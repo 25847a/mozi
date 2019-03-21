@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  */
 public class BluetoothMap {
-   ///sss
+   	//dddd
 	public static  Map<String,String>   mapsb =new ConcurrentHashMap<String, String>();
 	
 	public static  Map<String,String>   healthmap =new ConcurrentHashMap<String, String>();
