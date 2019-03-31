@@ -1,0 +1,34 @@
+.table-statistical tr td:nth-child(2n+1){
+  background: #FCFCFC
+}
+body .layer-ext-moon .layui-layer-btn .layui-layer-btn0{
+  background: #B6A2DF;
+}
+body .layer-ext-moon .layui-layer-btn .layui-layer-btn1{
+  background: #2BC7C6;
+}
+.modal-dialog{
+  width: 400px;
+}
+.inmodal .modal-body{
+  background: #fff;
+  padding-bottom: 10px;
+}
+.modal-footer{
+  border: 0;
+}
+.modal-dialog .ibox{
+  margin: 0;
+}
+.modal-dialog .ibox .ibox-content{
+  padding: 0;
+  padding-left: 30px;
+}
+
+.dataTables_wrapper{
+  padding: 20px;
+  background: #fff;
+}
+.modal-dialog{
+	margin-top:15%;
+}

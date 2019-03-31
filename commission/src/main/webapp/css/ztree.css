@@ -1,0 +1,63 @@
+
+.hideTree{
+  position:absolute;
+  width:200px;
+  left:-200px;
+  min-height:100%;
+  z-index:10000;
+  background:#fff;
+  box-shadow:5px 0 10px #ddd;
+  padding-top: 45px;
+  padding-left: 10px;
+}
+.hideTree:hover{
+  cursor:pointer
+}
+.ztree li{
+  line-height: 30px;
+}
+.ztree li span{
+  font-size: 14px;
+}
+.ztree li span.button.ico_docu{
+  display: none;
+}
+.ztree li span.button{
+  background-image: url("../img/st_icon.png");
+}
+.ztree li span.button.noline_close{
+  background-position: 6px 4px;
+}
+.ztree li span.button.noline_open{
+  background-image: url("../img/st_icon_open.png");
+  background-position: 6px 6px;
+}
+.ztree li a{
+  height: 30px;
+  padding: 0;
+}
+.ztree li a.curSelectedNode{
+  height: 30px;
+  background-color: #eee;
+  border: 0;
+  line-height: 30px;
+}
+.ztree li a:hover{
+  background: #ccc;
+  text-decoration: none;
+  color: #D97178;
+}
+.btn_icon{
+  width: 20px;
+  height:60px;
+  background: url("../img/icon_indent.png") no-repeat;
+  background-size: 100%;
+  position:absolute;
+  top: 20px;
+  right: -20px;
+}
+.btn_icon.dedent{
+  background: url("../img/icon_dedent.png") no-repeat;
+  background-size: 100%;
+}
+

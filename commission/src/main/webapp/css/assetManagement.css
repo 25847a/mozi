@@ -1,0 +1,76 @@
+.inmodal .modal-title-new .modal-title{
+  font-size: 14px;
+}
+.inmodal .modal-message{
+  font-size: 14px;
+}
+.inmodal .head_portrait{
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #fff;
+  margin: 28px auto 0;
+}
+
+#modalExamine .modal-body{
+  padding-left: 80px;
+}
+#modalExamine .content_item{
+  font-size: 12px;
+
+}
+#modalExamine .content_item h5{
+  font-size: 14px;
+  color: #2bc9c7;
+  margin: 15px 0;
+}
+#modalExamine .content_left{
+  display: inline-block;
+  width: 300px;
+  line-height: 2.2;
+}
+.radio-inline input[type=radio]{
+  margin-top: 4px;
+}
+
+
+.dataTables_wrapper{
+  padding: 20px;
+  padding-top: 5px;
+  background: #fff;
+}
+.dataTables-example td>div.state{
+	width:100%;
+	height:39px;
+	line-height:39px;
+}
+.bgsufficient{
+  background: #1c84c6;
+  color: #fff;
+}
+.bgwarning{
+  background: #f8ac59;
+  color: #fff;
+}
+.bgdanger{
+  background: #ed5565;
+  color: #fff;
+}
+.bgoverdue{
+  background: #ddd;
+  color: #fff;
+}
+
+#equipmentGrid thead .sorting_desc:after,
+#equipmentGrid thead .sorting:after{
+  display: none;
+}
+
+table.dataTable thead tr th:first-of-type {
+  background: 0;
+}
+
+
+
+
+

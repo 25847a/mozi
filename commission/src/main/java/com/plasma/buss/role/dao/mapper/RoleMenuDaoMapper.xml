@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.plasma.buss.role.dao.RoleMenuDao"> 
+
+	<!--查询所有f_role_menu-->
+	<select id="queryRoleMenuList" resultType="DataRow" parameterType="java.util.Map">
+		 SELECT * FROM f_role_menu LIMIT #{pageNum},#{pageSize}
+	</select>
+
+	<!--查询总数f_role_menu-->
+	<select id="queryRoleMenuListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		 SELECT COUNT(*) FROM f_role_menu
+	</select>
+
+	<!--根据ID查询f_role_menu-->
+	<select id="queryRoleMenuById" resultType="DataRow" parameterType="java.lang.Long">
+		 SELECT * FROM f_role_menu WHERE id=#{id}
+	</select>
+
+	<!--添加f_role_menu-->
+	<insert id="saveRoleMenu"  parameterType="java.util.List">
+		INSERT INTO f_role_menu(roleId,menuId,createDate) VALUES 
+ 		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.roleId},#{item.menuId},NOW())
+		</foreach>
+	</insert>
+
+	<!--根据ID修改f_role_menu-->
+	<update id="updateRoleMenuById" parameterType="java.util.Map">
+		UPDATE f_role_menu set 
+		 <if test="roleId!=null and roleId!='' ">
+		roleId=#{roleId},
+		</if>
+		 <if test="menuId!=null and menuId!='' ">
+		menuId=#{menuId},
+		</if>
+		 <if test="createDate!=null and createDate!='' ">
+		createDate=#{createDate},
+		</if>
+		id = #{id} WHERE id=#{id}
+	</update>
+
+	<!--根据ID删除f_role_menu-->
+	<delete id="deleteRoleMenuById" parameterType="java.lang.Long">
+		DELETE FROM f_role_menu where id=#{id}
+	</delete>
+	
+	<!-- 查询授权菜单总数 -->
+	<select id="queryRoleMenuCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		SELECT COUNT(*)  FROM f_role_menu WHERE roleId = #{id}
+	</select>
+	
+	<!-- 删除角色关联的菜单 -->
+	<delete id="deleteRoleMenuByRoleId" parameterType="java.lang.Long">
+		DELETE FROM f_role_menu where roleId=#{roleId}
+	</delete>
+	
+	<!-- 查询某个角色的权限 -->
+	<select id="queryRoleMenuListByRoleId" resultType="DataRow" parameterType="java.lang.Long">
+		SELECT * FROM f_role_menu WHERE roleId= #{id}
+	</select>
+</mapper>

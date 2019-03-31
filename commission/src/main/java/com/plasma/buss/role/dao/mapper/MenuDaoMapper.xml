@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.plasma.buss.role.dao.MenuDao"> 
+	<select id="menuAllList" resultType="DataRow" parameterType="java.util.Map">
+		SELECT id,menuName as name,pId FROM f_menu WHERE 1=1 
+		<if test="menuName!=null and menuName!='' ">
+		 	AND menuName LIKE CONCAT('%',#{menuName},'%')
+		 </if>
+	</select>
+	<!--查询所有f_menu-->
+	<select id="queryMenuList" resultType="DataRow" parameterType="java.util.Map">
+		 SELECT * FROM f_menu  WHERE 1=1 
+		 <if test="menuName!=null and menuName!='' ">
+		 	AND menuName LIKE CONCAT('%',#{menuName},'%')
+		 </if>
+		 LIMIT #{pageNum},#{pageSize}
+	</select>
+
+	<!--查询总数f_menu-->
+	<select id="queryMenuListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		 SELECT COUNT(*) FROM f_menu
+	</select>
+
+	<!--根据ID查询f_menu-->
+	<select id="queryMenuById" resultType="DataRow" parameterType="java.lang.Long">
+		 SELECT * FROM f_menu WHERE id=#{id}
+	</select>
+
+	<!--添加f_menu-->
+	<insert id="saveMenu"  parameterType="java.util.Map">
+		INSERT INTO f_menu(menuName,url,pid,style,createDate,updateDate) VALUES 
+ 		(#{menuName},#{url},#{pid},#{style},NOW(),#{updateDate})
+	</insert>
+
+	<!--根据ID修改f_menu-->
+	<update id="updateMenuById" parameterType="java.util.Map">
+		UPDATE f_menu set 
+		 <if test="menuName!=null and menuName!='' ">
+			menuName=#{menuName},
+		</if>
+		 <if test="url!=null and url!='' ">
+			url=#{url},
+		</if>
+		 <if test="createDate!=null and createDate!='' ">
+			createDate=#{createDate},
+		</if>
+		<if test="pid!=null and pid!='' ">
+			pid=#{pid},
+		</if>
+		<if test="style!=null and style!='' ">
+			style=#{style},
+		</if>
+		 <if test="updateDate!=null and updateDate!='' ">
+			updateDate=#{updateDate},
+		</if>
+		id = #{id} WHERE id=#{id}
+	</update>
+
+	<!--根据ID删除f_menu-->
+	<delete id="deleteMenuById" parameterType="java.lang.Long">
+		DELETE FROM f_menu where id=#{id}
+	</delete>
+	<delete id="deleteRoleMenuById" parameterType="java.lang.Long">
+		DELETE FROM f_role_menu where menuId=#{id}
+	</delete>
+	
+
+</mapper>

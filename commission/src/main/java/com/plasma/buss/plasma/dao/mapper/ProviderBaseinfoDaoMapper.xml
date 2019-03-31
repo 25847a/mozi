@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.plasma.buss.plasma.dao.ProviderBaseinfoDao">
+	
+	<!-- 根据身份证号码查询浆员信息是否存在 -->
+	<select id="queryProviderBaseinfoByIdNo" resultType="DataRow" parameterType="java.lang.String">
+		SELECT fp.*,fd.id AS fid FROM f_provider_baseinfo AS fp 
+		INNER JOIN f_detailed_info AS fd 
+		ON fp.id = fd.baseId
+		WHERE idNo=#{idNo}
+	</select>
+	<!-- 查询未审核浆员列表 -->
+	<select id="queryProviderBaseinfoList" resultType="DataRow" parameterType="java.util.Map">
+		SELECT fp.*,fd.addressx FROM f_provider_baseinfo AS fp  
+		INNER JOIN f_detailed_info AS fd 
+		ON fp.id = fd.baseId
+		WHERE fp.plasmaId = #{plasmaId} 
+		
+		<if test="status!=null and status!='' ">and status=#{status} AND fp.type!=2</if>
+		<if test="providerNo != null and providerNo != '' ">and providerNo = #{providerNo}</if>
+		<if test="name != null and name != '' ">and name like CONCAT('%',#{name},'%')</if>
+		<if test="startDate != null and startDate != '' ">and DATE_FORMAT(fp.updateDate,'%Y-%m-%d') &gt;= #{startDate}</if>
+		<if test="endDate != null and endDate != '' ">and DATE_FORMAT(fp.updateDate,'%Y-%m-%d') &lt;= #{endDate}</if>
+		LIMIT ${pageNum},${pageSize}
+	</select>
+	<!-- 查询未审核浆员总数 -->
+	<select id="queryProviderBaseinfoListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT COUNT(*) FROM f_provider_baseinfo fp WHERE fp.plasmaId = #{plasmaId} 
+		<if test="status!=null and status!='' ">and status=#{status} AND type!=2</if>
+		<if test="providerNo != null and providerNo != '' ">and providerNo = #{providerNo}</if>
+		<if test="name != null and name != '' ">and name like CONCAT('%',#{name},'%')</if>
+		<if test="startDate != null and startDate != '' ">and DATE_FORMAT(fp.updateDate,'%Y-%m-%d') &gt;= #{startDate}</if>
+		<if test="endDate != null and endDate != '' ">and DATE_FORMAT(fp.updateDate,'%Y-%m-%d') &lt;= #{endDate}</if>
+	</select>
+	
+	<!--根据ID修改f_provider_baseinfo-->
+	<update id="updateProviderBaseinfoById" parameterType="java.util.Map">
+		UPDATE f_provider_baseinfo set 
+		 <if test="providerNo!=null and providerNo!='' ">
+		providerNo=#{providerNo},
+		</if>
+		 <if test="icNumber!=null and icNumber!='' ">
+		icNumber=#{icNumber},
+		</if>
+		 <if test="name!=null and name!='' ">
+		name=#{name},
+		</if>
+		 <if test="sex!=null and sex!='' ">
+		sex=#{sex},
+		</if>
+		 <if test="idNo!=null and idNo!='' ">
+		idNo=#{idNo},
+		</if>
+		 <if test="imagez!=null and imagez!='' ">
+		imagez=#{imagez},
+		</if>
+		 <if test="imagef!=null and imagef!='' ">
+		imagef=#{imagef},
+		</if>
+		 <if test="imagespot!=null and imagespot!='' ">
+		imagespot=#{imagespot},
+		</if>
+		 <if test="bloodType!=null and bloodType!='' ">
+		bloodType=#{bloodType},
+		</if>
+		 <if test="birthday!=null and birthday!='' ">
+		birthday=#{birthday},
+		</if>
+		 <if test="plasmaState!=null and plasmaState!='' ">
+		plasmaState=#{plasmaState},
+		</if>
+		 <if test="type!=null and type!='' ">
+		type=#{type},
+		</if>
+		 <if test="immuneId!=null and immuneId!='' ">
+		immuneId=#{immuneId},
+		</if>
+		 <if test="immuneRegisterId!=null and immuneRegisterId!='' ">
+		immuneRegisterId=#{immuneRegisterId},
+		</if>
+		 <if test="status!=null and status!='' ">
+		status=#{status},
+		</if>
+		 <if test="level!=null and level!='' ">
+		level=#{level},
+		</if>
+		 <if test="groupId!=null and groupId!='' ">
+		groupId=#{groupId},
+		</if>
+		 <if test="createDate!=null and createDate!='' ">
+		createDate=#{createDate},
+		</if>
+		 <if test="updateDate!=null and updateDate!='' ">
+		updateDate=#{updateDate},
+		</if>
+		 <if test="creater!=null and creater!='' ">
+		creater=#{creater},
+		</if>
+		 <if test="updater!=null and updater!='' ">
+		updater=#{updater},
+		</if>
+		 <if test="bloodGrade!=null and bloodGrade!='' ">
+		bloodGrade=#{bloodGrade},
+		</if>
+		 <if test="isGrantCard!=null and isGrantCard!='' ">
+		isGrantCard=#{isGrantCard},
+		</if>
+		 <if test="plasmaId!=null and plasmaId!='' ">
+		plasmaId=#{plasmaId},
+		</if>
+		id = #{id} WHERE id=#{id}
+	</update>
+	
+	<!--根据ID修改f_provider_baseinfo-->
+	<update id="updateProviderBaseinfoByProvider" parameterType="java.util.Map">
+		UPDATE f_provider_baseinfo set 
+		 <if test="providerNo!=null and providerNo!='' ">
+		providerNo=#{providerNo},
+		</if>
+		 <if test="icNumber!=null and icNumber!='' ">
+		icNumber=#{icNumber},
+		</if>
+		 <if test="name!=null and name!='' ">
+		name=#{name},
+		</if>
+		 <if test="sex!=null and sex!='' ">
+		sex=#{sex},
+		</if>
+		 <if test="idNo!=null and idNo!='' ">
+		idNo=#{idNo},
+		</if>
+		 <if test="imagez!=null and imagez!='' ">
+		imagez=#{imagez},
+		</if>
+		 <if test="imagef!=null and imagef!='' ">
+		imagef=#{imagef},
+		</if>
+		 <if test="imagespot!=null and imagespot!='' ">
+		imagespot=#{imagespot},
+		</if>
+		 <if test="bloodType!=null and bloodType!='' ">
+		bloodType=#{bloodType},
+		</if>
+		 <if test="birthday!=null ">
+		birthday=#{birthday},
+		</if>
+		 <if test="plasmaState!=null and plasmaState!='' ">
+		plasmaState=#{plasmaState},
+		</if>
+		 <if test="type!=null and type!='' ">
+		type=#{type},
+		</if>
+		 <if test="immuneId!=null and immuneId!='' ">
+		immuneId=#{immuneId},
+		</if>
+		 <if test="immuneRegisterId!=null and immuneRegisterId!='' ">
+		immuneRegisterId=#{immuneRegisterId},
+		</if>
+		 <if test="status!=null and status!='' ">
+		status=#{status},
+		</if>
+		 <if test="level!=null and level!='' ">
+		level=#{level},
+		</if>
+		 <if test="groupId!=null and groupId!='' ">
+		groupId=#{groupId},
+		</if>
+		 <if test="createDate!=null ">
+		createDate=#{createDate},
+		</if>
+		 <if test="updateDate!=null ">
+		updateDate=#{updateDate},
+		</if>
+		 <if test="creater!=null and creater!='' ">
+		creater=#{creater},
+		</if>
+		 <if test="updater!=null and updater!='' ">
+		updater=#{updater},
+		</if>
+		 <if test="bloodGrade!=null and bloodGrade!='' ">
+		bloodGrade=#{bloodGrade},
+		</if>
+		 <if test="isGrantCard!=null and isGrantCard!='' ">
+		isGrantCard=#{isGrantCard},
+		</if>
+		providerNo = #{providerNo} WHERE providerNo=#{providerNo} AND plasmaId=#{plasmaId}
+	</update>
+	
+	<!--根据ID修改f_detailed_info-->
+	<update id="updateDetailedInfoById" parameterType="java.util.Map">
+		UPDATE f_detailed_info set 
+		 <if test="baseId!=null and baseId!='' ">
+		baseId=#{baseId},
+		</if>
+		 <if test="vocation!=null and vocation!='' ">
+		vocation=#{vocation},
+		</if>
+		 <if test="phone!=null and phone!='' ">
+		phone=#{phone},
+		</if>
+		 <if test="addressx!=null and addressx!='' ">
+		addressx=#{addressx},
+		</if>
+		 <if test="place!=null and place!='' ">
+		place=#{place},
+		</if>
+		 <if test="remarks!=null and remarks!='' ">
+		remarks=#{remarks},
+		</if>
+		 <if test="history!=null and history!='' ">
+		history=#{history},
+		</if>
+		 <if test="nation!=null and nation!='' ">
+		nation=#{nation},
+		</if>
+		 <if test="validDate!=null and validDate!='' ">
+		validDate=#{validDate},
+		</if>
+		 <if test="type!=null and type!='' ">
+		type=#{type},
+		</if>
+		 <if test="inviteId!=null and inviteId!='' ">
+		inviteId=#{inviteId},
+		</if>
+		 <if test="inviteType!=null and inviteType!='' ">
+		inviteType=#{inviteType},
+		</if>
+		 <if test="inviteDate!=null and inviteDate!='' ">
+		inviteDate=#{inviteDate},
+		</if>
+		 <if test="isMarry!=null and isMarry!='' ">
+		isMarry=#{isMarry},
+		</if>
+		 <if test="createDate!=null and createDate!='' ">
+		createDate=#{createDate},
+		</if>
+		 <if test="updateDate!=null and updateDate!='' ">
+		updateDate=#{updateDate},
+		</if>
+		 <if test="creater!=null and creater!='' ">
+		creater=#{creater},
+		</if>
+		 <if test="updater!=null and updater!='' ">
+		updater=#{updater},
+		</if>
+		id = #{id} WHERE id=#{id}
+	</update>
+	
+	<!--根据ID修改f_detailed_info-->
+	<update id="updateDetailedInfoByBaseId" parameterType="java.util.Map">
+		UPDATE f_detailed_info set 
+		 <if test="vocation!=null and vocation!='' ">
+		vocation=#{vocation},
+		</if>
+		 <if test="phone!=null and phone!='' ">
+		phone=#{phone},
+		</if>
+		 <if test="addressx!=null and addressx!='' ">
+		addressx=#{addressx},
+		</if>
+		 <if test="place!=null and place!='' ">
+		place=#{place},
+		</if>
+		 <if test="remarks!=null and remarks!='' ">
+		remarks=#{remarks},
+		</if>
+		 <if test="history!=null and history!='' ">
+		history=#{history},
+		</if>
+		 <if test="nation!=null and nation!='' ">
+		nation=#{nation},
+		</if>
+		 <if test="validDate!=null ">
+		validDate=#{validDate},
+		</if>
+		 <if test="type!=null and type!='' ">
+		type=#{type},
+		</if>
+		 <if test="inviteId!=null and inviteId!='' ">
+		inviteId=#{inviteId},
+		</if>
+		 <if test="inviteType!=null and inviteType!='' ">
+		inviteType=#{inviteType},
+		</if>
+		 <if test="inviteDate!=null">
+		inviteDate=#{inviteDate},
+		</if>
+		 <if test="isMarry!=null and isMarry!='' ">
+		isMarry=#{isMarry},
+		</if>
+		 <if test="createDate!=null">
+		createDate=#{createDate},
+		</if>
+		 <if test="updateDate!=null ">
+		updateDate=#{updateDate},
+		</if>
+		 <if test="creater!=null and creater!='' ">
+		creater=#{creater},
+		</if>
+		 <if test="updater!=null and updater!='' ">
+		updater=#{updater},
+		</if>
+		baseId = #{baseId} WHERE baseId=#{baseId} AND plasmaId=#{plasmaId}
+	</update>
+	
+	<!-- 根据ID修改浆员信息 -->
+	<update id="examinePlasma" parameterType="java.util.Map">
+		UPDATE f_provider_baseinfo SET  status=1,updateDate=NOW() WHERE id IN 
+	    <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+        and plasmaId=#{plasmaId}
+	</update>
+	
+	<!-- 批量取消发卡 -->
+	<update id="cancelExaminePlasma" parameterType="java.util.Map">
+		UPDATE f_provider_baseinfo SET  status=0 WHERE id =#{id} 
+	</update>
+	
+	<!-- 根据浆员卡号修改信息  -->
+	<update id="updatePlasmaByProvider" parameterType="java.util.Map">
+		UPDATE f_provider_baseinfo SET  status=#{status},type=#{type} WHERE providerNo =#{providerNo} AND plasmaId=#{plasmaId}
+	</update>
+	
+	<!-- 查询浆员详细信息 -->
+	<select id="queryDetail" parameterType="java.lang.Long" resultType="DataRow">
+		select base.*,detail.addressx,detail.place,detail.isMarry,detail.phone,fs.certificationOrgan,fs.licensor,fs.plasmaName,fn.name fname,DATE_FORMAT(base.birthday,'%Y-%m-%d') fbirthday
+		from f_provider_baseinfo base 
+		INNER JOIN f_detailed_info detail on base.id = detail.baseId 
+		LEFT JOIN f_plasma_site AS fs on base.plasmaId = fs.code
+		LEFT JOIN f_nation fn ON detail.nation = fn.id
+		where base.id = #{id}
+		
+	</select>
+	
+	<!-- 修改浆员状态为取消发卡 -->
+	<select id="changeStatus" parameterType="java.util.Map">
+		UPDATE f_provider_baseinfo set status = 2 where providerNo = #{providerNo} AND plasmaId=#{plasmaId} 
+	</select>
+	
+	<!-- 插入浆员基本信息 -->
+	<insert id="insertBaseinfo" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.Map">
+		insert into f_provider_baseinfo (providerNo,icNumber,name,sex,idNo,imagez,imagef,imagespot,bloodType,birthday,
+					plasmaState,type,immuneId,immuneRegisterId,status,level,createDate,updateDate,plasmaId)
+		values (#{providerNo},#{icNumber},#{name},#{sex},#{idNo},#{imagez},#{imagef},#{imagespot},#{bloodType},#{birthday},
+				#{plasmaState},#{type},#{immuneId},#{immuneRegisterId},#{status},#{level},NOW(),NULL,#{plasmaId})
+	</insert>
+	
+	<!-- 插入相关信息到详情表 -->
+	<insert id="insertDetail" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.Map">
+		insert into f_detailed_info (baseId,addressx,place,isMarry,phone,nation,createDate,plasmaId)
+		VALUES (#{baseId},#{addressx},#{place},#{isMarry},#{phone},#{nation},NOW(),#{plasmaId})
+	</insert>
+	
+	<!-- 对写卡浆员进行验证 -->
+	<select id="verification" resultType="DataRow" parameterType="java.lang.String">
+	select * from f_provider_baseinfo AS fp 
+	INNER JOIN f_plasma_site AS fs 
+	ON fp.plasmaId = fs.code
+	where providerNo = #{providerNo} and status = 1
+	</select>
+	
+	<!-- 查询浆员信息 -->
+	<select id="queryBaseInfo" resultType="DataRow" parameterType="java.util.Map">
+		select fp.*,fs.*,fd.addressx,fd.place,fd.nation,fd.validDate from f_provider_baseinfo AS fp 
+		INNER JOIN f_plasma_site AS fs 
+		ON fp.plasmaId = fs.code
+		INNER JOIN f_detailed_info AS fd 
+		ON fp.id = fd.baseId
+		where 1=1 
+		<if test="id!=null and id!='' ">
+			AND fp.id=#{id}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo=#{providerNo}
+		</if>
+	</select>
+	
+	<!-- 插入浆员信息到临时表中 -->
+	<!--添加f_provider_baseinfo_temp-->
+	<insert id="saveProviderBaseinfoTemp"  parameterType="java.util.Map">
+		INSERT INTO f_provider_baseinfo_temp(providerNo,icNumber,name,sex,idNo,imagez,imagef,imagespot,bloodType,birthday,plasmaState,type,immuneId,immuneRegisterId,status,level,groupId,createDate,updateDate,creater,updater,bloodGrade,isGrantCard,plasmaId,address,place,nation,validDate,isMarry) VALUES 
+ (#{providerNo},#{icNumber},#{name},#{sex},#{idNo},#{imagez},#{imagef},#{imagespot},#{bloodType},#{birthday},#{plasmaState},#{type},#{immuneId},#{immuneRegisterId},#{status},#{level},#{groupId},#{createDate},#{updateDate},#{creater},#{updater},#{bloodGrade},#{isGrantCard},#{plasmaId},#{address},#{place},#{nation},#{validDate},#{isMarry})
+	</insert>
+	
+	<!-- 批量查询浆员卡号 -->
+	<select id="queryProviderByIds" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT GROUP_CONCAT(providerNo) FROM f_provider_baseinfo WHERE id  IN (${_parameter})
+	</select>
+	
+	<!-- 查询浆员审核状态 -->
+	<select id="queryProviderStatus" resultType="java.lang.String" parameterType="java.util.Map">
+		SELECT GROUP_CONCAT(providerNo) providerNo FROM f_provider_baseinfo WHERE status=1 AND  providerNo IN 
+		<foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+	</select>
+	
+	<!-- 删除浆员信息 -->
+	<delete id="deleteProviderBaseInfoByProvider" parameterType="java.lang.String">
+		DELETE FROM f_provider_baseinfo WHERE providerNo = #{providerNo} AND plasmaId=#{plasmaId}
+	</delete>
+	<!-- 删除浆员详细信息 -->
+	<delete id="deleteDetailInfoByProvider" parameterType="java.lang.String">
+		DELETE FROM f_detailed_info WHERE baseId = (SELECT id FROM f_provider_baseinfo WHERE providerNo = #{providerNo} AND plasmaId=#{plasmaId}) AND plasmaId=#{plasmaId}
+	</delete>
+	<!-- 根据id集合 查询该批浆员是否为当前加密狗中的id一致 -->
+	<select id="queryBaseInfoCount" resultType="java.lang.Integer">
+	 SELECT count(*) from f_provider_baseinfo
+        WHERE plasmaId != #{plasmaId} and  id in
+        <foreach collection="templist" item="id" separator="," open="(" close=")">
+             #{id, jdbcType=VARCHAR}    
+        </foreach>
+	</select>
+</mapper>

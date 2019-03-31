@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.plasma.buss.check.dao.CheckDao"> 
+
+	<!--查询所有f_check-->
+	<select id="queryCheckList" resultType="DataRow" parameterType="java.util.Map">
+		 SELECT fc.*,fp.name FROM f_check AS fc 
+		 INNER JOIN f_provider_baseinfo AS fp 
+		 ON fc.providerNo = fp.providerNo 
+		 WHERE fc.plasmaId = #{plasmaId}
+		 <if test="name!=null and name!='' ">
+		 	AND fp.name LIKE CONCAT('%',#{name},'%')
+		 </if> 
+		 <if test="providerNo!=null and providerNo!='' ">
+		 	AND fp.providerNo = #{providerNo}
+		 </if> 
+		 LIMIT ${pageNum},${pageSize}
+	</select>
+
+	<!--查询总数f_check-->
+	<select id="queryCheckListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		 SELECT COUNT(*) FROM f_check AS fc 
+		 INNER JOIN f_provider_baseinfo AS fp 
+		 ON fc.providerNo = fp.providerNo 
+		 WHERE fc.plasmaId = #{plasmaId}
+		 <if test="name!=null and name!='' ">
+		 	AND fp.name LIKE CONCAT('%',#{name},'%')
+		 </if> 
+		 <if test="providerNo!=null and providerNo!='' ">
+		 	AND fp.providerNo = #{providerNo}
+		 </if> 
+	</select>
+
+	<!--根据ID查询f_check-->
+	<select id="queryCheckById" resultType="DataRow" parameterType="java.lang.Long">
+		 SELECT * FROM f_check WHERE id=#{id}
+	</select>
+
+	<!--添加f_check-->
+	<insert id="saveCheck"  parameterType="java.util.Map">
+		INSERT INTO f_check(providerNo,allId,isCheck,type,isIdentity,tz,tw,mb,xya,xyb,xb,fb,pf,wg,sz,heart,liver,spleen,lung,consult,consultResult,
+		result,reason,userId,isDel,createDate,updateDate,plasmaId,checkType) VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.providerNo},#{item.allId},#{item.isCheck},#{item.type},#{item.isIdentity},#{item.tz},#{item.tw},#{item.mb},#{item.xya},#{item.xyb},
+			#{item.xb},#{item.fb},#{item.pf},#{item.wg},#{item.sz},
+			#{item.heart},#{item.liver},#{item.spleen},#{item.lung},#{item.consult},#{item.consultResult},#{item.result},#{item.reason},#{item.userId},
+			#{item.isDel},#{item.createDate},
+			#{item.updateDate},#{item.plasmaId},#{item.checkType})			
+		</foreach>
+	</insert>
+
+	<!--根据ID修改f_check-->
+	<update id="updateCheckById" parameterType="java.util.Map">
+		UPDATE f_check set 
+		 <if test="providerNo!=null and providerNo!='' ">
+		providerNo=#{providerNo},
+		</if>
+		 <if test="allId!=null and allId!='' ">
+		allId=#{allId},
+		</if>
+		 <if test="isCheck!=null and isCheck!='' ">
+		isCheck=#{isCheck},
+		</if>
+		 <if test="type!=null and type!='' ">
+		type=#{type},
+		</if>
+		 <if test="isIdentity!=null and isIdentity!='' ">
+		isIdentity=#{isIdentity},
+		</if>
+		 <if test="tz!=null and tz!='' ">
+		tz=#{tz},
+		</if>
+		 <if test="tw!=null and tw!='' ">
+		tw=#{tw},
+		</if>
+		 <if test="mb!=null and mb!='' ">
+		mb=#{mb},
+		</if>
+		 <if test="xya!=null and xya!='' ">
+		xya=#{xya},
+		</if>
+		 <if test="xyb!=null and xyb!='' ">
+		xyb=#{xyb},
+		</if>
+		 <if test="xb!=null and xb!='' ">
+		xb=#{xb},
+		</if>
+		 <if test="fb!=null and fb!='' ">
+		fb=#{fb},
+		</if>
+		 <if test="pf!=null and pf!='' ">
+		pf=#{pf},
+		</if>
+		 <if test="wg!=null and wg!='' ">
+		wg=#{wg},
+		</if>
+		 <if test="sz!=null and sz!='' ">
+		sz=#{sz},
+		</if>
+		 <if test="heart!=null and heart!='' ">
+		heart=#{heart},
+		</if>
+		 <if test="liver!=null and liver!='' ">
+		liver=#{liver},
+		</if>
+		 <if test="spleen!=null and spleen!='' ">
+		spleen=#{spleen},
+		</if>
+		 <if test="lung!=null and lung!='' ">
+		lung=#{lung},
+		</if>
+		 <if test="consult!=null and consult!='' ">
+		consult=#{consult},
+		</if>
+		 <if test="consultResult!=null and consultResult!='' ">
+		consultResult=#{consultResult},
+		</if>
+		 <if test="result!=null and result!='' ">
+		result=#{result},
+		</if>
+		 <if test="reason!=null and reason!='' ">
+		reason=#{reason},
+		</if>
+		 <if test="userId!=null and userId!='' ">
+		userId=#{userId},
+		</if>
+		 <if test="isDel!=null and isDel!='' ">
+		isDel=#{isDel},
+		</if>
+		 <if test="createDate!=null and createDate!='' ">
+		createDate=#{createDate},
+		</if>
+		 <if test="updateDate!=null and updateDate!='' ">
+		updateDate=#{updateDate},
+		</if>
+		 <if test="creater!=null and creater!='' ">
+		creater=#{creater},
+		</if>
+		 <if test="updater!=null and updater!='' ">
+		updater=#{updater},
+		</if>
+		 <if test="plasmaId!=null and plasmaId!='' ">
+		plasmaId=#{plasmaId},
+		</if>
+		 <if test="checkType!=null and checkType!='' ">
+		checkType=#{checkType},
+		</if>
+		id = #{id} WHERE id=#{id}
+	</update>
+
+	<!--根据ID删除f_check-->
+	<delete id="deleteCheckById" parameterType="java.lang.Long">
+		DELETE FROM f_check where id=#{id}
+	</delete>
+
+	<!-- 查询最后体检时间 -->
+	<select id="queryCheckMaxDate" resultType="DataRow" parameterType="java.util.Map">
+		SELECT MAX(updateDate) date FROM f_check where plasmaId=#{plasmaId}
+	</select>
+</mapper>

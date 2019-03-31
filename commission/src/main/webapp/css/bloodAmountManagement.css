@@ -1,0 +1,30 @@
+.ibox-content{
+  padding: 0;
+}
+.collection{
+  color:#fff;
+}
+.collection .number{
+  font-size:18px;
+}
+.progress{
+  background: #724548;
+}
+.progress-bar-default{
+  background: #fff;
+  line-height: 5px;
+}
+
+.station{
+  color: #6EBBF1;
+}
+.text-red{
+  color: #E2989D;
+}
+#rankingGrid thead .sorting_desc:after,
+#rankingGrid thead .sorting:after{
+  display: none;
+}
+table.dataTable thead tr th:first-of-type{
+  background: 0;
+}

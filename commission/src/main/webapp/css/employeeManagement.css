@@ -1,0 +1,136 @@
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover{
+  background: #23c6c8;
+  color: #fff;
+}
+.btn-reset{
+  background-color: #B6A2DF;
+  border-color:#B6A2DF;
+  color: #fff;
+}
+.btn-reset:hover{
+  background-color: #AD98D3;
+  color: #fff;
+}
+
+.inmodal .modal-header-new{
+  padding: 20px;
+  padding-bottom: 10px;
+  text-align: left;
+}
+.inmodal .modal-title-new .modal-title{
+  font-size: 14px;
+}
+.modal-header .close{
+  margin-top: -13px;
+}
+.close{
+  font-size: 42px;
+}
+.ibox-content{
+  border: 0;
+}
+.inmodal .modal-header-information{
+  border: 0;
+  height: 180px;
+  background: -webkit-linear-gradient(left,#2bc9c7, #59b2ed);
+  background: -o-linear-gradient(left,#2bc9c7, #59b2ed);
+  background: -moz-linear-gradient(left,#2bc9c7, #59b2ed);
+  background: linear-gradient(left,#2bc9c7, #59b2ed);
+  position: relative;
+}
+.inmodal .modal-header-information .modal-title{
+  color: #323330;
+  font-size: 24px;
+}
+/*新增员工弹窗上传组件样式*/
+a.input {
+  width:21.5%;
+  height:34px;
+  line-height:34px;
+  background:#23c6c8;
+  text-align:center;
+  display:inline-block;
+  overflow:hidden;
+  position:relative;
+  float: right;
+}
+a.input:hover {
+  background:#31D1D3;
+  color: #ffffff;
+}
+a{
+  text-decoration:none;
+  color:#FFF;
+}
+#path{
+  width: 78.5%;
+  height: 34px;
+  border: 1px solid #e5e6e7;
+}
+#file {
+  opacity:0;
+  filter:alpha(opacity=0);
+  font-size:100px;
+  position:absolute;
+  top:0;
+  right:0;
+}
+.inmodal .modal-body{
+  background: #fff;
+}
+.inmodal .modal-message{
+  font-size: 14px;
+}
+
+.inmodal .head_portrait{
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  left: 240px;
+  bottom: -60px;
+  z-index: 999;
+}
+
+#modalExamine .modal-body{
+  padding-left: 80px;
+}
+#modalExamine .content_item{
+  font-size: 12px;
+
+}
+#modalExamine .content_item h5{
+  font-size: 14px;
+  color: #2bc9c7;
+  margin: 15px 0;
+}
+#modalExamine .content_left{
+  display: inline-block;
+  width: 300px;
+  line-height: 2.2;
+}
+
+.dataTables-example thead tr th,
+.dataTables-example tbody tr td{
+  white-space:nowrap;
+}
+.radio-inline input[type=radio]{
+  margin-top: 4px;
+}
+.form-control.error{
+  border: 1px solid #cc5965
+}
+.datepicker{
+  z-index: 9999!important;
+}
+
+.dataTables_wrapper{
+  padding: 20px;
+  background: #fff;
+}

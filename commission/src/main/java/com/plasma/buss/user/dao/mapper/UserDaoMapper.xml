@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.plasma.buss.user.dao.UserDao">
+
+	<!-- 用户登录 -->
+	<select id="queryUserLogin" resultType="DataRow" parameterType="java.util.Map">
+		SELECT u.* FROM f_admin AS u 
+		
+		WHERE (u.phone = #{userName} OR u.userName=#{userName})  AND u.passWord = #{passWord}
+	</select>
+	
+	<!-- 查询手机号码是否存在 -->
+	<select id="queryPhoneExist" resultType="DataRow" parameterType="java.util.Map">
+		SELECT id FROM f_admin WHERE phone = #{phone} 
+		<if test="id!=null and id!='' ">
+			AND id!=#{id}
+		</if> 
+	</select>
+	<!--查询所有用户-->
+	<select id="queryUserList" resultType="DataRow" parameterType="java.util.Map">
+		  select u.id,u.userName,u.createDate,phone,roleId,isDisable,disableDate,roleName from f_admin u 
+			left join f_role f on u.roleId=f.id where 1=1
+		 <if test="userName!=null and userName!='' ">
+		 	AND userName LIKE CONCAT('%',#{userName},'%') or phone =#{userName}
+		 </if>
+		 <if test="roleId!=null and roleId!='' ">
+		 	AND f.id=#{roleId}
+		 </if>
+		 LIMIT #{pageNum},#{pageSize}
+	</select>
+
+	<!--查询用户总数-->
+	<select id="queryUserListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		  select count(*) from f_admin u 
+			left join f_role f on u.roleId=f.id where 1=1
+		 <if test="userName!=null and userName!='' ">
+		 	AND userName LIKE CONCAT('%',#{userName},'%')
+		 </if>
+	</select>
+	<!-- 添加新的用户 -->
+	<insert id="saveUser" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+		insert into f_admin (userName,phone,passWord,plasmaId,createDate,roleId) values
+		(#{userName},#{phone},#{passWord},#{plasmaId},now(),#{roleId})
+	</insert>
+	<!-- 修改用户信息 -->
+	<update id="updateUser" parameterType="java.util.Map">
+		update f_admin set updateDate=now()
+		<if test="userName!=null and userName!=''">
+			,userName=#{userName}
+		</if>
+		<if test="phone!=null and phone!=''">
+			,phone=#{phone}
+		</if>
+		<if test="passWord!=null and passWord!=''">
+			,passWord=#{passWord}
+		</if>
+		<if test="userIamge!=null and userIamge!=''">
+			,userIamge=#{userIamge}
+		</if>
+		<if test="roleId!=null and roleId!=''">
+			,roleId=#{roleId}
+		</if>
+		,plasmaId=#{plasmaId}
+		where id=#{id}
+	</update>
+	<!-- 修改头像图片-->
+	<update id="updatePicture" parameterType="java.util.Map">
+		UPDATE f_admin SET userIamge=#{userIamge}
+		where id=#{id}
+	</update>
+	<!-- 修改密码-->
+	<update id="updatePassword" parameterType="java.util.Map">
+		UPDATE f_admin SET passWord=#{passWord}
+		where id=#{id}
+	</update>
+	<!-- 查询用户详情 -->
+	<select id="queryByIdUser" parameterType="java.util.Map" resultType="DataRow">
+		SELECT
+			fa.*,fp.companyId
+		FROM
+			f_admin fa 
+		LEFT JOIN f_plasma_site fp 
+		ON fa.plasmaId = fp.id
+		WHERE
+			fa.id = #{id}
+	</select>
+	<!-- 删除指定用户 -->
+	<delete id="deleteUser" parameterType="java.util.Map">
+		delete from f_admin where id=#{id}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+	<!-- 变量配置 -->
+	<Properties>
+		<Property name="log_path">D:/logs/</Property>
+	</Properties>
+
+	<!-- appender配置 -->
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%d][%t][%p][%c:%L] %m%n" />
+		</Console>
+		<RollingFile name="DailyRollingFile" fileName="${log_path}/fadl.log"
+			filePattern="${log_path}/fadl_server%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="[%d][%t][%p][%c:%L] %m%n" />
+			<TimeBasedTriggeringPolicy interval="1" />
+			<SizeBasedTriggeringPolicy size="10 MB" />
+
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		 <!-- 将业务dao接口填写进去,并用控制台输出即可 -->  
+        <logger name="com.fadl.buss.*.dao" level="DEBUG" additivity="false">  
+            <appender-ref ref="Console"/>  
+        </logger>  
+		<Logger name="mylog" level="trace" additivity="false">
+			<AppenderRef ref="DailyRollingFile" />
+		</Logger>
+		<!-- 配置要使用的appender -->
+		<!-- additivity开启的话，由于这个logger也是满足root的，所以会被打印两遍。 不过root logger 的level是error，为什么Bar 
+			里面的trace信息也被打印两遍呢 -->
+		
+		<!-- sql 以及耗费的执行时间 -->
+		<logger name="jdbc.sqltiming" level="DEBUG" additivity="false"></logger>
+		<!-- 执行之后的返回结果 -->
+		<logger name="jdbc.resultsettable" level="DEBUG"></logger>
+		<!-- 只有sql -->
+		<logger name="jdbc.sqlonly" level="DEBUG"></logger>
+		<logger name="jdbc.audit" level="DEBUG"></logger>
+		<logger name="jdbc.resultset" level="DEBUG"></logger>
+		<!-- 能看到数据库的连接数 -->
+		<logger name="jdbc.connection" level="DEBUG"></logger>
+
+		<Root level="DEBUG">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="DailyRollingFile" />
+		</Root>
+	</Loggers>
+</Configuration>

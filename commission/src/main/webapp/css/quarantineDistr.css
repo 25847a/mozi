@@ -1,0 +1,60 @@
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover{
+  background: #23c6c8;
+  color: #fff;
+}
+.ibox-content{
+  border: 0;
+}
+.btn-reset{
+  background-color: #B6A2DF;
+  border-color:#B6A2DF;
+  color: #fff;
+}
+.btn-reset:hover{
+  background-color: #AD98D3;
+  color: #fff;
+}
+
+.dataTables-example thead tr th,
+.dataTables-example tbody tr td{
+  white-space:nowrap;
+}
+.table-statistical tr td:nth-child(2n+1){
+  background: #FCFCFC
+}
+body .layer-ext-moon .layui-layer-btn .layui-layer-btn0{
+  background: #B6A2DF;
+}
+body .layer-ext-moon .layui-layer-btn .layui-layer-btn1{
+  background: #2BC7C6;
+}
+.modal-dialog{
+  width: 400px;
+}
+.inmodal .modal-body{
+  background: #fff;
+  padding-bottom: 10px;
+}
+.modal-footer{
+  border: 0;
+}
+.modal-dialog .ibox{
+  margin: 0;
+}
+.modal-dialog .ibox .ibox-content{
+  padding: 0;
+  padding-left: 30px;
+}
+
+.dataTables_wrapper{
+  padding: 20px;
+  background: #fff;
+}
+.modal-dialog{
+	margin-top:15%;
+}

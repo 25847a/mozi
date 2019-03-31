@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.plasma.buss.site.dao.PlasmaSiteDao">
+	
+	<!--查询所有f_plasma_site-->
+	<select id="queryPlasmaSiteList" resultType="DataRow" parameterType="java.util.Map">
+		SELECT fp.*,fc.plasmaName AS name FROM f_plasma_site AS fp 
+		INNER JOIN f_plasma_company as fc 
+		ON fp.companyId = fc.id 
+		WHERE 1=1 
+		<if test="companyId!=null and companyId!='' ">
+			AND companyId=#{companyId}
+		</if>
+		<if test="plasmaName!=null and plasmaName!='' ">
+			AND fp.plasmaName=#{plasmaName}
+		</if>
+	</select>
+	<!-- 查询浆站列表 -->
+	<select id="queryPlasmaSiteNoPageList" resultType="DataRow">
+		SELECT * FROM f_plasma_site fps
+	</select>
+
+	<!--查询总数f_plasma_site-->
+	<select id="queryPlasmaSiteListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		 SELECT COUNT(*) FROM (
+		 	SELECT fp.*,fc.plasmaName AS name FROM f_plasma_site AS fp 
+			INNER JOIN f_plasma_company as fc 
+			ON fp.companyId = fc.id 
+			WHERE 1=1 
+			<if test="companyId!=null and companyId!='' ">
+				AND companyId=#{companyId}
+			</if>
+			<if test="plasmaName!=null and plasmaName!='' ">
+				AND fp.plasmaName=#{plasmaName}
+			</if>
+		 )t
+	</select>
+
+	<!--根据ID查询f_plasma_site-->
+	<select id="queryPlasmaSiteById" resultType="DataRow" parameterType="java.lang.Long">
+		 SELECT * FROM f_plasma_site WHERE id=#{id}
+	</select>
+
+	<!--添加f_plasma_site-->
+	<insert id="savePlasmaSite"  parameterType="java.util.Map">
+		INSERT INTO f_plasma_site(plasmaName,code,certificationOrgan,licensor,elecLockNumber,companyId,updateDate,createDate) VALUES 
+ (#{plasmaName},#{code},#{certificationOrgan},#{licensor},#{elecLockNumber},#{companyId},#{updateDate},NOW())
+	</insert>
+
+	<!--根据ID修改f_plasma_site-->
+	<update id="updatePlasmaSiteById" parameterType="java.util.Map">
+		UPDATE f_plasma_site set 
+		 <if test="plasmaName!=null and plasmaName!='' ">
+		plasmaName=#{plasmaName},
+		</if>
+		 <if test="code!=null and code!='' ">
+		code=#{code},
+		</if>
+		 <if test="certificationOrgan!=null and certificationOrgan!='' ">
+		certificationOrgan=#{certificationOrgan},
+		</if>
+		 <if test="licensor!=null and licensor!='' ">
+		licensor=#{licensor},
+		</if>
+		 <if test="elecLockNumber!=null and elecLockNumber!='' ">
+		elecLockNumber=#{elecLockNumber},
+		</if>
+		 <if test="companyId!=null and companyId!='' ">
+		companyId=#{companyId},
+		</if>
+		 <if test="updateDate!=null and updateDate!='' ">
+		updateDate=#{updateDate},
+		</if>
+		 <if test="createDate!=null and createDate!='' ">
+		createDate=#{createDate},
+		</if>
+		
+		id = #{id} WHERE id=#{id}
+	</update>
+
+	<!--根据ID删除f_plasma_site-->
+	<delete id="deletePlasmaSiteById" parameterType="java.lang.Long">
+		DELETE FROM f_plasma_site where id=#{id}
+	</delete>
+	
+	<!-- 查询公司下面的浆站数量 -->
+	<select id="queryPlasmaSiteCountByCompanyId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		SELECT COUNT(*) FROM f_plasma_site WHERE companyId=#{companyId}
+	</select>
+</mapper>

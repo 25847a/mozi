@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.plasma.buss.assay.dao.NewCardDao"> 
+
+	<!--查询所有f_new_card-->
+	<select id="queryNewCardList" resultType="DataRow" parameterType="java.util.Map">
+		SELECT fn.*,fp.name FROM f_new_card AS fn
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fn.providerNo = fp.providerNo
+		WHERE fn.plasmaId = #{plasmaId}
+		<if test="name!=null and name!='' ">
+		 	AND fp.name LIKE CONCAT('%',#{name},'%')
+		</if> 
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo = #{providerNo}
+		</if> 
+		LIMIT ${pageNum},${pageSize} 
+	</select>
+
+	<!--查询总数f_new_card-->
+	<select id="queryNewCardListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		 SELECT COUNT(*) FROM f_new_card AS fn
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fn.providerNo = fp.providerNo
+		WHERE fn.plasmaId = #{plasmaId}
+		<if test="name!=null and name!='' ">
+		 	AND fp.name LIKE CONCAT('%',#{name},'%')
+		</if> 
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo = #{providerNo}
+		</if> 
+	</select>
+
+	<!--根据ID查询f_new_card-->
+	<select id="queryNewCardById" resultType="DataRow" parameterType="java.lang.Long">
+		 SELECT * FROM f_new_card WHERE id=#{id}
+	</select>
+
+	<!--添加f_new_card-->
+	<insert id="saveNewCard"  parameterType="java.util.Map">
+		INSERT INTO f_new_card(sampleNo,providerNo,allId,protein,proteinValue,serumProtein,bloodRedProtein,bloodRedProteinValue,wholeBlood,syphilis,alt,hbsag,hcv,hiv,blood,remarks,suppliesId,isAssay,result,type,reportAdminid,rechecked,createDate,updateDate,plasmaId,bloodTciId) VALUES 
+ 		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.sampleNo},#{item.providerNo},#{item.allId},#{item.protein},#{item.proteinValue},#{item.serumProtein},#{item.bloodRedProtein},#{item.bloodRedProteinValue},#{item.wholeBlood},
+			#{item.syphilis},#{item.alt},#{item.hbsag},#{item.hcv},#{item.hiv},#{item.blood},#{item.remarks},#{item.suppliesId},#{item.isAssay},#{item.result},#{item.type},#{item.reportAdminid},#{item.rechecked},
+			#{item.createDate},#{item.updateDate},#{item.plasmaId},#{item.bloodTciId})
+		</foreach>
+	</insert>
+
+	<!--根据ID修改f_new_card-->
+	<update id="updateNewCardById" parameterType="java.util.Map">
+		UPDATE f_new_card set 
+		 <if test="sampleNo!=null and sampleNo!='' ">
+		sampleNo=#{sampleNo},
+		</if>
+		 <if test="providerNo!=null and providerNo!='' ">
+		providerNo=#{providerNo},
+		</if>
+		 <if test="allId!=null and allId!='' ">
+		allId=#{allId},
+		</if>
+		 <if test="protein!=null and protein!='' ">
+		protein=#{protein},
+		</if>
+		 <if test="proteinValue!=null and proteinValue!='' ">
+		proteinValue=#{proteinValue},
+		</if>
+		 <if test="serumProtein!=null and serumProtein!='' ">
+		serumProtein=#{serumProtein},
+		</if>
+		 <if test="bloodRedProtein!=null and bloodRedProtein!='' ">
+		bloodRedProtein=#{bloodRedProtein},
+		</if>
+		 <if test="bloodRedProteinValue!=null and bloodRedProteinValue!='' ">
+		bloodRedProteinValue=#{bloodRedProteinValue},
+		</if>
+		 <if test="wholeBlood!=null and wholeBlood!='' ">
+		wholeBlood=#{wholeBlood},
+		</if>
+		 <if test="syphilis!=null and syphilis!='' ">
+		syphilis=#{syphilis},
+		</if>
+		 <if test="alt!=null and alt!='' ">
+		alt=#{alt},
+		</if>
+		 <if test="hbsag!=null and hbsag!='' ">
+		hbsag=#{hbsag},
+		</if>
+		 <if test="hcv!=null and hcv!='' ">
+		hcv=#{hcv},
+		</if>
+		 <if test="hiv!=null and hiv!='' ">
+		hiv=#{hiv},
+		</if>
+		 <if test="blood!=null and blood!='' ">
+		blood=#{blood},
+		</if>
+		 <if test="remarks!=null and remarks!='' ">
+		remarks=#{remarks},
+		</if>
+		 <if test="suppliesId!=null and suppliesId!='' ">
+		suppliesId=#{suppliesId},
+		</if>
+		 <if test="isAssay!=null and isAssay!='' ">
+		isAssay=#{isAssay},
+		</if>
+		 <if test="result!=null and result!='' ">
+		result=#{result},
+		</if>
+		 <if test="type!=null and type!='' ">
+		type=#{type},
+		</if>
+		 <if test="reportAdminid!=null and reportAdminid!='' ">
+		reportAdminid=#{reportAdminid},
+		</if>
+		 <if test="rechecked!=null and rechecked!='' ">
+		rechecked=#{rechecked},
+		</if>
+		 <if test="createDate!=null and createDate!='' ">
+		createDate=#{createDate},
+		</if>
+		 <if test="updateDate!=null and updateDate!='' ">
+		updateDate=#{updateDate},
+		</if>
+		 <if test="creater!=null and creater!='' ">
+		creater=#{creater},
+		</if>
+		 <if test="updater!=null and updater!='' ">
+		updater=#{updater},
+		</if>
+		 <if test="plasmaId!=null and plasmaId!='' ">
+		plasmaId=#{plasmaId},
+		</if>
+		 <if test="bloodTciId!=null and bloodTciId!='' ">
+		bloodTciId=#{bloodTciId},
+		</if>
+		id = #{id} WHERE id=#{id}
+	</update>
+
+	<!--根据ID删除f_new_card-->
+	<delete id="deleteNewCardById" parameterType="java.lang.Long">
+		DELETE FROM f_new_card where id=#{id}
+	</delete>
+	
+	<!-- 查询最后化验时间 -->
+	<select id="queryNewCardMaxDate" resultType="DataRow" parameterType="java.util.Map">
+		SELECT MAX(updateDate) date FROM f_new_card where plasmaId=#{plasmaId}
+	</select>
+
+</mapper>

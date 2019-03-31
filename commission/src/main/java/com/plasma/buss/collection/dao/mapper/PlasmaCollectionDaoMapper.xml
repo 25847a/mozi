@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.plasma.buss.collection.dao.PlasmaCollectionDao"> 
+
+	<!--查询所有f_plasm_collection-->
+	<select id="queryPlasmCollectionList" resultType="DataRow" parameterType="java.util.Map">
+		SELECT fc.*,fp.name FROM f_plasm_collection AS fc 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fc.providerNo = fp.providerNo
+		WHERE fc.plasmaId = #{plasmaId}
+		<if test="name!=null and name!='' ">
+		 	AND fp.name LIKE CONCAT('%',#{name},'%')
+		 </if> 
+		 <if test="providerNo!=null and providerNo!='' ">
+		 	AND fp.providerNo = #{providerNo}
+		 </if> 
+		 LIMIT ${pageNum},${pageSize}
+	</select>
+
+	<!--查询总数f_plasm_collection-->
+	<select id="queryPlasmCollectionListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		 SELECT COUNT(*) FROM f_plasm_collection AS fc 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fc.providerNo = fp.providerNo
+		WHERE fc.plasmaId = #{plasmaId}
+		<if test="name!=null and name!='' ">
+		 	AND fp.name LIKE CONCAT('%',#{name},'%')
+		 </if> 
+		 <if test="providerNo!=null and providerNo!='' ">
+		 	AND fp.providerNo = #{providerNo}
+		 </if> 
+	</select>
+
+	<!--根据ID查询f_plasm_collection-->
+	<select id="queryPlasmCollectionById" resultType="DataRow" parameterType="java.lang.Long">
+		 SELECT * FROM f_plasm_collection WHERE id=#{id}
+	</select>
+
+	<!--添加f_plasm_collection-->
+	<insert id="savePlasmCollection"  parameterType="java.util.Map">
+		INSERT INTO f_plasm_collection(providerNo,allId,typeId,machineId,roomId,plasmAmount,wholeBlood,knAmount,loopCount,runTime,veinCount,isAmple,type,isIdentity,situation,suppliesId,result,isCollection,status,userId,remarks,createDate,updateDate,creater,updater,plasmaId,scrapUserId,scrapDate) VALUES 
+	 	<foreach collection="list" item="item" index="index" separator=",">
+	 	(#{item.providerNo},#{item.allId},#{item.typeId},#{item.machineId},#{item.roomId},#{item.plasmAmount},#{item.wholeBlood},
+	 	#{item.knAmount},#{item.loopCount},#{item.runTime},#{item.veinCount},
+	 	#{item.isAmple},#{item.type},#{item.isIdentity},#{item.situation},#{item.suppliesId},#{item.result},#{item.isCollection},#{item.status},#{item.userId},
+	 	#{item.remarks},#{item.createDate},#{item.updateDate},#{item.creater},#{item.updater},#{item.plasmaId},#{item.scrapUserId},#{item.scrapDate}
+	 	)
+		</foreach>
+	</insert>
+
+	<!--根据ID修改f_plasm_collection-->
+	<update id="updatePlasmCollectionById" parameterType="java.util.Map">
+		UPDATE f_plasm_collection set 
+		 <if test="providerNo!=null and providerNo!='' ">
+		providerNo=#{providerNo},
+		</if>
+		 <if test="allId!=null and allId!='' ">
+		allId=#{allId},
+		</if>
+		 <if test="typeId!=null and typeId!='' ">
+		typeId=#{typeId},
+		</if>
+		 <if test="machineId!=null and machineId!='' ">
+		machineId=#{machineId},
+		</if>
+		 <if test="roomId!=null and roomId!='' ">
+		roomId=#{roomId},
+		</if>
+		 <if test="plasmAmount!=null and plasmAmount!='' ">
+		plasmAmount=#{plasmAmount},
+		</if>
+		 <if test="wholeBlood!=null and wholeBlood!='' ">
+		wholeBlood=#{wholeBlood},
+		</if>
+		 <if test="knAmount!=null and knAmount!='' ">
+		knAmount=#{knAmount},
+		</if>
+		 <if test="loopCount!=null and loopCount!='' ">
+		loopCount=#{loopCount},
+		</if>
+		 <if test="runTime!=null and runTime!='' ">
+		runTime=#{runTime},
+		</if>
+		 <if test="veinCount!=null and veinCount!='' ">
+		veinCount=#{veinCount},
+		</if>
+		 <if test="isAmple!=null and isAmple!='' ">
+		isAmple=#{isAmple},
+		</if>
+		 <if test="type!=null and type!='' ">
+		type=#{type},
+		</if>
+		 <if test="isIdentity!=null and isIdentity!='' ">
+		isIdentity=#{isIdentity},
+		</if>
+		 <if test="situation!=null and situation!='' ">
+		situation=#{situation},
+		</if>
+		 <if test="suppliesId!=null and suppliesId!='' ">
+		suppliesId=#{suppliesId},
+		</if>
+		 <if test="result!=null and result!='' ">
+		result=#{result},
+		</if>
+		 <if test="isCollection!=null and isCollection!='' ">
+		isCollection=#{isCollection},
+		</if>
+		 <if test="status!=null and status!='' ">
+		status=#{status},
+		</if>
+		 <if test="userId!=null and userId!='' ">
+		userId=#{userId},
+		</if>
+		 <if test="remarks!=null and remarks!='' ">
+		remarks=#{remarks},
+		</if>
+		 <if test="createDate!=null and createDate!='' ">
+		createDate=#{createDate},
+		</if>
+		 <if test="updateDate!=null and updateDate!='' ">
+		updateDate=#{updateDate},
+		</if>
+		 <if test="creater!=null and creater!='' ">
+		creater=#{creater},
+		</if>
+		 <if test="updater!=null and updater!='' ">
+		updater=#{updater},
+		</if>
+		 <if test="plasmaId!=null and plasmaId!='' ">
+		plasmaId=#{plasmaId},
+		</if>
+		 <if test="scrapUserId!=null and scrapUserId!='' ">
+		scrapUserId=#{scrapUserId},
+		</if>
+		 <if test="scrapDate!=null and scrapDate!='' ">
+		scrapDate=#{scrapDate},
+		</if>
+		id = #{id} WHERE id=#{id}
+	</update>
+
+	<!--根据ID删除f_plasm_collection-->
+	<delete id="deletePlasmCollectionById" parameterType="java.lang.Long">
+		DELETE FROM f_plasm_collection where id=#{id}
+	</delete>
+	
+	<!-- 查询最后同步时间 -->
+	<select id="queryPlasmaCollectionMaxDate" resultType="DataRow" parameterType="java.util.Map">
+		SELECT MAX(updateDate) date FROM f_plasm_collection where plasmaId=#{plasmaId}
+	</select>
+</mapper>

@@ -1,0 +1,69 @@
+.form-table {width: 100%;  border-collapse: collapse;  margin: 0 auto;  text-align: center;      overflow: hidden;table-layout: fixed;    position: absolute;
+    top: 26px;
+    left: 0;display: block;}
+
+.form-table th {border-left: none;border-top: none;border-right: 1px #ccc solid;border-bottom: 1px #ccc solid;background: #F3F3F3;}
+
+.form-table td {border-left: none;border-top: none;border-bottom: 1px #ccc solid;border-right: 1px #ccc solid;
+}
+.fixed-thead,
+.fixed-tfoot {
+display: block;
+ width:101%; 
+height: 50px;
+    overflow: auto;
+}
+.fixed-tfoot tr td {
+background: #F3F3F3;
+border-bottom: none;
+}
+.fixed-thead tr,
+.fixed-tfoot tr {
+width: 100%;
+height: 50px;
+line-height: 50px;
+display: block;
+}
+
+.fixed-thead tr th,
+.fixed-tfoot tr td {
+float: left;
+display: block;
+width: 33.3%;
+text-align: center;
+    font-size: 16px;
+    
+        border: 0;
+}
+
+.scroll-tbody {
+display: block;
+height: 306px;
+overflow: auto;
+width: 101%;
+}
+
+.scroll-tbody tr {
+width: 100%;
+display: block;
+height: 40px;
+line-height: 40px;
+}
+
+.scroll-tbody tr td {
+float: left;
+display: block;
+width: 33.3%;
+}
+
+.form-table .scroll-tbody tr:nth-child(odd) td {
+background-color: #ECE9D8;
+}
+    .col-sm-6{width:100%}
+ th{}
+     
+    .foreMf{    float: left;    position: relative;
+    width: 45%;}
+    .foreMd{float: left;
+    width:55%;
+    margin-top: 23px;}

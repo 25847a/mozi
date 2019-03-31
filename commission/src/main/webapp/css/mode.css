@@ -1,0 +1,43 @@
+.goisr{text-align: center;}
+@media (min-width: 768px){
+.modal-dialog {
+	     width:73%;
+	}
+	}
+.modal-dialog {
+	     width:73%;
+	}	
+.iangd .col-xs-1,.col-xs-2 ,.col-xs-3 ,.col-xs-4 ,.col-xs-5 ,.col-xs-6 ,.col-xs-7 ,.col-xs-8, .col-xs-9, .col-xs-10 ,.col-xs-11, .col-xs-12{}
+
+.ioliad img{ 
+   height:100%;
+    }
+.ioliad{height:10.5rem;
+    text-align: center;}
+#loagkrd .col-xs-12{margin-top: 0.8rem;font-size: 1rem;}
+
+#loagkrd .col-xs-12 .col-xs-5{    padding-left: 0;}
+.morlad{
+    text-align:  center;
+    margin:  auto;
+    width: 50%;
+}
+.morlad p{}
+.morlad img{
+  width: 70%;
+}
+.table-bordered td{    font-size: 1rem;} 
+.actinle{
+    width: 29%;
+}
+.loralbd{
+    width: 71%;
+}
+
+.modal-body {
+       position: relative;
+    padding: 15px;
+    overflow-x: auto;
+    height: 100%;
+    overflow-y: auto;
+}
