@@ -1,5 +1,6 @@
 package txte;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -7,7 +8,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class Tecs {
 	
-	private static ConcurrentMap<String, String> cacheMap = new ConcurrentHashMap<String, String>(); 
+	private static Map<String, String> cacheMap = new HashMap<String, String>(); 
 	
 	/**
      * ≥ı ºªØª∫¥Ê
