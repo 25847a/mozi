@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+		<meta charset="UTF-8"/>
+		<title>血液标本采集记录</title>
+		<link th:href="@{/layui-master/dist/css/layui.css}" rel="stylesheet" />
+		<link th:href="@{/css/bootstrap.min14ed.css?v=3.3.6}" rel="stylesheet" />
+		<link th:href="@{/css/common.css}" rel="stylesheet" />
+		<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.min862f.css}" rel="stylesheet" />
+	</head>
+<style> @page { size: auto; margin: 3mm 5mm 3mm 5mm; }  #newpray .dayina { width: 100%; margin-bottom: 0; }  #newpray .gray-bg .colx8 .inhenagoi { text-align: left; color: #b9b9b9; }  .colxsgray { float: left; width: 24%; padding: 0 }  .newregistr .zhiconsyr { float: left; width: auto; margin-top: 0.3em; margin-right: 1%; }  body .ahudr { width: 20% !important; }  .indegirtion .consdr { margin-left: 0; }  #aordklr .indegirtion .consdr { width: auto; float: right; }  .newregis { margin: 0; padding: 0.1em 0; }  .busr table tr th { padding: 0.4em 0; width: 14em; font-size: 13px; border: 1px solid #000; text-align: center; }  .busr table tr .blcirth { border-top: 0; border-left: 0; border-right: 0; }  .busr table tr .logdkr { border-top: 0; border-bottom: 0; border-left: 0; border-right: 0; font-size: 17px; line-height: 3em; }  .busr table tr td { padding: 0.4em 0; width: 14em; font-size: 13px; border: 1px solid #000; }  .busr table { margin: 0 }  #newpray .busr { width: 100%; margin-left: 0px !important; }  #newpray .gray-bg .colx8 .UserC { width: auto; }  .wrapper .newikrd .input-group { width: 73% }  .consdr .input-group { width: auto !important; }  #newpray .gray-bg { margin-bottom: inherit; padding: 0.5em 0; }  .zhikdP p { cursor: pointer; float: left; padding: 0 0.3em; color: #54a664; font-size: 15px; }  .zhikdP p:hover { color: red; cursor: pointer } @media print {
+            body {-webkit-print-color-adjust: exact;}
+           .dayindiv #headLeft{    text-align: left; padding-left: 3rem;} .dayindiv #headRight{    text-align: right; padding-right: 3rem;}
+      		  }  </style>
+<script language="javascript"> function printdiv(printpage) { var newstr = printpage.innerHTML; var oldstr = document.body.innerHTML; document.body.innerHTML = newstr; window.print(); document.body.innerHTML = oldstr; return false; } window.onload = function() { var bt = document.getElementById("bt"); var div_print = document.getElementById("div_print"); bt.onclick = function() { printdiv(div_print); } } </script>
+	<body id="newpray">
+	<input type="hidden" name ="printDate" id="printDate" th:value="${printDate}"/>
+	
+		<button type="button" class="btn btn-success" name="print" id="bt">点击打印</button>
+		<shiro:hasPermission name="report:fixedRefuse:view">
+		<button type="button" class="btn btn-success" name="editReportInfo" id="editReportInfo" onclick="gotoEditReportInfo()">编辑表头</button>
+		</shiro:hasPermission>
+		<div class="gray-bg dayina">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="    padding: 0;">
+ 
+				<div id="div_print">
+					
+					<div class="gray-bg" id="" style=" ">
+						<div class="wrapper wrapper-content animated fadeInRight" style="width:1115px;padding: 0;  margin: 0 auto;"> 
+							<div class="row busr" id="bustable"> 
+							<div class="dayindiv">
+						 <div class="row">
+							<div class="col-xs-4" id= "headLeft">
+							1
+							</div>
+							<div class="col-xs-4" id= "headCenter">
+							1
+							</div>
+							<div class="col-xs-4" id= "headRight">
+							1
+							</div> 
+						 </div>
+					</div>
+<TABLE border='0' style='display:table-header-group;font-size:1pt;' align='center'>
+									<THEAD>
+										<TR>
+											<th colspan='10' class='logdkr'>实验室标本拒收记录表</th>
+										</TR>
+										<TR>
+											<th colspan='7' class='blcirth'>&nbsp; </th>
+										 <th colspan='5' align='center' class='blcirth'> 
+	 	 	 	 	 	 	 	 		   <div class=''  style='float:right'>
+									<div class='form-group newikrd'>
+										<label class='control-label UserC'>打印时间：</label>
+										<label class='control-label UserC inhenagoi' id="printDate1"></label>
+									</div>
+                                     </div></th>
+ 	 	 	 	 	 	 	 	 	</TR>
+										<TR>
+											<th rowspan="2">日期</th>
+											<th rowspan="2">时间 </th>
+											<th rowspan="2">献血浆者编号 </th>
+											<th rowspan="2">献血浆者姓名</th>
+											<th colspan="5">拒收原因</th>
+											<th rowspan="2">处理方式</th> 
+											<th rowspan="2">送样人</th> 
+											<th rowspan="2">拒收人</th> 
+										</TR>
+										<TR>
+											<th>量不足</th>
+											<th>渗漏</th>
+											<th>标签不完整</th>
+											<th>溶血</th>
+											<th>脂血</th>
+										</TR>
+									</THEAD>
+									<TBODY style='text-align:center'>
+										 
+										  <tr  th:each="m : ${list}">
+										  		<td><span th:text = "${#dates.format(m.updateDate, 'yyyy-MM-dd')}"></span></td>
+												<td><span th:text = "${#dates.format(m.updateDate, 'HH:mm')}"></span></td>
+												<td><span th:text = "${m.providerNo}"></span></td>
+												<td><span th:text = "${m.name}"></span></td>
+												<td><span th:text = "${m.refuseRemark==4?'1':'0'}"></span></td>
+												<td><span th:text = "${m.refuseRemark==3?'1':'0'}"></span></td>
+												<td><span th:text = "${m.refuseRemark==2?'1':'0'}"></span></td>
+												<td><span th:text = "${m.refuseRemark==1?'1':'0'}"></span></td>
+												<td><span th:text = "${m.refuseRemark==0?'1':'0'}"></span></td>
+												<td>拒收</td>
+												<td><span th:text = "${m.sendName}"></span></td>
+												<td><span th:text = "${m.refuseName}"></span></td>
+										  </tr>
+								</TBODY>
+							  </TABLE>
+							<div class="dayindiv">
+							 <div class="row">
+							<div class="col-xs-4" id= "footLeft">
+							</div>
+							<div class="col-xs-4" id= "footCenter">
+							</div>
+							<div class="col-xs-4" id= "footRight">
+							</div> 
+						 </div>
+						 </div>
+							</div>
+
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+		</div>
+			<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+	<script  th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<script type="text/javascript">
+	$(function(){
+		getReportInfo();
+		$("#printDate1").html((new Date()).toLocaleString());
+	});
+	
+	
+	function getReportInfo(){
+		var url = "/reportInfo/getInfoByReportNO";
+		var datas = {"reportNO":2};
+		simpleAjax(url, datas, function(result) {
+			var info = result.data;
+			$("#headLeft").html(info.headLeft);
+			$("#headCenter").html(info.headCenter);
+			$("#headRight").html(info.headRight);
+			$("#footLeft").html(info.footLeft);
+			$("#footCenter").html(info.footCenter);
+			$("#footRight").html(info.footRight);
+		});
+	
+	}
+	
+	function gotoEditReportInfo(){
+		parent.layer.ready(function() {
+			parent.layer.open({
+				type : 2,
+				title : '报表表头配置',
+				maxmin : false,
+				content : '/reportInfo/initRefusePage',
+				area : [ '100%', '220px' ],
+				end : function() {
+					getReportInfo();
+				}
+			})
+		});
+	}
+	</script>
+	</body>
+
+</html>

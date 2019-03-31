@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.account.dao.RoleAuthMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.account.entity.RoleAuth">
+        <id column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="auth_id" property="authId" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, role_id AS roleId, auth_id AS authId, createDate, updateDate, creater, updater
+    </sql>
+		<select id="queryRoleAuthList" parameterType="java.util.List" resultMap="java.lang.String">
+				SELECT permission FROM role_auth tp
+				LEFT JOIN auth td
+				ON tp.auth_id =td.id
+				WHERE tp.role_id in
+				<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+		</select>
+</mapper>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="UTF-8" />
+		<title>血浆入库</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+		<style type="text/css">
+			.newolod {padding-left: 35%;}
+		 
+			.colsur{width:auto !important}
+			.bustrNew .phyegistrS {width: 37%;}
+			.bustrNew .phytable { width: 62% !important;}
+			.newrowseg{margin-top:0}
+			.colsurse{    width: 16.66666%!important;
+    padding-right: initial;
+    padding-left: 8px;}
+		</style>
+	</head>
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid">
+				<!--基本信息及验证-->
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion">
+						<p class="grayP">
+							<label class="grayLa ">基本信息</label></p>
+						<div class="row newregistr" id="basic">
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi"><la>姓名</la>：</label>
+									<div class="input-group  inhemog">
+										<input  class="form-control newfrin" name="name"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi"><la>性别</la>：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control newfrin" name="sex" id="sex"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi"><la>血型</la>：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control newfrin" name="bloodType" id="bloodType"/>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi"><la>类型</la>：</label>
+									<div class="input-group inhemog">
+										<input value=" " title="" class="form-control newfrin" name="type" id="type"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">献浆卡号：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control newfrin" name="providerNo"/>
+									</div>
+								</div>
+								
+							</div>
+							<div class="col-xs-3 colxsgray">
+							<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi"><ls>血浆量</ls>：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control newfrin" name="plasmAmount" id="plasmAmount"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi"><ls>登记号</ls>：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control newfrin" name="allId" id="allId"/>
+									</div>
+								</div>
+								
+								
+							</div>
+							
+							<div class="col-xs-3 colxsgray">
+							<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">血浆编号：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control newfrin" name="plasmaNo" id="plasmaNo"/>
+									</div>
+								</div>
+							<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">当前箱号：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control newfrin" name="boxId" id="boxId"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- <div class="row newregis indegirtion">
+						<p class="grayP">
+							<label class="grayLa ">选择项</label></p>
+						<div class="row newregistr">
+							<div class="col-xs-3 colxsgray">
+								
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagoi">普通种类信息：</label>
+							<div class="input-group inhemog">
+								<select name="type" class="form-control">
+									<option value="">请选择</option>
+									<option value="">液面下</option>
+									<option value="">液面下</option>
+								</select>
+							</div>
+						</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">扫描直接包装：</label>
+									<div class="input-group inhemog">
+										<select name="type" class="form-control">
+											<option value="">请选择</option>
+											<option value="">液面下</option>
+											<option value="">液面下</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+ 							 	<div class="form-group newikrd">
+				  					<label class="control-label UserC inhenagoi">打印方式：</label>
+				  					<div class="input-group inhemog">
+										<select name="type" class="form-control">
+											<option value="">请选择</option>
+											<option value="">液面下</option>
+											<option value="">液面下</option>
+										</select>
+				  					</div>
+ 							  	</div>
+							</div>
+						</div>
+					</div> -->
+					<div class="row newrowseg">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr" style=" ">
+								<input type="hidden" id="id" value=""/>
+								<input type="hidden" id="allIds" value=""/>
+								
+								<shiro:hasPermission name="plasmaStock:add">
+									<button type="button" class="btn  btn-info" id="confirm">确定</button>
+								</shiro:hasPermission>
+								<shiro:hasPermission name="queryStock:cancel">
+									<button type="button" class="btn  btn-info" id="cancel">取消入库</button>
+								</shiro:hasPermission>
+								<button type="button" class="btn  btn-info" id="refush">刷新</button>
+								<shiro:hasPermission name="queryStock:scrap">
+									<button type="button" class="btn  btn-info" id="scrap">血浆报废</button>
+								</shiro:hasPermission>
+								
+								<button type="button" class="btn  btn-info" id="print">打印浆员血浆条码</button>
+								<button type="button" class="btn  btn-info" id="printBox">打印装箱条码</button>
+								<shiro:hasPermission name="plasmaStock:printBoxDetail">
+									<button type="button" class="btn  btn-info" id="detail">打印装箱清单</button>
+								</shiro:hasPermission>
+								<button type="button" class="btn  btn-info" id="all_scrap">血浆批量报废</button>
+							 	<button type="button" class="btn  btn-info" id="simple">血浆留样</button>  
+							 	<button type="button" class="btn  btn-info" id="plasma_box">血浆装箱单</button>  
+							 	<button type="button" class="btn  btn-info" id="update_plasmaWeight">修改血浆重量</button>  
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gray-bg" id="" style=" ">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row UserA">
+				<div class="col-xs-12">
+					<div class="ibox">
+						<div class="ibox-content" style="padding: 0;">
+						<div class="row form-horizontal" style="  margin-top: 0.8em;">
+								<div class="col-xs-3 colikra" style="margin-left:-2em; width:17%">
+									<div class="form-group newformcol">
+										<label class="control-label col-xs-4">浆员信息列表</label>
+									</div>
+								</div>
+								<div  style="float:right;margin-right:-8% !important">
+									<form id="addStock">
+										<div class="col-xs-2 colsurse">
+											<div class="form-group newformcol">
+												<label class="control-label" style="float:left">全登记号：</label>
+												<div class="input-group date">
+													<input type="text" placeholder="" title="" value="" class="form-control required" name="qallId" id="qallId"/>
+										 		</div>
+											</div>
+										</div>
+										<div class="col-xs-2 colsurse">
+											<div class="form-group newformcol">
+												<label class="control-label" style="float:left">献浆卡号：</label>
+												<div class="input-group date">
+													<input type="text" placeholder="" title="" value="" class="form-control required" name="providerNo" id="providerNo"/>
+										 		</div>
+											</div>
+										</div>
+										<div class="col-xs-2 colsurse">
+											<div class="form-group newformcol">
+												<label class="control-label" style="float:left">入库时间：</label>
+												<div class="input-group date">
+													<input name="startTime" id="startTime" type="text" placeholder="" readonly="readonly" title="请输入开始日期" value="" class="form-control" />
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-2 colsurse">
+											<div class="form-group newformcol">
+												<label class="control-label" style="float:left">浆员：</label>
+												<div class="input-group"  style="width: 70%;">
+												  <select name="checkAdmin" id="checkAdmin" class="form-control">
+										</select> 
+												 </div>
+											</div>
+										</div>
+										<div class="col-xs-4">
+											<div class="form-group newformcol">
+												<div class="">
+													<button type="button" class="btn  btn-info" id="query" style=" margin-right:1rem">查询</button>
+													<button type="button" class="btn  btn-info" onclick="sendOff();"  style=" margin-right:1rem">送样</button>
+									
+												</div>
+											</div>
+										</div>
+										<div style="display: none;">
+											<input type="submit"/>
+										</div>
+									</form>		
+									<div style="float:right">
+									
+										
+									 
+								</div>							
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+				<div class="row busr">
+					<div class="col-md-12 bustrNew" style="margin: 0 !IMPORTANT;">
+						<!--table数据-->
+						<div class="phyegistrS">
+							<p>未入库血浆信息</p>
+							<table class="layui-table" id="notStock" lay-filter="demo" style=""></table>
+						</div>
+						<div class="phyegistrS phytable">
+							<p>已入库血浆信息</p>
+							<table class="layui-table" id="stock" lay-filter="demo" style=""></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!-- form表单提交 -->
+		<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+		<script th:src="@{/js/jquery-form.js}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/common.js}"></script>
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<script th:src="@{/js/plasmaStock/stock_list.js}"></script>
+	</body>
+</html>

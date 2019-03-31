@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+ <head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+		<title>设置管理</title>
+		<link rel="shortcut icon" href="favicon.ico"/>
+		<link href="../../../css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet"/>
+		<link href="../../../css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet"/>
+		<link href="../../../css/style.min862f.css" rel="stylesheet"/>
+		<link href="../../../css/list/index.css" rel="stylesheet"/>
+		<link href="../../../css/list/Index_home.css" rel="stylesheet"/>
+	</head>
+
+	<body class="fixed-sidebar full-height-layout gray-bg">
+		<div id="wrapper" class="wrabusr">
+			<!--左侧导航开始-->
+			<nav class="navbar-default navbar-static-side" role="navigation">
+				<div class="arabusimg">
+					<img src="../../../img/Quud_03.png" />
+					<label for="">设置管理</label>
+				</div>
+				<div class="sidebar-collapse">
+					<ul class="nav" id="side-menu">
+						<li class="">
+							<a>
+								<i class="fa fa-pie-chart"></i>
+								<span class="nav-label">系统设置</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
+								<li>
+									<a class="J_menuItem" th:href="@{/config/config}">
+										<span class="nav-label">系统设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/area/area}" data-index="1">
+										<span class="nav-label">区域设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/nation/nation}" data-index="2">
+										<span class="nav-label">民族设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/group/groupPage}" data-index="2">
+										<span class="nav-label">小组设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/groupArea/groupAreaPage}" data-index="2">
+										<span class="nav-label">小组区域关联设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/propagandist/propagandist}" data-index="3">
+										<span class="nav-label">宣传员设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/rabatUnit/rabatUnitList}" data-index="3">
+										<span class="nav-label">体检单位设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/disease/diseasePage}" data-index="3">
+										<span class="nav-label">淘汰设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/assaySetting/assaySettingPage}" data-index="3">
+										<span class="nav-label"> 效价值设置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/immuneAssay/immuneConfigPage}" data-index="3">
+										<span class="nav-label">开关流程配置</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/backup/backupPage}" data-index="3">
+										<span class="nav-label">数据备份记录</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-bar-chart"></i>
+								<span class="nav-label">采浆设置</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a class="J_menuItem" th:href="@{/room/room}" data-index="6">
+										<span class="nav-label">采室</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/room/plasmType}" data-index="5">
+										<span class="nav-label">采浆机型</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/room/machineNumber}" data-index="4">
+										<span class="nav-label">采浆机号</span>
+									</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/situation/situationConfig}" data-index="7">
+										<span class="nav-label">采浆情况</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-bar-chart"></i>
+								<span class="nav-label">版本说明</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a class="J_menuItem" th:href="@{/version/versionPage}" data-index="4">
+										<span class="nav-label">版本说明</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul> 
+				</div>
+			</nav>
+			<!--左侧导航结束-->
+			<!--右侧部分开始-->
+			<div id="page-wrapper" class="gray-bg dashbard-1">
+				<div class="row content-tabs">
+				<button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+                </button>
+					<nav class="page-tabs J_menuTabs">
+						<div class="page-tabs-content">
+							<a href="javascript:;" class="active J_menuTab" data-id="config.html">系统设置</a>
+						</div>
+					</nav>
+					<button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+                </button>
+					<div class="btn-group roll-nav roll-right">
+						<button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+                    	</button>
+						<ul role="menu" class="dropdown-menu dropdown-menu-right">
+							<li class="J_tabShowActive">
+								<a>定位当前选项卡</a>
+							</li>
+							<li class="divider"></li>
+							<li class="J_tabCloseOther">
+								<a>关闭其他选项卡</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="row J_mainContent" id="content-main">
+					<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="../config/config"  frameborder="0" data-id="" seamless=""></iframe>
+				</div>
+			</div>
+			<!--右侧部分结束-->
+		</div>
+		<script src="../../../js/jquery.min.js"></script>
+		<script src="../../../js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="../../../layui-master/src/layer.min.js"></script>
+		<script src="../../../js/hplus.min.js"></script>
+		<script src="../../../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="../../../js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="../../../js/contabs.min.js"></script>
+	</body>
+
+</html>

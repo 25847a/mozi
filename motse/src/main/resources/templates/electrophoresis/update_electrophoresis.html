@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="UTF-8"/>
+		<title>血清/血浆电泳信息添加</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<!--bootstarp-->
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<!---->
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<!--文件上传-->
+		<link th:href="@{/css/fileinput.min.css}" rel="stylesheet"/>
+		<!---->
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<!--新献浆员登记css-->
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+		<style type="text/css">
+			.newolod {
+				padding-left: 35%;
+			}
+		</style>
+	</head>
+	<body id="newpray">
+		<form id="newForm">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid">
+				<!--基本信息及验证-->
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion"> 
+						<div class="row newregistr">
+							<div class="col-xs-6 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC   ">献浆卡号：</label>
+									<div class="input-group inhemog">
+										<input  title="" class="form-control newfrin" tip="" name="providerNo" readonly="readonly" id="providerNo" th:value='${serum.providerNo=="null"?"":serum.providerNo}'/>
+									</div>
+								</div> 
+								<div class="form-group newikrd">
+									<label class="control-label UserC   "><ls>白蛋白</ls>：</label>
+									<div class="input-group inhemog">
+										<select name="albumin" class="form-control" tip="" id="albumin">
+											<option value="">请选择</option>
+											<option value="0" th:selected="${serum.albumin==0}">&ge;50%</option>
+											<option value="1" th:selected="${serum.albumin==1}">&le;50%</option>
+										</select>
+									</div>
+								</div>
+								
+							</div>
+							<div class="col-xs-6 colxsgray"> 
+								<div class="form-group newikrd">
+									<label class="control-label UserC   "><la>图谱</la>：</label>
+									<div class="input-group inhemog">
+										<select name="atlas" class="form-control" tip="" id="atlas">
+												<option value="">请选择</option>
+												<option value="0" th:selected="${serum.atlas==0}">正常</option>
+												<option value="1" th:selected="${serum.atlas==1}">不正常</option>
+											</select>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC   "><la>备注</la>：</label>
+									<div class="input-group inhemog">
+									 <input th:value="${serum.remarks}" title="" class="form-control newfrin" name="remarks" id="remarks"/>
+									</div>
+								</div> 
+								<div class="row" style=" margin-top: 1em;"> 
+									<div class="col-xs-12" style="margin-left: -65%;">
+										<div class="form-group newformcol">
+											<div class="pull-right">
+												<input type="hidden" th:value="${serum.id}" id="id"/>
+												<button type="button" class="btn  btn-info" style=" margin-right: 1em;" id="confirm">确定</button>  
+												<button type="button" class="btn  btn-info" id="cannel">取消</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> 
+							 
+						</div>
+					</div> 
+					 
+				</div> 
+				
+			</div>
+		</div>
+		</form> 
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script> 
+		<!--layer插件包-->
+		<script charset="utf-8" th:src="@{/layui-master/src/layui.js}"></script>
+		<script th:src="@{/js/electrophoresis/update_electrophoresis.js}"></script>
+	</body>
+</html>

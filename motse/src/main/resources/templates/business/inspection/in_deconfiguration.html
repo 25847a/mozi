@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+
+	<head>
+		<meta charset="UTF-8"/>
+		<title>固定浆员检验登记</title>
+<link th:href="@{/layui-master/src/css/layui.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap.min14ed.css?v=3.3.6}" rel="stylesheet" />
+<link th:href="@{/css/font-awesome.min93e3.css?v=4.4.0}"
+	rel="stylesheet" />
+<link th:href="@{/css/fileinput.min.css}" rel="stylesheet" />
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+<link th:href="@{/css/style.min862f.css}" rel="stylesheet" />
+		<style type="text/css">
+			.newolod {padding-left: 35%;}
+			#newpray .gray-bg .colx8 .imadut {
+    width: 37%!important;
+}.wrapper .newikrd .input-group {
+    width: 62%;
+}
+.newregistr{margin-left:0}
+		</style>
+	</head>  
+<body id="newpray">
+	<div class="gray-bg ">
+		<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+			<!--基本信息及验证-->
+			<form id="updateForm">
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" name="isAssay" id ="isAssay" />
+			<div class="col-xs-12 colx8 colnewo">
+				<div class="row newregis">
+					<div class="col-xs-7"> 
+						<div class="row newregistr" style="margin-left: -7%;">
+							<div class="col-xs-6 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>姓名</la>：</label>
+									<div class="input-group">
+										<input  id="name" name="name" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>血型</la>：</label>
+									<div class="input-group">
+										<input  id="bloodType" name="bloodType" class="form-control newfrin" />
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">献浆卡号：</label>
+									<div class="input-group">
+										<input value=" " title="" id="providerNo" name="providerNo" class="form-control newfrin" />
+									</div>
+								</div>
+
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">血浆日期：</label>
+									<div class="input-group">
+										<input value=" " title=""  id="pcreateDate" name="pcreateDate"  class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">血浆编号：</label>
+									<div class="input-group">
+										<input value=" " title=""  id="plasmaNo" name="plasmaNo"  class="form-control newfrin"/>
+									</div>
+								</div> 
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">可用断档小样号：</label>
+									<div class="input-group" style=" width: 62%;">
+										<select name="selectSampleNo" id="selectSampleNo" onchange="changeSMNO();"  class="form-control">
+											<option value=""></option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6 colxsgray">
+<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>性别</la>：</label>
+									<div class="input-group">
+										<input value=" " title=""  id="sex" name="sex"   class="form-control newfrin" />
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>类型</la>：</label>
+									<div class="input-group">
+										<input value=" " title="" id="pbType" name ="pbType" class="form-control newfrin" />
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">打印选项：</label>
+									<div class="input-group">
+										<select name="printType" id="printType" class="form-control">
+											<option value="0">请选择</option>
+											<option value="0">小票打印</option>
+											<option value="1">送样记录打印</option>
+											<option value="2">拒收样本打印</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><ls>登记号</ls>：</label>
+									<div class="input-group">
+										<input value=" " title=""  id="allId" name ="allId"  class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+
+									<label class="control-label UserC imadut"><ls>小样号</ls>：</label>
+									<div class="input-group">
+										<input value="" readonly="readonly" title="" id="sampleNo" name ="sampleNo"  class="form-control newfrin"/>
+									</div>
+								</div>
+								
+								<div class="form-group newikrd" style="display: none;">
+									<label class="control-label UserC imadut">最后效价值：</label>
+									<div class="input-group " style="    width: 69.2%;">
+										<input value=" " title="" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd"  style="display: none;">
+									<label class="control-label UserC imadut">最后效价日期：</label>
+										<div class="input-group " style="    width: 65.5%;">
+										<input value=" " title="" class="form-control newfrin"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-5 colxsgray">
+						<div class="row">
+							<div class="col-xs-6  ">
+								<div class="row"> 
+									<div class="col-xs-12 coldiv">
+										<div class="layui-upload-list">
+											<img class="layui-upload-img" id="play" src="../../../img/new_pa1.png" style=" height: 131px;width: auto;" />
+											<p id="demoText"></p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<div class="row">
+									<div class="col-xs-12 coldix">
+										<img id="play1"  class="layui-upload-img"  src="../../../img/new_pa1.png" style=" height: 131px;width: auto;    margin-top: 0.9em;" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="row newrowseg" style="margin-top: 0em;margin-bottom: 0.5em;">
+					<div class="form-group newikrd">
+						<div class="input-group newInpa butnewikr" style=" ">
+							<button type="button" class="btn  btn-info" onclick="doAssay(1)">登记</button>
+							<button type="button" class="btn  btn-info" onclick="window.reload();">刷新</button>
+							<button type="button" class="btn  btn-info" onclick="printSM()">打印</button>
+							<button type="button" class="btn  btn-info" onclick="doAssay(0)">取消登记</button>
+							<button type="button" class="btn  btn-info" onclick="refusePerson()">样本拒收</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+	<div class="gray-bg" id="" style=" ">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row UserA" style=" ">
+				<div class="col-xs-12">
+				
+				<div class="ibox"  style="margin-bottom:0em">
+						<div class="ibox-content" style="padding: 0;">
+							<div class="row form-horizontal" style="  margin-top: 0.8em;">
+								<div class="col-xs-8 colikra">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4" style=" ">浆员信息列表</label>
+										</div>
+									</div>
+								<div class="col-xs-3">
+									<div class="form-group newformcol">
+										<label class="control-label col-xs-4">日期</label>
+										<div class="input-group col-xs-8 date">
+											<input name="startTime" id="startTime" type="text" placeholder="日期" title="请输入日期" value="" class="form-control" />
+											
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-1">
+									<div class="form-group newformcol">
+										<div class="pull-right">
+											<button type="button" class="btn  btn-info" onclick="doSearch();">查询</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row busr">
+		 
+				<div class="col-md-12 bustrNew">
+					<!--table数据-->
+					<div class="phyegistrS">
+						<p>未登记人员信息</p>
+						<table class="layui-hide" id="newtest" lay-filter="demo"></table>
+					</div>
+					<div class="phyegistrS phytable">
+						<p>已登记人员信息</p>
+						<table class="layui-hide" id="newtestS" lay-filter="demo1"></table>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+		<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery-form.js}"></script>
+		<script th:src="@{/js/zoom.js}"></script>
+	<!--  jQuery Validation plugin javascript -->
+	<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+	<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<!--bootstarp表格插件-->
+	<script  th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}"></script>
+	<!--新献浆员登记JS-->
+	<script th:src="@{/js/business/inspection/in_deconfiguration.js}"></script>
+				<script th:src="@{/js/imgx.js}"></script>
+ 
+	<img src="" alt="" class="bigimg" />
+<div class="mask">
+	<img src="" alt="" />
+</div>
+</body>
+</html>

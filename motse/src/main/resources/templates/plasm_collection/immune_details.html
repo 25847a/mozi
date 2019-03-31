@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>免疫验证 -免疫</title>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/usera.css}" rel="stylesheet"/>
+		<link th:href="@{/css/fileinput.min.css}" rel="stylesheet"/>
+	</head>
+ <style>
+ .ingfagr{margin: auto;}
+ .ingfagr span{    font-size: 15px;
+    line-height: 2em;}
+ </style>
+	<body>
+		<div class="gray-bg " style="    padding-top: 1em;    padding-bottom: 1em;">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+				<!--基本信息及验证-->
+					 
+							 <div class="row form-horizontal">
+											<div class="col-sm-12 col-xs-12">
+												<div class="form-group">
+													<!-- <label class="control-label col-xs-3">
+	                                                   <div class="col-xs-4"> 
+												 
+											</div>
+	                                                </label> -->
+													<div class="input-group ingfagr" >
+													<img th:src="@{/img/gacost.jpg}" style="width: 2.1em;margin-right:0.5em" /><span th:text="${map.message}"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+								  
+						<div class="col-xs-12">
+							<div class="form-group newformcol">
+								<div class="pull-right" id="dd">
+									<button type="button" id="quey" class="btn  btn-info" style=" margin-right: 1em;padding:3px 27px">是</button>
+									 <button type="button" class="btn  btn-info" id="cannel" style="display:none;">否</button>
+									 <!-- <button type="button" class="btn  btn-info" id="cannel" style=" padding: 3px 27px;">否</button> -->
+								</div>
+							</div>
+						</div>
+					
+			</div>
+		</div>
+		
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!-- form表单提交 -->
+		<script th:src="@{/js/jquery-form.js}"></script>
+		<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+		<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+		<script th:src="@{/layui-master/src/layui.js}"></script>
+		<script th:src="@{/js/fileinput/fileinput.js}"></script>
+   		<script th:src="@{/js/fileinput/zh.js}"></script>
+		<script th:src="@{/js/plasm_collection/immune_details.js}"></script>
+		<script th:src="@{/js/utils.js}"></script>
+	</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+		<meta charset="UTF-8"/>
+		<title>添加耗材入库</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+	</head>
+<style type="text/css">
+	.indegirtion .btn-info{    margin-right: 1em;}
+	.layui-layer-dialog .layui-layer-content{color: #d38f8f !important;}
+	.wrapper .newikrd .input-group {
+    width: 64%;
+}
+</style> 
+	<body id="newpray">
+		<div class="gray-bg" id="">
+			<div class="wrapper wrapper-content animated fadeInRight weralid">
+			 	 <!--基本信息及验证-->
+				<div class="col-md-12 bustrNew">
+					<!--table数据-->
+					<div class="phyegistrS">
+						<div class="col-xs-12 colx8 colnewo">
+	 			 		 <div class="row newregis indegirtion" id="box" style="height :8em">
+							 <div class="col-xs-6 colxsgray">
+								 <div class="form-group newikrd">
+										<label class="control-label UserC">耗材名称 ：</label>
+									 <div class="input-group">
+									 				<input id="id" type="hidden"/>
+													<input value=""  title="text" disabled="disabled" type="text" id="name" class="form-control" />
+									 </div>
+								 </div>
+							 </div>
+							 
+							 <div class="col-xs-6 colxsgray">
+								 <div class="form-group newikrd">
+										<label class="control-label UserC"><la>批号</la> ：</label>
+									 <div class="input-group">
+													<input value=""  title="text" disabled="disabled" type="text" id="batchNumber" class="form-control" />
+									 </div>
+								 </div>
+							 </div>
+							  
+							   <div class="col-xs-6 colxsgray">
+								 <div class="form-group newikrd">
+								 <label class="control-label UserC">剩余数量 ：</label>
+									 <div class="input-group">
+													<input value="" title="text" disabled="disabled" type="text" id="surplusNumber" class="form-control" />
+									 </div>
+								 </div>
+							 </div>
+							  
+							<div class="col-xs-6 colxsgray">
+								 <div class="form-group newikrd">
+									 <label class="control-label UserC"><ls>供应商</ls> ：</label>
+									 <div class="input-group">
+													<input value="" title="text" disabled="disabled" type="text" id="supply" class="form-control" />
+									 </div>
+								 </div>
+							 </div>
+							 
+							 <div class="col-xs-6 colxsgray">
+								 <div class="form-group newikrd">
+									 <label class="control-label UserC">有效时间 ：</label>
+									 <div class="input-group">
+													<input value="" title="text" disabled="disabled" type="text" id="expiryTime" class="form-control" />
+									 </div>
+								 </div>
+							 </div>
+							 
+							  <div class="col-xs-6 colxsgray">
+								 <div class="form-group newikrd">
+								 <label class="control-label UserC">出库数量 ：</label>
+									 <div class="input-group">
+													<input value="" title="text" type="text" id="outNumber" class="form-control" />
+									 </div>
+								 </div>
+							 </div>
+							 
+							 
+							 
+							 
+							 
+	 			 		 </div>
+	 			 		 <div class="row">
+	 			 			 <div class="form-group newikrd">
+	 			 				 <div class="input-group newInpa butnewikr" style=" margin:  1em auto;">
+	 			 				 <input id="suppliesId" type="hidden" />
+	 			 				 <input id="orderformId" type="hidden" />
+	 			 				 <button type="button" class="btn  btn-info" id="kuadd">添加</button>
+	 			 				 </div>
+	 			 			 </div>
+	 			 		 </div>
+	 			 	 </div>
+						<p>订购单列表</p>
+						<table class="layui-hide" id="suppliesInfo" lay-filter="demo"></table>
+					</div>
+					<div class="phyegistrS phytable">
+						<div class="col-xs-12 colx8 colnewo">
+	 			 		 <div class="row newregis indegirtion" style="height :8em">
+								 <div class="col-xs-6 colxsgray">
+								 	<div class="form-group newikrd">
+								 		<label class="control-label UserC"><la>备注</la>：</label>
+								 		<div class="input-group">
+								 					 <input  id="remarks" class="form-control" />
+								 		</div>
+								 	</div>
+								 </div>
+	 			 		 </div>
+	 			 		 <div class="row">
+	 			 			 <div class="form-group newikrd">
+	 			 				 <div class="input-group newInpa butnewikr" style=" margin:  1em auto;">
+	 			 					 <button type="button" class="btn  btn-info" id="exactly">确定</button>
+	 			 				 </div>
+	 			 			 </div>
+	 			 		 </div>
+	 			 	 </div>
+						<p>耗材列表</p>
+						<script type="text/html" id="barDemoding">
+							<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+						</script>
+						<table class="layui-hide" id="newtestS" lay-filter="demo1"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<!-- -->
+		<!-- 公共包-->
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/supplies/used/outStock_add.js}"></script>
+</html>

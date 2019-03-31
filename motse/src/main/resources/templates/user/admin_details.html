@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>用户管理</title>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/usera.css}" rel="stylesheet"/>
+		<link th:href="@{/css/fileinput.min.css}" rel="stylesheet"/>
+	</head>
+	<style>
+
+	</style>
+	<body>
+		<div class="">
+			<div class="modal-content">
+				<form id="updateAdminForm" enctype="multipart/form-data">
+					<div class="modal-body">
+						<div class="row">
+							<div class="ibox">
+								<div class="ibox-content">
+
+									<div class="row form-horizontal">
+										<div class="col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-xs-3">
+                                                   		 角色权限：<font color="red">*</font>
+                                                </label>
+												<div class="col-xs-8 input-group">
+													<select title="请选择用户角色" id="roleId" name="roleId" class="form-control required">
+													</select>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row form-horizontal">
+										<div class="col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-xs-3">
+                                                    姓名：<font color="red">*</font>
+                                                </label>
+												<div class="col-xs-8 input-group">
+													<input id="roleIds" type="hidden" th:value="${admin.roleId}"/>
+													<input name="id" th:value="${admin.id}" type="hidden"/>
+													<input  id="name" th:value="${admin.name}" name="name" class="form-control required"
+															placeholder="请输入姓名" />
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row form-horizontal">
+										<div class="col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-xs-3">
+                      				                              性别：<font color="red">*</font>
+                                                </label>
+												<div class="col-xs-8 input-group">
+													<input type="radio" name="sex" th:checked="${admin.sex== 0}" value="0" />  男
+													<input type="radio" name="sex" th:checked="${admin.sex== 1}" value="1" /> 女
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row form-horizontal">
+										<div class="col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-xs-3">
+                                                    用户名称：<font color="red">*</font>
+                                                </label>
+												<div class="col-xs-8 input-group">
+													<input title="请输入用户名称" th:value="${admin.userName}" id="userName" name="userName" class="form-control required" placeholder="请输入用户名称" />
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row form-horizontal">
+										<div class="col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-xs-3">
+                                                    手机号：<font color="red">*</font>
+                                                </label>
+												<div class="col-xs-8 input-group">
+													<input title="请输入手机号" id="mobile" th:value="${admin.mobile}" name="mobile" class="form-control required" placeholder="请输入手机号" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row form-horizontal">
+										<div class="col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-xs-3">
+                                                    新密码：<font color="red">*</font>
+                                                </label>
+												<div class="col-xs-8 input-group">
+													<input  id="newpass"  name="newpass" class="form-control" placeholder="请输入新密码" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row form-horizontal">
+										<div class="col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-xs-3">
+                                                    确认密码：<font color="red">*</font>
+                                                </label>
+												<div class="col-xs-8 input-group">
+													<input  id="passWord" name="passWord" class="form-control" placeholder="请 确认新密码" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row form-horizontal">
+                                        <div class="col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <label class="control-label col-xs-3">
+                                                    头像<font color="red">*</font>
+                                                </label>
+                                                <div class="col-xs-3 input-group labelcss">
+										 
+																							<div class="row">
+							<div class="col-xs-12 coldiv">
+								<div class="layui-upload-list">
+									<img class="layui-upload-img" src="/img/new_pa1.png" style=" height: 17em;" id="demo1" />
+									<!-- <p id="demoText"></p> -->
+								</div>
+							</div>
+
+							<div class="row newrowseg coldiv6">
+								<div class="form-group newikrd">
+									<div class="input-group newInpa butnewikr" style="margin-left: 3.4em;float: left;  margin-top: 1em;">
+										<span class="btn upload"  style="float: left;margin-right: 1em;">选择<input type="file" name="file"  onchange="addFile('demo1','file',0)" class="upload_pic" id="file" /></span>
+									 </div>
+								</div>
+							</div>
+
+						</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="row form-horizontal">
+										<div class="col-sm-12 col-xs-12">
+											<div class="form-group">
+												<label class="control-label col-xs-3">
+                                             	       状态：<font color="red">*</font>
+                                                </label>
+												<div class="col-xs-8 input-group">
+													<input type="radio" name="isDisable" th:checked="${admin.isDisable== 0}" value="0" />  启用
+													<input type="radio" name="isDisable" th:checked="${admin.isDisable== 1}" value="1" /> 禁用
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 adminuser" >
+							<div class="form-group newformcol">
+								<div class="pull-right" style="margin-bottom:1em">
+									<button type="submit" class="btn  btn-info" style="margin-right:1em">确定</button>
+									<button type="button" id="cannel" class="btn  btn-info">取消</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!-- form表单提交 -->
+		<script th:src="@{/js/jquery-form.js}"></script>
+		<!--  jQuery Validation plugin javascript -->
+		<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+		<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+
+		<script th:src="@{/layui-master/src/layui.js}"></script>
+		<script th:src="@{/js/fileinput/fileinput.js}"></script>
+   		<script th:src="@{/js/fileinput/zh.js}"></script>
+
+
+		<script th:src="@{/js/user/admin_details.js}"></script>
+		<script th:src="@{/js/utils.js}"></script>
+	</body>
+
+</html>

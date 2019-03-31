@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+	<head>
+		<meta charset="UTF-8"/>
+		<title>孔</title> 
+		<link th:href="@{/layui-master/src/css/layui.css}" rel="stylesheet" />
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+		<link th:href="@{/css/common.css}" rel="stylesheet" />
+		<link th:href="@{/css/list/echarts/font-awesome.min93e3.css}" rel="stylesheet" />
+		<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+		<link th:href="@{/css/a_kong.css}" rel="stylesheet" /> 
+		<script th:src="@{/js/jquery.min.js}"></script>
+	</head>
+	<style type="text/css">
+		.layui-table-view{margin: initial;}
+	</style>
+ <script type="text/javascript">
+ 	
+	$(function(){
+		//中心点横坐标
+		var dotLeft = ($(".container").width()-$(".dot").width())/2;
+		//中心点纵坐标
+		var dotTop = ($(".container").height()-$(".dot").height())/2; 
+		//起始角度
+		var stard = 0;
+		//半径
+		var radius = 200; 
+		var radiusx = 235; 
+		var radiusxe = 265; 
+		//每一个BOX对应的角度;
+		var avd = 360/$(".box").length;
+		//每一个BOX对应的弧度;
+		var ahd = avd*Math.PI/180;
+  
+		//设置圆的中心点的位置
+		$(".dot").css({"left":dotLeft,"top":dotTop});
+	
+		$(".box").each(function(index, element){
+            $(this).css({"left":Math.sin((ahd*index))*radius+dotLeft,"top":Math.cos((ahd*index))*radius+dotTop});
+        });
+        
+
+        $(".boxs").each(function(index, element){
+            $(this).css({"left":Math.sin((ahd*index))*radiusx+dotLeft,"top":Math.cos((ahd*index))*radiusx+dotTop});
+        });
+        
+         $(".boxse").each(function(index, element){
+            $(this).css({"left":Math.sin((ahd*index))*radiusxe+dotLeft,"top":Math.cos((ahd*index))*radiusxe+dotTop});
+        });
+	})
+	 
+
+   $(document).ready(function (){
+       $(".container div").each(function(index){
+       $(this).click(function(){
+    	   changeBox(index);
+       });
+     });
+     });
+	
+	function changeBox(index){
+		 $(".container div").removeClass("first");
+	       $(".container div").eq(index).addClass("first");
+	}
+</script>
+	<body id="newpray">
+		<div class="container"> 
+	<div name="conglirk" class="box">1</div>
+	<div name="conglirk" class="box">2</div>
+	<div name="conglirk" class="box">3</div>
+	<div name="conglirk" class="box">4</div>
+	<div name="conglirk" class="box">5</div>
+	<div name="conglirk" class="box">6</div>
+	<div name="conglirk" class="box">7</div>
+	<div name="conglirk" class="box">8</div>
+	<div name="conglirk" class="box">9</div>
+	<div name="conglirk" class="box">10</div>
+	<div name="conglirk" class="box">11</div>
+	<div name="conglirk" class="box">12</div>
+	<div name="conglirk" class="box">13</div>
+	<div name="conglirk" class="box">14</div>
+	<div name="conglirk" class="box">15</div>
+	<div name="conglirk" class="box">16</div>
+	<div name="conglirk" class="box">17</div>
+	<div name="conglirk" class="box">18</div>
+	<div name="conglirk" class="box">19</div>
+	<div name="conglirk" class="box">20</div>
+	<div name="conglirk" class="box">21</div>
+	<div name="conglirk" class="box">22</div>
+	<div name="conglirk" class="box">23</div>
+	<div name="conglirk" class="box">24</div>
+	<div name="conglirk" class="box">25</div>
+	<div name="conglirk" class="box">26</div>
+	<div name="conglirk" class="box">27</div>
+	<div name="conglirk" class="box">28</div>
+	<div name="conglirk" class="box">29</div>
+	<div name="conglirk" class="box">30</div>
+	<div name="conglirk" class="box">31</div>
+	<div name="conglirk" class="box">32</div>
+	<div name="conglirk" class="box">33</div>
+	<div name="conglirk" class="box">34</div>
+	<div name="conglirk" class="box">35</div>
+	<div name="conglirk" class="box">36</div>
+	<div name="conglirk" class="box">37</div>
+	<div name="conglirk" class="box">38</div>
+	<div name="conglirk" class="box">39</div>
+	<div name="conglirk" class="box">40</div>
+	 
+	  
+	<div name="conglirk" class="boxs">41</div>
+	<div name="conglirk" class="boxs">42</div>
+	<div name="conglirk" class="boxs">43</div>
+	<div name="conglirk" class="boxs">44</div>
+	<div name="conglirk" class="boxs">45</div>
+	<div name="conglirk" class="boxs">46</div>
+	<div name="conglirk" class="boxs">47</div>
+	<div name="conglirk" class="boxs">48</div>
+	<div name="conglirk" class="boxs">49</div>
+	<div name="conglirk" class="boxs">50</div>
+	<div name="conglirk" class="boxs">51</div>
+	<div name="conglirk" class="boxs">52</div>
+	<div name="conglirk" class="boxs">53</div>
+	<div name="conglirk" class="boxs">54</div>
+	<div name="conglirk" class="boxs">55</div>
+	<div name="conglirk" class="boxs">56</div>
+	<div name="conglirk" class="boxs">57</div>
+	<div name="conglirk" class="boxs">58</div>
+	<div name="conglirk" class="boxs">59</div>
+	<div name="conglirk" class="boxs">60</div>
+	<div name="conglirk" class="boxs">11</div>
+	<div name="conglirk" class="boxs">62</div>
+	<div name="conglirk" class="boxs">63</div>
+	<div name="conglirk" class="boxs">64</div>
+	<div name="conglirk" class="boxs">65</div>
+	<div name="conglirk" class="boxs">66</div>
+	<div name="conglirk" class="boxs">67</div>
+	<div name="conglirk" class="boxs">68</div>
+	<div name="conglirk" class="boxs">69</div>
+	<div name="conglirk" class="boxs">70</div>
+	<div name="conglirk" class="boxs">71</div>
+	<div name="conglirk" class="boxs">72</div>
+	<div name="conglirk" class="boxs">73</div>
+	<div name="conglirk" class="boxs">74</div>
+	<div name="conglirk" class="boxs">75</div>
+	<div name="conglirk" class="boxs">76</div>
+	<div name="conglirk" class="boxs">77</div>
+	<div name="conglirk" class="boxs">78</div>
+	<div name="conglirk" class="boxs">79</div>
+	<div name="conglirk" class="boxs">80</div>
+	
+	 
+	<div name="conglirk" class="boxse">81</div>
+	<div name="conglirk" class="boxse">82</div>
+	<div name="conglirk" class="boxse">83</div>
+	<div name="conglirk" class="boxse">84</div>
+	<div name="conglirk" class="boxse">85</div>
+	<div name="conglirk" class="boxse">86</div>
+	<div name="conglirk" class="boxse">87</div>
+	<div name="conglirk" class="boxse">88</div>
+	<div name="conglirk" class="boxse">89</div>
+	<div name="conglirk" class="boxse">90</div>
+	<div name="conglirk" class="boxse">91</div>
+	<div name="conglirk" class="boxse">92</div>
+	<div name="conglirk" class="boxse">93</div>
+	<div name="conglirk" class="boxse">94</div>
+	<div name="conglirk" class="boxse">95</div>
+	<div name="conglirk" class="boxse">96</div>
+	<div name="conglirk" class="boxse">97</div>
+	<div name="conglirk" class="boxse">98</div>
+	<div name="conglirk" class="boxse">99</div>
+	<div name="conglirk" class="boxse">100</div>
+	<div name="conglirk" class="boxse">101</div>
+	<div name="conglirk" class="boxse">102</div>
+	<div name="conglirk" class="boxse">103</div>
+	<div name="conglirk" class="boxse">104</div>
+	<div name="conglirk" class="boxse">105</div>
+	<div name="conglirk" class="boxse">106</div>
+	<div name="conglirk" class="boxse">107</div>
+	<div name="conglirk" class="boxse">108</div>
+	<div name="conglirk" class="boxse">109</div>
+	<div name="conglirk" class="boxse">110</div>
+	<div name="conglirk" class="boxse">111</div>
+	<div name="conglirk" class="boxse">112</div>
+	<div name="conglirk" class="boxse">113</div>
+	<div name="conglirk" class="boxse">114</div>
+	<div name="conglirk" class="boxse">115</div>
+	<div name="conglirk" class="boxse">116</div>
+	<div name="conglirk" class="boxse">117</div>
+	<div name="conglirk" class="boxse">118</div>
+	<div name="conglirk" class="boxse">119</div>
+	<div name="conglirk" class="boxse">120</div> 
+		
+		<suc id="Imgrod">
+		<p>孔位信息</p>
+		<loar class="clasImgrod">
+			
+		</loar>
+	</suc>
+	
+</div>
+
+<div class="bisloar">
+		<p>孔位列表</p>
+<table class="layui-hide" id="test"></table>
+</div>
+	<!--bootstarp表格插件-->
+	<script  th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+
+<script type="text/javascript">
+layui.use('table', function(){
+  var table = layui.table;
+  
+  table.render({
+    elem: '#test'
+    ,url:'kong.json'
+    ,cols: [[
+      {field:'id', width:60,title: '序号'}
+      ,{field:'sign',width:100, title: '小样号' , sort: true} 
+      ,{field:'sex',width:100, title: '浆员姓名', sort: true}
+      ,{field:'sign',width:100, title: '浆员卡号' , sort: true} 
+    ]]
+    ,page: true
+  });
+});
+</script>
+	</body>
+
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+<meta charset="UTF-8" />
+<title>板次打印</title>
+<link th:href="@{/layui-master/dist/css/layui.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+<link th:href="@{/css/css/list/echarts/font-awesome.min93e3.css}" rel="stylesheet" />
+</head>
+<style> 
+#col-xs-12 {
+	float: left;
+	width: 100%
+}
+
+#newpray .dayina {
+	width: 100%;
+	margin-bottom: 0;
+}
+#newpray .UserC {
+	margin-bottom: 0;
+}
+
+#newpray .gray-bg .colx8 .inhenagoi {
+	text-align: left;
+	color: #b9b9b9;
+}
+
+.ibox-content {
+	padding: 0;
+}
+
+#newpray .gray-bg {
+	padding: 0
+}
+
+.colxsgray {
+	float: left;
+	width: 22%;
+	/* margin-left: 3em; */
+	padding: 0
+}
+.simd{    width: auto;
+    margin-left: 5%}
+#newpray .gray-bg {
+	margin-bottom: initial;
+}
+
+#bustable table p {
+	margin: 0 0 0 1px
+}
+
+.busr table tr th {border: 1px solid #666;
+	padding: 0.5em 0;
+	width: 7em;
+	font-size: 12px;
+}
+.newregis{    padding: 0.2em 0px;    margin: 0; }
+.busr table tr td { line-height: 1.1em;border: 1px solid #666;
+	padding: 0.2em 0;
+	height: 5em;
+	width: 7em;
+	font-size: 12px;
+}
+
+.busr table {
+	margin: 0
+}
+
+#newpray .busr {
+	width: 100%;
+	margin-left: 0px !important;
+}
+
+.wrapper .newregis .bigas{width:17%}
+.wrapper .newregis .biga{width:24%}
+.dabiaoz .col-md-12 {
+	margin-top: -3em !important;;
+}
+.baidin{background: #c5c2c2 !important;
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorStr='#c5c2c2',EndColorStr='#c5c2c2');}
+		   @media print {
+            body {-webkit-print-color-adjust: exact;}
+         .sucr{ display:none;}
+      		  }
+      		  
+      		  	    @page {
+   size: auto;
+   margin:2mm 5mm 2mm 5mm;
+  }#line_container4 div {
+    width: 400px !important;
+    float: right;
+}
+#line_container4 canvas {
+    width: 400px !important;
+    right: 0;
+   right: initial !important;
+}
+  .omalr {bottom:-0.8em}
+  .dayindiv p{font-size:15px}
+</style>
+<script>
+		function btnPrintClick() {
+			window.print();
+		}
+		
+	</script>
+
+<body id="newpray">
+	<button type="button" class="btn btn-success sucr" name="print" id="bt" onclick="btnPrintClick();">点击打印</button>
+	<shiro:hasPermission name="report:pp:view">
+	<button type="button" class="btn btn-success sucr" name="editReportInfo" id="editReportInfo" onclick="gotoEditReportInfo('/reportInfo/initReitmanPlatePrintTwoPage',18)">编辑表头</button>
+	</shiro:hasPermission>
+
+
+
+	<!--startprint-->
+	<!--注意要加上html里star和end的这两个标记-->
+	<div class="gray-bg dayina">
+		<div id="div_print" class="box">
+		<div class="dayindiv">
+				 <div class="row">
+					<div class="col-xs-4" id= "headLeft">
+					
+					</div>
+					<div class="col-xs-4" id= "headCenter">
+					
+					</div>
+					<div class="col-xs-4" id= "headRight">
+					
+					</div> 
+				 </div>
+				</div>
+			<div class="dayindiv">
+				<p>    
+				<label style="margin-bottom:0;font-size:  12px;float: left;margin-left: 1mm;line-height: 22px;" class=""
+								th:text="${elisaInfo.elisaTemplate.elisaReport.reportSignature}"></label>
+						<label  th:text="${elisaInfo.elisaTemplate.elisaReport.reportName}"></label>		
+				</p>
+			</div>
+			<div class="gray-bg" id="">
+				<input type="hidden" id="id" name="id" th:value="${elisaInfo.id}" />
+				<input type="hidden" id="eadbutS" name="eadbutS"
+					th:value="${eadbutS}" /> <input type="hidden" id="showSampleNo"
+					name="showSampleNo" th:value="${showSampleNo}" /> <input
+					type="hidden" id="std1" name="std1" th:value="${emm.std1}" /> <input
+					type="hidden" id="std2" name="std2" th:value="${emm.std2}" /> <input
+					type="hidden" id="std3" name="std3" th:value="${emm.std3}" /> <input
+					type="hidden" id="std4" name="std4" th:value="${emm.std4}" /> <input
+					type="hidden" id="std5" name="std5" th:value="${emm.std5}" />
+					<input type="hidden" id="printType" name="printType"  value="2" />
+					<input type="hidden" id="testingMethodid" name="testingMethodid"  th:value="${tci.testingMethodid}" />
+					<input type="hidden" id="projectName" name="projectName"  th:value="${tci.projectName}" />
+					
+				<div class="wrapper wrapper-content animated fadeInRight"
+					style="width: 100%; margin: 0 auto;     padding: 20px 0 0 0px;"> 
+			 		<div class="row newregis indegirtion">
+					   <div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC" >检测项目：</label> <label
+									class="control-label UserC inhenagoi"><span id= "checkProject"></span></label>
+							</div>
+						</div>
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">检测方法：</label> <label
+									class="control-label UserC inhenagoi"><span id="checkMethod"> </span></label>
+							</div>
+						</div>
+						 <div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">微板代码：</label> <label
+									class="control-label UserC inhenagoi"><span>HBsAg20515554856150-006</span></label>
+							</div>
+						</div>
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">检验设备型号及厂家：</label> <label
+									class="control-label UserC inhenagoi"
+									th:text="${elisaInfo.elisaTemplate.elisaReport.elisaEquipmentAndManufacturers}"></label>
+							</div>
+						</div>
+								<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">使用波长：</label> <label
+									class="control-label UserC inhenagoi"
+									th:text="${elisaInfo.elisaTemplate.elisaReport.useWavelength}"></label>
+							</div>
+						</div>
+						
+						<!-- <div class="colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">使用方法：</label> <label
+									class="control-label UserC inhenagoi"
+									th:text="${elisaInfo.elisaTemplate.elisaReport.inspectionSpecimen}"></label>
+							</div>
+						</div> -->
+						
+				<!--  <div class="colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">送检日期：</label> <label
+									class="control-label UserC inhenagoi"><span
+									th:text="${elisaInfo.testDate1}"></span>[<span
+									th:text="${elisaInfo.sequenceNumber}"></span>]</label>
+							</div>
+						</div> --> 
+					</div>
+					 		<div class="row newregis indegirtion">
+					<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">送检单位：</label> <label
+									class="control-label UserC inhenagoi"><span
+									th:text="${elisaInfo.elisaTemplate.elisaReport.inspectionUnit}"></span></label>
+							</div>
+						</div>
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">送检标本：</label> <label
+									class="control-label UserC inhenagoi"
+									th:text="${elisaInfo.elisaTemplate.elisaReport.inspectionSpecimen}"></label>
+							</div>
+						</div>
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">试剂厂家：</label> <label
+									class="control-label UserC inhenagoi" th:text="${supply.name}"></label>
+							</div>
+						</div>
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">试剂批号：</label> <label
+									class="control-label UserC inhenagoi"
+									th:text="${stock.batchNumber}"></label>
+							</div>
+						</div>
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">有效期：</label> <label id="stockExpiryTime"
+									class="control-label UserC inhenagoi"
+									th:text="${stock.expiryTime}"></label>
+							</div>
+						</div>
+					</div>
+					<div class="row newregis indegirtion">
+					<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">检测单位：</label> <label
+									class="control-label UserC inhenagoi"
+									th:text="${elisaInfo.elisaTemplate.elisaReport.detectionUnit}"></label>
+							</div>
+						</div>
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">检测日期：</label> <label
+									class="control-label UserC inhenagoi"><span
+									th:text="${elisaInfo.updateDate}"></span>[<span
+									th:text="${elisaInfo.sequenceNumber}"></span>]</label>
+							</div>
+						</div> 
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">质控物来源：</label> <label
+									class="control-label UserC inhenagoi" th:text="${qcSupply.name}"> </label>
+							</div>
+						</div>
+						<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">质控品批号：</label> <label
+									class="control-label UserC inhenagoi"
+									th:text="${qcStock.batchNumber}"></label>
+							</div>
+						</div> 
+				<div class="colxsgray simd">
+							<div class="form-group newikrd">
+								<label class="control-label UserC  ">有效期：</label> <label
+									class="control-label UserC inhenagoi"
+									th:text="${qcStock.expiryTime1}"></label>
+							</div>
+						</div>
+					</div>
+					<div class="row busr" id="bustable"></div>
+		 
+					<div class="daryinx" style="float: left; width: 60%">
+						        <div class="row newregis indegirtion" style="float:left;width:50% !important">
+						 
+						<div class="colxsgray" style="    width: 100%;">
+						<div class="form-group newikrd">
+							<label class="control-label UserC  loagkrd">统计信息：</label>
+							<!-- <label class="control-label UserC inhenagoi"><span>0.12</span>
+							-<span>0.12</span>
+							</label> -->
+						<label class="control-label UserC kiage" id ="ybs">样本数=90</label>
+						<label class="control-label UserC kiage" id ="yxs1">阳性数（+）：0 (0.00%)</label>
+						<label class="control-label UserC kiage" id ="yxs2">阴性数（- ）：90 (100.00%)</label>
+						<label class="control-label UserC kiage" id ="hqs">灰区： 0 (0.00%)</label>
+						</div> 
+				  
+					</div> 
+						        </div>
+					        <div class="row newregis indegirtion" style="float:left;width:50% !important">
+							<div id="col-xs-12">
+								<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">STD1=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${x1}"></span></label>
+									</div>
+								</div>
+								<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">浓度1=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${emm.std1}"></span></label>
+									</div>
+								</div>
+						 
+							</div>
+							<div id="col-xs-12">
+								<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">STD2=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${x2}"></span></label>
+									</div>
+								</div>
+								<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">浓度2=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${emm.std2}"></span></label>
+									</div>
+								</div>
+								  
+							</div>
+								<div id="col-xs-12">
+									<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">STD3=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${x3}"></span></label>
+									</div>
+								</div>
+								<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">浓度3=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${emm.std3}"></span></label>
+									</div>
+								</div> 
+						</div>
+									
+									<div id="col-xs-12">
+										<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">STD4=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${x4}"></span></label>
+									</div>
+								</div>
+										<div class="colxsgray coloadiv" >
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">浓度4=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${emm.std4}"></span></label>
+									</div>
+								</div>
+							  
+								</div>
+							<div id="col-xs-12">
+							<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">STD5=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${x5}"></span></label>
+									</div>
+								</div>
+								<div class="colxsgray coloadiv">
+									<div class="form-group newikrd">
+										<label class="control-label UserC  ">浓度5=</label> <label
+											class="control-label UserC inhenagoi"><span
+											th:text="${emm.std5}"></span></label>
+									</div>
+								</div>
+					  
+							</div>
+								 
+						</div>
+						<div class="row newregis indegirtion">
+							<div class="colxsgray" style="width: 100%;">
+								 <label class="control-label UserC "  style="color:#666" >结果判断：<span
+									th:text="${elisaInfo.elisaTemplate.elisaReport.criticalResult}"></span></label>
+							</div>
+						</div>
+						<div class="row newregis indegirtion">
+						<div class="col-xs-4"> 
+						<div class="form-group newikrd">
+							<label class="control-label UserC  ">打印时间：</label>
+							<label class="control-label UserC inhenagoi"><span th:text = '${printTime}'></span> </label>
+						</div> 
+							</div>
+						</div> 
+						
+					</div>
+					
+						 <div class="dabiaoz"  style="float: right; width: 40%; height: 132px; overflow: hidden; margin-left: -1%;">
+						<div class="col-md-12" style="margin: 0; padding: 0;">
+							<div class="ibox">
+								<div class="ibox-content conrlobd">
+									<div id="line_container4" style="width: 100%; height: 200px;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+						<div class="row newregis indegirtion"  style=" border-bottom: 2px solid #54a664;width: 100% !important;    float: left;margin-top:-1.5em"> 
+					<div class="colxsgray">
+						<div class="form-group newikrd"> 
+								<label class="control-label UserC">复核者：</label>
+							<label class="control-label UserC inhenagoi"><span></span>	</label>
+							</div> 
+					</div>
+					<div class="colxsgray">
+						<div class="form-group newikrd"> 
+										<label class="control-label UserC">检测者：</label>
+							<label class="control-label UserC inhenagoi"><span></span>	</label>
+							</div>
+						</div>
+									<div class="colxsgray">
+						<div class="form-group newikrd">
+							<label class="control-label UserC  ">环境温度：</label>
+							<label class="control-label UserC inhenagoi">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;℃</label>
+						</div>
+					</div>
+					<div class="colxsgray">
+						<div class="form-group newikrd">
+							<label class="control-label UserC  ">湿度：</label>
+							<label class="control-label UserC inhenagoi">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</label>
+						</div>
+					</div> 
+				</div>
+			<div class="dayindiv omalr">
+						 <div class="row">
+							<div class="col-xs-4">
+						 
+						<div class="form-group newikrd">
+							<label class="control-label UserC"></label>
+							<label class="control-label UserC inhenagoi"><span></span>
+							</label>
+						</div>
+			 
+							</div>
+							
+							<div class="col-xs-4">
+						<!-- <label class="control-label ">注：</label> -->
+							 <div class="col-xs-6">
+						<div class="form-group newikrd">
+						
+					 
+					</div>
+					</div>
+					 <div class="col-xs-6">
+					
+					</div>
+							</div> 
+						 </div>
+					</div>
+					<div class="dayindiv omalr">
+						<div class="row">
+							<div class="col-xs-4" id= "footLeft"> </div>
+							<div class="col-xs-4" id= "footCenter" style="line-height: 1rem;"> </div>
+							<div class="col-xs-4" id= "footRight"> </div> 
+				 		</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--endprint-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+	<script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+	<script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+	<!--bootstarp表格插件-->
+	<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<script th:src="@{/css/list/echarts/echarts.min.js}"></script>
+	<script th:src="@{/css/list/echarts/content.min.js}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}"></script>
+	<!--mbb酶标板JS-->
+	<script th:src="@{/js/business/elisa/bancdayinReitman.js}"></script>
+	<script type="text/javascript">
+		getReportInfo(18);
+	</script>
+</body>
+</html>

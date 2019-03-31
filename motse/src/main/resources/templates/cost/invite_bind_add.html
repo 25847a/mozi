@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="renderer" content="webkit" />
+		<title>绑定</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+		<!--bootstarp-->
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+		<link th:href="@{/css/common.css}" rel="stylesheet" />
+
+		<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+		<style type="text/css">
+			.newolod {
+				padding-left: 35%;
+			}
+		</style>
+	</head>
+
+	<body id="newpray" style="background: #FFF;">
+		<div class="gray-bg" id="" style=" ">
+			<form id="addBindFit" method="post">
+				 
+			
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row" style=" ">
+					<div class="col-xs-12" style="margin-left: 6%;">
+						<div class="ibox">
+							<div class="ibox-content" style="padding: 0;">
+								<div class="row form-horizontal">
+									<input type="hidden" id="id" name="id" />
+									<div class="col-xs-12">
+											<div class="form-group newformcol cactivitad">
+											<label class="control-label col-xs-4 UserCS" style=" width: 9em;">邀请人类型：</label>
+											<div class="input-group date">
+									<select class="form-control" id="inviterType" name="inviterType">
+										<option value="">请选择</option>
+										<option value="0">浆员</option>
+										<option value="1">业务员</option>
+									</select>
+								</div>
+										</div>
+									</div>
+									<div class="col-xs-12">
+											<div class="form-group newformcol cactivitad">
+											<label class="control-label col-xs-4 UserCS" style=" width: 9em;"><ls>邀  请   人</ls>：</label>
+											<div class="input-group date" style="    ;">
+												<input value="" id="inviter" name="inviter" title="" class="form-control newfrin" />
+											</div>
+										</div>
+									</div>
+
+									<!-- <div class="col-xs-12">
+												<div class="form-group newformcol cactivitad">
+											<label class="control-label col-xs-4 UserCS" style=" width: 9em;">被邀请人：</label>
+										<div class="input-group date" style="    ;">
+												<input value="" id="invited" name="invited" title="" class="form-control newfrin" />
+											</div>
+										</div>
+									</div>  -->
+									 
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="col-xs-12">
+									<div class="form-group newformcol">
+										<div class="pull-right">
+											<button type="submit" class="btn  btn-info" style=" margin-right: 1em;" id="sub">确定</button>  
+											<button type="button" class="btn  btn-info" id="cannel">取消</button>
+										</div>
+									</div>
+								</div>
+			</form>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		
+		<script th:src="@{/js/jquery-form.js}"></script>
+		<!--  jQuery Validation plugin javascript -->
+		<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+		<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+		
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/cost/invite_bind_add.js}"></script>
+	</body>
+
+</html>

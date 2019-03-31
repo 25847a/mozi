@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+<meta charset="UTF-8" />
+<title>固定浆员采小血</title>
+<link th:href="@{/layui-master/src/css/layui.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap.min14ed.css?v=3.3.6}" rel="stylesheet" />
+<link th:href="@{/css/font-awesome.min93e3.css?v=4.4.0}" rel="stylesheet" />
+<link th:href="@{/css/fileinput.min.css}" rel="stylesheet" />
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+<link th:href="@{/css/style.min862f.css}" rel="stylesheet" />
+<style type="text/css">
+.newolod {
+	padding-left: 35%;
+}
+.bustrNew .phyegistrS p{text-indent: 1rem;}
+</style>
+</head>
+<body id="newpray">
+	<div class="gray-bg ">
+		<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+			<!--基本信息及验证-->
+			<div class="col-xs-12 colx8 colnewo">
+				<div class="row newregis">
+					<div class="col-xs-7 colxsgray">
+				 
+						<div class="row newregistr">
+							<div class="col-xs-6 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC"><la>姓名</la>：</label>
+									<div class="input-group">
+										<input  id="name" name ="name" class="form-control newfrin" />
+										<input type="hidden" id="id" name ="id"/>
+										<input type="hidden" name="isCollection" id ="isCollection" />
+										<input type="hidden" class="not" id="result" value=""/>
+										<input type="hidden" class="not" name="type" id="valdationType" value=""/><!-- 验证类型(默认人脸识别) -->
+										<input type="hidden" class="not" name="isIdentity" id="isIdentity" value=""/><!-- 是否验证成功 -->
+										<input type="hidden" class="not" name="image" id="imageFace"/><!-- 需要保存的人脸识别图片 -->
+										<div style="display: none;"><img src="" id="demo3"/></div>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC"><la>血型</la>：</label>
+									<div class="input-group">
+										<input  id="bloodType" name="bloodType" class="form-control newfrin" />
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC">献浆卡号：</label>
+									<div class="input-group">
+										<input value=" " title="" id="providerNo" name="providerNo" class="form-control newfrin" />
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC"><la>性别</la>：</label>
+									<div class="input-group">
+										<input value=" " title=""  id="sex" name="sex"   class="form-control newfrin" />
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC"><la>类型</la>：</label>
+									<div class="input-group">
+										<input value=" " title="" id="pbType" name ="pbType" class="form-control newfrin" />
+									</div>
+								</div>
+								
+								<div class="form-group newikrd">
+									<label class="control-label UserC"><ls style=" letter-spacing: 4px;  margin-right: -3px;">IC卡号</ls>：</label>
+									<div class="input-group">
+										<input value=" " title="" id="icNumber" name="icNumber" class="form-control newfrin" />
+									</div>
+								</div>
+								<!-- <div class="form-group newikrd">
+									<label class="control-label UserC">打印选项：</label>
+									<div class="input-group">
+										<select name="type" class="form-control">
+											<option value="">请选择</option>
+											<option value="">条码打印</option>
+											<option value="">打印2</option>
+										</select>
+									</div>
+								</div>
+ 									-->
+								<div class="form-group newikrd">
+									<label class="control-label UserC">采浆次数：</label>
+									<div class="input-group">
+										<input value=" " title="" id="scount" name="scount" class="form-control newfrin" />
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-5 colxsgray">
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="row">
+									<div class="col-xs-12 coldiv">
+										<div class="layui-upload-list">
+											<img class="layui-upload-img" src="../../../img/new_pa1.png"
+												style="height:11em; width: auto;" id="demo1" />
+											<p id="demoText"></p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<div class="row">
+									<div class="col-xs-12 coldix">
+										<img id="imageFace_show" class="layui-upload-img" src="../../../img/new_pa1.png"
+											style="width: auto; height:11em;    margin-top: 0.9em;" /> 
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+						<div class="row newrowseg" style="margin-top: 0em;margin-bottom: 0.5em;">
+					<div class="form-group newikrd">
+						<div class="input-group newInpa butnewikr" style="">
+							<input type="hidden" name="id" id="id" value=""/>
+							<button type="button" class="btn  btn-info" id="confirm">确定</button>
+							<button type="button" onclick="read()" class="btn  btn-info">读取</button>
+							<button type="button" class="btn  btn-info" onclick="reload();">刷新</button>
+							<button type="button" class="btn  btn-info" id="print">打印</button>
+							<button type="button" class="btn  btn-info" id="cancal">取消采样</button>
+							<!-- <button type="button" class="btn  btn-info " style="" id="inspecim">静脉验证</button> -->
+							<button type="button" class="btn  btn-info " style="" id="indecfxue">面部验证</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="gray-bg" id="" style="">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row UserA" style="">
+				<div class="col-xs-12">
+				<div class="ibox"  style="margin-bottom:0em">
+						<div class="ibox-content" style="padding: 0;">
+							 <div class="row form-horizontal" style="  margin-top: 0.8em;">
+										<div class="col-xs-2 colikra" style="padding:0">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4" style="padding-left:0">浆员信息列表</label>
+										</div>
+									</div>
+								<DIV class="col-xs-10"> 
+								
+								
+								<div class="col-xs-2"  style="float:right">
+									<div class="form-group newformcol"> 
+										<div class="">
+							 
+										
+									
+										</div>
+									</div>
+								</div>
+								<div style="float:right">
+									<div 	>
+										<div class="pull-left">
+											<button type="button" class="btn  btn-info" onclick="initList();">查询</button>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-3"  style="float:right">
+									<div class="form-group newformcol">
+										<label class="control-label col-xs-4">日期</label>
+										<div class="input-group col-xs-8 date">
+											<input name="createTime" id="createTime" type="text"
+												placeholder="日期" title="请输入日期" value=""
+												class="form-control" />
+
+										</div>
+									</div>
+								</div>
+								</DIV>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row busr">
+		 
+				<div class="col-md-12 bustrNew">
+					<!--table数据-->
+					<div class="phyegistrS" id="domne">
+						<p>未采集人员</p>
+						<table class="layui-hide" id="newtest" lay-filter="demo"></table>
+					</div>
+					<div class="phyegistrS phytable">
+						<p>已采集人员</p>
+						<table class="layui-hide" id="newtestS" lay-filter="demo1"></table>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery.webcam.js}"></script>
+	<script  th:src="@{/js/zoom.js}"></script>
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<script th:src="@{/layui-master/src/layui.js}"></script>
+	<!-- 人脸识别 -->
+	<script src="/js/common/start_camera.js"></script>
+	<script th:src="@{/js/business/inspection/in_deconfxue.js}"></script>
+	<script  th:src="@{/js/imgx.js}"></script> 
+	<img src="" alt="" class="bigimg" />
+<div class="mask">
+	<img src="" alt="" />
+</div>
+</body>
+</html>

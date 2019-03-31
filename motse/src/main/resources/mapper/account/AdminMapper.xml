@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.account.dao.AdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.account.entity.Admin">
+        <id column="id" property="id" />
+        <result column="account" property="account" />
+        <result column="passWord" property="passWord" />
+        <result column="name" property="name" />
+        <result column="age" property="age" />
+        <result column="gender" property="gender" />
+        <result column="position" property="position" />
+        <result column="phone" property="phone" />
+        <result column="address" property="address" />
+        <result column="avatar" property="avatar" />
+        <result column="wechat" property="wechat" />
+        <result column="qq" property="qq" />
+        <result column="role" property="role" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="remarks" property="remarks" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, account, passWord, name, age, gender, position, phone, address, avatar, wechat, qq, role, createDate, updateDate, creater, updater, remarks
+    </sql>
+	<!-- 根据用户名查询用户信息-->
+	<select id="queryAdminInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM admin WHERE account=#{account}
+	</select>
+</mapper>

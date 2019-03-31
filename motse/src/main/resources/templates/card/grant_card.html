@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>发卡</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+		<!--bootstarp-->
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+		<link th:href="@{/css/common.css}" rel="stylesheet" />
+		<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+		<style type="text/css">
+			.newolod {padding-left: 35%;} 
+			.wrapper .newikrd .inhemog {    width: 63% !important; }
+			.gray-bg .wrapper .colnewo {padding-right: 0px;}
+			.layui-layer-content{color:#FFF}
+			.newrowseg{  float: left;   width: 100%;}
+			.wrapper .newikrd .UserC ls {    letter-spacing: 4px;
+			  margin-right: -3px;}
+			.layui-table tr td:nth-child(1),td:nth-child(8){
+			       		 display:none !important
+			 }
+			.layui-table tr th:nth-child(1),th:nth-child(8) {
+			      		  display: none !important
+			 }
+  		  
+		</style>
+	</head>
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style=""> 
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion">
+						<div class="col-xs-8">
+							<div class="row newregistr">
+								<div class="col-xs-4 colxsgray">
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi"><la>姓名</la>：</label>
+										<div class="input-group inhemog">
+											<input type="hidden" id="id" name="id"/>
+											<input value="" id="name" title="" class="form-control newfrin" readonly="readonly"  />
+										</div>
+									</div>
+									<!-- <div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi"><la>小样号</la>：</label>
+										<div class="input-group inhemog">
+											<input value=" " title="" class="form-control newfrin" />
+										</div>
+									</div> -->
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi"><ls>IC卡号</ls>：</label>
+										<div class="input-group inhemog">
+											<input  id="icNum" class="form-control newfrin" value="" readonly="readonly" />
+										</div>
+									</div>
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi">发卡次数：</label>
+										<div class="input-group inhemog">
+											<input type="text" class="form-control newfrin" id="num" readonly="readonly" />
+										</div>
+									</div>
+									 
+								</div>
+								<div class="col-xs-4 colxsgray">
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi"><la>性别</la>：</label>
+										<div class="input-group inhemog">
+											<input value="" id="sex" title="" class="form-control" readonly="readonly"  />
+										</div>
+									</div>
+									<!-- <div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi">是否发证：</label>
+										<div class="input-group inhemog">
+											<select name="type" class="form-control">
+												<option value="">请选择</option>
+												<option value="">1</option>
+												<option value="">2</option>
+											</select>
+										</div>
+									</div> -->
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi">献浆卡号：</label>
+										<div class="input-group inhemog" id="pDiv">
+											
+											<input value="" id="providerNo" title="" class="form-control newfrin" readonly="readonly"  />
+										</div>
+									</div> 
+								</div>
+								<div class="col-xs-4 colxsgray">
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi"><la>血型</la>：</label>
+										<div class="input-group inhemog">
+											<input value="" id="bloodType" title="" class="form-control newfrin" readonly="readonly"  />
+										</div>
+									</div> 
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi">发证日期：</label>
+										<div class="input-group inhemog">
+											<input  id="createDate" class="form-control newfrin" readonly="readonly" />
+										</div>
+									</div>
+									
+								</div> 
+							</div> 
+						</div>
+						<div class="col-xs-4">
+							<div class="row newregistr">
+							<div class=" col-xs-6">
+								<div class="layui-upload-list" style="text-align: right;">
+									<img id="play" th:src="@{/img/new_pa1.png}" class="layui-upload-img"  style="width: auto;height: 7.1em;margin-top: -1em;" /> 
+							</div>
+							</div>
+							<div class=" col-xs-6">
+								<div class="layui-upload-list" style="text-align: left;"> 
+									<img id="demo1" class="layui-upload-img" th:src="@{/img/new_pa1.png}" style="height: 7.1em;width: auto;margin-top: -1em;"  />
+							</div>
+							</div>
+							
+							</div> 
+						</div> 
+					</div>
+					<div class="row newrowseg">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr" style=" ">
+								<button type="button" class="btn  btn-info" id="audit">提交审核</button>
+								<button type="button" class="btn  btn-info" id="readCard">读卡</button> 
+								<button type="button" class="btn  btn-info" id="grantCard">发卡</button> 
+								<button type="button" class="btn  btn-info" style="display:none">打卡</button>
+								<button type="button" class="btn  btn-info" id="puveryanf" style="display:none">静脉验证</button>
+								<button type="button" class="btn  btn-info" id="writeCard">写卡</button> 
+								 <button type="button" class="btn  btn-info" id="cancel_card">申请取消发卡</button>
+								<button type="button" class="btn  btn-info" id="cancel">取消发卡</button>
+								<button type="button" class="btn  btn-info" id="refresh">刷新</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gray-bg">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row UserA" style=" ">
+					<div class="col-xs-12">
+						<div class="ibox">
+							<div class="ibox-content" style="padding: 0;">
+								<div class="row form-horizontal" style="padding-top:1em">
+									<div class="col-xs-8 colikra">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4" style=" ">浆员信息列表</label>
+										</div>
+									</div>
+									<div class="col-xs-3">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4">时间：</label>
+											<div class="input-group col-xs-8 date">
+					<input name="endTime" id="endTime" type="text" placeholder="结束日期" title="请输入结束日期" value="" class="form-control" />
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-1">
+										<div class="form-group newformcol">
+											<div class="pull-right">
+												<button type="button" class="btn  btn-info" id="query">查询</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row busr"> 
+					<div class="col-md-12 bustrNew">
+						<div class="phyegistrS">
+							<p>未发卡人员</p>
+							<table class="layui-hide" id="newtest" lay-filter="demo"></table>
+						</div>
+						<div class="phyegistrS phytable">
+							<p>今日已发卡人员</p>
+							<table class="layui-hide" id="newtestS" lay-filter="demo1"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+			<script th:src="@{/js/zoom.js}"></script>
+		<script th:src="@{/js/jquery.webcam.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<script th:src="@{/js/card/grant_card.js}"></script>
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/dateUtil.js}"></script>
+		<script th:src="@{/js/imgx.js}"></script>
+	<img src="" alt="" class="bigimg" />
+		<div class="mask">
+			<img src="" alt="" />
+		</div>
+	</body>
+
+</html>

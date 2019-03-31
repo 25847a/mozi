@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+<meta charset="UTF-8" />
+<title>检验配置</title>
+<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+<!--bootstarp-->
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+<link th:href="@{/css/common.css}" rel="stylesheet"/>
+<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+<link th:href="@{/css/fileinput.min.css}" rel="stylesheet"/>
+<!---->
+<!--文件上传-->
+<!---->
+<!--新献浆员登记css-->
+<style type="text/css">
+.newolod {
+	padding-left: 35%;
+}
+</style>
+</head>
+
+<body id="newpray">
+	<div class="gray-bg ">
+		<div class="wrapper wrapper-content animated fadeInRight weralid"
+			style="">
+			<!--基本信息及验证-->
+			<form id="addForm" >
+			<input type="hidden" name="optype" id="optype"/>
+			<input type="hidden" name="status" id="status"/>
+			<input type="hidden" name="id" id="id"/>
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion">
+						<div class="row newregistr">
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">模板名称：</label>
+									<div class="input-group inhemog">
+										<input  title="请输入模板名称" name="templateName" id="templateName" class="form-control newfrin" />
+									</div>
+								</div>
+								 
+							</div>
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">是否默认：</label>
+									<div class="input-group inhemog">
+										<select name="isDefault" id="isDefault" class="form-control">
+											<option value="1">是</option>
+											<option value="0">否</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						 	<div class="col-xs-3 colxsgray">
+						 		<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr" style="">
+								<button type="button" id="" class="btn  btn-info">查询</button>
+								<button type="button" style="display: none" id="submitButton" class="btn  btn-info">修改</button>
+							</div>
+						</div>
+						 	</div>
+						</div>
+					</div>
+					<!-- <div class="row newrowseg">
+					
+					</div> -->
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="gray-bg" id="" style="">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row UserA">
+				<div class="col-xs-12">
+					<div class="ibox">
+						<div class="ibox-content" style="padding: 0;">
+							<div class="row form-horizontal">
+								<div class="col-xs-5 colikra"  style="margin-left:-2em">
+									<div class="form-group newformcol">
+										<label class="control-label col-xs-4" style="">配置列表</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row busr" style="margin-top: 1.9em;">
+				<div class="col-md-12 bustrNew">
+					<!--table数据-->
+					<!--	<table class="layui-hide" id="newtest" lay-filter="demo"></table>
+						-->
+					<script type="text/html" id="barDemo">
+						<a class="layui-btn layui-btn-primary layui-btn-xs intoconas" lay-event="detail">修改</a>
+							<a class="layui-btn layui-btn-primary layui-btn-xs intoconas" lay-event="peizhi">配置</a>
+						</script>
+					<table class="layui-hide" id="toconig" lay-filter="demo" style=""></table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery-form.js}"></script>
+	<!--  jQuery Validation plugin javascript -->
+	<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+	<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<!--bootstarp表格插件-->
+	<script  th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}"></script>
+	<script th:src="@{/js/business/inspection/intoconig.js}"></script>
+</body>
+
+</html>

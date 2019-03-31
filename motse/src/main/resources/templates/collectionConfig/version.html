@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<meta charset="UTF-8" />
+<title>版本号说明</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/list/usera.css}" rel="stylesheet" />
+<link th:href="@{/layui-master/src/css/layui.css}" rel="stylesheet" />
+<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+</head>
+<style type="text/css">
+.indegirtion .btn-info {
+	margin-right: 1em;
+}
+#newpray .gray-bg .colx8 .inhenagoi {
+    width: 9em !important;
+}
+</style>
+<body id="newpray">
+	<div class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight weralid"
+			style="">
+			<!--基本信息及验证-->
+			<div class="col-xs-12 colx8 colnewo">
+				<div class="row newregis indegirtion">
+					<div class="row newregistr" id="search_par">
+						<div class="col-xs-3 colxsgray">
+
+							<div class="form-group newikrd">
+								<label class="control-label UserC ">版本号：</label>
+								<div class="input-group inhemog">
+									<select title="请选择类型" id="versionNumber" name="versionNumber" class="form-control required">
+										<option value="">请选择</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-5 colxsgray"></div>
+					</div>
+					<div class="row newrowseg">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr" style="">
+								<button id="btn-reset" type="button" class="btn  btn-info ">重置</button>
+								<button id="searchBtn" type="button" class="btn  btn-info ">查询</button>
+								<button id="versionAdd" type="button" class="btn  btn-info ">添加</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="gray-bg" id="" style="">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="row UserA" style="    border-bottom: 0px solid #d4d4d4"> 
+					<div class="col-xs-12">
+						<div class="ibox">
+							<div class="ibox-content" style="padding: 0;">
+								<div class="row form-horizontal" style=" margin-left:-1%; margin-top: 0.8em;">
+									<div class="col-xs-8 colikra">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4" style=" "></label>
+										</div>
+									</div>
+								<!-- 	<div class="col-xs-3">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4">日期</label>
+											<div class="input-group col-xs-8 date">
+												<input name="startTime" id="startTime" type="text" placeholder="开始日期" title="请输入开始日期" value="" class="form-control" />
+											</div>
+										</div>
+									</div> 
+									<div class="col-xs-1">
+										<div class="form-group newformcol">
+											<div class="pull-right">
+												<button type="button" id="search" class="btn  btn-info">查询</button>
+											</div>
+										</div>
+									</div>-->
+								</div>
+							</div>
+						</div>
+					</div> 
+			</div>
+			<div class="row busr">
+				<div class="col-md-12 bustrNew">
+				<div style=" border: 1px solid #d4d4d4;padding: 2rem;min-height:25rem;margin-bottom:1rem">
+				当前版本:
+				<textarea rows="" cols="" readonly="readonly" id="versionDescription">
+				
+				</textarea>
+				</div>
+					 
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery.webcam.js}"></script>
+	<!--bootstarp表格插件-->
+	<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/dateUtil.js}"></script>
+	<!-- 版本号说明JS -->
+	<script th:src="@{/js/collectionConfig/version.js}"></script>
+
+</body>
+</html>

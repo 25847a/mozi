@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>费用明细</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+		 
+	</head>
+	<style type="text/css">
+		.layui-table{width: 97%;}
+				.newformcol{     margin: 0.54em !important;} 
+				#newpray .gray-bg{margin-bottom:initial}
+	</style>
+
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+				<!--基本信息及验证-->
+				<form id="newForm">
+				<table  class="layui-table" cellspacing="" cellpadding="" id="form">
+					<thead>
+						<tr>
+							<th>费用类型</th>
+							<th>数目（单位：元）</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<!-- <tr>
+							<td>采浆费用</td>
+							<td>1000</td>
+						</tr>
+						
+						<tr>
+							<td>路费</td>
+							<td>1000</td>
+						</tr>
+
+
+<tr>
+							<td>活动费用</td>
+							<td>1000</td>
+						</tr>
+
+
+<tr>
+							<td>合计</td>
+							<td>1000</td>
+						</tr> -->
+
+					</tbody>
+				</table>
+				
+				
+				<!-- <div class="col-xs-12">
+							<div class="form-group newformcol">
+								<div class="pull-right">
+									<button type="button" class="btn  btn-info" style=" margin-right: 1em;">发放</button>
+									<button type="button" class="btn  btn-info" style=" margin-right: 1em;">取消</button>
+
+								</div>
+							</div>
+						</div> -->
+				</form>
+				
+				
+				
+			</div>
+		</div>
+		</body>
+<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>  
+		<script th:src="@{/js/cost/grant_cost_detail.js}"></script>
+</html>

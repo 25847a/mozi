@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>基本信息审核</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<!--浆员信息变更css-->
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+	</head>
+	<style>
+	.layui-table-view {  margin: 12px 0;}
+	</style>
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid">
+				<div class="col-xs-12 colx8 inforcol">
+					<div class="row rowinfor" id="search_par">
+						 
+						<div class="col-xs-3">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">建档日期：</label>
+								<div class="input-group">
+									<div class="col-xs-5 advancol">
+										 <input value="" title="" class="form-control" id="startTime"/>
+									</div>
+									<div class="col-xs-1 advancolS">
+										--
+									</div>
+									<div class="col-xs-5 advancol">
+										<input value="" title="" class="form-control" id="endTime"/>
+									</div>
+								</div>
+							</div> 
+						</div>
+						
+						<div class="col-xs-3">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">身份证号：</label>
+								<div class="input-group">
+									<div class="col-xs-12 advancol">
+										<input value="" title="" class="form-control" id="idNo"/>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3 colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC"><la>姓名</la>：</label>
+								<div class="input-group">
+									<input value="" title="" class="form-control" id="name"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">是否审核：</label>
+								<div class="input-group">
+									<select name="status" class="form-control" id="status">
+										<option value="">请选择</option>
+										<option value="0">未审核</option>
+										<option value="1">已审核</option>
+									</select>
+								</div>
+							</div>
+						</div> 
+					</div>
+					<div class="row" style=" padding:0.5em 0;">
+				<div class="col-xs-12 colxsgray">
+							<div class="form-group newikrd">
+								<div class="input-group newInpa butnewikr" style=" margin:  0 auto!important">
+									<button type="button" class="btn  btn-info Toexa" id="query">查询</button>
+									<button type="button" class="btn  btn-info Toexa" id="examine">审核</button>
+									<button type="button" class="btn  btn-info Toexa" id="calcal_examine">取消</button>
+									<button type="button" class="btn  btn-info Toexa" id="btn-reset">重置</button>
+									<button type="button" class="btn  btn-info Toexa" id="export">导出</button>
+								</div>
+							</div> 
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			<div class="gray-bg"  style="padding: 0;">
+		<div class="wrapper wrapper-content animated fadeInRight" style="    padding-top: 0 !important;   margin-top: 0;">
+				 
+				<div class="row busr">
+					<div class="row busr_sxid rowbusrs">
+					</div>
+					<div class="col-md-12" style="margin-top: -2em;">
+						<!--table 表格-->
+						<table class="layui-hide" id="baseInfo" lay-filter="demo"></table>
+						<!--table 表格-->
+						<div class="row">
+							<div class="col-md-7 col-sm-12">
+								<div class="dataTables_paginate bootstrap_full_number">
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<!-- 公共包 -->
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!--浆员信息变更js-->
+		<script th:src="@{/js/business/register/plasma_examine.js}"></script>
+	</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>耗材报损单查询</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<!--bootstarp-->
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<!--新献浆员登记css-->
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+	</head>
+	<style type="text/css">
+	 td:nth-child(2) {
+       		 display: none;
+  		  }
+
+   		 th:nth-child(2) {
+      		  display: none;
+  		  } 
+		.layui-layer-content{      margin-top: 2.5em;}
+		.layui-layer-title{display: none;}
+		.pull-center .layui-layer-ico {    background:initial}
+		.layui-layer-page .layui-layer-content{overflow: hidden!important;}
+	</style> 
+	<style>body .layui-layer-content{background-color:  #aab0ac; color: #f6f8f7;}</style>
+	
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid">
+				<div class="col-xs-12 colx8 inforcol">
+					<div class="row rowinfor" id="search_par">
+						<div class="col-xs-4 colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">报损日期：</label>
+								<div class="input-group">
+									<div class="col-xs-5 advancol">
+									<input name="startTime" id="startTime" type="text" placeholder="开始日期" title="请输入开始日期" value="" class="form-control" />
+									</div>
+									<div class="col-xs-1 advancolS">
+										--
+									</div>
+									<div class="col-xs-5 advancol">
+										<input name="endTime" id="endTime" type="text" placeholder="结束日期" title="请输入结束日期" value="" class="form-control" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4 colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">报损单号：</label>
+								<div class="input-group">
+									<input id="damageOrder" name="damageOrder" title="请输入退还单号" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-4 colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">审核状态：</label>
+								<div class="input-group">
+									<select name="status" id="status" class="form-control">
+										<option value="">请选择</option>
+										<option value="0">未审核</option>
+										<option value="1">已审核</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group newikrd demoTable">
+							<div class="input-group newInpa butnewikr" style=" margin:  1em auto;">
+								<button type="button" id="query" class="btn  btn-info">查询</button>
+								<button type="button" id="btn-reset" class="btn  btn-info">重置</button>
+								<button type="button" onclick="refresh()" class="btn  btn-info">刷新</button>
+								<shiro:hasPermission name="loss:status">
+								<button type="button" class="btn  btn-info hcj"  data-type="getCheckData">审核</button>
+								<button type="button" class="btn  btn-info hmy"  data-type="cancel">取消审核</button>
+								</shiro:hasPermission>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="gray-bg" id="">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row UserA">
+				</div>
+				<div class="col-md-12 bustrNew">
+						<!--table数据-->
+						<div class="phyegistrS" style="width:100%">
+							<p>耗材列表</p>
+							<script type="text/html" id="barDemohao">
+								<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看详情</a>
+							</script>
+							<table class="layui-hide" id="returnPage" lay-filter="demo"></table>
+						</div>
+					</div>
+			</div>
+		</div>
+	<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<!-- 公共包-->
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/supplies/loss/lossQuery.js}"></script>
+	</body>
+
+</html>

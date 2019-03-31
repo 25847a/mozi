@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<meta charset="UTF-8" />
+<title>参数配置</title>
+<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+<!--bootstarp-->
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+<link th:href="@{/css/common.css}" rel="stylesheet" /> 
+<link th:href="@{/css/icheck-bootstrap.css}" rel="stylesheet" />
+<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+<link th:href="@{/css/fileinput.min.css}" rel="stylesheet" />
+<style type="text/css">
+.newolod {
+	padding-left: 35%;
+}
+</style>
+</head>
+<body id="newpray">
+	<div class="gray-bg " style="margin-bottom: 0em;">
+		<div class="wrapper wrapper-content animated fadeInRight weralid">
+			<!--基本信息及验证-->
+			<form id="addForm">
+				<input type="hidden" name ="id" th:value="${config.id}"/>
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion">
+						<div class="row newregistr" style="margin: 4em 0;"> 
+							<div class="col-xs-12 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC">非固定浆员蛋白值合格范围：</label>
+									<div class="input-group"  style="  width: 68%;">
+										<div class="col-xs-5 advancol">
+											<input  id="unfixedProteinMin" name="unfixedProteinMin"
+												th:value="${config.unfixedProteinMin}" class="form-control" />
+										</div>
+										<div class="col-xs-1 advancolS">--</div>
+										<div class="col-xs-5 advancol">
+											<input  id="unfixedProteinMax" name="unfixedProteinMax"
+												th:value="${config.unfixedProteinMax}" class="form-control" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC   "  style="   text-indent: 2.5%;">固定浆员蛋白值合格范围：</label>
+									<div class="input-group"   style="  width: 68%;">
+										<div class="col-xs-5 advancol">
+											<input  id="fixedProteinMin" name="fixedProteinMin"
+												th:value="${config.fixedProteinMin}" class="form-control" />
+										</div>
+										<div class="col-xs-1 advancolS">--</div>
+										<div class="col-xs-5 advancol">
+											<input  id="fixedProteinMax" name="fixedProteinMax"
+												th:value="${config.fixedProteinMax}" class="form-control" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC   "  style="  text-indent:9.5%;">新浆员是否抽小样：</label>
+									<div class="input-group" style="  width: 60%;">
+										<div class="col-xs-2input-group"> 
+											<div class="jidmaas" style="float: left">
+									<div class="radio icheck-default" style="   float: left;"> 
+											<input type="radio" id="default1" name="isSample" th:checked="${config.isSample== 0}" value="0" /> <label
+											for="default1">化验</label>
+									</div>
+									<div class="radio icheck-default"  style="margin-left: 1em;    float: left;">
+										<input type="radio"   id="default2" name="isSample" th:checked="${config.isSample== 1}" value="1" /> <label
+											for="default2">化验</label>
+									</div>
+								</div>
+										</div>
+										<div class="col-xs-2input-group"> 
+											 	
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-12">
+						<div class="form-group newformcol">
+							<div class="pull-right">
+								<button type="submit" class="btn  btn-info"
+									style="margin-right: 1em;">确定</button>
+								<button type="reset" class="btn  btn-info"
+									style="margin-right: 1em;">重置</button>
+								<button type="button" class="btn  btn-info" id="cannel">取消</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery-form.js}"></script>
+	<!--  jQuery Validation plugin javascript -->
+	<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+	<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+	<script th:src="@{/js/jquery.validate.methods.js}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<!--bootstarp表格插件-->
+	<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<script th:src="@{/js/popup/bus/busintoconig.js}"></script>
+</body>
+
+</html>
