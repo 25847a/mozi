@@ -1,0 +1,22 @@
+
+debug: false
+ 
+#mybatis: 
+#  mapper-locations: 
+#  type-aliases-package: 
+ 
+mvc:
+  view:
+    prefix:/WEB-INF/views/
+    suffix:.jsp
+ 
+#pagehelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  
+spring: 
+  profiles: 
+    active: pro    #指定开发环境配置  application-dev.yml
