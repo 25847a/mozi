@@ -25,6 +25,7 @@ public class NewCardController extends BaseController{
 
 	private static final Logger log = LogManager.getLogger(NewCardController.class);
 	
+	
 	@Autowired
 	public NewCardService newCardService;
 	
