@@ -10,7 +10,6 @@ public class Caaa {
 		int d = r.nextInt((lowpressure/10)*2)+(lowpressure-lowpressure/10)+1;
 		System.out.println(d);
 		
-		
 	}
 	
 	
