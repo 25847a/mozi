@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.image.dao.PlasmaImageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.image.entity.PlasmaImage">
+        <id column="id" property="id" />
+        <result column="imgId" property="imgId" />
+        <result column="type" property="type" />
+        <result column="imgUrl" property="imgUrl" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, imgId, type, imgUrl, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+    
+    <!-- 根据浆员卡号和时间查询现场图片 -->
+    <select id="queryPlasmaImageInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+    	SELECT fi.imgUrl FROM f_provider_registries fp 
+		INNER JOIN f_plasma_image AS fi 
+		ON fp.id = fi.imgId
+		WHERE providerNo=#{providerNo} AND fi.type=0
+		<if test="time!=null and time!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d')=#{time} 
+		</if>
+		<if test="allId!=null and allId!='' ">
+			AND fp.allId = #{allId}
+		</if>
+		ORDER BY fp.createDate DESC 
+		LIMIT 1
+    </select>
+    
+    <!-- 获取现场图片 -->
+    <select id="queryPlasmaImageByImgIdAndType" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+    	SELECT fp.imgUrl FROM f_plasma_image AS fp 
+		WHERE fp.imgId = #{id} AND fp.type=#{type}
+    </select>
+</mapper>

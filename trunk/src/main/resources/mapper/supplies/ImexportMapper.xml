@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.supplies.dao.ImexportMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.supplies.entity.Imexport">
+        <id column="id" property="id" />
+        <result column="orderId" property="orderId" />
+        <result column="suppliesId" property="suppliesId" />
+        <result column="sum" property="sum" />
+        <result column="batchNumber" property="batchNumber" />
+        <result column="expiryTime" property="expiryTime" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, orderId, suppliesId, sum, batchNumber, expiryTime, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+    <!-- 查询出入库流水表列表 -->
+	<select id="queryUsedList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tk.oddNumber,tg.name as supplies,tg.type,sum,batchNumber,tg.apply,tp.createDate FROM f_supplies_imexport tp
+		LEFT JOIN f_supplies_info tg
+		ON tp.suppliesId=tg.id
+		LEFT JOIN f_order_form tk
+		ON tp.orderId=tk.id
+		where 1=1
+		<if test="supplies!=null and supplies!=''">
+		and tg.name LIKE CONCAT('%',#{supplies},'%')
+		</if>
+		<if test="batchNumber!=null and batchNumber!=''">
+		and batchNumber LIKE CONCAT('%',#{batchNumber},'%')
+		</if>
+		<if test="createDate!=null and createDate!=''">
+		and tp.createDate  LIKE CONCAT('%',#{createDate},'%')
+		</if>
+		ORDER BY createDate DESC
+	</select>
+</mapper>

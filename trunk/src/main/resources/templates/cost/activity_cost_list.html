@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>浆站活动</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<!--bootstarp-->
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<!--文件上传-->
+		<link th:href="@{/css/fileinput.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<!--新献浆员登记css-->
+		<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+		<style type="text/css">
+			.newolod {
+				padding-left: 35%;
+			}
+			#newpray .UserCS{width:38%}
+		</style>
+	</head> 
+	<body id="newpray">
+	<div class="gray-bg" id="" style=" ">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row UserA">
+					<div class="col-xs-12">
+						<div class="ibox">
+							<div class="ibox-content" style="padding: 0;">
+								<div class="row form-horizontal"  style="  margin-top: 0.8em;"> 	 
+									<!-- <div class="col-xs-6" style="width: initial;"> 
+										<div class="form-group newformcol">
+											<label class="control-label" style=" ">活动信息列表</label>
+										</div>
+									</div>  -->
+									<div class="col-xs-5 colxsgray" style="width: initial;"> 
+										<div class="form-group newformcol">
+											<label class="control-label UserC" style="font-size:12px;color: #3e3e3e">活动名称：</label>
+											<div class="input-group ">
+							<input type="text" class="form-control newfrin" id="name" />
+ 											</div>
+										</div>
+									</div>
+									<div class="col-xs-3 colxsgray">
+										<div class="form-group newformcol">
+											<div class="pull-left">
+												<button type="button" class="btn  btn-info" style=" margin: 0 1em;" id="query">查询</button>
+												<button type="button" class="btn  btn-info" style=" margin: 0 1em;" id="reset">重置</button>
+												<shiro:hasPermission name="activity:add">
+												  <button type="button" class="btn  btn-info" id="activityadd">新增</button>
+											 	</shiro:hasPermission>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row busr"> 
+					<div class="col-md-12 bustrNew">  
+						<script type="text/html" id="barDemo">
+							<shiro:hasPermission name="activity:update">
+						  		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">修改</a>
+					 		</shiro:hasPermission>
+							<shiro:hasPermission name="activity:delete">
+						  		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="del">删除</a> 
+					 		</shiro:hasPermission>
+						</script>
+							<table class="layui-hide" id="newtestS" lay-filter="demo"></table> 
+					</div>
+				</div>  
+				 
+			</div>
+		</div>
+	<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script> 
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<script th:src="@{/js/cost/activity_cost_list.js}"></script>
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/dateUtil.js}"></script>
+	</body>
+
+</html>

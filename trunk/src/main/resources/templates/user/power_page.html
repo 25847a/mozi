@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>用户管理</title>
+		<link rel="shortcut icon" href="favicon.ico"/>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<!--font文字图标-->
+		<link th:href="@{/css/font-awesome.min93e3.css?v=4.4.0}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/index.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/Index_home.css}" rel="stylesheet"/>
+	</head>
+
+	<body class="fixed-sidebar full-height-layout gray-bg">
+
+		<div id="wrapper" class="wrabusr">
+			<!--左侧导航开始-->
+			<nav class="navbar-default navbar-static-side" role="navigation">
+				<div class="arabusimg">
+					<img th:src="@{'/img/Quud_03.png'}"  />
+					<label>权限管理</label>
+				</div>
+				<div class="sidebar-collapse">
+
+					<ul class="nav" id="side-menu">
+
+						<li>
+							 <a class="J_menuItem"   href="/admin/adminList"><i class="fa fa-home"></i><span class="nav-label">用户管理</span> </a>						</li>
+
+						<li>
+							<a class="J_menuItem" href="/sysRole/rolePage"><i class="fa fa-television"></i> <span class="nav-label">角色管理</span><span class="fa arrow"></span></a>
+
+						</li>
+						<li>
+							<a class="J_menuItem" href="/sysPermission/permissionPage"><i class="fa fa-user"></i> <span class="nav-label">权限管理</span><span class="fa arrow"></span></a>
+
+						</li>
+						<li>
+							<a class="J_menuItem" href="/sysPermission/menuPage"><i class="fa fa-user"></i> <span class="nav-label">菜单管理</span><span class="fa arrow"></span></a>
+
+						</li>
+						<li>
+							<a class="J_menuItem" href="/log/log"><i class="fa fa-user"></i> <span class="nav-label">操作日志</span><span class="fa arrow"></span></a>
+
+						</li>
+
+					</ul>
+
+				</div>
+			</nav>
+			<!--左侧导航结束-->
+			<!--右侧部分开始-->
+			<div id="page-wrapper" class="gray-bg dashbard-1">
+
+				<div class="row content-tabs">
+					<button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+                </button>
+					<nav class="page-tabs J_menuTabs">
+						<div class="page-tabs-content">
+							<a href="javascript:;" class="active J_menuTab" data-id="/admin/adminList">用户管理</a>
+						</div>
+					</nav>
+					<button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+                </button>
+					<div class="btn-group roll-nav roll-right">
+						<button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+                    </button>
+						<ul role="menu" class="dropdown-menu dropdown-menu-right">
+							<li class="J_tabShowActive">
+								<a>定位当前选项卡</a>
+							</li>
+							<li class="divider"></li>
+
+							<li class="J_tabCloseOther">
+								<a>关闭其他选项卡</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				<div class="row J_mainContent" id="content-main">
+					<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="/admin/adminList" frameborder="0" data-id="/admin/adminList" seamless=""></iframe>
+				</div>
+			</div>
+			<!--右侧部分结束-->
+		</div>
+		<!--jquery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--'bootstarp框架包'-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+		<!--layre组件包-->
+		<script th:src="@{/layui-master/src/layer.min.js}"></script>
+		<script th:src="@{/js/hplus.min.js}"></script>
+		<!--做导航条组件包-->
+		<script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+		<script type="text/javascript" th:src="@{/js/contabs.min.js}"></script>
+	</body>
+
+</html>

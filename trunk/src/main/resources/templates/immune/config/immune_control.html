@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html> 
+	<head>
+		<meta charset="UTF-8"/>
+		<title>免疫针次控制设置</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+		<style type="text/css">
+			.newolod {
+				padding-left: 35%;
+			} 
+		</style>
+	</head>
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+				<!--基本信息及验证-->
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion" id="search_par">
+						 
+						<div class="row newregistr">
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">免疫名称：</label>
+									<div class="input-group inhemog">
+									<select name="immunetypeId" id="immunetypeId" class="form-control">
+											<option value="">请选择</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4 colxsgray ">
+								<div class="form-group newikrd">
+									<button type="button" class="btn  btn-info" id="searchBtn" style="margin-right: 1em;  line-height: 16px;">查询</button>
+									<button type="button" class="btn  btn-info" id="btn-reset" style="margin-right: 1em;  line-height: 16px;">重置</button>
+									<button type="button" class="btn  btn-info" id="immAdd" style="    line-height: 16px;">添加</button>
+								</div>
+								<div class="form-group newikrd">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gray-bg" id="" style=" ">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row busr">
+
+					<div class="col-md-12 bustrNew">
+						<!--table数据表格-->
+						<script type="text/html" id="barDemo">
+							<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">修改</a>
+							<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+						</script>
+						<table class="layui-hide" id="control" lay-filter="page"></table>
+						<div class="row">
+							<div class="col-md-7 col-sm-12">
+								<div class="dataTables_paginate bootstrap_full_number">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<!-- 公共包 -->
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/immune/config/immune_control.js}"></script>
+
+	</body>
+
+</html>

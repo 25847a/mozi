@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+	<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>登录界面</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+		<!--bootstarp框架css样式-->
+		<link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+		<link th:href="@{/iconfont/style.css}" type="text/css" rel="stylesheet"/>
+		<!--本地样式调用-->
+		<link th:href="@{/css/list/index.css}" type="text/css" rel="stylesheet"/>
+		<link rel="stylesheet" th:href="@{/css/list/log.css}"/>
+	</head> 
+	<body class="loglogbody">
+		<div class="container wrap1 loz" style="height:450px;">
+			<h2 class="mg-b20 text-center shucr" style="">浆站业务管理系统</h2>
+			<div class="col-sm-8 col-md-5 center-auto pd-sm-50 pd-xs-20 main_content">
+
+				<div class="logia">
+					<p class="text-center font16">本地数据库连接</p>
+					<div class="form-group">
+						<label for="txt_departmentname">服务地址:</label>
+						<input type="text" name="txt_departmentname" class="form-control" id="txt_departmentname" placeholder="服务地址"/>
+					</div>
+					<div class="form-group">
+						<label for="txt_parentdepartment">登录账号:</label>
+						<input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment" placeholder="登录账号"/>
+					</div>
+					<div class="form-group">
+						<label for="txt_departmentlevel">登录密码:</label>
+						<input type="password" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel" placeholder="登录密码"/>
+					</div>
+					<div class="form-group">
+						<label for="txt_statu">数据库名:</label>
+						<input type="text" name="txt_statu" class="form-control" id="txt_statu" placeholder="数据库名"/>
+					</div>
+					<div class="form-group">
+						<button style="submit" class="login_btn secr" onclick="lonzed()">测试连接</button>
+						<button style="submit" class="login_btn hidr" onclick="Fanir()">返回</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</body>
+	<!--jquery包-->
+	<script type="text/javascript" th:src="@{/js/PlaJs/jquery.min.js}"></script>
+	<!--layui层框架-->
+	<script type="text/javascript" th:src="@{/layui-master/src/lay/modules/layer.js}"></script>
+	<script type="text/javascript" th:src="@{/js/PlaJs/jquery-ui.min.js}"></script>
+	<!--页面节点特效-->
+	<script type="text/javascript" th:src="@{/js/PlaJs/stopExecutionOnTimeout.js?t=1}"></script>
+	<script type="text/javascript" th:src="@{/js/PlaJs/Particleground.js}"></script>
+	<script type="text/javascript" th:src="@{/js/PlaJs/jquery.mockjax.js}"></script>
+	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+<!--本地js文件-->
+	<script type="text/javascript" th:src="@{/js/script.js}"></script>
+
+	</html>

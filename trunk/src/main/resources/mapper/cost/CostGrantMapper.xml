@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.cost.dao.ICostGrantMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap type="com.fadl.cost.entity.CostGrant" id="BaseResultMap">
+		<id column="id" property="id"/>
+		<result column="providerNo" property="providerNo"/>
+		<result column="allId" property="allId"/>
+		<result column="num" property="num"/>
+		<result column="money" property="money"/>
+		<result column="isGrant" property="isGrant"/>
+		<result column="roadFeeType" property="roadFeeType"/>
+		<result column="roadFee" property="roadFee"/>
+		<result column="status" property="status"/>
+		<result column="isRoadFee" property="isRoadFee"/>
+		<result column="collDate" property="collDate"/>
+		<result column="remarks" property="remarks"/>
+		<result column="createDate" property="createDate"/>
+		<result column="updateDate" property="updateDate"/>
+		<result column="creater" property="creater"/>
+		<result column="updater" property="updater"/>
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+	
+	
+	<!-- 通用查询结果列 -->
+	<sql id="Base_column_list">
+		id,providerNo,allId,money,isGrant,status,isRoadFee,collDate,createDate,updateDate,creater,updater, plasmaId
+	</sql>
+	<!-- 更新费用发放记录 -->
+	<update id="update" parameterType="com.fadl.cost.entity.CostGrant">
+		update f_cost_grant
+		<trim prefix="set" suffixOverrides=",">
+			<if test="providerNo !=null">providerNo = #{providerNo},</if>
+			<if test="money !=null">money = #{money},</if>
+			<if test="isGrant !=null">isGrant = #{isGrant},</if>
+			<if test="status !=null">status = #{status},</if>
+			<if test="updateDate !=null">updateDate = #{updateDate},</if>
+			<if test="creater !=null">creater = #{creater},</if>
+			<if test="updater !=null">updater = #{updater},</if>
+		</trim>
+		where 1=1 
+		<if test="id!=null and id!='' ">
+			AND id = #{id} 
+		</if>
+		<if test="allId!=null and allId!='' ">
+			AND allId=#{allId}
+		</if>
+	</update>
+	<!-- 浆员费用信息列表 未发放-->
+	<select id="queryNotGrantList" resultType="java.util.HashMap" parameterType="com.fadl.cost.entity.CostGrant">
+		select cost.id as id,cost.providerNo as providerNo,cost.allId as regNo,base.`name` as pName ,base.sex as sex,cost.remarks,
+		cost.isGrant as isGrant,cost.money as pMoney,base.type as pType,base.icNumber,
+		base.bloodType as bType,cost.collDate as cjDate,admin.name as provider,cost.createDate as ffDate
+		FROM f_cost_grant cost
+		INNER JOIN f_provider_baseinfo base 
+		ON cost.providerNo = base.providerNo
+		INNER JOIN f_admin admin 
+		on admin.id = cost.updater 
+		WHERE cost.isGrant=0 and cost.isRoadFee = 1 AND DATE_FORMAT(cost.updateDate,'%Y-%m-%d') = #{createDate}
+		<if test="providerNo!=null and providerNo!=''">
+			AND cost.providerNo=#{providerNo}
+		</if>
+		ORDER BY cost.allId DESC
+	</select>
+	<!-- 浆员费用信息列表 已发放-->
+	<select id="queryGrantList" resultType="java.util.HashMap" parameterType="com.fadl.cost.entity.CostGrant">
+		select cost.id as id,cost.providerNo as providerNo,cost.allId as regNo,base.`name` as pName ,base.sex as sex,
+		cost.isGrant as isGrant,cost.money as pMoney,base.type as pType,
+		base.bloodType as bType,cost.collDate as cjDate,admin.name as provider,cost.createDate as ffDate
+		FROM f_cost_grant cost
+		INNER JOIN f_provider_baseinfo base 
+		ON cost.providerNo = base.providerNo
+		INNER JOIN f_admin admin 
+		on admin.id = cost.updater 
+		WHERE cost.isGrant=1 AND DATE_FORMAT(cost.updateDate,'%Y-%m-%d') = #{createDate} 
+		ORDER BY cost.allId DESC
+	</select>
+	<!-- 根据providerNo相关条件查询费用发放信息 -->
+	<select id="getCostGrantDetailList" resultType="java.util.Map" parameterType="java.lang.String">
+		<!-- select * from f_cost_grant where providerNo = #{providerNo} -->
+		select cost.id,
+		cost.providerNo,base.name,base.sex,base.bloodType,base.type,cost.collDate,cost.money,cost.createDate,admin.name updater
+		from f_cost_grant cost inner join f_provider_baseinfo base INNER JOIN f_admin admin 
+		on cost.providerNo = base.providerNo and cost.updater = admin.id where cost.providerNo = #{providerNo}
+	</select>
+	<!-- 费用发放首页 -->
+	<select id="queryCostHead" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT fp.name,fc.roadFee,fp.bloodType,fp.type,fc.allId,fp.icNumber,fp.sex,fp.providerNo,fr.ordinaryNo,fs.plasmaType,
+		fas.name as fname,fc.money,fp.collectionDate,fp.aboutDate,(TO_DAYS(NOW()) - TO_DAYS(fp.collectionDate)) daydiff,
+		t.money AS fmoney,fp.imagez,fc.isGrant,fp.photo,
+		(SELECT COUNT(*) FROM f_plasm_collection WHERE providerNo = fc.providerNo AND DATE_FORMAT(updateDate,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) month,
+		(SELECT COUNT(*) FROM f_plasm_collection WHERE providerNo = fc.providerNo AND YEAR(updateDate) = YEAR(NOW())) year
+		FROM f_cost_grant AS fc 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fc.providerNo = fp.providerNo
+		LEFT JOIN f_immune_register AS fr 
+		ON fp.immuneRegisterId = fr.id 
+		LEFT JOIN f_provider_registries AS fs 
+		ON fc.allId = fs.allId 
+		
+		INNER JOIN f_admin AS fas 
+		ON fas.id = fc.updater 
+		LEFT JOIN (SELECT * FROM f_cost_grant WHERE id &lt; #{id} ORDER BY id DESC LIMIT 1)t
+		ON t.providerNo = fc.providerNo
+		WHERE fc.id=#{id}
+	</select>
+	<!-- 费用详情查询 -->
+	<select id="costDetail" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+		SELECT
+			cost.money AS colMoney,
+			IFNULL(cost.roadFee,'0') AS roadMoney,
+			IFNULL(activity.money,'0') AS activityMoney,
+			activity.`name`
+		FROM
+			f_cost_grant cost
+		LEFT JOIN f_activity_cost_detail detail
+		ON cost.id = detail.costId
+		LEFT JOIN f_activity activity  
+		ON activity.id = detail.activityId
+		WHERE
+			cost.id = #{id}
+	</select>
+	
+	<!-- 打印费用详情小票 -->
+	<select id="printGrantCost" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+		SELECT
+			base.name,cost.providerNo,IFNULL(cost.money,0) AS colMoney,IFNULL(cost.roadFee, 0) AS roadMoney,
+			IFNULL(activity.money, 0) AS activityMoney,activity.name as activityname,cost.collDate,DATE_ADD(cost.collDate,INTERVAL 14 DAY) as nextCollDate
+		FROM
+		f_cost_grant cost
+		LEFT JOIN f_activity_cost_detail detail ON cost.id = detail.costId
+		LEFT JOIN f_activity activity ON activity.id = detail.activityId
+		INNER JOIN f_provider_baseinfo base on cost.providerNo = base.providerNo
+		WHERE
+			cost.id = #{id}
+	</select>
+	
+	<!-- 费用发放查询 -->
+	<select id="queryCostGrantList" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT cost.*,SUM(IF(fa.moneyType=0,fa.money,fa.money * num)) fmoney FROM(
+			SELECT
+			cost.id,
+			cost.providerNo,cost.money,cost.roadFee,
+			base.name,
+			base.sex,
+			base.bloodType,
+			base.type,
+			cost.collDate,
+			cost.createDate,
+			admin. NAME AS updater,
+			reg.plasmaType
+		FROM
+			f_cost_grant cost
+		INNER JOIN f_provider_baseinfo base ON cost.providerNo = base.providerNo
+		INNER JOIN f_admin admin ON admin.id = cost.updater
+		INNER JOIN f_provider_registries reg ON reg.allId = cost.allId
+		WHERE
+			cost.isRoadFee = 1
+			<if test="providerNo != null and providerNo != '' ">and cost.providerNo like CONCAT('%',#{providerNo},'%')</if> 
+			<if test="updater!=null and updater!='' ">and admin.name like CONCAT('%',#{updater},'%')</if>
+			<if test="createDateCost!=null and createDateCost!='' ">and DATE_FORMAT(cost.createDate,'%Y-%m-%d') = #{createDateCost}</if>
+			<if test="icNumber!=null and icNumber!='' ">and base.icNumber like CONCAT('%',#{icNumber},'%')</if> 
+			<if test="idNo!=null and idNo!='' ">and base.idNo like CONCAT('%',#{idNo},'%')</if>
+			<if test="createDateCol!=null and createDateCol!='' ">and DATE_FORMAT(cost.collDate,'%Y-%m-%d') = #{createDateCol}</if>
+			<if test="plasmaType!=null and plasmaType!='' ">and reg.plasmaType = #{plasmaType}</if> 
+			LIMIT ${pageNum},${pageSize}
+		)cost
+		LEFT JOIN f_activity_cost_detail fad ON cost.id = fad.costId 
+		LEFT JOIN f_activity fa ON fad.activityId = fa.id
+		GROUP BY cost.id
+	</select>
+	
+	<!-- 批量插入费用中间表  -->
+	<insert id="insertActivityCostDetail" parameterType="java.util.Map">
+		INSERT INTO f_activity_cost_detail(costId,activityId,num) VALUES 
+		<foreach collection="list" item="item" index="index" separator=","> 
+			(#{item.costId},#{item.activityId},#{item.num})
+		</foreach>
+	</insert>
+	
+	<!-- 发放费用 -->
+	<update id="updateGrandCostStatus" parameterType="com.fadl.cost.entity.CostGrant">
+		UPDATE f_cost_grant SET isGrant=1,money=#{money},type=#{type},isIdentity=#{isIdentity},updateDate=NOW(),remarks=#{remarks} WHERE id= #{id}
+	</update>
+	
+	<!-- 取消发放费用 -->
+	<update id="updateCostGrantById" parameterType="java.lang.Long">
+		UPDATE f_cost_grant SET isGrant=0,remarks=#{remarks},updateDate=NOW() WHERE id= #{id}
+	</update>
+</mapper>

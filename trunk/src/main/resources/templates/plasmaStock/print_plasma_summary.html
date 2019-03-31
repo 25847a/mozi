@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+		<meta charset="UTF-8" />
+		<title>血浆装箱汇总表</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+		<link rel="stylesheet" th:href="@{/css/style.min862f.css?v=4.1.0}" />
+		<link rel="stylesheet" th:href="@{/css/common.css}" />
+		<link rel="stylesheet" th:href="@{/css/list/log.css}" />
+	</head>
+	<style>@page { size: auto; margin: 3mm 5mm 3mm 5mm; }  #newpray .busr table thead {}  #newpray .busr table tbody tr .tabdistr { border-bottom: 0; color: #FFFFFF; }  #newpray .busr table tbody tr .liardg { border-top: 0; color: #FFFFFF; }  .floalp { line-height: 2.2rem; }  .logdkr { border-top: 0; border-bottom: 0; border-left: 0; border-right: 0; font-size: 17px; }  .footRight .floalp p label { border-bottom: 1px solid; width: 8rem; }  .footRight .floalp p { font-size: 1.4rem; }  .footRight .floalp .loakp {}  .footRight .floalp .lockp { font-size: 1rem; }  .footCenter .floalp p {}  .footCenter .floalp .loakp { font-size: 2rem; letter-spacing: 0.3rem; }  .footCenter .floalp .lockpS { font-size: 1.6rem; margin-top: 1rem; }  .footCenter .floalp .lockp { font-size: 1.3rem; }  .footLeft .floalp p label { border-bottom: 1px solid; width: 8rem; }  .footLeft .floalp p { font-size: 1.4rem; }  .footLeft .floalp .loakp {}  .footLeft .floalp .lockp { font-size: 1rem; }  .busr table tr .logdkr p {margin-bottom: -1px;    line-height: 30px;}  .busr table tr .logdkr .loakp {}  .busr table tr .logdkr .lockp {}  .zhuangxl { text-decoration: none; border-bottom: 1px solid #ccc; display: inline-block; padding-bottom: 3px; }  #newpray .dayina { width: 100%; margin-bottom: 0; }  #newpray .gray-bg .colx8 .inhenagoi { text-align: left; color: #b9b9b9; }  .colxsgray { float: left; width: 24%; padding: 0 }  .newregistr .zhiconsyr { float: left; width: auto; margin-top: 0.3em; margin-right: 1%; }  body .ahudr { width: 20% !important; }  .indegirtion .consdr { margin-left: 0; }  #aordklr .indegirtion .consdr { width: auto; float: right; }  .newregis { margin: 0; padding: 0.1em 0; }  .busr table tr th { padding: 0.4em 0; width: 29em; font-size: 13px; border: 1px solid #bbbbbb; text-align: center; }  .busr table tr .blcirth { border-top: 0; border-left: 0; border-right: 0; }  .busr table tr .logdkr { border-top: 0; border-bottom: 0; border-left: 0; border-right: 0; font-size: 17px; line-height: 1em; }  .busr table tr td { padding: 1.1em 0; font-size: 13px; border: 1px solid #bbbbbb; }  .busr table { margin: 0 }  #newpray .busr { width: 100%; margin-left: 0px !important; }  #newpray .gray-bg .colx8 .UserC { width: auto; }  .wrapper .newikrd .input-group { width: 73% }  .consdr .input-group { width: auto !important; }  #newpray .gray-bg { margin-bottom: inherit; padding: 0.5em 0; }  .zhikdP p { cursor: pointer; float: left; padding: 0 0.3em; color: #54a664; font-size: 15px; }  .zhikdP p:hover { color: red; cursor: pointer }  .busr table .table {}  @media print {}  </style>
+	<body id="newpray">
+		<div class="col-xs-12 colx8 colnewo" id="search">
+			<div class="row newregis" style="border-bottom: 0px solid #e7e7e7 !important;" id="basic">
+				<div class="row newregistr">
+					<div class="col-xs-5 colxsgray">
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagoi" style="    margin-top: 10px;">采浆日期：</label>
+							<div class="input-group inhemog">
+								<div class="col-xs-5 advancol">
+									<input class="form-control" name="startDate" id="startDate" readonly="readonly" />
+								</div>
+								<div class="col-xs-1 advancolS">
+									--
+								</div>
+								<div class="col-xs-5 advancol">
+									<input class="form-control" name="endDate" id="endDate" readonly="readonly" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-7 colxsgray">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr">
+								<button type="button" class="btn  btn-info" id="chaxun">查询</button>
+								<button type="button" class="btn  btn-info" onclick="printCheck()">打印</button>
+								<shiro:hasPermission name="report:plasmaSummary:view">
+									<button type="button" class="btn btn-success" name="editReportInfo" id="editReportInfo" onclick="gotoEditReportInfo('/reportInfo/initPlasmaSummaryPage',14)">编辑表头</button>
+								</shiro:hasPermission>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+		</div>
+	<div class="gray-bg dayina">
+		<div class="wrapper wrapper-content animated fadeInRight weralid"
+			style="padding: 0;">
+			<div id="div_print">
+				<div class="gray-bg">
+					<div class="wrapper wrapper-content animated fadeInRight"
+						style="width: 1115px; padding: 0; margin: 0 auto;">
+						<div class="row busr" id="bustable">
+							<div class="dayindiv">
+								<div class="row">
+									<div class="col-xs-4" id="headLeft">a</div>
+									<div class="col-xs-4" id="headCenter">b</div>
+									<div class="col-xs-4" id="headRight">c</div>
+								</div>
+							</div>
+							<div class="dayindiv logdkr"></div>
+							<div class="" style="margin-top: 1rem; float: left; width: 100%;">
+								<table border="0"
+									style="display: table-header-group; font-size: 1pt; width: 100%; float: left; border-bottom: 1px solid #bbbbbb;"
+									align="center">
+									<thead style="width: 100%;">
+										<tr style="width: 100%;">
+											<th colspan="2" style="width: 368px;" class="logdkr">
+												<div class="footLeft">
+													<div class="floalp">
+														<p class="loakp">
+															浆站(代号 )<label id="code"></label>
+														</p>
+														<p class="lockp">Plasna Canter(No.)</p>
+													</div>
+													<div class="floalp ">
+														<p class="loakp">
+															血浆总箱数<label id="boxNum">0</label>
+														</p>
+														<p class="lockp    ">Total Cases</p>
+													</div>
+													<div class="floalp ">
+														<p class="loakp">
+															库存浆总重量<label id="sumPlasma">0</label>g
+														</p>
+														<p class="lockp">Total Volume</p>
+													</div>
+													<div class="floalp">
+														<p class="loakp">
+															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;负责人: __________
+														</p>
+														<p class="lockp">Responsible Personer</p>
+													</div>
+
+												</div>
+											</th>
+											<th colspan="3" style="width: 32rem;" class="logdkr">
+												<div class="footCenter">
+													<div class="floalp">
+														<p class="loakp" id="company"></p>
+
+													</div>
+													<div class="floalp" style="margin-top: 1rem;">
+														<p class="loakp">血浆装箱汇总表</p>
+														<p class="lockp" style="padding: 0 3rem;">Aggregate
+															Plasma packinListg</p>
+														<p class="lockpS" style="padding: 0 3rem;"></p>
+													</div>
+												</div>
+											</th>
+											<th colspan="2" style="width: 321px;" class="logdkr">
+												<div class="footRight">
+													<div class="floalp">
+														<p class="loakp">
+															血浆批号__________
+														</p>
+														<p class="lockp">Plasma N0</p>
+													</div>
+													<div class="floalp">
+														<p class="loakp">
+															装箱日期__________
+														</p>
+														<p class="lockp">Date Packed</p>
+													</div>
+													<div class="floalp">
+														<p class="loakp">
+															&nbsp;&nbsp;&nbsp;填表人__________
+														</p>
+														<p class="lockp">Completed by</p>
+													</div>
+													<div class="floalp">
+														<p class="loakp">
+															&nbsp;&nbsp;&nbsp;核对人__________
+														</p>
+														<p class="lockp">Checked by</p>
+													</div>
+												</div>
+											</th>
+										</tr>
+									</thead>
+									<tbody style="text-align: center" id="tbody">
+										<tr>
+											<td style="width: 200px;">箱号 CasenNo.</td>
+											<td style="width: 200px;">采浆编号Control No.(from) (to)</td>
+											<td style="width: 200px;">重量(Subtotalg)</td>
+											<td class="tabdistr">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+											<td style="width: 200px;">箱号 CasenNo.</td>
+											<td style="width: 200px;">采浆编号Control No.(from) (to)</td>
+											<td style="width: 200px;">重量(Subtotalg)</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+						<div class="dayindiv">
+							<div class="row">
+								<div class="col-xs-4" id="footLeft"></div>
+								<div class="col-xs-4" id="footCenter"></div>
+								<div class="col-xs-4" id="footRight"></div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<!--bootstarp表格插件-->
+	<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<!--layer插件包-->
+	<script charset="utf-8" th:src="@{/layui-master/src/layui.js}"></script>
+	<script th:src="@{/js/plasmaStock/print_plasma_summary.js}"></script>
+</body>
+</html>

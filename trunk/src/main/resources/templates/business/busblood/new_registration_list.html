@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>新献浆员登记</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<!--bootstarp-->
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<!--文件上传-->
+		<link th:href="@{/css/fileinput.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<!--新献浆员登记css-->
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+		<link th:href="@{/css/icheck-bootstrap.css}"  rel="stylesheet"/>
+		<style type="text/css">
+			.newolod {
+				padding-left: 35%;
+			}
+			.fliespan label{
+				position: absolute;
+				bottom: -2.1em;
+
+			}
+			.newolod {
+				padding-left: 35%;
+			}
+
+			.fliespan label {
+				position: absolute;
+				bottom: -2.1em;
+			}
+
+			.newikrds {
+				float: left;
+				width: 100%
+			}
+
+			.aralbcks {
+				float: left;
+				margin-top: 0.1em;
+				text-align: right;
+			}
+
+			.aralbcka {
+				float: right;
+				width: 4em;
+				margin-left: 1em;
+			}
+
+			.aralbcka input {
+				width: 88%
+			}
+			.margin-top{margin-top:0em}
+			#newpray .gray-bg .colx8 .imadut {
+    width: 37%!important;
+}.wrapper .newikrd .input-group {
+    width: 62%;
+}
+.newregistr{margin-left:0}
+.auto{
+	width: 240px;
+	border: 1px solid #dedede;
+	border-top: none;
+	position: absolute;
+}
+.hidden{
+	display: none;
+}
+		</style>
+
+	</head> 
+	<body id="newpray">
+	<form id="newForm" enctype="multipart/form-data">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+				<!--基本信息及验证-->
+				<div class="col-xs-9 colx8 colnewo">
+					<div class="row newregis">
+						<p class="grayP">
+							<label class="grayLa ">基本信息</label></p>
+						<div class="row newregistr" style="margin-left: -3%;">
+							<div class="col-xs-4 colxsgray">
+
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>姓名</la>：</label>
+									<div class="input-group">
+										<input id="name" name="name" readonly="readonly" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut imadut"><la>年龄</la>：</label>
+									<div class="input-group">
+										<input id="age"  readonly="readonly" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">身份证号：</label>
+									<div class="input-group">
+										<input id="idNo" name="idNo" readonly="readonly" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>民族</la>：</label>
+									<div class="input-group">
+										<select id="nationId" class="form-control" disabled="disabled" >
+											<option value=""></option>
+										</select>
+										<input type="hidden" id="nation" name="nation"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>职业</la>：</label>
+									<div class="input-group">
+									<select name="vocation"  class="form-control" id="vocation">
+											<option value="">请选择</option>
+											<option value="0">务农</option>
+											<option value="1">非农</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>性别</la>：</label>
+									<div class="input-group">
+										<input type="text" class="form-control newfrin" id="sexTemp" readonly="readonly"/>
+										<input type="hidden" name="sex" id="sex" />
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>籍贯</la>：</label>
+									<div class="input-group">
+										<input id="place" name="place" readonly="readonly" class="form-control newfrin"/>
+									</div>
+								</div>
+
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">证件到期：</label>
+									<div class="input-group">
+										<input id="validDate"  name="validDate" readonly="readonly" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><ls>现居地</ls>：</label>
+									<div class="input-group">
+										<input id="addressx" readonly="readonly" name="addressx"  class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">出生年月：</label>
+									<div class="input-group">
+										<input id="birthday" name="birthday" readonly="readonly" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">是否结婚：</label>
+									<div class="input-group">
+									<select name="isMarry" id="isMarry">
+											<option value="">请选择</option>
+											<option value="0">已婚</option>
+											<option value="1">未婚</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>组号</la>：</label>
+									<div class="input-group">
+										<input type="text" id="group" name="group" class="form-control newfrin"/>
+										<div class="auto hidden" id="auto">
+										</div>
+									</div>
+								</div>
+								<!-- <div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>乡镇</la>：</label>
+									<div class="input-group">
+										<input type="text" id="country" name="country"  class="form-control newfrin"/>
+									</div>
+								</div> -->
+								<!-- <div class="form-group newikrd">
+									<label class="control-label UserC imadut"><ls>村委会</ls>：</label>
+									<div class="input-group">
+										<input type="text" id="village" name="village" class="form-control newfrin"/>
+									</div>
+								</div> -->
+								<!-- <div class="form-group newikrd">
+									<label class="control-label UserC imadut"><ls>村小组</ls>：</label>
+									<div class="input-group">
+										<input type="text" id="vgroup" name="vgroup"  class="form-control newfrin"/>
+									</div>
+								</div> -->
+							</div>
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>病史</la>：</label>
+									<div class="input-group">
+										<input type="text" id="history" name="history" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">联系电话：</label>
+									<div class="input-group">
+										<input type="text" id="phone" name="phone" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">邀请人类型：</label>
+									<div class="input-group" style="    width: 62%;">
+										<select id="inviteType" name="inviteType">
+											<option value="">请选择</option>
+											<option value="0">浆员</option>
+											<option value="1">拓展员</option>
+											<option value="2">业务员</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut">邀请人号：</label>
+									<div class="input-group">
+										<input type="text" id="inviteId" name="inviteId" class="form-control newfrin"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC imadut"><la>备注</la>：</label>
+									<div class="input-group">
+										<input id="remarks" name="remarks" class="form-control newfrin"/>
+									</div>
+								</div>
+
+								<div class="form-group newikrds">
+									<div class="input-group inhemog" style="float: right; width: 80%;">
+										<div style=" float: left;">
+											<label style="float:right;margin-top: 0.5em;">元</label>
+											<div class="aralbcka">
+												<input id="roadFee" name="roadFee"  type="text" value="0" readonly="readonly" style="text-align: center;" />
+											</div>
+											<div style="float:right">
+												<div class="aralbcks">
+													<div class="radio icheck-success">
+														<input type="radio" id="default1" value="0"  name="roadFeeType" checked="checked" />
+														<label for="default1">路费</label>
+													</div>
+												</div>
+												<div class="aralbcks">
+													<label>
+														<div class="radio icheck-success">
+															<input type="radio" id="default2" value="1" name="roadFeeType"/>
+															<label for="default2">车补</label>
+														</div>
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+
+					</div>
+
+					<div class="row newrowseg" >
+						<p class="grayP" style="margin-bottom: 2em;">
+							<label class="grayLa ">分配验证</label></p>
+						<div class="col-xs-6 coload">
+							<div class="coloadDi">
+								<div class="newIdr">验证方式</div>
+								 
+								<div class="form-group newikrd ondeadl">
+									<div class="input-group newgroup ndegrtup">
+										<button type="button" class="btn  btn-info buttnewifo"  id="newfacial">面部验证</button>
+										<button type="button" class="btn  btn-info buttnewifo"  id="loadidNo" >请提取身份信息 </button>
+										<button type="button" class="btn  btn-info buttnewifo"  id="loadJust" >请提取正面身份信息 </button>
+										<button type="button" class="btn  btn-info buttnewifo"  id="loadBack" >请提取反面身份信息 </button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="col-xs-6 coload">
+							<div class="coloadDi">
+								<div class="newIdr">打印方式</div>
+								<div class="form-group newikrd">
+									<div class="input-group">
+										<input type="hidden" id="providerNo" value=""/>
+										<label class="control-label UserC imadut Usnre">打印方式：</label>
+										<div class="input-group col-xs-8 date" id="inputNewS">
+											<select name="aa" class="form-control">
+												<option value="0">小票打印</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<div class="input-group" style="width: 100%; height: 3.4em;">
+									</div>
+								</div> 
+							</div>
+						</div>
+					</div>
+					
+					<div class="row newrowseg">
+						<div class="form-group newikrd" style=" margin: 1em 0;">
+							<div class="input-group newInpa butnewikr">
+								<input type="hidden" name="validateType" value="3" id="result"/>
+								<shiro:hasPermission name="baseinfo:add">
+									<button type="button" id="saveBaseInfo"  class="btn  btn-info">保存</button>
+								</shiro:hasPermission>
+								<button type="button" id="refreshPage"  class="btn  btn-info">刷新</button>
+								<button type="button" class="btn  btn-info" id="print">打印</button>
+								<button type="button" class="btn  btn-info Phyegis" id="check_print">打印体格表(正面)</button>
+								<button type="button" class="btn  btn-info Phyegis" id="check_print_f">打印体格表(反面)</button>
+								<shiro:hasPermission name="registration:addCost">
+									<button type="button" class="btn  btn-info" id="add_cost">添加路费</button>
+								</shiro:hasPermission>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--上传证件及照片-->
+				<div class="col-xs-3 colnewo">
+					<div class="row">
+						<div class="col-xs-12">
+							<p style="margin:  0; text-align: center;">
+								<img class="layui-upload-img" src="/img/new_pa1.png" style=" height: 3em;" id="demo2" />
+							</p>
+						</div>
+						<div class="col-xs-12 coldiv">
+							<div class="layui-upload-list">
+								<img class="layui-upload-img" th:src="@{'/img/new_pa1.png'}" style=" height: 12em;" id="demo1"/>
+								<p id="demoText"></p>
+							</div>
+						</div>
+						<div class="row" >
+							<div class="col-xs-6 coldiv6" style=" ">
+								<span class="btn upload fliespan">身份证正面<input type="file" onchange="addFile('demo1','file',0)" class="upload_pic" name="file" id="file" /></span>
+							</div>
+							<div class="col-xs-6 colki6" style="padding-right: 2.5em; ">
+								<span class="btn upload">身份证反面<input type="file" onchange="addFile('demo2','file1',1)" name="file" class="upload_pic" id="file1" /></span>
+							</div>
+						</div>
+					
+					<div class="row" style=" margin-top: 2em;">
+
+						<div class="col-xs-12 coldix">
+							 <img  id="play"   class="layui-upload-img"  th:src="@{'/img/new_pa2.png'}" style="width: 13em;height: 13em;position: initial;"/>
+						</div>
+						
+						 
+							<div class="col-xs-6 coldiv6" style="margin-top: 0.7rem;">
+								<span class="btn upload fliespan">启动摄像头<input type="button" class="upload_pic" id="newcamera"  /></span>
+							</div>
+							<div class="col-xs-6 colki6" style="padding-right: 2.5em; margin-top: 0.7rem;">
+								<span class="btn upload">上传照片<input type="file" onchange="addFile('play','file2',2)" name="," class="upload_pic" id="file2"/></span>
+							</div>
+						 
+					<!-- 	\<div class="col-xs-6 colki6" style="margin-top: 0.7rem;">
+							<span class="btn upload fliespan" style="float:inherit">启动摄像头<input type="button" id="newcamera"  class="upload_pic"/></span>
+							</div>
+							<div class="col-xs-6 colki6" style="margin-top: 0.7rem; ">
+								<span class="btn upload fliespan" style="float:inherit">上传照片<input type="file" name="file2" onchange="addFile('play','file2',2)"  class="upload_pic" id="file2"  /></span>
+
+						</div> -->
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+		<div class="gray-bg" id="" style=" ">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row UserA" style=" ">
+					<div class="col-xs-12">
+						<div class="ibox">
+							<div class="ibox-content" style="padding: 0;">
+								<div class="row form-horizontal" style=" margin-left:-1%; margin-top: 0.8em;">
+									<div class="col-xs-8 colikra">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4" style=" ">浆员信息列表</label>
+										</div>
+									</div>
+									<div class="col-xs-3">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4">日期</label>
+											<div class="input-group col-xs-8 date">
+												<input name="startTime" id="startTime" type="text" placeholder="开始日期" title="请输入开始日期" value="" class="form-control" />
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-1">
+										<div class="form-group newformcol">
+											<div class="pull-right">
+												<button type="button" id="search" class="btn  btn-info">查询</button>
+												<img class="layui-upload-img" th:src="@{'/img/new_pa1.png'}" style="display: none;" id="demo3"/>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row busr">
+					<!--<div class="row busr_sxid sxideNew">
+						<ul></ul>
+					</div>-->
+					<div class="col-md-12 bustrNew">
+						<!--table数据-->
+						<script type="text/html" id="barDemoS">
+							<shiro:hasPermission name="baseinfo:detail">
+								<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看详情</a>
+							</shiro:hasPermission>
+							<shiro:lacksPermission name="baseinfo:detail">
+								<a class="layui-btn layui-btn-primary layui-btn-xs" >无权限</a>
+							</shiro:lacksPermission>
+							<shiro:hasPermission name="baseinfo:del">
+								<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="del">删除</a>
+							</shiro:hasPermission>
+							<shiro:lacksPermission name="baseinfo:del">
+								<a class="layui-btn layui-btn-primary layui-btn-xs" >无权限</a>
+							</shiro:lacksPermission>
+						</script>
+						<table class="layui-hide" id="newBaseinfo" lay-filter="page"></table>
+						<div class="row">
+							<div class="col-md-7 col-sm-12">
+								<div class="dataTables_paginate bootstrap_full_number">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件--> 
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script> 
+		<script th:src="@{/js/zoom.js}"></script>
+		<!-- form表单提交 -->
+		<script th:src="@{/js/jquery-form.js}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" ></script>
+		<script th:src="@{/js/utils.js}"></script>
+		<!-- 身份证读取 -->
+		<script  th:src="@{/js/common/idCard.js}"></script>
+
+		<!-- 人脸识别 -->
+		<script  th:src="@{/js/common/start_camera.js}"></script>
+		<!--新献浆员登记JS-->
+		<script th:src="@{/js/a_a.js}"></script>
+		<script th:src="@{/js/business/busblood/new_registration.js}"></script>
+			<script th:src="@{/js/imgx.js}"></script>
+ 
+	<img src="" alt="" class="bigimg" />
+<div class="mask">
+	<img src="" alt="" />
+</div>
+	</body>
+
+</html>

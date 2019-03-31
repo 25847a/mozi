@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.plasma.dao.ProviderBaseinfoMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.fadl.plasma.entity.ProviderBaseinfo">
+		<id column="id" property="id" />
+		<result column="providerNo" property="providerNo" />
+		<result column="icNumber" property="icNumber" />
+		<result column="name" property="name" />
+		<result column="sex" property="sex" />
+		<result column="idNo" property="idNo" />
+		<result column="imagez" property="imagez" />
+		<result column="imagef" property="imagef" />
+		<result column="imagespot" property="imagespot"/>
+		<result column="bloodType" property="bloodType" />
+		<result column="birthday" property="birthday" />
+		<result column="aboutDate" property="aboutDate"/>
+		<result column="collectionDate" property="collectionDate"/>
+		<result column="type" property="type" />
+		<result column="immuneId" property="immuneId" />
+		<result column="immuneRegisterId" property="immuneRegisterId" />
+		<result column="groupId" property="groupId" />
+		<result column="isMarry" property="isMarry" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="bloodGrade" property="bloodGrade" />
+		<result column="isGrantCard" property="isGrantCard" />
+		<result column="plasmaId" property="plasmaId" />
+		<result column="photo" property="photo" />
+		<result column="examineStatus" property="examineStatus" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, icNumber, name, sex, idNo, imagez, imagef, bloodType, birthday, type, immuneId,isMarry, immuneRegisterId, createDate, updateDate, creater, updater,bloodGrade, plasmaId,aboutDate,collectionDate,photo,examineStatus
+    </sql>
+
+	<!-- 查询浆员基本信息 -->
+	<select id="queryProviderBaseInfoDetails" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		select t.providerNo,fpi.imgUrl,fpb.*,fdi.*,fcg.roadFee,fcg.roadFeeType,td.num
+		   from (
+			select id,providerNo,allId from f_provider_registries fpr where fpr.providerNo=#{providerNo} and
+			to_days(fpr.createDate)=to_days(#{startTime})) t
+			left join f_plasma_image fpi on t.id=fpi.imgId and fpi.type=0
+			left join f_provider_baseinfo fpb on fpb.providerNo=t.providerNo
+			left join f_detailed_info fdi on fpb.id=fdi.baseId and fdi.type=0
+			left join f_cost_grant fcg on fcg.allId=t.allId
+			LEFT JOIN f_group td ON fpb.groupId=td.id
+
+	</select>
+
+	<!-- 公共条件查询浆员信息列表 -->
+	<select id="queryWhereBaseInfoOrDetailList" parameterType="com.fadl.common.DataRow" resultType="com.fadl.common.DataRow">
+		select * from f_provider_baseinfo  fpb
+			left join f_detailed_info fdi on fpb.id=fdi.baseId and fdi.type=0 where 1=1
+			<if test="id!=null and id!=''">
+				and  fpb.id=#{id}
+			</if>
+		  	<if test="providerNo!=null and providerNo!=''">
+			 and  fpb.providerNo=#{providerNo}
+		  	</if>
+			<if test="icNumber!=null and icNumber!=''">
+				and  fpb.icNumber=#{icNumber}
+			</if>
+			<if test="name!=null and name!=''">
+				and  fpb.name=#{name}
+			</if>
+			<if test="sex!=null and sex!=''">
+				and  fpb.sex=#{sex}
+			</if>
+			<if test="idNo!=null and idNo!=''">
+				and  fpb.idNo=#{idNo}
+			</if>
+			<if test="type!=null and type!=''">
+				and  fpb.type=#{type}
+			</if>
+			<if test="startDate!=null and startDate!=''">
+				and   DATE_FORMAT(createDate, '%Y-%m-%d') >=fpb.startDate
+			</if>
+			<if test="endDate!=null and endDate!=''">
+				and  fpb.endDate>= DATE_FORMAT(createDate, '%Y-%m-%d')
+			</if>
+	</select>
+	<!-- 点击浆员 查询浆员详细信息 -->
+	<select id="queryPlasmaInfoDetail" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		select fpb.id,fpb.providerNo,fpb.name,fpb.sex,fpb.bloodType,fpb.plasmaState,fpb.idNo,tj.groupName,fdi.validDate,fpb.createDate,
+		fdi.history,fdi.country,fdi.village,fdi.vgroup,
+		TIMESTAMPDIFF(YEAR,fpb.createDate,now()) as jdAge,fdi.nation,fpb.birthday,
+		TIMESTAMPDIFF(YEAR, fpb.birthday, now()) as age,fdi.inviteType,fdi.inviteId,
+		fdi.addressx,fdi.place,fpb.icNumber,fn.name as nationName,fpb.type,fdi.phone,COUNT(fpc.id) as cid,MAX(fpc.createDate) as mcreateDate,
+		fdi.remarks,fpb.imagez,fpb.imagef,fpb.imagespot from f_provider_baseinfo fpb
+			left join f_detailed_info fdi on fpb.id=fdi.baseId and fdi.type=0 
+			left join f_plasm_collection fpc on fpb.providerNo=fpc.providerNo
+			left join f_nation fn on fdi.nation=fn.id
+			LEFT JOIN f_group tj ON fpb.groupId=tj.id
+			where fpb.id=#{id} 
+			group BY fpb.providerNo
+	</select>
+	<!-- 查询单个浆员 登记-采浆信息列表 -->
+	<select id="queryPlasmaInfoDetailList" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		select fpr.providerNo,fpr.createDate regCreateDate,fc.isCheck,fc.result,
+			fpc.isCollection,fpc.updateDate as colUpdateDate
+			from f_provider_registries fpr
+			left join f_check fc on fpr.allId=fc.allId
+			left join f_plasm_collection fpc on fpr.allId=fpc.allId
+			where fpr.providerNo=#{providerNo}
+	</select>
+	<!-- 公共条件查询浆员信息列表 -->
+	<select id="queryWhereBaseInfoOrDetailObj" parameterType="com.fadl.common.DataRow" resultType="com.fadl.common.DataRow">
+		select fpb.*,fdi.*,fn.name AS fname from f_provider_baseinfo  fpb
+		left join f_detailed_info fdi on fpb.id=fdi.baseId and fdi.type=0 
+		LEFT JOIN f_nation fn on fdi.nation = fn.id  where 1=1
+		<if test="id!=null and id!=''">
+			and  fpb.id=#{id}
+		</if>
+		<if test="providerNo!=null and providerNo!=''">
+			and  fpb.providerNo=#{providerNo}
+		</if>
+		<if test="icNumber!=null and icNumber!=''">
+			and  fpb.icNumber=#{icNumber}
+		</if>
+		<if test="name!=null and name!=''">
+			and  fpb.name=#{name}
+		</if>
+		<if test="sex!=null and sex!=''">
+			and  fpb.sex=#{sex}
+		</if>
+		<if test="idNo!=null and idNo!=''">
+			and  fpb.idNo=#{idNo}
+		</if>
+		<if test="type!=null and type!=''">
+			and  fpb.type=#{type}
+		</if>
+		<if test="startDate!=null and startDate!=''">
+			and   DATE_FORMAT(createDate, '%Y-%m-%d') >=fpb.startDate
+		</if>
+		<if test="endDate!=null and endDate!=''">
+			and  fpb.endDate>= DATE_FORMAT(createDate, '%Y-%m-%d')
+		</if>
+	</select>
+
+	<!-- 查询浆员首次建档登记 -->
+	<select id="queryRegistriesList" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		select fpb.id,fpb.providerNo,fpr.registriesNo,fpr.allId,fpb.name,fpb.idNo,fdi.vocation,fa.name as zname,fpb.sex,fpb.birthday,fdi.place,fdi.history,
+			fdi.inviteId,fdi.inviteType,fpr.createDate,fdi.addressx,fdi.validDate,fdi.remarks,fdi.phone
+			 from f_provider_registries fpr
+			left join f_provider_baseinfo fpb on fpr.providerNo=fpb.providerNo
+			left join f_detailed_info fdi on fpb.id=fdi.baseId and fdi.type=0
+			left join f_admin fa on fpr.creater=fa.id
+			where 1=1
+			<if test="startTime==null or startTime==''">
+				and  to_days(fpb.createDate)=to_days(now()) and to_days(fpr.createDate)=to_days(now())
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				and  to_days(fpb.createDate)=to_days(#{startTime}) and to_days(fpr.createDate)=to_days(#{startTime})
+			</if>
+			ORDER BY createDate DESC
+	</select>
+	<!-- 查询浆员信息 -->
+	<select id="queryProviderBaseInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fpb.id, fpb.providerNo, fpb.name, fpb.idNo, fdi.vocation, fa.name AS zname,
+			fpb.sex, fpb.birthday, fdi.place, fdi.history, fdi.inviteId, fdi.inviteType, fdi.addressx, fdi.validDate, fdi.remarks,
+			fdi.phone FROM f_provider_baseinfo fpb
+			LEFT JOIN f_detailed_info fdi ON fpb.id = fdi.baseId AND fdi.type = 0
+			LEFT JOIN f_admin fa ON fpb.creater = fa.id WHERE 1 = 1
+		<if test="idNo!=null and idNo!=''">
+			and fpb.idNo =#{idNo}
+		</if>
+		<if test="name!=null and name!=''">
+			and fpb.name =#{name}
+		</if>
+		<if test="providerNo!=null and providerNo!=''">
+			and fpb.providerNo =#{providerNo}
+		</if>
+	</select>
+	
+	<!-- 办卡查询 （未发卡）-->
+	<select id="queryCard" parameterType="java.lang.String" resultType="com.fadl.common.DataRow">
+		SELECT
+			base.id,base.providerNo,icNumber,name,
+			sex,
+			bloodType,
+			base.createDate,
+			imagez,
+			imagef,base.status,base.isGrantCard
+		FROM
+			f_provider_baseinfo base
+		INNER JOIN f_new_card AS fn 
+		ON base.providerNo = fn.providerNo
+		WHERE
+		 icNumber IS NULL AND fn.result=0 
+		<if test="_parameter != null and _parameter != ''">and DATE_FORMAT(base.createDate,'%Y-%m-%d') = #{_parameter}</if>
+	</select>
+	
+	<!-- 办卡查询 （已发卡）-->
+	<select id="haveGrantCard" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		select id,providerNo,icNumber,name,sex,bloodType,createDate,imagez,imagef,idNo,isGrantCard from f_provider_baseinfo
+		where plasmaState != 2 and icNumber is not null
+		<if test="createDate!=null and createDate!=''">
+			and DATE_FORMAT(createDate,'%Y-%m-%d') = #{createDate}
+		</if>
+		<if test="name != null and name != ''">
+			and name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="idNo != null and idNo != ''">
+			and idNo = #{idNo}
+		</if>
+		<if test="providerNo != null and providerNo != ''">
+			and providerNo = #{providerNo}
+		</if>
+	</select>
+	
+	<!-- 给检验合格的浆员将临时卡号改为浆员卡号 -->
+	<!-- 给检验合格的浆员将临时卡号改为浆员卡号 -->
+	<select id="changeProviderNo" resultType="java.lang.Integer" parameterType="java.util.Map" statementType="CALLABLE">
+		<![CDATA[
+		CALL changeProviderNo(#{newProviderNo,mode=IN,jdbcType=VARCHAR},#{pNo,mode=IN,jdbcType=VARCHAR},#{res,mode=OUT,jdbcType=INTEGER});
+		]]>
+	</select>
+	
+	<!-- 发卡，即给浆员绑定卡号 -->
+	<update id="grantCard" parameterType="java.util.Map">
+		update f_provider_baseinfo set icNumber = #{icNum} where id =#{id}
+	</update>
+	
+	<!-- 取消发卡 -->
+	<update id="cancelCard" parameterType="java.lang.String">
+		UPDATE f_provider_baseinfo set icNumber = null,status = 0,isGrantCard = 0 where id = #{id} 
+	</update>
+	
+	<!-- 写卡(可以根据idNo或者providerNo进行查询) --> 
+	<select id="queryPunchCard" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		select base.id,base.providerNo,base.`name`,base.sex,base.bloodType,nation.`name` as nation,base.idNo,base.imagez,base.birthday,detail.addressx,base.createDate
+		from f_provider_baseinfo base 
+		INNER JOIN f_detailed_info detail on base.id = detail.baseId         
+		INNER JOIN f_nation nation ON nation.id = detail.nation where 1=1
+		<if test="providerNo != null and providerNo!='' ">and base.providerNo like concat('%',#{providerNo},'%')</if>
+		<if test="idNo != null and idNo!='' ">and base.idNo like CONCAT('%',#{idNo},'%') </if>
+	</select>
+	
+	<!--打印 -->
+	<select id="printPunchCard" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		select fi.imgUrl,base.providerNo,base.`name`,base.sex,base.bloodType,nation.`name` as nation,base.idNo,base.imagez,base.birthday,detail.addressx,base.createDate
+		from f_provider_baseinfo base 
+		INNER JOIN f_detailed_info detail on base.id = detail.baseId
+		INNER JOIN f_nation nation ON nation.id = detail.nation 
+		INNER JOIN f_provider_registries AS fp on base.providerNo=fp.providerNo
+		INNER JOIN f_plasma_image AS fi on fi.imgId=fp.id AND fi.type=0
+		where 1=1
+		<if test="providerNo != null and providerNo!='' ">and base.providerNo = #{providerNo}</if>
+		<if test="idNo != null and idNo!='' ">and base.idNo =#{idNo} </if>
+	</select>
+	
+	<!-- 未审核浆员发送到卫计委系统 -->
+	<select id="sendPlasmaMsg" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		select base.*,detail.addressx,detail.place,detail.isMarry,detail.phone,detail.nation
+		from f_provider_baseinfo base 
+		INNER JOIN f_detailed_info detail on base.id = detail.baseId
+		where base.icNumber is null and isGrantCard = 0 and base.providerNo=#{providerNo}
+	</select>
+	
+	<!-- 将以发卡浆员审核状态改成已审核 -->
+	<update id="updateStatus" parameterType="java.lang.String">
+		update f_provider_baseinfo set status = #{status} where providerNo = #{providerNo}
+	</update>
+	
+	<!-- 献浆员高级查询 -->
+	<select id="queryPlasmaDetailList" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT p.*,t.eliminateReason,t.updateDate as refuseDate FROM (
+		SELECT COUNT(fc.providerNo) as cou,t.* from(
+		SELECT fp.providerNo,fp.name,fp.sex,fp.bloodType,fp.plasmaState,fv.immuneName,fp.birthday,fp.idNo,fn.name as nname,fp.collectionDate,fd.addressx from f_provider_baseinfo fp
+		LEFT JOIN f_detailed_info fd
+		ON fp.id=fd.baseId
+		LEFT JOIN f_nation AS fn
+		ON fd.nation = fn.id
+		LEFT JOIN f_immune_setting fv
+		ON fp.immuneId=fv.id
+		WHERE fd.type=0
+		<if test="birthdayStartDate!=null and birthdayStartDate!='' ">
+			AND DATE_FORMAT(fp.birthday,'%Y-%m-%d') &gt;=#{birthdayStartDate}
+		</if>
+		<if test="birthdayEndDate!=null and birthdayEndDate!='' ">
+			AND DATE_FORMAT(fp.birthday,'%Y-%m-%d') &lt;=#{birthdayEndDate}
+		</if>
+		<if test="startDate!=null and startDate!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &gt;=#{startDate}
+		</if>
+		<if test="endDate!=null and endDate!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &lt;=#{endDate}
+		</if>
+		<if test="name!=null and name!='' ">
+			AND fp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="sex!=null and sex!='' ">
+			AND fp.sex =#{sex}
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND fp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+		<if test="place!=null and place!='' ">
+			AND fd.addressx LIKE CONCAT('%',#{place},'%')
+		</if>
+		<if test="bloodType!=null and bloodType!='' ">
+			AND fp.bloodType =#{bloodType}
+		</if>
+		<if test="nation!=null and nation!='' ">
+			AND fd.nation =#{nation}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="type!=null and type!='' ">
+			<choose>
+				<when test="type=='普通'">
+					AND fp.immuneId =''
+				</when>
+				<otherwise>
+					AND fv.immuneName =#{type}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="icNumber!=null and icNumber!='' ">
+			AND fp.icNumber LIKE CONCAT('%',#{icNumber},'%')
+		</if>
+		<if test="plasmaState!=null and plasmaState!='' ">
+			AND fp.plasmaState = #{plasmaState}
+		</if>
+		LIMIT ${pageNum},${pageSize}
+		) t
+		LEFT JOIN f_plasm_collection AS fc
+		ON t.providerNo = fc.providerNo
+		GROUP BY t.providerNo
+		) p
+		LEFT JOIN (select * from f_refuse_info fri,
+		(select max(id) as ida  from f_refuse_info group by providerNo) fri1
+		where fri.id=fri1.ida) t on t.providerNo=p.providerNo
+	</select>
+	<!-- 献浆员高级查询总数 -->
+	<select id="queryPlasmaDetailListCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT COUNT(*) from f_provider_baseinfo fp
+		LEFT JOIN f_detailed_info fd
+		ON fp.id=fd.baseId
+		LEFT JOIN f_nation AS fn
+				ON fd.nation = fn.id
+		LEFT JOIN f_immune_setting fv
+		ON fp.immuneId=fv.id
+		WHERE fd.type=0 
+		<if test="birthdayStartDate!=null and birthdayStartDate!='' ">
+			AND DATE_FORMAT(fp.birthday,'%Y-%m-%d') &gt;=#{birthdayStartDate}
+		</if>
+		<if test="birthdayEndDate!=null and birthdayEndDate!='' ">
+			AND DATE_FORMAT(fp.birthday,'%Y-%m-%d') &lt;=#{birthdayEndDate}
+		</if>
+		<if test="startDate!=null and startDate!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &gt;=#{startDate}
+		</if>
+		<if test="endDate!=null and endDate!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &lt;=#{endDate}
+		</if>
+		<if test="name!=null and name!='' ">
+			AND fp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="sex!=null and sex!='' ">
+			AND fp.sex =#{sex}
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND fp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+		<if test="place!=null and place!='' ">
+			AND fd.addressx LIKE CONCAT('%',#{place},'%')
+		</if>
+		<if test="bloodType!=null and bloodType!='' ">
+			AND fp.bloodType =#{bloodType}
+		</if>
+		<if test="nation!=null and nation!='' ">
+			AND fd.nation =#{nation}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="type!=null and type!='' ">
+			<choose>
+				<when test="type=='普通'">
+					AND fp.immuneId =''
+				</when>
+				<otherwise>
+					AND fv.immuneName =#{type}
+				</otherwise>
+			</choose>
+		</if>
+		<if test="icNumber!=null and icNumber!='' ">
+			AND fp.icNumber LIKE CONCAT('%',#{icNumber},'%')
+		</if>
+		<if test="plasmaState!=null and plasmaState!='' ">
+			AND fp.plasmaState = #{plasmaState}
+		</if>
+	</select>
+	<!-- 献浆员数据导出 -->
+	<select id="queryPlasmaDetailExcel" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT fp.providerNo,(SELECT value FROM f_config WHERE lable='company') as providerNumber,fp.name,fp.idNo,fd.addressx,((
+			YEAR (now()) - YEAR (fp.birthday) - 1
+		) + (
+			DATE_FORMAT(NOW(), '%m%d') > DATE_FORMAT(fp.birthday, '%m%d')
+		))age,fp.sex,DATE_FORMAT(fp.birthday,'%Y-%m-%d') as birthday,fp.bloodType,fd.phone,fd.addressx AS newaddressx,fp.plasmaState,t.updateDate as refuseDate,t.eliminateReason
+ 		FROM f_provider_baseinfo AS fp
+		INNER JOIN f_detailed_info AS fd
+		ON fp.id = fd.baseId
+		LEFT JOIN f_nation AS fn
+		ON fd.nation = fn.id
+		LEFT JOIN (select * from f_refuse_info fri,
+		(select max(id) as ida  from f_refuse_info group by providerNo) fri1
+		where fri.id=fri1.ida) t
+		ON t.providerNo=fp.providerNo
+		WHERE fd.type=0
+		<if test="birthdayStartDate!=null and birthdayStartDate!='' ">
+			AND DATE_FORMAT(fp.birthday,'%Y-%m-%d') &gt;=#{birthdayStartDate}
+		</if>
+		<if test="birthdayEndDate!=null and birthdayEndDate!='' ">
+			AND DATE_FORMAT(fp.birthday,'%Y-%m-%d') &lt;=#{birthdayEndDate}
+		</if>
+		<if test="startDate!=null and startDate!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &gt;=#{startDate}
+		</if>
+		<if test="endDate!=null and endDate!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &lt;=#{endDate}
+		</if>
+		<if test="refuseStartDate!=null and refuseStartDate!='' ">
+			AND DATE_FORMAT(t.updateDate,'%Y-%m-%d') &gt;=#{refuseStartDate}
+		</if>
+		<if test="refuseEndDate!=null and refuseEndDate!='' ">
+			AND DATE_FORMAT(t.updateDate,'%Y-%m-%d') &lt;=#{refuseEndDate}
+		</if>
+		<if test="name!=null and name!='' ">
+			AND fp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="sex!=null and sex!='' ">
+			AND fp.sex =#{sex}
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND fp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+		<if test="bloodType!=null and bloodType!='' ">
+			AND fp.bloodType =#{bloodType}
+		</if>
+		<if test="nation!=null and nation!='' ">
+			AND fd.nation =#{nation}
+		</if>
+		<if test="place!=null and place!='' ">
+			AND fd.addressx LIKE CONCAT('%',#{place},'%')
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="type!=null and type!='' ">
+			AND fp.type LIKE CONCAT('%',#{type},'%')
+		</if>
+		<if test="country!=null and country!='' ">
+			AND fp.country LIKE CONCAT('%',#{country},'%')
+		</if>
+		<if test="plasmaState!=null and plasmaState!='' ">
+			AND fp.plasmaState = #{plasmaState}
+		</if>
+	</select>
+	<!-- 献浆员审核 -->
+	<select id="queryPlasmaExamineList" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT * FROM f_provider_baseinfo AS fp 
+		INNER JOIN f_detailed_info AS fd 
+		ON fp.id = fd.baseId
+		WHERE fd.type=0 
+		<if test="status!=null and status!='' ">
+			AND fp.examineStatus=#{status}
+		</if>
+		<if test="startTime!=null and startTime!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &gt;=#{startTime}
+		</if>
+		<if test="endTime!=null and endTime!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &lt;=#{endTime}
+		</if>
+		<if test="name!=null and name!='' ">
+			AND fp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND fp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+	</select>
+	
+	<!-- 批量审核浆员 -->
+	<update id="updateBaseInfoExamine" parameterType="java.util.Map">
+		UPDATE f_provider_baseinfo SET examineStatus=#{examineStatus} WHERE id IN 
+		<foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+	        #{item}
+	    </foreach>
+	</update>
+	
+	<!-- 根据条件更新浆员状态 -->
+	<update id="updateProviderBaseinfoState" parameterType="java.util.HashMap">
+		UPDATE f_provider_baseinfo SET plasmaState=#{plasmaState} WHERE providerNo=#{providerNo}
+	</update>
+
+	<!-- 查询浆员需要删除的字段id -->
+	<select id="queryPlasmaWorkflow" parameterType="java.lang.String" resultType="com.fadl.common.DataRow">
+		select fpb.id as baseId,fdi.id as detailId,fpr.id as registriesId,fpi.id as imageId
+			,fw.id as workflowId,fc.id as checkId,SUBSTR(fw.flowStep,2,1) as lc,fcg.id as costId from f_provider_baseinfo fpb
+			left join f_detailed_info fdi on fpb.id=fdi.baseId and fdi.type=0
+			left join f_provider_registries fpr on fpb.providerNo=fpr.providerNo
+			left join f_check fc on fc.allId=fpr.allId and fc.isCheck
+			left join f_cost_grant fcg on fcg.allId=fpr.allId
+			left join f_plasma_image fpi on fpr.id=fpi.imgId
+			left join f_workflow fw on fpr.allId=fw.allId
+								where fpb.id = #{id}
+	</select>
+	
+	<!-- 取消发卡 -->
+	<update id="cancelPlassmaCard" parameterType="java.lang.String">
+		UPDATE f_provider_baseinfo SET icNumber=NULL,isGrantCard=0,status=0 WHERE providerNo=#{providerNo}
+	</update>
+	
+	<!-- 更新浆员信息 -->
+	<update id="updatePlasmaInfo" parameterType="java.util.HashMap" >
+		UPDATE f_provider_baseinfo SET name=#{name},sex=#{sex},idNo=#{idNo},
+		<if test="imagez!=null and imagez!='' ">
+			imagez=#{imagez},
+		</if>
+		<if test="imagef!=null and imagef!='' ">
+			imagef=#{imagef},
+		</if>
+		<if test="imagespot!=null and imagespot!='' ">
+			imagespot=#{imagespot},
+		</if>
+		bloodType=#{bloodType},birthday=#{birthday},status=1,isGrantCard=1 
+		WHERE providerNo=#{providerNo}
+	</update>
+	
+	<!-- 根据 id 查询浆员部分信息 -->
+	<select id="queryPlasmaInfoById" parameterType="java.lang.Long" resultType="com.fadl.common.DataRow">
+		SELECT id,providerNo,icNumber,name,sex,idNo,imagez,imagef,imagespot,bloodType,birthday,plasmaState,type,immuneId,immuneRegisterId,
+		status,level,groupId,createDate,updateDate,bloodGrade,isGrantCard,plasmaId FROM f_provider_baseinfo
+		WHERE id=#{id}
+	</select>
+	
+	<!-- 查询新浆员登记列表 -->
+	<select id="queryNewRegistriesList" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		select fpb.id,fpb.providerNo,fpr.registriesNo,fpr.allId,fpb.name,fpb.idNo,fdi.vocation,fa.name as zname,fpb.sex,fpb.birthday,fdi.place,fdi.history,
+		fdi.inviteId,fdi.inviteType,fpr.createDate,fdi.addressx,fdi.validDate,fdi.remarks,fdi.phone,fpr.plasmaType
+		 from f_provider_registries fpr
+		left join f_provider_baseinfo fpb on fpr.providerNo=fpb.providerNo
+		left join f_detailed_info fdi on fpb.id=fdi.baseId and fdi.type=0
+		left join f_admin fa on fpr.creater=fa.id
+		where fpr.plasmaType=0 AND fpr.isNew=0
+		<if test="startTime==null or startTime==''">
+			and  to_days(fpr.createDate)=to_days(now()) and to_days(fpr.createDate)=to_days(now())
+		</if>
+		<if test="startTime!=null and startTime!=''">
+			and  to_days(fpr.createDate)=to_days(#{startTime}) and to_days(fpr.createDate)=to_days(#{startTime})
+		</if>
+		ORDER BY createDate DESC
+	</select>
+	
+	<!-- 查询未发卡人员列表 -->
+	<select id="queryNotGrantCard" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT GROUP_CONCAT(providerNo) providerNo FROM f_provider_baseinfo WHERE isGrantCard=1 AND icNumber IS NULL AND status=0
+	</select>
+	
+	<!-- 更新浆员审核状态 -->
+	<update id="updatePrividerStatus" parameterType="java.util.Map">
+		UPDATE f_provider_baseinfo SET status=1 WHERE providerNo IN 
+		<foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+	        #{item}
+	    </foreach>
+	</update>
+	
+	<!-- 查询浆员卡号列表，是否需要补卡 -->
+	<select id="queryProviderList" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT providerNo providerNo FROM (
+			SELECT providerNo FROM f_provider_baseinfo WHERE bloodType=#{_parameter} AND left(providerNo, 1) != 'R' AND left(providerNo, 1) != 'f'
+			ORDER BY providerNo DESC
+		)t
+		ORDER BY t.providerNo DESC 
+		LIMIT 30
+	</select>
+	
+	<!-- 更新浆员状态 -->
+	<update id="">
+		
+	</update>
+</mapper>

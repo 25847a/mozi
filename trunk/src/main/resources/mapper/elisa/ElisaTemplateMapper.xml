@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.elisa.dao.ElisaTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.elisa.entity.ElisaTemplate">
+        <id column="id" property="id" />
+        <result column="templateName" property="templateName" />
+        <result column="cutoffFormula" property="cutoffFormula" />
+        <result column="apiId" property="apiId" />
+        <result column="qcId" property="qcId" />
+        <result column="isAuto" property="isAuto" />
+        <result column="arrangement" property="arrangement" />
+        <result column="reagentId" property="reagentId" />
+        <result column="projectId" property="projectId" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,apiId, templateName,qcId,isAuto, arrangement, reagentId, cutoffFormula, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+</mapper>

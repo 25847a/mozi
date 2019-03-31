@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.account.dao.SysPermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.account.entity.SysPermission">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="masterType" property="masterType" />
+        <result column="url" property="url" />
+        <result column="permission" property="permission" />
+        <result column="parentId" property="parentId" />
+        <result column="isDisable" property="isDisable"/>
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, masterType, url, permission, parentId, isDisable, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+    <!-- 查询权限URL 用于拦截 -->
+    <select id="querySysPermissionList" resultMap="BaseResultMap">
+         select * from f_sys_permission
+    </select>
+
+    <!-- 根据菜单名字查询菜单 -->
+    <select id="queryByName" resultMap="BaseResultMap" parameterType="com.fadl.account.entity.SysPermission">
+         select * from f_sys_permission where name=#{name}
+        <if test="permission!=null and permission!=''">
+             or permission=#{permission}
+        </if>
+    </select>
+
+    <!-- 根据ID查询菜单是否存在子菜单 -->
+    <select id="queryByIdMenuList" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT * FROM  f_sys_permission fsp WHERE masterType='menu' and  parentId in (
+                SELECT  id  FROM f_sys_permission fsp1  WHERE  fsp1.id=#{id} and masterType='menu'  )
+    </select>
+
+    <!-- 查询所有查单及按钮 用以授权 -->
+    <select id="queryPermissionList" resultType="java.util.HashMap" parameterType="java.lang.Long">
+         select fsp.id,fsp.name,fsp.parentId as pId,if(permissionId is not null,'true','') as checked,
+          if(permissionId is not null,'true','') as open  from
+            f_sys_permission fsp left join (select permissionId from f_sys_role_permission where roleId=#{id} ) as fsrp
+             on fsp.id=fsrp.permissionId
+    </select>
+</mapper>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="UTF-8"/>
+		<title>打印献血浆者体检记录表</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+		<link th:href="@{/css/common.css}" rel="stylesheet" />
+		<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+	</head>
+<style>
+@page {
+	size: auto;
+	margin: 3mm 5mm 3mm 5mm;
+}
+
+#newpray .dayina {
+	width: 100%;
+	margin-bottom: 0;
+}
+
+#newpray .gray-bg .colx8 .inhenagoi {
+	text-align: left;
+	color: #b9b9b9;
+}
+
+.colxsgray {
+	float: left;
+	width: 24%;
+	padding: 0
+}
+
+.newregistr .zhiconsyr {
+	float: left;
+	width: auto;
+	margin-top: 0.3em;
+	margin-right: 1%;
+}
+
+body .ahudr {
+	width: 20% !important;
+}
+
+.indegirtion .consdr {
+	margin-left: 0;
+}
+
+#aordklr .indegirtion .consdr {
+	width: auto;
+	float: right;
+}
+
+.newregis {
+	margin: 0;
+	padding: 0.1em 0;
+}
+
+.busr table tr th {
+	padding: 0.4em 0;
+	width: 14em;
+	font-size: 13px;
+	border: 1px solid #bbbbbb;
+	text-align: center;
+}
+
+.busr table tr .blcirth {
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+}
+
+.busr table tr .logdkr {
+	border-top: 0;
+	border-bottom: 0;
+	border-left: 0;
+	border-right: 0;
+	font-size: 17px;
+	line-height: 1em;
+}
+
+.busr table tr td {
+	padding: 0.4em 0;
+	width: 14em;
+	font-size: 13px;
+	border: 1px solid #bbbbbb;
+}
+
+.busr table {
+	margin: 0
+}
+
+#newpray .busr {
+	width: 100%;
+	margin-left: 0px !important;
+}
+
+#newpray .gray-bg .colx8 .UserC {
+	width: auto;
+}
+
+.wrapper .newikrd .input-group {
+	width: 73%
+}
+
+.consdr .input-group {
+	width: auto !important;
+}
+
+#newpray .gray-bg {
+	margin-bottom: inherit;
+	padding: 0.5em 0;
+}
+
+.zhikdP p {
+	cursor: pointer;
+	float: left;
+	padding: 0 0.3em;
+	color: #54a664;
+	font-size: 15px;
+}
+
+.zhikdP p:hover {
+	color: red;
+	cursor: pointer
+}
+
+@media print {
+	INPUT {
+		display: none
+	}
+}
+</style>
+<body id="newpray">
+	<button type="button" class="btn btn-success" name="print" id="bt" onclick="printCheck()">点击打印</button>
+	<shiro:hasPermission name="report:check:view">
+		<button type="button" class="btn btn-success" name="editReportInfo" id="editReportInfo" onclick="gotoEditReportInfo('/reportInfo/initCheckPage',9)">编辑表头</button>
+	</shiro:hasPermission>
+	<div class="gray-bg dayina">
+		<div class="wrapper wrapper-content animated fadeInRight weralid"
+			style="padding: 0;">
+			<div id="div_print">
+				<div class="gray-bg">
+					<div class="wrapper wrapper-content animated fadeInRight"
+						style="width: 1115px; padding: 0; margin: 0 auto;">
+						<div class="row busr" id="bustable">
+							<div class="dayindiv">
+								<div class="row">
+									<div class="col-xs-4" id="headLeft"></div>
+									<div class="col-xs-4" id="headCenter"></div>
+									<div class="col-xs-4" id="headRight"></div>
+								</div>
+							</div>
+							<table border='0'
+								style='display: table-header-group; font-size: 1pt;'
+								align='center' id="check_table">
+								<thead>
+									<TR>
+										<th colspan='6' class='blcirth' style="border: none;">
+											<div style='float: left'>
+												<div class='form-group newikrd'>
+													<label class='control-label UserC inhenagoi'></label>
+												</div>
+											</div>
+										</th>
+										<th colspan='12' align='center' class='blcirth'
+											style="border: none;">
+
+											<div class='' style='float: right'>
+												<div class='form-group newikrd'>
+													<label class='control-label UserC inhenagoi'></label>
+												</div>
+											</div>
+										</th>
+									</TR>
+									<TR>
+										<th colspan='18' class='logdkr'>供血浆者体检记录</th>
+									</TR>
+									<TR>
+										<th colspan='8' class='blcirth' style="border: none;">
+											<div class='' style='float: left'>
+												<div class='form-group newikrd'>
+													<label class='control-label UserC'></label>
+												</div>
+											</div>
+										</th>
+										<th colspan='10' class='blcirth' style="border: none;">
+											<div class='' style='float: right'>
+												<div class='form-group newikrd'>
+													<label class='control-label UserC'>体检日期：</label> <label
+														class='control-label UserC inhenagoi' id="date"></label>
+												</div>
+											</div>
+										</th>
+										<th colspan='7' align='center' class='blcirth'
+											style="border: none;"></th>
+									</TR>
+									<TR>
+
+										<th>供血浆者卡号</th>
+										<th>登记号</th>
+										<th>姓名</th>
+										<th>性别</th>
+										<th>类型</th>
+										<th>血型</th>
+										<th>健康征询</th>
+										<th>体重(kg)</th>
+										<th>体温(℃)</th>
+										<th>脉搏(次/分)</th>
+										<th>血压(KPa)</th>
+										<th>胸部</th>
+										<th>腹部</th>
+										<th>皮肤</th>
+										<th>五官</th>
+										<th>四肢</th>
+										<th>体检医生</th>
+										<th>是否合格</th>
+									</TR>
+								</thead>
+								<TBODY style='text-align: center'>
+									
+								</TBODY>
+							</table>
+
+						</div>
+
+						<div class="row newregis indegirtion" style="padding: 0.5em 0 0 0">
+							<div class="col-xs-12 consdr">
+								<div class="form-group newikrd"
+									style="float: left; margin-right: 1.5rem;">
+									<label class="control-label UserC inhenagois">合格者：</label>
+									<div class="input-group" id="hege">0人</div>
+								</div>
+								<div class="form-group newikrd"
+									style="float: left; margin-right: 1.5rem;">
+									<label class="control-label UserC inhenagois">不合格者：</label>
+									<div class="input-group" id="buhege">0人</div>
+								</div>
+								<div class="form-group newikrd"
+									style="float: left; margin-right: 1.5rem;">
+									<label class="control-label UserC inhenagois">共体检：</label>
+									<div class="input-group" id="sum">0人</div>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="row newregis indegirtion" style="padding: 0.5em 0 0 0">
+							<div class="consdr" style="float: right;">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois"
+										style="margin-right: 1rem;">体检医生：_________</label> <label
+										class="control-label UserC inhenagois">审核者：_________</label>
+								</div>
+
+							</div>
+
+						</div> -->
+						<div class="dayindiv">
+							<div class="row">
+								<div class="col-xs-4" id="footLeft">a</div>
+								<div class="col-xs-4" id="footCenter">b</div>
+								<div class="col-xs-4" id="footRight">c</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<!--bootstarp表格插件-->
+	<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<script th:src="@{/js/check/print_check.js}"></script>
+</body>
+</html>

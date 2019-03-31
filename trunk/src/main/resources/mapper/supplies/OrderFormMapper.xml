@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.supplies.dao.OrderFormMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.supplies.entity.OrderForm">
+		<result column="id" property="id"/>
+		<result column="oddNumber" property="oddNumber"/>
+		<result column="paymentType" property="paymentType"/>
+		<result column="status" property="status"/>
+		<result column="sumMoney" property="sumMoney"/>
+		<result column="remarks" property="remarks"/>
+		<result column="createDate" property="createDate"/>
+		<result column="updateDate" property="updateDate"/>
+		<result column="creater" property="creater"/>
+		<result column="updater" property="updater"/>
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, oddNumber, paymentType, status, sumMoney, remarks, createDate,
+		updateDate, creater, updater, plasmaId
+	</sql>
+	<!-- 入库根据订单号查询耗材 -->
+	<select id="querySuppliesInfo" resultType="java.util.HashMap" parameterType="java.lang.Long">
+		SELECT tp.id,tp.orderformId as orderId,td.name as depot,tp.suppliesId,tg.number,tw.name as type,tb.name as unit,tl.name as sopply,tg.name as supplies,
+		tp.num,tp.money,tp.sumMoney,tg.maxStock,tg.minStock,tg.apply,tg.remark
+		FROM f_supplies_order tp
+		LEFT JOIN f_supplies_info tg
+		ON tp.suppliesId = tg.id
+		LEFT JOIN f_depot td
+		ON tp.depotId=td.id
+		LEFT JOIN f_supplies_type tw
+		ON tg.typeId=tw.id
+		LEFT JOIN f_unit tb
+		ON tg.unitId=tb.id
+		LEFT JOIN f_supplies_supply tl
+		ON tg.supplyId=tl.id
+		WHERE tp.orderformId=#{order}
+	</select>
+	
+	<!-- 耗材检验列表查询 -->
+	<select id="queryQuarantineList" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tp.id,oddNumber,paymentType,tp.status,tp.sumMoney,tp.remarks,tf.name as depot,tp.createDate FROM f_order_form tp
+		LEFT JOIN f_supplies_order tg
+		ON tp.id=tg.orderformId
+		LEFT JOIN f_depot tf
+		ON tg.depotId=tf.id
+		where (tp.status=1 or tp.status=2) 
+		<if test="updateDateStart!=null and updateDateStart!='' ">
+		 	AND DATE_FORMAT(tp.quarantineDate,'%Y-%m-%d') &gt;= #{updateDateStart}
+		 </if>
+		 <if test="updateDateEnd!=null and updateDateEnd!='' ">
+		 	AND DATE_FORMAT(tp.quarantineDate,'%Y-%m-%d') &lt;= #{updateDateEnd}
+		 </if>
+		 <if test="depotId!=null and depotId!=''">
+			AND tg.depotId=#{depotId}
+		 </if>
+		 <if test="oddNumber!=null and oddNumber!='' ">
+		 	AND oddNumber LIKE CONCAT('%',#{oddNumber},'%')
+		 </if>
+		 GROUP BY oddNumber
+	</select>
+	<!-- 订购列表接口 -->
+	<select id="queryOrder" resultType="com.fadl.common.DataRow" parameterType="com.fadl.supplies.entity.OrderForm">
+		SELECT id,oddNumber,paymentType,status,sumMoney,remarks FROM f_order_form WHERE 1=1
+		<choose>
+		 <when test="status!=null">
+		 AND status=#{status}
+		 </when>
+		 <otherwise>
+		 AND status!=3
+		 </otherwise>
+		</choose>
+		<if test="oddNumber!=null and oddNumber!=''">
+		AND oddNumber LIKE  CONCAT('%',#{oddNumber},'%')
+		</if>
+		<if test="createDate!=null and updateDate!=null and createDate!='' and updateDate!=''">
+		AND DATE_FORMAT(createDate,'%Y-%m-%d')  BETWEEN #{createDate} and #{updateDate}
+		</if>
+		ORDER BY createDate DESC
+	</select>
+	<!-- 库存入库时耗材添加入库使用的接口 -->
+	<select id="queryOrderFormPage" resultType="com.fadl.common.DataRow">
+		SELECT tp.orderformId,tp.suppliesId,tg.number,tg.name,tg.minStock,tg.maxStock,tj.name as unit,tp.num,tg.type FROM f_supplies_order tp
+		LEFT JOIN f_supplies_info tg
+		ON tp.suppliesId=tg.id
+		LEFT JOIN f_unit tj
+		ON tg.unitId=tj.id
+		LEFT JOIN f_order_form tk
+		ON tp.orderformId = tk.id
+		WHERE tp.status=0 AND (tk.status=2 OR tk.status=5)
+	</select>
+</mapper>

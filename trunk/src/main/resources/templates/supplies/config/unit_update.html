@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>仓库管理-修改</title>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/usera.css}" rel="stylesheet"/>
+		<link th:href="@{/css/fileinput.min.css}" rel="stylesheet"/>
+	</head>
+ 
+	<body>
+		<div class="gray-bg " style="    padding-top: 1em;    padding-bottom: 1em;">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+				<!--基本信息及验证-->
+				<form id="updateUnitForm">
+					<div class="col-xs-12 colx8" style="padding-right: 4em;">
+
+								<div class="row">
+									<div class="ibox-content">
+
+										<div class="row form-horizontal">
+											<div class="col-sm-12 col-xs-12">
+														<div class="form-group" style="margin-bottom: inherit;">
+												<label class="control-label col-xs-3" style="line-height: 3rem;">
+	                                                    单位名称：<font color="red">*</font>
+	                                                </label>
+													<div class="col-xs-8 input-group">
+														<input name="id" th:value="${unit.id}" type="hidden"/>
+														<input  id="name" th:value="${unit.name}" name="name" class="form-control required"
+															placeholder="请输入单位名称" />
+													</div>
+												</div>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+						<div class="col-xs-12">
+							<div class="form-group newformcol">
+								<div class="pull-right">
+									<button type="submit" class="btn  btn-info" style=" margin-right: 1em;">确定</button>
+									<button type="button" class="btn  btn-info" id="cannel">取消</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!-- form表单提交 -->
+		<script th:src="@{/js/jquery-form.js}"></script>
+		<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+		<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+		<script th:src="@{/layui-master/src/layui.js}"></script>
+		<script th:src="@{/js/fileinput/fileinput.js}"></script>
+   		<script th:src="@{/js/fileinput/zh.js}"></script>
+		<script th:src="@{/js/supplies/config/unit_update.js}"></script>
+		<script th:src="@{/js/utils.js}"></script>
+	</body>
+</html>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.refuseInfo.dao.RefuseInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.refuseInfo.entity.RefuseInfo">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="allId" property="allId" />
+        <result column="evId" property="evId" />
+        <result column="isRefuse" property="isRefuse" />
+        <result column="opinion" property="opinion" />
+        <result column="eliminateReason" property="eliminateReason" />
+        <result column="day" property="day" />
+        <result column="userId" property="userId" />
+        <result column="releaseId" property="releaseId" />
+        <result column="remarks" property="remarks" />
+        <result column="type" property="type" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, opinion, eliminateReason, day, userId, releaseId, remarks, type, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+	<!-- 查询体检拒绝信息列表 -->
+	<select id="queryRefuseInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fc.*,fr.opinion,fr.eliminateReason,fr.day,fr.id pid,fpb.name AS pname,fpb.sex,fpb.bloodType,fpb.idNo 
+		FROM f_refuse_info AS fr 
+		INNER JOIN f_new_card AS fc 
+		ON fr.allId = fc.allId 
+		LEFT JOIN f_provider_baseinfo AS fpb ON fr.providerNo = fpb.providerNo 
+		
+		WHERE fr.type=#{type}  AND fr.isRefuse=#{isRefuse} 
+		<if test="date!=null and date!=''">
+			AND DATE_FORMAT(fr.createDate,'%Y-%m-%d')=DATE_FORMAT(#{date},'%Y-%m-%d')
+		</if>
+		<if test="allId!=null and allId!='' ">
+			AND fr.allId=#{allId}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fr.providerNo=#{providerNo}
+		</if>
+	</select>
+	<!-- 查询化验拒绝信息列表 -->
+	<!-- <select id="queryAssayRefuseInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fc.*,fr.opinion,fr.eliminateReason,fr.day,fp1.name,fp2.name AS nam2,fr.id pid,fpb.name AS pname FROM f_refuse_info AS fr 
+		INNER JOIN f_check AS fc 
+		ON fr.allId = fc.allId 
+		LEFT JOIN f_provider_baseinfo AS fpb ON fr.providerNo = fpb.providerNo
+		LEFT JOIN f_propagandist AS fp1
+		ON fc.userId = fp1.id
+		LEFT JOIN f_propagandist AS fp2
+		ON fr.releaseId = fp2.id
+		WHERE fr.type=1 AND DATE_FORMAT(fr.createDate,'%Y-%m-%d')=DATE_FORMAT(#{date},'%Y-%m-%d') AND fr.isRefuse=#{isRefuse} 
+		<if test="allId!=null and allId!='' ">
+			AND fr.allId=#{allId}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fr.providerNo=#{providerNo}
+		</if>
+	</select> -->
+		<!-- 查询浆员的最新拒绝信息发布-CJ -->
+	<select id="plasmaRefuseInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * FROM f_refuse_info WHERE providerNo=#{providerNo} and isRefuse=1 ORDER BY day desc
+		LIMIT 0, 1
+	</select>
+	
+	<!-- 生物所反馈 -->
+	<select id="queryOtherRefuseInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fr.id,fp.name,fp.sex,fp.bloodType,fp.idNo,fp.icNumber,fp.type,fp.providerNo,fd.addressx,fp.imagez FROM f_refuse_info AS fr 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fr.providerNo = fp.providerNo
+		INNER JOIN f_detailed_info AS fd 
+		ON fp.id = fd.baseId
+		WHERE fr.type=2 AND fr.isRefuse=0 
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fr.providerNo=#{providerNo} 
+		</if>
+	</select>
+	<!-- 定时任务插入语句,由于定时任务在项目启动未登陆时启动,使用自带insert报错SecurityManager,手动写 -->
+	<insert id="insertEliminateYearOld" parameterType="java.util.Map">
+	INSERT INTO f_refuse_info(providerNo,eliminateReason,createDate,updateDate,creater,updater)
+	VALUES(#{providerNo},#{eliminateReason},#{createDate},#{updateDate},#{creater},#{updater})
+	</insert>
+	<!-- 查询转氨酶暂拒情况 -->
+	<select id="queryTransaminaseInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT * FROM f_refuse_info WHERE eliminateReason LIKE CONCAT('%',#{eliminateReason},'%') AND isRefuse=1 AND day!=0 AND providerNo=#{providerNo} ORDER BY createDate DESC LIMIT 1
+	</select>
+</mapper>

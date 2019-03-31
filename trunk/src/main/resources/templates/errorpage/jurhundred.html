@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>无权限</title>
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+	</head>
+
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="row forve">
+				<div class="col-xs-12 fourhu">
+					<ul>
+						<li><img th:src="@{'/img/imgxiao.png'}" class="imxia" /> <label>Sorry! 您暂无访问权限......</label></li>
+					<li><img th:src="@{'/img/jua.png'}" class="fourdre" /></li>
+						<li>
+						</li>
+					</ul>
+				</div>
+				<p>
+					<button>返回系统首页</button>
+				</p>
+			</div>
+		</div>
+	</body>
+
+</html>

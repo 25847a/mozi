@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="renderer" content="webkit"/>
+	<title>新献浆员登记</title>
+	<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css} "/>
+	<!--bootstarp-->
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+	<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+	<link th:href="@{/css/common.css}" rel="stylesheet"/>
+	<!--新献浆员登记css-->
+	<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+	<style type="text/css">
+		.newolod {
+			padding-left: 35%;
+		}
+		#newpray #busdeta .newikrd .input-group{    width: 73%!important;}
+	</style>
+</head>
+
+<body id="newpray">
+<div class="gray-bg ">
+	<div class="wrapper wrapper-content animated fadeInRight weralid" id="busdeta">
+		<!--基本信息及验证-->
+		<div class="col-xs-12 colx8 colnewo">
+			<div class="row newregis newgeBus">
+				<p class="grayP busgrayp"><label class="grayLa newgryla">基本信息</label></p>
+				<div class="row newregistr">
+					<div class="col-xs-6 colxsgray" id="buscolsx" style=" border-right: 0px solid #c3baba!important;">
+						<div class="form-group newikrd">
+							<label class="control-label UserC">浆员编号：</label>
+							<div class="input-group">
+								<input type="hidden" id="id" th:value="${id}"/>
+								<input  id="providerNo"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+
+						<div class="form-group newikrd">
+							<label class="control-label UserC">浆员姓名：</label>
+							<div class="input-group">
+								<input  id="name"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC"><la>籍贯</la>：</label>
+							<div class="input-group">
+								<input id="place"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">浆员性别：</label>
+							<div class="input-group">
+								<select name="sex" id="sex" class="form-control" disabled="disabled">
+									<option value="0">男</option>
+									<option value="1">女</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group newikrd">
+							<label class="control-label UserC">浆员血型：</label>
+							<div class="input-group">
+								<select name="bloodType" id="bloodType" class="form-control" disabled="disabled">
+									<option value="0">A</option>
+									<option value="1">B</option>
+									<option value="2">O</option>
+									<option value="3">AB</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">浆员状态：</label>
+							<div class="input-group">
+								<select id="plasmaState" class="form-control" disabled="disabled">
+									<option value="0">正常</option>
+									<option value="1">暂时拒绝</option>
+									<option value="2">永久拒绝</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">证件号码：</label>
+							<div class="input-group">
+								<input id="idNo"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">到期日期：</label>
+							<div class="input-group">
+								<input id="validDate"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">建档日期：</label>
+							<div class="input-group">
+								<input id="createDate"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">现住地址：</label>
+							<div class="input-group">
+								<input id="addressx"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+									<label class="control-label UserC"><ls style="    letter-spacing: 4px;  margin-right: -3px;">IC卡号</ls>：</label>
+							<div class="input-group">
+								<input id="icNumber"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+									<label class="control-label UserC"><la>组号</la>：</label>
+									<div class="input-group">
+									<input id="groupName"  class="form-control newfrin" readonly="readonly"/>
+									</div>
+						</div>
+					</div>
+					<div class="col-xs-6 colxsgray"> 
+						<div class="form-group newikrd">
+							<label class="control-label UserC">浆员年龄：</label>
+							<div class="input-group">
+								<input id="age"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">建档年龄：</label>
+							<div class="input-group">
+								<input id="jdAge"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">浆员民族：</label>
+							<div class="input-group">
+								<input  id="nationName"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">献浆种类：</label>
+							<div class="input-group">
+								<select name="type" class="form-control">
+									<option value="0">普通</option>
+									<option value="1">普免</option>
+									<option value="2">特免</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">邀请人类型：</label>
+							<div class="input-group" style="width:69% !important">
+								<select  id="inviteType" class="form-control">
+									<option value="0">浆员</option>
+									<option value="1">扩展员</option>
+									<option value="2">业务员</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC"><ls>邀请人</ls>：</label>
+							<div class="input-group">
+								<input id="iproviderNo"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">联系电话：</label>
+							<div class="input-group">
+								<input id="phone"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">献浆次数：</label>
+							<div class="input-group">
+								<input id="cid"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">末次采浆日期：</label>
+							<div class="input-group" style="    width: 66%!important;">
+								<input id="mcreateDate"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC">下次预约日期：</label>
+							<div class="input-group" style="    width: 66%!important;">
+								<input id="yycreateDate"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group newikrd">
+							<label class="control-label UserC"><la>备注</la>：</label>
+							<div class="input-group">
+								<input  id="remarks"  class="form-control newfrin" readonly="readonly"/>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<p class="grayP busgrayp"><label class="grayLa newgryla">照片信息</label></p>
+				<div class="row newregistrS" style="margin-right: 0">
+					<div class="col-xs-4 busdetalis">
+						<img id="demo1"  src="/img/new_pa2.png"/>
+					</div>
+					<div class="col-xs-4 busdetalis">
+						<div class="row">
+							<div class="col-xs-12 buscoltalis">
+								<img id="play" src="/img/new_pa2.png"/>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-4 busdetalis">
+						<img id="demo2" src="/img/new_pa2.png"/>
+					</div>
+				</div>
+				<div class="row busgrayp" style="margin-right: 0">
+					<!--table 表格-->
+					<table class="layui-hide" id="busdetatable" lay-filter="page"></table>
+					<!--table 表格-->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--jQuery包-->
+<script th:src="@{/js/jquery.min.js}"></script>
+<!--bootstarp表格插件-->
+
+<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+<!--layer插件包-->
+<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+<script th:src="@{/js/utils.js}"></script>
+<script th:src="@{/js/business/busblood/butdatel.js}"></script>
+<script th:src="@{/js/business/busblood/new_registration_details.js}"></script>
+
+
+</body>
+
+</html>

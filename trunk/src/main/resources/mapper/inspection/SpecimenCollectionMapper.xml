@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.fadl.inspection.dao.SpecimenCollectionMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.inspection.entity.SpecimenCollection">
+		<id column="id" property="id" />
+		<result column="allId" property="allId" />
+		<result column="providerNo" property="providerNo" />
+		<result column="isCollection" property="isCollection" />
+		<result column="type" property="type" />
+		<result column="isSendOff" property="isSendOff" />
+		<result column="sendPerson" property="sendPerson" />
+		<result column="isIdentity" property="isIdentity" />
+		<result column="sampleNo" property="sampleNo" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, providerNo, isCollection, type,isSendOff,sendPerson, isIdentity, sampleNo,
+		createDate,
+		updateDate, creater, updater, plasmaId
+	</sql>
+
+
+
+	<select id="queryListByCreateDateAndIsCollection"
+		resultType="com.fadl.common.DataRow" parameterType="com.fadl.inspection.entity.SpecimenCollection">
+
+		SELECT sc.*, pb.name, pb.sex, pr.registriesNo, pb.type AS pbType,
+		pb.bloodType,
+		pb.icNumber,pr.plasmaType  FROM
+		f_specimen_collection AS sc
+		INNER JOIN f_provider_baseinfo AS pb ON sc.providerNo = pb.providerNo
+		INNER JOIN f_provider_registries as pr ON sc.allId = pr.allId
+		WHERE 
+		 sc.updateDate BETWEEN #{startTime} AND #{endTime}
+		<if test="isCollection != null ">
+				AND sc.isCollection = #{isCollection}
+		</if>
+		ORDER BY sc.isSendOff
+	</select>
+
+	<select id="querySpecimenCollectionByEntity"
+		resultType="com.fadl.common.DataRow">
+
+		SELECT sc.*, pb.name, pb.sex,pb.photo,
+		pb.type AS pbType, pb.bloodType, pimg.imgUrl,pb.imagez, pb.icNumber 
+		FROM f_specimen_collection AS sc
+		INNER JOIN f_provider_baseinfo AS pb ON sc.providerNo = pb.providerNo
+		INNER JOIN f_provider_registries AS pr ON sc.allId = pr.allId
+		LEFT JOIN f_plasma_image AS pimg ON pimg.imgId=pr.id AND pimg.type=0
+		WHERE sc.providerNo = pb.providerNo
+		AND sc.id = #{id}
+
+	</select>
+
+	<update id="updateWithCollection">
+		UPDATE f_specimen_collection SET
+		isCollection=#{isCollection}
+		WHERE id=#{id}
+	</update>
+	
+	<!-- 浆员采小血打印小票 -->
+	<select id="printSpecimenCollection"  resultType="java.util.HashMap" parameterType="java.lang.Long">
+		SELECT fp.name,fp.providerNo code,
+			fs.sampleNo sample,
+			fs.allId longSample,
+		
+		DATE_FORMAT(fr.createDate,'%Y-%m-%d') register FROM
+		<if test="isSpecimen == 1"><!-- 标本采集 -->
+		f_specimen_collection AS fs 
+		</if> 
+		<if test="isSpecimen == 2"><!-- 固定浆员检验登记 -->
+		f_fixed_pulp_register AS fs 
+		</if> 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo
+		INNER JOIN f_provider_registries AS fr 
+		ON fs.allId = fr.allId
+		WHERE fs.id= #{id}
+	</select>
+	<!-- 根据小样号前面日期得到所有被使用的小样号集合 -->
+	<select id="selectAllSampleNoByDateStr" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT sampleNo FROM f_specimen_collection 
+		WHERE 
+			sampleNo LIKE CONCAT('',#{dateStr},'%')
+		UNION ALL
+		SELECT sampleNo FROM f_fixed_pulp_register 
+		WHERE
+			sampleNo LIKE CONCAT('',#{dateStr},'%')
+		ORDER BY sampleNo
+	</select>
+	<!-- 根据修改时间查询送样的报表记录 -->
+	<select id="querySendInfosByUpdateDate" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT sc.*, pb.sex,pb.name,cc.lable, ad.name as adName FROM 
+		f_specimen_collection AS sc 
+		LEFT JOIN f_provider_baseinfo AS pb ON pb.providerNo = sc.providerNo
+		LEFT JOIN f_blood_red_protein_content AS brpc ON brpc.allid = sc.allid
+		LEFT JOIN f_config AS cc ON cc.type = 'cuso_config' AND cc.value = brpc.resultId
+		LEFT JOIN f_admin AS ad ON ad.id = sc.updater
+		WHERE sc.isSendOff = 1 AND TO_DAYS(sc.updateDate) = TO_DAYS(#{updateDate});
+	</select>
+</mapper>

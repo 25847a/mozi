@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.inspection.dao.FixedPulpRegisterMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.inspection.entity.FixedPulpRegister">
+        <id column="id" property="id" />
+        <result column="allId" property="allId" />
+        <result column="providerNo" property="providerNo" />
+        <result column="sampleNo" property="sampleNo" />
+        <result column="isAssay" property="isAssay" />
+        <result column="receivePerson" property="receivePerson" />
+        <result column="sendPerson" property="sendPerson" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, allId, providerNo, sampleNo, isAssay,receivePerson, sendPerson,createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+	<select id="queryListByCreateDateAndIsAssay"
+		resultType="com.fadl.common.DataRow">
+		SELECT dp.*,pb.name,pb.imagez, pb.sex, pb.type AS pbType,
+		pb.bloodType,   pr.registriesNo,
+		ps.plasmaNo,
+		pb.icNumber FROM
+		f_fixed_pulp_register AS dp
+		LEFT JOIN  f_plasma_stock AS ps ON ps.allId = dp.allId
+		INNER JOIN f_provider_baseinfo AS pb
+		ON pb.providerNo = dp.providerNo
+		INNER JOIN f_provider_registries AS pr
+		ON pr.allId = dp.allId
+		<if test="isAssay != null ">
+			AND dp.isAssay = #{isAssay} 
+		</if>
+		AND 
+		dp.updateDate BETWEEN #{startTime} AND #{endTime}
+	</select>
+
+
+	<select id="queryFixedPulpRegisterByEntity"
+		resultType="com.fadl.common.DataRow" parameterType="com.fadl.common.DataRow">
+
+		SELECT rpc.*, pb.name, pb.sex, ps.plasmaNo,
+		pb.type AS pbType, 
+		pimg.imgUrl,pb.imagez,
+		pb.bloodType,
+		sc.createDate AS pcreateDate,
+		pb.icNumber FROM f_fixed_pulp_register AS rpc 
+		LEFT JOIN  f_plasma_stock AS ps ON ps.allId = rpc.allId
+		INNER JOIN f_provider_baseinfo AS pb ON rpc.providerNo = pb.providerNo
+		LEFT JOIN f_plasm_collection AS sc ON sc.allId= rpc.allId
+		INNER JOIN f_provider_registries AS pr ON rpc.allId = pr.allId
+		LEFT JOIN f_plasma_image AS pimg ON pimg.imgId=pr.id 
+		WHERE pimg.type=0
+		<if test="id != null">
+		 AND rpc.id = #{id}
+		</if>
+		<if test="allId != null">
+		 AND rpc.allId = #{allId}
+		</if>
+	</select>
+
+	<!-- 根据修改时间查询送样的报表记录 -->
+	<select id="querySendInfosByUpdateDate" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT sc.*, pb.sex,pb.name,cc.lable, ad.name as adName, pr.plasmaType FROM 
+		f_fixed_pulp_register AS sc
+		INNER JOIN f_provider_registries AS pr ON pr.allId = sc.allId 
+		INNER JOIN f_provider_baseinfo AS pb ON pb.providerNo = sc.providerNo
+		LEFT JOIN f_blood_red_protein_content AS brpc ON brpc.allid = sc.allid
+		LEFT JOIN f_config AS cc ON cc.type = 'cuso_config' AND cc.value = brpc.resultId
+		LEFT JOIN f_admin AS ad ON ad.id = sc.receivePerson
+		WHERE TO_DAYS(sc.updateDate) = TO_DAYS(#{updateDate});
+	</select>
+	<!-- 根据修改时间查询拒收的报表记录 -->
+	<select id="queryRefuseInfosByUpdateDate" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT fr.*,pb.sex, pb.name, ad.name AS refuseName, ad2.name AS sendName, pr.plasmaType 
+		FROM `f_fixed_pulp_register` AS fr 
+		INNER JOIN f_provider_registries AS pr ON pr.allId = fr.allId 
+		INNER JOIN f_provider_baseinfo AS pb ON pb.providerNo = pr.providerNo
+		LEFT JOIN f_admin AS ad ON ad.id = fr.receivePerson
+		LEFT JOIN f_admin AS ad2 ON ad2.id = fr.sendPerson
+		WHERE fr.status = 1 AND TO_DAYS(fr.updateDate) = TO_DAYS(#{updateDate});
+	</select>
+
+
+
+</mapper>

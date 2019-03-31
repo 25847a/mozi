@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="UTF-8" />
+		<title>血浆箱号打印</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+		<link th:href="@{/css/common.css}" rel="stylesheet" />
+		<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+	</head>
+	<style>
+		#newpray .dayina {width: 100%;margin-bottom: 0;}
+		#newpray .gray-bg .colx8 .inhenagoi {text-align: left;color: #b9b9b9;} 
+		.colxsgray {float: left;width: 27%;margin-left: 3em;padding: 0}
+		#newpray .busr{padding: 0 0.4em;} 
+		.imadrul{}
+		.imadrul .imdleft{float:left}
+		.imadrul .imdleft li{float: left;    margin-left: 3em;}
+		.imadrul .imdright{float:right}
+		.imadrul .imdright li{float: left;margin-right: 8em;} 
+		.grupla la{font-weight: bold !important;  font-size: 16px !important;}
+		.grupla{font-weight: bold !important;  font-size: 16px !important;}
+	</style>
+	<body id="newpray">
+		<div class="col-xs-12 colx8 colnewo" id="search"> 
+					<div class="row newregis" style=" border-bottom: 0px solid #e7e7e7 !important;" id="basic"> 
+						<div class="row newregistr">
+							<div class="col-xs-9 colxsgray"> 
+								<div class="form-group newikrd">
+									<label class="control-label UserC" style="float: left;    line-height: 2.5em;"><la>箱号</la>：</label>
+									<div class="input-group">
+											<input class="form-control newfrin" id="boxId"/>
+									</div> 
+								</div> 
+							</div>
+							 <div class="col-xs-2 colxsgray"> 
+							 <div class="form-group newikrd">
+					<div class="input-group newInpa butnewikr">
+						<button type="button" class="btn  btn-info" id="chaxun">查询</button>
+						<button type="button" class="btn  btn-info" onclick="printdiv()">打印</button>
+					</div>
+				</div>
+							 	</div>
+						</div>
+					</div>
+					 
+				</div>
+		<div class="gray-bg dayina" id="div_print" style="display: none;">
+			<div class="dayindiv">
+				<p>原料血浆装箱报告单</p>
+			</div>
+			<div class="gray-bg" id="" style=" ">
+				<div class="wrapper wrapper-content animated fadeInRight" style="width: 830px;    margin: 0 auto;">
+					<div class="row newregis indegirtion">
+						<div class="colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC grupla"><la>箱号</la>：</label>
+								<label class="control-label UserC inhenagoi grupla" id="boxId_val"></label>
+							</div>
+						</div>
+						<div class="colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC grupla"><la>类型</la>：</label>
+								<label class="control-label UserC inhenagoi grupla" id="type"></label>
+							</div>
+						</div>
+						<div class="colxsgray">
+							<div class="form-group newikrd">
+								<label class="control-label UserC">装箱日期：</label>
+								<label class="control-label UserC inhenagoi" id="time"></label>
+							</div>
+						</div>
+					</div>
+					<div class="row busr">
+						<table class="layui-table">
+							<thead>
+								<tr>
+									<th>血浆编号</th>
+									<th>献浆卡号</th>
+									<th>姓名</th>
+									<th>性别</th>
+									<th>采浆<br/>日期</th>
+									<th>血型</th>
+									<th>血浆量(g)</th>
+									<th>全血<br/>比重</th>
+									<th>蛋白<br/>含量</th>
+									<th>ALT</th>
+									<th>HBsAg</th>
+									<th>HCV<br/>抗体</th>
+									<th>HIV<br/>抗体</th>
+									<th>梅毒</th>
+									<th>类型</th>
+									<th>检测<br/>结论</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+							</tbody>
+						</table>
+						<div class="imadrul">
+							<ul class="imdleft">
+								<li>装箱人：<label th:text="${session.admin.name}"></label></li>
+								<li>核对人：</li>
+							</ul>
+							<ul class="imdright">
+								<li>合计袋数：<label id="count"></label></li>
+								<li>合计浆量：<label id="sum"></label></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!-- 公共包 -->
+		<script th:src="@{/js/utils.js}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<script th:src="@{/js/plasmaStock/print_box_detail.js}"></script>
+	</body>
+
+</html>

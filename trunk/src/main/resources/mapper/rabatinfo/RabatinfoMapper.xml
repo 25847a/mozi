@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.rabatinfo.dao.RabatinfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.rabatinfo.entity.Rabatinfo">
+        <id column="id" property="id" />
+        <result column="rabatunitId" property="rabatunitId" />
+        <result column="allId" property="allId" />
+        <result column="userId" property="userId" />
+        <result column="providerNo" property="providerNo" />
+        <result column="result" property="result" />
+        <result column="rabatImg" property="rabatImg" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+        <result column="isCheck" property="isCheck" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, rabatunitId,allId, userId, providerNo, result, rabatImg, createDate, updateDate, creater, updater, plasmaId,isCheck
+    </sql>
+
+	<!-- 查询浆员胸片列表 -->
+	<select id="queryRabatinfoListByProviderNo" parameterType="java.util.Map" resultType="com.fadl.common.DataRow"> 
+		SELECT fr.id,fr.providerNo,fp.name,fp.sex,fp.bloodType,DATE_FORMAT(fr.createDate,'%Y-%m-%d') createDate,fn.name AS fname,fr.rabatImg,fr.result,fr.isCheck FROM f_rabatinfo fr 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fr.providerNo = fp.providerNo
+		LEFT JOIN f_rabat_unit AS fn 
+		ON fr.rabatunitId = fn.id
+		WHERE 1=1 
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if> 
+		<if test="name!=null and name!='' ">
+			AND fp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="rabatunitId!=null and rabatunitId!='' ">
+			AND fr.rabatunitId=#{rabatunitId}
+		</if>
+		<if test="result!=null and result!='' ">
+			AND fr.result=#{result}
+		</if>
+		<if test="startTime!=null and startTime!='' ">
+			AND DATE_FORMAT(fr.createDate,'%Y-%m-%d') >=#{startTime}
+		</if>
+		<if test="endTime!=null and endTime!='' ">
+			AND DATE_FORMAT(fr.createDate,'%Y-%m-%d') &lt;=#{endTime}
+		</if>
+		ORDER BY fr.isCheck ASC,fr.updateDate ASC
+	</select>
+	
+	<!-- 查询浆员胸片列表总数 -->
+	<select id="queryRabatinfoListByProviderNoCount" parameterType="java.util.Map" resultType="java.lang.Integer"> 
+		SELECT COUNT(*) FROM f_rabatinfo fr 
+		LEFT JOIN f_provider_baseinfo AS fp 
+		ON fr.providerNo = fp.providerNo
+		LEFT JOIN f_rabat_unit AS fn 
+		ON fr.rabatunitId = fn.id
+		WHERE fr.providerNo=#{providerNo}
+	</select>
+	<!-- 查询浆员最后一次照胸片时间 -->
+	<select id="queryProviderLastTime" parameterType="com.fadl.rabatinfo.entity.Rabatinfo" resultType="com.fadl.common.DataRow"> 
+		SELECT IFNULL(TIMESTAMPDIFF(DAY,updateDate,NOW()),0) AS time FROM f_rabatinfo WHERE providerNo=#{providerNo} AND isCheck=1
+		ORDER BY createDate DESC 
+		LIMIT 1
+	</select>
+	
+	<!-- 更新胸片信息 -->
+	<update id="updateRabatInfoByAllId" parameterType="java.lang.Long">
+		UPDATE f_rabatinfo SET rabatunitId=NULL,userId=NULL,result=NULL,rabatImg=NULL,remarks=NULL,isCheck=0 WHERE allId=#{allId}
+	</update>
+</mapper>

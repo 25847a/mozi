@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.immuneAssay.dao.OrdinaryStrengthenInjectionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.immuneAssay.entity.OrdinaryStrengthenInjection">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="immuneId" property="immuneId" />
+        <result column="num" property="num" />
+        <result column="injection" property="injection" />
+        <result column="vaccineId" property="vaccineId" />
+        <result column="status" property="status" />
+        <result column="remarks" property="remarks" />
+        <result column="isShot" property="isShot" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, immuneId, num, injection, vaccineId, status, remarks, isShot, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+	<!-- 普免加强针注射  未注射人员 -->
+	<select id="notShotOrdStrengthen" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tp.id,td.icNumber,td.providerNo,td.name,td.sex,tl.registriesNo,tk.immuneName,td.type,tp.num,admin.name as admin,tb.imgUrl FROM f_ordinary_strengthen_injection tp
+		INNER JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		LEFT JOIN (SELECT * FROM f_provider_registries WHERE  DATE_FORMAT(createDate,'%Y-%m-%d')=#{updateDate}) tl
+		ON tp.providerNo=tl.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0 AND DATE_FORMAT(createDate,'%Y-%m-%d')=#{updateDate}) tb
+		ON tl.id=tb.imgId
+		INNER JOIN f_admin admin 
+		on tp.updater = admin.id
+		WHERE tp.isShot=0 AND DATE_FORMAT(tp.createDate,'%Y-%m-%d')=#{updateDate}
+	</select>
+	
+	<!-- 普免加强针注射  已注射人员 -->
+	<select id="haveShotOrdStrengthen" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,td.icNumber,td.providerNo,td.name,td.sex,tl.registriesNo,tk.immuneName,td.type,tp.num,admin.name as admin,tb.imgUrl FROM f_ordinary_strengthen_injection tp
+		INNER JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		LEFT JOIN (SELECT * FROM f_provider_registries WHERE  DATE_FORMAT(createDate,'%Y-%m-%d')=#{updateDate}) tl
+		ON tp.providerNo=tl.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0 AND DATE_FORMAT(createDate,'%Y-%m-%d')=#{updateDate}) tb
+		ON tl.id=tb.imgId
+		INNER JOIN f_admin admin 
+		on tp.updater = admin.id
+		WHERE tp.isShot=1 AND DATE_FORMAT(tp.createDate,'%Y-%m-%d')=#{updateDate}
+	</select>
+	<!-- 获取疫苗信息(啊健)基础针 -->
+	<select id="queryVaccineInfoStreng" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+	SELECT tj.id,tj.immuneName,tk.name,td.batchNumber,tg.name as supply,tp.id as vaccineId,validMonth,injection,standard FROM f_vaccine_setting tp
+		LEFT JOIN f_supplies_stream td
+		ON tp.suppliesId=td.suppliesId AND tp.batchNumber=td.batchNumber
+		LEFT JOIN f_supplies_info tk
+		ON tp.suppliesId=tk.id
+		LEFT JOIN f_supplies_supply tg
+		ON tk.supplyId=tg.id
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		WHERE tp.id=#{immune} AND tp.injectionType=1
+	</select>
+	<select id="getBaseImmuneStreng" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tk.name,td.batchNumber,tp.id as vaccineId,tk.standard,tp.injection,tp.validMonth,tg.name as supply FROM f_vaccine_setting tp
+		LEFT JOIN f_supplies_stream td
+		ON tp.suppliesId=td.suppliesId AND tp.batchNumber=td.batchNumber
+		LEFT JOIN f_supplies_info tk
+		ON tp.suppliesId=tk.id
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		LEFT JOIN f_supplies_supply tg 
+		ON tk.supplyId=tg.id
+		WHERE tp.immuneId=#{id} AND tp.injectionType=1
+	</select>
+	<!-- 普免加强针 头部内容 -->
+	<select id="ordinaryStrengthenHead" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		select inject.id,base.`name`,base.sex,base.bloodType,base.type,immu.immuneName,base.icNumber,inject.providerNo, inject.updateDate,inject.immuneId,
+		admin.`name` as zsName,inject.num,inject.injection,inject.vaccineId,tr.name as supplies,inject.status,inject.remarks,base.immuneRegisterId,rule.intervalDay,base.photo,inject.isShot
+		from f_ordinary_strengthen_injection inject 
+		INNER JOIN f_immune_setting immu ON inject.immuneId = immu.id 
+		INNER JOIN f_provider_baseinfo base on inject.providerNo = base.providerNo 
+		INNER JOIN f_admin admin ON admin.id = inject.updater
+		INNER JOIN f_basic_rules_setting rule on inject.immuneId = rule.id
+		LEFT JOIN f_vaccine_setting tc
+		ON inject.vaccineId=tc.id
+		LEFT JOIN f_supplies_info tr
+		ON tc.suppliesId=tr.id
+		where inject.id = #{id} and DATE_FORMAT(inject.createDate,'%Y-%m-%d') = #{updateDate}
+	</select>
+	<!-- 啊健(查询普免加强登记表信息) -->
+	<select id="queryStrengInjectionInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT * FROM f_ordinary_strengthen_injection WHERE providerNo=#{providerNo} ORDER BY createDate DESC LIMIT 0,1 
+	</select>
+</mapper>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.check.dao.CheckMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.fadl.check.entity.Check">
+		<id column="id" property="id" />
+		<result column="allId" property="allId" />
+		<result column="providerNo" property="providerNo" />
+		<result column="isCheck" property="isCheck" />
+		<result column="type" property="type" />
+		<result column="isIdentity" property="isIdentity" />
+		<result column="tz" property="tz" />
+		<result column="tw" property="tw" />
+		<result column="mb" property="mb" />
+		<result column="xya" property="xya" />
+		<result column="xyb" property="xyb" />
+		<result column="xb" property="xb" />
+		<result column="fb" property="fb" />
+		<result column="pf" property="pf" />
+		<result column="wg" property="wg" />
+		<result column="sz" property="sz" />
+		<result column="consult" property="consult" />
+		<result column="consultResult" property="consultResult" />
+		<result column="result" property="result" />
+		<result column="reason" property="reason" />
+		<result column="remark" property="remark" />
+		<result column="userId" property="userId" />
+		<result column="isDel" property="isDel" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+		<result column="checkType" property="checkType" />
+		<result column="finalResult" property="finalResult" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, isCheck,type, isIdentity, tz, tw, mb, xya, xyb, xb, fb, pf, wg, sz, isNew, consult, consultResult, result, reason, remark, userId, isDel, createDate, updateDate, creater, updater, plasmaId,checkType,finalResult
+    </sql>
+	
+	<!-- 查询未体检/体检人员 -->
+	<select id="queryCheckList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fc.*,fr.registriesNo,fp.name,fp.sex,fp.bloodType,fr.id rid,fa.name as fname,ff.opinion,fr.plasmaType FROM f_check AS fc 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fc.providerNo = fp.providerNo
+		INNER JOIN f_provider_registries AS fr 
+		ON fc.providerNo = fr.providerNo AND DATE_FORMAT(fr.createDate,'%Y-%m-%d') = #{date} 
+		LEFT JOIN f_admin AS fa 
+		ON fc.userId = fa.id
+		LEFT JOIN f_refuse_info AS ff 
+		ON fc.allId=ff.allId
+		WHERE DATE_FORMAT(fc.createDate,'%Y-%m-%d') = #{date} 
+		<if test="isNew!=null and isNew!=''">
+			AND fr.isNew=#{isNew}
+		</if>
+		<if test="providerNo!=null and providerNo!=''">
+			AND fc.providerNo=#{providerNo}
+		</if>
+		<if test="allId!=null and allId!=''">
+			AND fc.allId=#{allId}
+		</if>
+		AND fc.isCheck=#{isCheck} 
+		ORDER BY fc.allId DESC
+	</select>
+	<!-- 查询体检头部信息 -->
+	<select id="queryCheckHeadInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tp.providerNo,tg.registriesNo,tg.plasmaType FROM f_check tp
+		LEFT JOIN f_provider_registries tg
+		ON tp.providerNo=tg.providerNo AND tp.allId=tg.allId
+		WHERE tp.providerNo=#{providerNo} AND tp.allId=#{allId} AND tp.isCheck=0
+	</select>
+	<!-- 献浆员体检高级查询 -->
+	<select id="queryCheckQueryList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fp.name,fp.sex,fp.bloodType,fp.idNo,fp.icNumber,fc.*,fr.opinion FROM f_check AS fc 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fc.providerNo = fp.providerNo 
+		LEFT JOIN f_refuse_info AS fr 
+		ON fc.allId = fr.allId
+		WHERE 1=1  
+		<if test="startTime!=null and startTime!='' ">
+			AND DATE_FORMAT(fc.createDate, '%Y-%m-%d') >= #{startTime}
+		</if>
+		<if test="endTime!=null and endTime!='' ">
+			AND DATE_FORMAT(fc.createDate, '%Y-%m-%d') &lt;= #{endTime}
+		</if>
+		<if test="regStartTime!=null and regStartTime!='' ">
+			AND DATE_FORMAT(fp.createDate, '%Y-%m-%d') >= #{regStartTime}
+		</if>
+		<if test="regEndTime!=null and regEndTime!='' ">
+			AND DATE_FORMAT(fp.createDate, '%Y-%m-%d') &lt;= #{regEndTime}
+		</if>
+		<if test="result!=null and result!='' ">
+			AND fc.result = #{result}
+		</if>
+		<if test="name!=null and name!=''">
+			AND fp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="idNo!=null and idNo!=''">
+			AND fp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+		<if test="icNumber!=null and icNumber!=''">
+			AND fp.icNumber LIKE CONCAT('%',#{icNumber},'%')
+		</if>
+		<if test="providerNo!=null and providerNo!=''">
+			AND fp.providerNo = #{providerNo}
+		</if>
+		<if test="isCheck!=null and isCheck!=''">
+			AND fc.isCheck =#{isCheck}
+		</if>
+		
+		<if test="providerNo!=null and providerNo!=''">
+			UNION ALL
+			SELECT fp.name,fp.sex,fp.bloodType,fp.idNo,fp.icNumber,fc.*,fr.opinion
+			FROM f_check_repeat AS fc 
+			INNER JOIN f_provider_baseinfo AS fp 
+			ON fc.providerNo = fp.providerNo 
+			LEFT JOIN f_refuse_info AS fr 
+			ON fc.allId = fr.allId
+			WHERE fc.isCheck=#{isCheck}  AND fc.providerNo=#{providerNo}
+		</if>
+	</select>
+	
+	<!-- 查询上次体检记录 -->
+	<select id="queryPrevCheckInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fc.xya,fc.xyb,fc.tz,fc.mb,fc.tw FROM f_check AS fc 
+		WHERE fc.providerNo=#{providerNo} AND fc.createDate &lt; #{time}
+		ORDER BY fc.createDate DESC 
+		LIMIT 1
+	</select>
+	
+	<!-- 同步体检数据到叫号系统 -->
+	<select id="queryCallDataList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fp.providerNo,fp.idNo,fp.sex,fp.name,DATE_FORMAT(fp.birthday,'%Y-%m-%d') birthday,
+		fr.registriesNo,DATE_FORMAT(fr.createDate,'%Y-%m-%d %H:%i:%S') createDate,fd.addressx FROM 
+		<choose>
+			<when test="type==1">
+				f_check
+			</when>
+			<when test="type==2">
+				f_small_blood
+			</when>
+			<when test="type==3">
+				f_plasm_collection
+			</when>
+			<when test="type==4">
+				f_cost_grant
+			</when>
+		</choose>
+		 AS fc  
+		<if test="type==4">
+			INNER JOIN f_plasm_collection AS fl 
+			ON fc.allId = fl.allId
+		</if>
+		INNER JOIN f_provider_registries AS fr 
+		ON fc.allId = fr.allId 
+		INNER JOIN f_provider_baseinfo AS fp
+		ON fr.providerNo = fp.providerNo
+		INNER JOIN f_detailed_info AS fd 
+		ON fd.baseId = fp.id
+		WHERE fc.createDate > #{time} 
+		<if test="type==1">
+			AND fc.isCheck=0
+		</if>
+		<if test="type==2">
+			AND fc.isCollection=0
+		</if>
+		<if test="type==3">
+			AND fc.isCollection=0
+		</if>
+		<if test="type==4">
+			AND fc.isGrant=0
+		</if>
+	</select>
+	
+	<!-- 打印体检记录 -->
+	<select id="queryCheckRecordList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fc.providerNo,fc.allId,fp.name as fname,fp.sex,fi.immuneName,fp.bloodType,fc.consultResult,fc.tz,fc.tw,fc.mb,fc.xya,fc.xyb,fc.xb,fc.fb,fc.pf,fc.wg,fc.sz,fa.name,fc.result
+		FROM f_check AS fc 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fc.providerNo = fp.providerNo
+		LEFT JOIN f_immune_setting fi 
+		ON fp.immuneId = fi.id
+		INNER JOIN f_admin fa
+		ON fc.updater = fa.id
+		WHERE fc.updateDate >=#{startDate} AND fc.updateDate &lt;= #{endDate}
+	</select>
+</mapper>

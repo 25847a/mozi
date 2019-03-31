@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.stock.dao.PlasmaStockMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.stock.entity.PlasmaStock">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="allId" property="allId" />
+        <result column="plasmaNo" property="plasmaNo" />
+        <result column="isStorage" property="isStorage" />
+        <result column="boxId" property="boxId" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, plasmaNo, isStorage, boxId, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+	
+	<!-- 查询入库列表 -->
+	<select id="queryPlasmaStockList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fp.name,fp.sex,fc.status,fc.updateDate AS cupdateDate,fc.plasmAmount,fs.*,fa.name AS fname,fc.isSendOff,fr.plasmaType FROM f_plasma_stock AS fs 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo 
+		LEFT JOIN f_plasm_collection AS fc 
+		ON fs.allId = fc.allId 
+		LEFT JOIN f_admin AS fa
+		ON fs.updater = fa.id 
+		LEFT JOIN f_provider_registries AS fr ON fs.allId = fr.allId
+		WHERE DATE_FORMAT(fs.createDate,'%Y-%m-%d') = #{date} 
+		AND fs.isStorage=#{isStorage}
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fs.providerNo=#{providerNo}
+		</if> 
+		<if test="allId!=null and allId!='' ">
+			AND fs.allId=#{allId}
+		</if> 
+		 ORDER BY fc.isSendOff
+	</select>
+	<!-- 查询 箱号信息和浆量-->
+	<select id="queryPlasmaStockById" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+		SELECT fc.plasmAmount,fs.allId,fs.plasmaNo,fs.boxId FROM f_plasma_stock AS fs 
+		INNER JOIN f_plasm_collection AS fc
+		ON fs.allId = fc.allId 
+		WHERE 
+		fs.id=#{id}
+	</select>
+	
+	<!-- 入库查询浆员信息并打印条码 -->
+	<select id="queryStockInfoAndPrint" resultType="java.util.HashMap" parameterType="java.lang.String">
+		SELECT fp.plasmAmount weight,DATE_FORMAT(fp.createDate,'%Y-%m-%d') pulpingDate,fb.name,fb.sex,fb.bloodType blood,fb.providerNo code,fi.immuneName plasmaType,fk.plasmaNo plasma,fk.boxId boxNo FROM f_plasm_collection AS fp 
+		INNER JOIN f_provider_baseinfo AS fb 
+		ON fp.providerNo = fb.providerNo 
+		INNER JOIN f_plasma_stock AS fk 
+		ON fp.allId = fk.allId
+		LEFT JOIN f_immune_setting AS fi 
+		ON fb.immuneId = fi.id 
+		WHERE fp.allId = #{allId}
+	</select>
+	
+	<!-- 浆库高级查询 -->
+	<select id="querySeniorStockList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.name AS bname,tp.sex,tp.bloodType,tp.type,fc.plasmAmount,fc.createDate AS ccreateDate,tk.*,fa.name,fc.status FROM f_plasma_stock AS tk 
+		INNER JOIN f_provider_baseinfo AS tp 
+		ON tk.providerNo = tp.providerNo 
+		LEFT JOIN f_plasm_collection AS fc 
+		ON tk.allId = fc.allId
+		INNER JOIN f_admin AS fa 
+		ON tk.creater = fa.id 
+		LEFT JOIN f_box_info AS fi 
+		ON tk.boxId = fi.id 
+		WHERE 1=1
+		<if test="startDate!=null and startDate!='' ">
+			AND fc.createDate >=#{startDate}
+		</if>
+		<if test="endDate!=null and endDate!='' ">
+			AND fc.createDate &lt;=#{endDate}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND tk.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="type!=null and type!='' ">
+			AND tp.type =#{type}
+		</if>
+		<if test="boxId!=null and boxId!='' ">
+			AND tk.boxId =#{boxId}
+		</if>
+		<if test="name!=null and name!='' ">
+			AND tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND tp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+		<if test="icNumber!=null and icNumber!='' ">
+			AND tp.icNumber LIKE CONCAT('%',#{icNumber},'%')
+		</if>
+		<if test="allId!=null and allId!='' ">
+			AND tk.allId LIKE CONCAT('%',#{allId},'%')
+		</if>
+		<if test="plasmaNo!=null and plasmaNo!='' ">
+			AND tk.plasmaNo LIKE CONCAT('%',#{plasmaNo},'%')
+		</if>
+		<if test="isStorage!=null and isStorage!='' ">
+			AND tk.isStorage LIKE CONCAT('%',#{isStorage},'%')
+		</if>
+		<if test="status!=null and status!='' ">
+			AND fc.status=#{status}
+		</if>
+	</select>
+	
+	<!-- 根据箱号查询血浆详情 -->
+	<select id="queryPlasmaStockListByBoxId" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT fp.name,fp.providerNo,fp.sex,fp.bloodType,DATE_FORMAT(fk.createDate,'%Y-%m-%d') createDate,fk.allId FROM f_plasma_stock AS fk 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fk.providerNo = fp.providerNo
+		WHERE boxId= #{boxId}			
+	</select>
+	
+	<!-- 根据箱号统计装箱新 -->
+	<select id="queryPlasmaStockByBoxId" resultType="java.util.HashMap" parameterType="java.lang.String">
+		SELECT fp.boxId boxCode,COUNT(*) count,SUM(fc.plasmAmount) total FROM f_plasma_stock AS fp 
+		INNER JOIN f_plasm_collection AS fc 
+		ON fp.allId = fc.allId
+		WHERE fp.boxId=#{boxId} AND fp.isStorage=1 
+		AND fc.status=0 
+	</select>
+	
+	<!-- 打印装箱清单（根据箱子编号查询 箱子血浆信息） -->
+	<select id="queryBoxPlasmaInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT fp.allId,fp.plasmaNo,fp.providerNo,fb.name,fb.sex,fc.updateDate,fb.bloodType,fc.plasmAmount,
+		fn.wholeBlood,fn.protein,fn.alt,fn.HBsAg,fn.hcv,fn.hiv,fn.syphilis,fi.immuneName,fn.result,DATE_FORMAT(NOW(),'%Y-%m-%d') time
+		 FROM f_plasma_stock  fp 
+		INNER JOIN f_plasm_collection AS fc 
+		ON fp.allId = fc.allId
+		INNER JOIN f_new_card AS fn 
+		ON fp.allId = fn.allId 
+		INNER JOIN f_provider_baseinfo AS fb 
+		ON fp.providerNo = fb.providerNo
+		LEFT JOIN f_immune_setting AS fi 
+		ON fb.immuneId = fi.id
+		WHERE fp.boxId=#{boxId} AND fp.isStorage=1
+	</select>
+	<!-- 查询装箱清单 试剂信息 -->
+	<select id="queryBoxPlasmaInfoReagents" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT fc.lable,fc1.lable as cmLable,ss.batchNumber,DATE_FORMAT(ft.termOfValidity,'%Y-%m-%d') termOfValidity,sss.name,fa1.name AS testName,
+		fa2.name AS checkName,fa3.name AS reportName
+		 FROM f_test_config_info AS ft 
+		INNER JOIN f_config AS fc ON fc.`value` = ft.projectName AND fc.type = 'elisa_check_project'
+		INNER JOIN f_config AS fc1 ON fc1.`value` = ft.testingMethodid AND fc1.type = 'check_method'
+		LEFT JOIN f_elisa_info AS ei ON ei.tciId = ft.id
+		LEFT JOIN f_elisa_values AS ev ON ev.eiId = ei.id 
+		LEFT JOIN  f_provider_registries as pr on pr.providerNo = ev.pbId and ev.sampleNo = pr.sampleNo
+		LEFT JOIN f_supplies_outstock as ss ON ss.id = ei.reagentId
+		LEFT JOIN f_supplies_info AS si on ss.suppliesId = si.id
+		LEFT JOIN f_supplies_supply AS sss on sss.id = si.supplyId 
+		LEFT JOIN f_admin AS fa1 ON ft.testAdminid = fa1.id
+		LEFT JOIN f_admin AS fa2 ON ft.checkAdminid = fa2.id
+		LEFT JOIN f_admin AS fa3 ON ft.reportAdminid = fa3.id
+		WHERE pr.allId = #{allId}
+		GROUP BY  ft.projectName
+	</select>
+	<!--  根据检验配置详情中的检测项目得到具体的试剂信息和检测方法 -->
+	<select id="querySuppliesInfoByProjectNameLable" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+	SELECT c.lable,c1.lable AS methodLable, ss.name, DATE_FORMAT(so.expiryTime,'%Y-%m-%d') expiryTime,so.batchNumber 
+	,fa1.name AS testName, fa2.name AS checkName,fa3.name AS reportName
+	FROM f_test_config_info tci 
+	INNER JOIN f_config c ON c.value = tci.projectName AND c.type='elisa_check_project' AND c.lable= #{lable}
+	INNER JOIN f_supplies_outstock  so ON so.id= tci.reagentBatch
+	INNER JOIN f_supplies_supply  ss ON ss.id = tci.venderid
+	INNER JOIN f_config c1 ON c1.type = 'check_method' AND c1.value = tci.testingMethodid
+	LEFT JOIN f_admin AS fa1 ON tci.testAdminid = fa1.id
+	LEFT JOIN f_admin AS fa2 ON tci.checkAdminid = fa2.id
+	LEFT JOIN f_admin AS fa3 ON tci.reportAdminid = fa3.id
+	WHERE TO_DAYS(tci.endTime) > TO_DAYS(#{endTime})
+	</select>
+	<!-- 查询血浆信息 -->
+	<select id="queryPlasmaStockInfoByAllId" resultType="com.fadl.common.DataRow" parameterType="com.fadl.stock.entity.PlasmaStock">
+		SELECT fs.*,fi.typeCode code,fa.result AS fresult,fc.updateDate AS collDate,fc.status,fn.result,fn.isAssay,fa.immuneId,fr.plasmaType,fa.id AS fid FROM f_plasma_stock AS fs 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo
+		INNER JOIN f_plasm_collection AS fc
+		ON fs.allId = fc.allId 
+		INNER JOIN f_new_card AS fn 
+		ON fs.allId = fn.allId 
+		LEFT JOIN f_immune_assay AS fa 
+		ON fs.allId = fa.allId
+		LEFT JOIN f_immune_setting AS fi 
+		ON fa.immuneId = fi.id
+		INNER JOIN f_provider_registries AS fr 
+		ON fs.allId = fr.allId
+		WHERE fs.isStorage=0
+		<if test="id!=null and id!='' ">
+			AND fs.id=#{id}
+		</if>
+		<if test="allId!=null and allId!='' ">
+			AND fs.allId=#{allId}  
+		</if>
+	</select>
+	
+	<!-- 查询出库信息 -->
+	<select id="queryOutPlasmaStock" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT fb.*,fi.immuneName,IF(fb.status=0,'未出库','已出库') AS fstatus,fa.name,faa.name fname FROM f_box_info AS fb 
+		INNER JOIN f_immune_setting fi 
+		ON fb.immuneId=fi.id
+		LEFT JOIN f_admin AS fa 	
+		ON fb.creater = fa.id
+		LEFT JOIN f_admin AS faa 
+		ON faa.id = fb.updater 
+		WHERE 1=1 
+		<if test="status!=null and status!='' ">
+			AND fb.status=#{status}
+		</if>
+		<if test="sNumber!=null and sNumber!='' ">
+			AND fb.sNumber= #{sNumber}
+		</if>
+		<if test="boxNum1!=null and boxNum1!='' ">
+			AND fb.id >= #{boxNum1}
+		</if>
+		<if test="boxNum2!=null and boxNum2!='' ">
+			AND fb.id &lt;= #{boxNum2}
+		</if>
+		<if test="type!=null and type!='' ">
+			AND fb.immuneId = #{type}
+		</if>
+		<if test="startDate!=null and startDate!='' ">
+			AND fb.id >=#{startDate}
+		</if>
+		<if test="endDate!=null and endDate!='' ">
+			AND fb.id &lt;=#{endDate}
+		</if>
+	</select>
+	
+	<!-- 报废未出库的血浆 -->
+	<select id="queryScrapPlasmaList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT fc.id,fp.name,fp.providerNo,fc.updateDate,fc.plasmAmount FROM f_plasma_stock AS fs 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo 
+		INNER JOIN f_plasm_collection AS fc 
+		ON fs.allId = fc.allId AND fs.providerNo = fc.providerNo
+		WHERE  fs.isStorage!=2 AND fc.status=0 AND fc.isCollection=1 
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fs.providerNo=#{providerNo} 
+		</if>
+		<if test="name!=null and name!='' ">
+			AND fp.name=#{name}
+		</if>
+	</select>
+	
+	<!-- 批量报废 -->
+	<update id="updatePlasmaScrapList" parameterType="java.util.Map">
+		UPDATE f_plasm_collection SET status=1,scrapDate=NOW(),scrapUserId = #{scrapUserId } 
+		WHERE status=0 
+		<if test="ids!=null ">
+		   AND id IN 
+		   <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+		</if>
+		<if test="allId!=null ">
+		    AND allId=#{allId}
+		</if>
+	</update>
+	
+	<!-- 固定浆员留样查询 -->
+	<select id="queryReturnSimpleList" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT fs.createDate,fp.name,fp.providerNo,fs.allId,fa.name AS fname FROM f_plasma_stock AS fs
+		INNER JOIN f_plasm_collection AS pc ON fs.allId = pc.allId AND pc.isSendOff = 1 
+		INNER JOIN f_provider_registries AS fr 
+		ON fs.allId = fr.allId
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo
+		INNER JOIN f_admin AS fa 
+		ON fs.creater = fa.id
+		WHERE fr.plasmaType=1  
+		<if test="startDate!=null and startDate!='' ">
+			AND fs.createDate >=#{startDate}
+		</if>
+		<if test="endDate!=null and endDate!='' ">
+			AND fs.createDate &lt;=#{endDate}
+		</if>
+		<if test="startAllId!=null and startAllId!='' ">
+			AND fs.allId >=#{startAllId}
+		</if>
+		<if test="endAllId!=null and endAllId!='' ">
+			AND fs.allId &lt;=#{endAllId}
+		</if>
+		
+		<if test="startPlasmaNo!=null and startPlasmaNo!='' ">
+			AND fs.allId >=#{startPlasmaNo}
+		</if>
+		<if test="endPlasmaNo!=null and endPlasmaNo!='' ">
+			AND fs.allId &lt;=#{endPlasmaNo}
+		</if>
+	</select>
+	
+	<!--                       导出浆站数据到公司                                          -->
+	<!-- 导出浆员信息 -->
+	<select id="exportPlasmaDataInfo" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		<!-- SELECT fp.id BaseNo,icNumber ICNo,idNo IDNo,fp.name Name,IF(sex=0,'M','F') Sex,fp.ProviderNo,BirthDay,BloodType,fp.immuneId ProviderType,'' IsRPRCheck,
+		place NativePlace,isMarry IsMarried ,fn.id Nation,fd.addressx Address,'' Zip,
+		fd.phone Tel,fp.plasmaState ProviderState,fp.createDate FileDate,fp.imagespot Photo,fp.imagez IDCardPhoto,'0' FingerMark,'' Times,
+		'' SickHistory,'' Remark,fp.createDate RegistDate,'' Register,'' RefuseDate,'' RefuseReason,collectionDate CollectionDate,aboutDate LastDateBooking,'' SmallNo,
+		fp.groupId TeamNo,'' IsAuditing,'' Assessor,'1' OLdNewRedatebz,'' SFFZ,'2' update_flag,'' update_date,(SELECT value FROM f_config WHERE id=21) org_id,'-1' web_flag,
+		'11000' uppic_flag,'00000000000000' zw_downflag,fd.validDate FZDate,'宁远县卫生和计划生育' FZEmpName,'' FZUnitName,'' Fzsm,'150523AA00138' JmgCpbh,
+		'F9F81BE7A5FB4525' JmgXlh,'' FZEmpID,'' FZUnitID,'' OldIcNo
+		FROM f_box_info AS fb 
+		INNER JOIN f_plasma_stock AS fs
+		ON fb.id = fs.boxId
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo
+		INNER JOIN f_detailed_info AS fd 
+		ON fp.id = fd.baseId
+		LEFT JOIN f_nation AS fn 
+		ON fd.nation = fn.id
+		WHERE fb.updateDate >=#{startDate} AND fb.updateDate &lt;=#{endDate} AND fb.status=1
+		GROUP BY fp.providerNo -->
+		
+		SELECT fp.id BaseNo,icNumber ICNo,idNo IDNo,fp.name Name,IF(sex=0,'M','F') Sex,fp.ProviderNo,BirthDay,
+		 CASE WHEN BloodType=0 THEN 'A' WHEN BloodType=1 THEN 'B' WHEN BloodType=2 THEN 'O'  WHEN BloodType=3 THEN 'AB' END BloodType
+		,fp.immuneId ProviderType,'' IsRPRCheck,
+		place NativePlace,isMarry IsMarried ,fn.id Nation,fd.addressx Address,'' Zip,
+		fd.phone Tel,fp.plasmaState ProviderState,fp.createDate FileDate,fp.imagespot Photo,fp.imagez IDCardPhoto,'0' FingerMark,'' Times,
+		'' SickHistory,'' Remark,fp.createDate RegistDate,'' Register,'' RefuseDate,'' RefuseReason,collectionDate CollectionDate,aboutDate LastDateBooking,'' SmallNo,
+		fp.groupId TeamNo,'' IsAuditing,'' Assessor,'1' OLdNewRedatebz,'' SFFZ,'2' update_flag,'' update_date,(SELECT value FROM f_config WHERE id=21) org_id,'-1' web_flag,
+		'11000' uppic_flag,'00000000000000' zw_downflag,fd.validDate FZDate,'宁远县卫生和计划生育' FZEmpName,'' FZUnitName,'' Fzsm,'150523AA00138' JmgCpbh,
+		'F9F81BE7A5FB4525' JmgXlh,'' FZEmpID,'' FZUnitID,'' OldIcNo
+		FROM f_box_info AS fb 
+		INNER JOIN f_plasma_stock AS fs
+		ON fb.id = fs.boxId
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo
+		INNER JOIN f_detailed_info AS fd 
+		ON fp.id = fd.baseId
+		LEFT JOIN f_nation AS fn 
+		ON fd.nation = fn.id
+		WHERE fb.id >=#{startDate} AND fb.id &lt;=#{endDate} AND fb.status=1
+		GROUP BY fp.providerNo
+	</select>
+	<!-- 箱子记录 -->
+	<select id="exportBoxDataInfo" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT fb.id Serial,fb.id BoxNo,'' FacBoxNo,fb.sNumber BoxSize,fb.immuneId BoxType,'' IncTime,'' SendPlace,
+		fb.updateDate SendTime,'' Sender,fb.status IsOut,'' Remark,(SELECT value FROM f_config WHERE id=21) org_id,'2' update_flag,'' update_date,'-1' web_flag 
+		FROM f_box_info fb 
+		WHERE fb.id >= #{startDate} AND fb.id &lt;=#{endDate} AND fb.status=1
+	</select>
+	<!-- 采浆记录 -->
+	<select id="exportCollectionDataInfo" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT fc.id Serial,'1' CollectionNo,fs.plasmaNo PlasmaNo,'' FactoryPlasmaNo,fb.immuneId PlasmaType,fp.idNo IDNo,fp.providerNo ProviderNo,
+		fn.sampleNo SmallNo,fc.updateDate CollectionDate,fc.updateDate CollectionTime,'' CollectionWorker,fc.plasmAmount PlasmaGross,'' SendPlace,
+		fs.updateDate InStorageDate,fs.updateDate InStorageTime,'' InStorageWorker,fb.id BoxNo,'' FactBoxNo,'' InPacker,'是' BQHD,fb.status IsOut,'' IsAuditing,'' Assessor,
+		(SELECT value FROM f_config WHERE id=21) org_id,'2' update_flag,'' update_date,'-1' web_flag,'0' sw_isinto,'1' ProviderNoType
+		FROM f_box_info AS fb  
+		INNER JOIN f_plasma_stock AS fs 
+		ON fb.id = fs.boxId
+		LEFT JOIN f_plasm_collection AS fc
+		ON fs.allId = fc.allId
+		INNER JOIN f_provider_baseinfo AS fp
+		ON fs.providerNo = fp.providerNo
+		INNER JOIN f_new_card AS fn 
+		ON fs.allId = fn.allId
+		WHERE fb.id >= #{startDate} AND fb.id &lt;=#{endDate} AND fb.status=1
+	</select>
+	<!-- 拒绝信息 -->
+	<select id="queryRefuseDataInfo" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		<!-- SELECT fr.id RefuseId,fr.providerNo providerno,fr.updateDate RefuseDate,fr.eliminateReason RefuseReason,IF(fc.id IS NULL,0,1) isBodyCheck,
+		IF(fn.id IS NULL,0,1) isAssayCheck,'' worker,fi.plasmaState providernostate,(SELECT value FROM f_config WHERE id=21)  org_id,'2' update_flag,
+		'' update_date,'-1' web_flag,'' SerialID
+		FROM f_box_info AS fb
+		INNER JOIN f_plasma_stock AS fs 
+		ON fb.id = fs.boxId
+		INNER JOIN f_refuse_info AS fr 
+		ON fs.allId = fr.allId
+		LEFT JOIN f_check AS fc 
+		ON fs.allId =fc.allId 
+		LEFT JOIN f_new_card AS fn 
+		ON fs.allId = fn.allId
+		INNER JOIN f_provider_baseinfo AS fi 
+		ON fs.providerNo = fi.providerNo 
+		WHERE fb.updateDate >= #{startDate} AND fb.updateDate &lt;=#{endDate} AND fb.status=1 -->
+		
+		SELECT fr.id RefuseId,fr.providerNo providerno,fr.updateDate RefuseDate,fr.eliminateReason RefuseReason,IF(fc.id IS NULL,0,1) isBodyCheck,
+		IF(fn.id IS NULL,0,1) isAssayCheck,'' worker,fi.plasmaState providernostate,(SELECT value FROM f_config WHERE id=21)  org_id,'2' update_flag,
+		'' update_date,'-1' web_flag
+		FROM f_refuse_info AS fr 
+		LEFT JOIN f_check AS fc 
+		ON fr.allId =fc.allId 
+		INNER JOIN f_provider_baseinfo AS fi 
+		ON fr.providerNo = fi.providerNo 
+		LEFT JOIN f_new_card AS fn 
+		ON fr.allId = fn.allId
+	</select>
+	<!-- 导出浆员免疫信息表 -->
+	<select id="exportPlasmaStockImmune" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT ID,typeCode as SortNo,immuneName as ImmunityName,basicNum as BasePin,strengthenNum as StrengthenPin,null as Abate,
+		null as BasicDeductM,null as StrengthenDeductM,null as BoxbagNumber,null as AbateTime,CASE type WHEN 0 THEN '普通' WHEN 1 THEN '普免' WHEN 2 THEN '特免' ELSE type END as SortType,
+		null as Remark,(SELECT value FROM f_config WHERE id=21) as org_id,'2' as update_flag,updateDate as update_date,-1 as web_flag 
+		FROM f_immune_setting
+	</select>
+	<!-- 导出浆员免疫信息表 -->
+	<select id="queryTmAssayInfo" resultType="java.util.Map" parameterType="java.util.Map">
+	 <!--	SELECT tp.id as ID,tc.ordinaryNo as TMRegNo,tt.immuneName as ProviderType,tp.providerNo,td.sampleNo SmallNo,null as State,tp.updateDate AssayDate,null as SXH,tp.updater as Assayer,
+		null as regno,null as PinCount,tp.effectiveValue as Avalue,null as AssCount,CASE WHEN tp.result=0 THEN '合格' WHEN tp.result=1 THEN '不合格' ELSE '未检' END AS AssResult,tp.remarks Remark,null as IsAuditing,null as Assessor,(SELECT value FROM f_config WHERE id=21) as org_id,'0' as update_flag,
+		tp.updateDate as update_date,'-1' as web_flag,'0' as org_id_SW,'1' as update_flag_SW,'1900-01-01 00:00:00.000' as update_date_SW,'-1' as web_flag_SW,'0' as org_id_QT,'1' as update_flag_QT,
+		'1900-01-01 00:00:00.000' as update_date_QT,'-1' as web_flag_QT
+		 FROM f_immune_assay tp
+		LEFT JOIN f_immune_setting tt
+		ON tp.immuneId=tt.id
+		LEFT JOIN f_immune_register tc
+		ON tp.providerNo=tc.providerNo AND tp.immuneId=tc.immuneId
+		LEFT JOIN f_provider_registries td
+		ON tp.allId=td.allId
+		WHERE tp.isAssay=1 and tp.updateDate BETWEEN #{startDate} AND #{endDate}-->
+		SELECT td.id AS ID,ts.ordinaryNo as TMRegNo,ts.immuneId AS ProviderType,tp.providerNo as ProviderNo,tx.sampleNo AS SmallNo,null as State,td.updateDate AssayDate,null as SXH,ta.userName as Assayer,
+		null as regno,null as PinCount,td.effectiveValue as Avalue,null as AssCount,td.result as AssResult,td.remarks AS Remark,null as IsAuditing,null as Assessor,
+		(SELECT value FROM f_config WHERE id=21) AS org_id,'0' as update_flag,tp.updateDate as update_date,'-1' as web_flag,'0' as org_id_SW,'1' as update_flag_SW,
+		'1900-01-01 00:00:00.000' as update_date_SW,'-1' as web_flag_SW,'0' as org_id_QT,'1' as update_flag_QT,'1900-01-01 00:00:00.000' as update_date_QT,'-1' as web_flag_QT FROM f_box_info tc
+		LEFT JOIN f_plasma_stock tp
+		ON tc.id=tp.boxId
+		LEFT JOIN f_immune_assay td
+		ON tp.providerNo=td.providerNo AND tp.allId=td.allId
+		LEFT JOIN f_immune_register ts
+		on td.providerNo=ts.providerNo AND td.oldImmuneId=ts.immuneId
+		LEFT JOIN f_provider_registries tx
+		ON tp.providerNo=tx.providerNo AND tp.allId=tx.allId
+		LEFT JOIN f_admin ta
+		ON ta.id=td.updater
+		WHERE tc.status=1 AND tc.id BETWEEN #{startDate} AND #{endDate}
+	</select>
+	<!--                       导出浆站数据到公司                                              -->
+	
+	<!-- 血浆装箱单 -->
+	<select id="queryPlasmaBoxList" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT fb.name,fp.providerNo,fb.sex,fb.bloodType,fc.updateDate,fc.plasmAmount,fp.plasmaNo,fi.immuneName FROM f_plasma_stock AS fp 
+		LEFT JOIN f_plasm_collection AS fc 
+		ON fp.allId = fc.allId
+		INNER JOIN f_provider_baseinfo AS fb 
+		ON fp.providerNo = fb.providerNo
+		LEFT JOIN f_immune_setting AS fi 
+		ON fb.immuneId = fi.id
+		WHERE fp.boxId= #{boxId}
+	</select>
+	
+	<!-- 血浆检测装运表 -->
+	<select id="queryPlasmaCheckList" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT fn.sampleNo,fp.name,fs.plasmaNo,fs.providerNo,fc.plasmAmount,fc.updateDate,fn.bloodRedProtein,fn.serumProtein,fi.immuneName,fs.allId,
+		fn.alt,fn.syphilis,fn.hbsag,fn.hcv,fn.hiv
+		 FROM f_plasma_stock AS fs 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo 
+		INNER JOIN f_new_card AS fn 
+		ON fs.allId = fn.allId 
+		LEFT JOIN f_plasm_collection AS fc 
+		ON fs.allId= fc.allId 
+		INNER JOIN f_box_info AS fbi 
+		ON fs.boxId = fbi.id
+		LEFT JOIN f_immune_setting AS fi 
+		ON fbi.immuneId = fi.id
+		WHERE fs.boxId= #{boxId}
+	</select>
+	
+	<!-- 血浆装箱汇总表 -->
+	<select id="queryPlasmaBoxSummaryList" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+		SELECT fs.boxId,MIN(fs.plasmaNo) AS minPlasmaNo,MAX(fs.plasmaNo) maxPlasmaNo,SUM(fc.plasmAmount) plasmAmount FROM f_plasma_stock AS fs 
+		LEFT JOIN f_plasm_collection AS fc 
+		ON fs.allId = fc.allId 
+		WHERE fs.isStorage=1 
+		<if test="startDate!=null and startDate!='' ">
+			AND fs.updateDate &gt;= #{startDate}
+		</if>
+		<if test="endDate!=null and endDate!='' ">
+			AND fs.updateDate &lt;= #{endDate}
+		</if>
+		GROUP BY fs.boxId 
+	</select>
+	
+	<!-- 批量、单箱送浆 -->
+	<update id="updatePulpingList" parameterType="java.util.Map">
+		UPDATE f_box_info SET status=1,batchNumber=#{batchNumber} where id IN 
+	    <foreach collection="ids" item="id" separator="," open="(" close=")">
+       		#{id}
+        </foreach>
+	</update>
+	
+	<!-- 取消送浆  -->
+	<update id="cacalPulpingList" parameterType="java.util.Map">
+		UPDATE f_box_info SET status=0,batchNumber=NULL where id IN 
+	    <foreach collection="ids" item="id" separator="," open="(" close=")">
+       		#{id}
+        </foreach>
+	</update>
+</mapper>

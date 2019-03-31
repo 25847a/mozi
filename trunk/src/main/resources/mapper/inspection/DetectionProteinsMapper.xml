@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.fadl.inspection.dao.DetectionProteinsMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.inspection.entity.DetectionProteins">
+		<id column="id" property="id" />
+		<result column="providerNo" property="providerNo" />
+		<result column="value" property="value" />
+		<result column="result" property="result" />
+		<result column="tciId" property="tciId" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, providerNo, value, result,tciId, createDate, updateDate, creater, updater, plasmaId
+	</sql>
+
+	<select id="queryListByUpdateDate"
+		resultType="com.fadl.common.DataRow">
+		SELECT dp.*,pb.name,pb.imagez, pb.sex, pb.type AS pbType,
+		pb.bloodType,sc.sampleNo,
+		pb.icNumber FROM
+		f_detection_proteins AS dp
+		INNER JOIN f_provider_baseinfo AS pb
+		ON pb.providerNo = dp.providerNo
+		INNER JOIN f_provider_registries AS sc ON sc.allId= dp.allId
+		AND
+		TO_DAYS(dp.updateDate) = TO_DAYS(#{startTime}) 
+		ORDER BY dp.result ASC 
+	</select>
+
+
+	<select id="queryDetectionProteinsById"
+		resultType="com.fadl.common.DataRow">
+
+		SELECT rpc.*, pb.name, pb.sex,
+		pb.type AS pbType,sc.sampleNo,
+		pb.imagez,
+		pb.bloodType,
+		pb.icNumber FROM f_detection_proteins
+		AS
+		rpc INNER
+		JOIN
+		f_provider_baseinfo AS pb ON rpc.providerNo =
+		pb.providerNo
+		INNER JOIN f_provider_registries AS sc ON sc.allId= rpc.allId
+		WHERE
+		 rpc.id = #{id}
+
+	</select>
+	
+	<select id="queryInfosByChooseDate"
+		resultType="com.fadl.common.DataRow">
+		SELECT brp.*, pb.name,pb.sex, pr.sampleNo
+		FROM f_detection_proteins AS brp 
+		INNER JOIN f_provider_baseinfo AS pb ON pb.providerNo = brp.providerNo
+		INNER JOIN f_provider_registries AS pr ON pr.allId = brp.allId
+		WHERE TO_DAYS(brp.updateDate) = TO_DAYS(#{chooseDate}) AND brp.result  IS NOT NULL;
+	</select>
+	
+</mapper>

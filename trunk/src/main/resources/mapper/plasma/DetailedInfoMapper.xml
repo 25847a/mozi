@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.plasma.dao.DetailedInfoMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.fadl.plasma.entity.DetailedInfo">
+		<id column="id" property="id" />
+		<result column="baseId" property="baseId" />
+		<result column="vocation" property="vocation" />
+		<result column="phone" property="phone" />
+		<result column="addressx" property="addressx" />
+		<result column="place" property="place" />
+		<result column="remarks" property="remarks" />
+		<result column="history" property="history" />
+		<result column="nation" property="nation" />
+		<result column="validDate" property="validDate" />
+		<result column="type" property="type" />
+		<result column="inviteId" property="inviteId" />
+		<result column="inviteType" property="inviteType" />
+		<result column="inviteDate" property="inviteDate" />
+		<result column="country" property="country" />
+		<result column="village" property="village" />
+		<result column="vgroup" property="vgroup" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, baseId, vocation, phone, addressx, place, remarks, history, nation, validDate, type, inviteId,inviteType,inviteDate,country,village,vgroup, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+	<!-- 根据baseId查询浆员详细信息 -->
+	<select id="queryByBaseId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select * from f_detailed_info fdi where fdi.baseId=#{baseId} and type=0
+	</select>
+	
+	<!-- 更新基本信息 -->
+	<update id="updatePlasmaDetailInfo" parameterType="java.util.HashMap">
+		UPDATE f_detailed_info set addressx=#{addressx},place=#{place},nation=#{nation},validDate=#{validDate}
+		WHERE baseId = #{fid}
+	</update>
+</mapper>

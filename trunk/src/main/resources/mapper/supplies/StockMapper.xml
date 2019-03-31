@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.supplies.dao.StockMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.supplies.entity.Stock">
+		<id column="id" property="id" />
+		<result column="orderId" property="orderId" />
+		<result column="suppliesId" property="suppliesId" />
+		<result column="surplusNumber" property="surplusNumber" />
+		<result column="batchNumber" property="batchNumber" />
+		<result column="expiryTime" property="expiryTime" />
+		<result column="status" property="status" />
+		<result column="remarks" property="remarks" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, orderId, suppliesId, surplusNumber, batchNumber, expiryTime, status,
+		remarks, createDate, updateDate, creater, updater, plasmaId
+	</sql>
+	<!-- 获取订单入库拥有订单号的耗材(适用出库) -->
+	<select id="querySuppliesStatus" resultType="com.fadl.common.DataRow">
+		SELECT tp.id,tp.orderId,tg.oddNumber,tp.suppliesId,td.name,tk.name as unit,tp.surplusNumber,tp.batchNumber,tp.type,tp.status,tp.expiryTime,tc.name as supply FROM f_supplies_stock tp
+		LEFT JOIN f_supplies_info td
+		ON tp.suppliesId=td.id
+		LEFT JOIN f_unit tk
+		ON td.unitId=tk.id
+		LEFT JOIN f_order_form tg
+		ON tp.orderId=tg.id
+		LEFT JOIN f_supplies_supply tc
+		ON td.supplyId=tc.id
+		WHERE tp.status=0 and surplusNumber!=0
+	</select>
+	<!-- 入库根据订单号查询耗材 -->
+	<select id="queryStockDatelis" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+			SELECT tp.id,tp.batchNumber,tg.name as supplies,tw.name as type,tb.name as unit,tl.name as supply,tp.surplusNumber,tg.money,(tp.surplusNumber*tg.money) as sumMoney FROM f_supplies_stock tp
+		LEFT JOIN f_supplies_info tg
+		ON tp.suppliesId = tg.id
+		LEFT JOIN f_supplies_type tw
+		ON tg.typeId=tw.id
+		LEFT JOIN f_unit tb
+		ON tg.unitId=tb.id
+		LEFT JOIN f_supplies_supply tl
+		ON tg.supplyId=tl.id
+		WHERE tp.orderId=#{id}
+	</select>
+	<!-- 使用耗材减少 -->
+	<update id="updateStockNum">
+		UPDATE f_supplies_stock SET surplusNumber=surplusNumber-#{num} WHERE suppliesId=#{suppliesId} and id=#{id}
+	</update>
+	<!-- 库存报警列表 -->
+	<select id="queryPoliceList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.suppliesId,tg.name,tw.name as type,tb.name as unit,tl.name as supply,tp.surplusNumber,tp.batchNumber,tp.expiryTime from f_supplies_stock  tp
+		LEFT JOIN f_supplies_info tg
+		ON tp.suppliesId = tg.id
+		LEFT JOIN f_supplies_type tw
+		ON tg.typeId=tw.id
+		LEFT JOIN f_unit tb
+		ON tg.unitId=tb.id
+		LEFT JOIN f_supplies_supply tl
+		ON tg.supplyId=tl.id
+		where 1=1
+		<if test="name!=null and name!=''">
+		and tg.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="supply!=null and supply!=''">
+		and tg.supplyId=#{supply}
+		</if>
+		<if test="expiryTime!=null and expiryTime!=''">
+		and tp.expiryTime LIKE CONCAT('%',#{expiryTime},'%')
+		</if>
+		ORDER BY tp.surplusNumber
+	</select>
+	<!-- 提供给谢鑫检验查询 -->
+	<select id="queryTestList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,td.name,tp.batchNumber,tp.status,tk.name as supply,tp.startTime,tp.endTime,tp.expiryTime 
+		<if test="type!=null and type!='' and type ==1">
+		FROM f_elisa_qc AS eq 
+    	LEFT JOIN f_supplies_stock tp ON eq.stockId = tp.id
+		</if>
+		<if test="type!=null and type!='' and type ==0">
+		FROM   f_supplies_stock tp  
+		</if>
+		LEFT JOIN f_supplies_info td ON tp.suppliesId=td.id
+		LEFT JOIN f_supplies_supply tk ON td.supplyId=tk.id
+		WHERE td.apply=1 
+		<if test="type!=null and type!=''">
+		AND td.type=#{type}
+		</if>
+		<if test="status!=null and status!=''">
+		AND tp.status=#{status}
+		</if>
+	</select>
+	<!-- 提供给谢鑫检验查询2 -->
+	<select id="queryTestPage" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		select ss.id,ss.batchNumber from f_supplies_outstock   as ss
+		LEFT JOIN `f_test_config_info` as tci on ss.id = tci.reagentBatch
+		LEFT JOIN `f_elisa_template` AS  et ON  et.projectId = tci.projectName
+		where ss.status=0
+		and unix_timestamp(tci.startDate)&lt; unix_timestamp(now())
+		and unix_timestamp(now())&lt; unix_timestamp(tci.endTime)
+		and tci.del_flag= 0 
+		<if test="type != null">
+			<if test="type == '0'">
+				AND ss.type=#{type}
+			</if>
+			<if test="type == '1'">
+				AND ss.type=#{type}
+			</if>
+		</if>
+		<if test="id != null">
+		AND et.id=#{id}
+		</if>
+		group by tci.reagentBatch
+	</select>
+	<!-- 盘点查询 -->
+	<select id="queryPointList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tg.oddNumber,td.name,tk.name as unit,tv.name as supply,tp.surplusNumber,tp.batchNumber,tp.startTime,tp.endTime,tp.createDate FROM f_supplies_stock tp
+		LEFT JOIN f_supplies_info td
+		ON tp.suppliesId=td.id
+		LEFT JOIN f_unit tk
+		ON td.unitId=tk.id
+		LEFT JOIN f_order_form tg
+		ON tp.orderId=tg.id
+		LEFT JOIN f_supplies_supply tv
+		ON td.supplyId = tv.id
+		WHERE tp.status=0
+		<if test="oddNumber!=null and oddNumber!=''">
+		and tg.oddNumber LIKE CONCAT('%',#{oddNumber},'%')
+		</if>
+		ORDER BY createDate DESC
+	</select>
+	<!-- 谢鑫使用的SQL语句 -->
+	<select id="queryOutNumberInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT ss.*, so.outNumber,si.name AS siName , ssa.name AS ssName 
+		FROM f_supplies_stock AS ss 
+		INNER JOIN f_supplies_outstock AS so ON so.batchNumber = ss.batchNumber
+		INNER JOIN f_supplies_info AS si ON ss.suppliesId = si.id
+		INNER JOIN f_supplies_supply  AS  ssa ON ssa.id= si.supplyId
+		WHERE  so.isDisable = 0 
+		AND ss.type=1
+		AND si.apply = 1
+		AND ss.expiryTime > NOW()
+	</select>
+	<!-- 根据ID查询耗材信息，包含其它表内容信息 -->
+	<select id="queryById" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+		select ss.*, si.name AS siName , si.standard, sss.name AS ssName from f_supplies_stock  as ss
+		INNER JOIN f_supplies_info as si on si.id=ss.suppliesid
+		INNER JOIN f_supplies_supply as sss on sss.id = si.supplyid
+		where ss.id= #{id}
+	</select>
+	<!-- 根据条件查找质控品的批号 -->
+	<select id="queryBatchNumberByQC" resultType="com.fadl.common.DataRow" parameterType="com.fadl.common.DataRow">
+		SELECT ss.id, ss.batchNumber FROM f_elisa_qc  AS eq 
+		INNER JOIN f_supplies_stock AS ss  ON eq.stockid = ss.id
+		WHERE ss.status=0
+		<if test="checkMethod!=null and checkMethod!=''">
+		eq.checkMethod = #{checkMethod}
+		</if>
+		<if test="checkProject!=null and checkProject!=''">
+		AND checkProject = #{checkProject}
+		</if>
+		AND ss.expiryTime > NOW()
+		GROUP BY ss.id
+	</select>
+	
+</mapper>

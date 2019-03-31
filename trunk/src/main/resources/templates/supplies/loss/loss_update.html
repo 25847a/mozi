@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8"/>
+		<title>订单修改</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<!--bootstarp-->
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<!--文件上传-->
+		<link th:href="@{/css/fileinput.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="styleshe et"/>
+		<!--新献浆员登记css-->
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+		<style type="text/css">
+			.newolod {
+				padding-left: 35%;
+			}
+			#newpray .innpuld {
+				margin-left: -8%;
+			} 
+		</style>
+	</head>
+
+	<body id="newpray">
+		<div class="gray-bg " style="    padding-top: 1em;    padding-bottom: 1em;">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+				<!--基本信息及验证-->
+				<form id="order">
+					<div class="col-xs-12 colx8" style="padding-right: 4em;">
+
+								<div class="row">
+									<div class="ibox-content">
+
+										<div class="row form-horizontal">
+											<div class="col-sm-12 col-xs-12">
+												<div class="form-group">
+													<label class="control-label col-xs-3">
+	                                                    退还原因：<font color="red">*</font>
+	                                                </label>
+													<div class="col-xs-8 input-group">
+													<input name="damageOrder" th:value="${damageOrder}" type="hidden"/>
+														<input  id="reason" th:value="${reason}" name="reason" class="form-control required"
+															placeholder="请输入退还原因" />
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+						<div class="col-xs-12">
+							<div class="form-group newformcol">
+								<div class="pull-right">
+									<button type="submit" class="btn  btn-info" style=" margin-right: 1em;">确定</button>
+									<button type="button" class="btn  btn-info" id="cannel">取消</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!-- form表单提交 -->
+		<script th:src="@{/js/jquery-form.js}"></script>
+		<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<!-- 公共类 -->
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/supplies/loss/loss_update.js}"></script>
+		</body>
+</html>

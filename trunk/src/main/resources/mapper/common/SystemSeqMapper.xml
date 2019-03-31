@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.common.dao.SystemSeqMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.common.entity.SystemSeq">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="value" property="value" />
+        <result column="increment" property="increment" />
+        <result column="type" property="type" />
+        <result column="version" property="version" />
+        <result column="isInit" property="isInit" />
+        <result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, value, increment, type, version, plasmaId
+    </sql>
+
+    <!-- 查询登记号、小样号、订单号 -->
+    <select id="querySystemSeqInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select * from f_system_seq where type=#{type}
+    </select>
+    <!-- 修改序列号 -->
+    <update id="updateSystemSeqInfo">
+        update f_system_seq set value=value+1 where type=#{systemSeq.type} and value=#{systemSeq.value}
+    </update>
+    
+    <!-- 初始化序列号 -->
+    <update id="updateSystemById" >
+    	UPDATE f_system_seq SET value=#{systemSeq.value},updateDate = NOW() WHERE id = #{systemSeq.id} 
+    </update>
+</mapper>

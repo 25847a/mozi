@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.immuneAssay.dao.ImmuneRegisterMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.immuneAssay.entity.ImmuneRegister">
+        <id column="id" property="id" />
+        <result column="ordinaryNo" property="ordinaryNo" />
+        <result column="providerNo" property="providerNo" />
+        <result column="type" property="type" />
+        <result column="immuneId" property="immuneId" />
+        <result column="status" property="status" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ordinaryNo, providerNo, type, immuneId, status, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+	<!-- 普免登记不通过 -->
+	<select id="queryImmuneRegister" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tk.providerNo,tk.name,tk.sex,tk.type,tk.bloodType,tk.birthday,tk.status,td.addressx,tk.icNumber,tp.id,tp.immuneId,tp.ordinaryNo,tl.registriesNo,tb.imgUrl FROM f_immune_register  tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		INNER JOIN f_detailed_info td
+		ON tk.id=td.baseId
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		LEFT JOIN (SELECT * FROM f_provider_registries WHERE DATE_FORMAT(createDate,'%Y-%m-%d')=#{startTime}) tl
+		ON tp.providerNo=tl.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0) tb
+		ON tl.id=tb.imgId
+		WHERE tp.status=1 AND DATE_FORMAT(tp.updateDate,'%Y-%m-%d')=#{startTime}
+	<!-- 11月23号考虑注释,因为普免特免不通过列表都是共用的不需要加这个 	<if test="type==1">
+		 and tp.type!=2
+		</if>
+		<if test="type==2">
+		 and tp.type=2
+		</if>-->
+		ORDER BY tp.updateDate DESC
+	</select>
+	<!-- 普免特免登记不通过(显示所有浆员的未登记信息 )-->
+	<select id="queryImmuneRegisterWhole"  resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tk.providerNo,tk.name,tk.sex,tp.type,tk.bloodType,tk.birthday,tk.status,td.addressx,tk.icNumber,tp.id,tp.immuneId,tp.ordinaryNo,tc.registriesNo,tb.imgUrl FROM f_immune_register  tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		INNER JOIN f_detailed_info td
+		ON tk.id=td.baseId
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		LEFT JOIN (SELECT id,DATE_FORMAT(createDate,'%Y-%m-%d') as time,providerNo,registriesNo FROM f_provider_registries) tc
+		ON DATE_FORMAT(tp.updateDate,'%Y-%m-%d')=tc.time AND tp.providerNo=tc.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0) tb
+		ON tc.id=tb.imgId
+		WHERE tp.status=1
+	<!-- 11月23号考虑注释,因为普免特免不通过列表都是共用的不需要加这个	<if test="_parameter==1">
+		 and tp.type!=2
+		</if>
+		<if test="_parameter==2">
+		 and tp.type=2
+		</if>-->
+		ORDER BY tp.updateDate DESC
+	</select>
+	<!-- 普免登记已通过 -->
+	<select id="queryImmuneRegisterAdopt" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tk.providerNo,tk.name,tk.sex,tp.type,tk.bloodType,tk.birthday,tk.status,td.addressx,tk.icNumber,tp.id,tp.immuneId,tp.ordinaryNo,tl.registriesNo,tb.imgUrl,tp.ordinaryNo FROM f_immune_register  tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		INNER JOIN f_detailed_info td
+		ON tk.id=td.baseId
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		LEFT JOIN (SELECT * FROM f_provider_registries WHERE DATE_FORMAT(createDate,'%Y-%m-%d')=#{startTime}) tl
+		ON tp.providerNo=tl.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0) tb
+		ON tl.id=tb.imgId
+		WHERE tp.status=0 AND DATE_FORMAT(tp.updateDate,'%Y-%m-%d')=#{startTime} AND tp.type!=2
+		ORDER BY tp.updateDate DESC
+	</select>
+	<!--  普免登记已通过(显示所有浆员的已登记信息) -->
+	 <select id="queryImmuneRegisterAdoptWhole" resultType="com.fadl.common.DataRow">
+	 	SELECT tk.providerNo,tk.name,tk.sex,tp.type,tk.bloodType,tk.birthday,tk.status,td.addressx,tk.icNumber,tp.id,tp.immuneId,tp.ordinaryNo,tc.registriesNo,tb.imgUrl FROM f_immune_register  tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		INNER JOIN f_detailed_info td
+		ON tk.id=td.baseId
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		LEFT JOIN (SELECT id,DATE_FORMAT(createDate,'%Y-%m-%d') as time,providerNo,registriesNo FROM f_provider_registries) tc
+		ON DATE_FORMAT(tp.createDate,'%Y-%m-%d')=tc.time AND tp.providerNo=tc.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0) tb
+		ON tc.id=tb.imgId
+	 	WHERE tp.status=0 AND tp.type!=2
+	 	ORDER BY tp.updateDate DESC
+	 </select>
+	<!-- 特免登记已通过 -->
+	<select id="queryTeregisterAdopt" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tk.providerNo,tk.name,tk.sex,tp.type,tk.bloodType,tk.birthday,tk.status,td.addressx,tk.icNumber,tp.id,tp.immuneId,tp.ordinaryNo,tl.registriesNo,tb.imgUrl,tp.ordinaryNo FROM f_immune_register  tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		INNER JOIN f_detailed_info td
+		ON tk.id=td.baseId
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		LEFT JOIN (SELECT * FROM f_provider_registries WHERE DATE_FORMAT(createDate,'%Y-%m-%d')=#{startTime}) tl
+		ON tp.providerNo=tl.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0) tb
+		ON tl.id=tb.imgId
+		WHERE tp.status=0 AND DATE_FORMAT(tp.updateDate,'%Y-%m-%d')=#{startTime} AND tp.type=2
+		ORDER BY tp.updateDate DESC
+	</select>
+	<!--特免登记已通过(显示所有浆员的已登记信息)  -->
+	<select id="queryTeregisterAdoptWhole" resultType="com.fadl.common.DataRow">
+		SELECT tk.providerNo,tk.name,tk.sex,tp.type,tk.bloodType,tk.birthday,tk.status,td.addressx,tk.icNumber,tp.id,tp.immuneId,tp.ordinaryNo,tc.registriesNo,tb.imgUrl FROM f_immune_register  tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		INNER JOIN f_detailed_info td
+		ON tk.id=td.baseId
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		LEFT JOIN (SELECT id,DATE_FORMAT(createDate,'%Y-%m-%d') as time,providerNo,registriesNo FROM f_provider_registries) tc
+		ON DATE_FORMAT(tp.createDate,'%Y-%m-%d')=tc.time AND tp.providerNo=tc.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0) tb
+		ON tc.id=tb.imgId
+		WHERE tp.status=0 AND tp.type=2
+	</select>
+	<!-- 查询普通免疫基本信息查询列表 -->
+	<select id="queryPuregisterInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tk.name,tp.ordinaryNo,tp.providerNo,tk.sex,tk.bloodType,td.immuneName,tg.pcount,ts.tcount,tp.updateDate,tf.name as admin FROM f_immune_register tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting td
+		ON tp.immuneId=td.id
+		LEFT JOIN (SELECT COUNT(num) as pcount,providerNo FROM f_ordinary_injection GROUP BY providerNo) tg
+		ON tp.providerNo=tg.providerNo
+		LEFT JOIN (SELECT COUNT(num) as tcount,providerNo FROM f_ordinary_strengthen_injection GROUP BY providerNo) ts
+		ON tp.providerNo=ts.providerNo
+		INNER JOIN f_admin tf
+		ON tp.updater = tf.id
+		where tp.type=1
+		<if test="immuneId!=null and immuneId!=''">
+		AND tp.immuneId=#{immuneId}
+		</if>
+		<if test="ordinaryNo!=null and ordinaryNo!=''">
+		AND tp.ordinaryNo=#{ordinaryNo}
+		</if>
+		<if test="providerNo!=null and providerNo!=''">
+		AND tp.providerNo=#{providerNo}
+		</if>
+		<if test="name!=null and name!=''">
+		AND tk.name=#{name}
+		</if>
+		<if test="pcount!=null and pcount!=''">
+		AND tg.pcount=#{pcount}
+		</if>
+		<if test="tcount!=null and tcount!=''">
+		AND ts.tcount=#{tcount}
+		</if>
+	</select>
+	<!-- 查询特殊免疫基本信息查询列表 -->
+	<select id="queryTuregisterInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tk.name,tp.ordinaryNo,tp.providerNo,tk.sex,tk.bloodType,td.immuneName,tg.pcount,ts.tcount,tp.updateDate,tf.name as admin FROM f_immune_register tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting td
+		ON tp.immuneId=td.id
+		LEFT JOIN (SELECT COUNT(num) as pcount,providerNo FROM f_privilege_injection GROUP BY providerNo) tg
+		ON tp.providerNo=tg.providerNo
+		LEFT JOIN (SELECT COUNT(num) as tcount,providerNo FROM f_privilege_strengthen_injection GROUP BY providerNo) ts
+		ON tp.providerNo=ts.providerNo
+		INNER JOIN f_admin tf
+		ON tp.updater = tf.id
+		where tp.type=2
+		<if test="immuneId!=null and immuneId!=''">
+		AND tp.immuneId=#{immuneId}
+		</if>
+		<if test="ordinaryNo!=null and ordinaryNo!=''">
+		AND tp.ordinaryNo=#{ordinaryNo}
+		</if>
+		<if test="providerNo!=null and providerNo!=''">
+		AND tp.providerNo=#{providerNo}
+		</if>
+		<if test="name!=null and name!=''">
+		AND tk.name=#{name}
+		</if>
+		<if test="pcount!=null and pcount!=''">
+		AND tg.pcount=#{pcount}
+		</if>
+		<if test="tcount!=null and tcount!=''">
+		AND ts.tcount=#{tcount}
+		</if>
+	</select>
+	<!-- 查询免疫登记表特免未登记的浆员 -->
+	<select id="queryImmuneRegisterInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT * from f_immune_register WHERE providerNo=#{providerNo} AND type=2 ORDER BY createDate desc LIMIT 1
+	</select>
+	
+</mapper>

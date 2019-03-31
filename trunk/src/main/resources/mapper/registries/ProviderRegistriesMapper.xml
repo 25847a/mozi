@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.registries.dao.ProviderRegistriesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.registries.entity.ProviderRegistries">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="allId" property="allId" />
+        <result column="registriesNo" property="registriesNo" />
+        <result column="type" property="type" />
+        <result column="isIdentity" property="isIdentity" />
+        <result column="isDelete" property="isDelete" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo,allId, registriesNo, type, isIdentity, isDelete, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+	<!-- 查询浆员登记记录 -->
+	<select id="queryRegistrationList" resultType="java.util.HashMap" parameterType="java.lang.String">
+		SELECT fr.id,fr.providerNo,fb.name,fr.plasmaType,
+		fb.idNo,fr.registriesNo,fb.sex,fb.type,tk.immuneName,fr.type as inspection,fr.createDate,fr.isIdentity,fi.phone,fi.addressx,fi.remarks FROM f_provider_registries fr
+		INNER JOIN f_provider_baseinfo fb ON fr.providerNo=fb.providerNo
+		INNER JOIN f_detailed_info fi ON fb.id=fi.baseId
+		LEFT JOIN f_immune_setting tk
+		ON fb.immuneId=tk.id
+		WHERE isNew!=0 AND fr.createDate BETWEEN #{registerDate} AND #{registerNine}
+		GROUP BY fr.providerNo ORDER BY registriesNo DESC
+	</select>
+
+<!-- 根据读卡器获取献浆卡号查询浆员登记记录 -->
+	<select id="queryRegistriesByProviderNo" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT tp.id,tj.addressx as address,tp.name,tv.groupName,tv.num,tj.phone,tp.bloodType,tp.sex,tp.collectionDate,
+		tg.createDate as valencyDate,tp.providerNo,ty.immuneName,tp.immuneRegisterId,tg.effectiveValue,tp.icNumber,
+		tj.remarks,tp.imagez,tp.photo
+		FROM f_provider_baseinfo tp
+		LEFT JOIN f_detailed_info tj ON baseId=tp.id
+		LEFT JOIN (SELECT * FROM f_immune_assay WHERE providerNo=#{code} ORDER BY updateDate DESC LIMIT 1) tg ON tg.providerNo=tp.providerNo
+		LEFT JOIN f_immune_setting ty ON tp.immuneId=ty.id
+		LEFT JOIN f_group tv ON tp.groupId=tv.id
+		WHERE tp.providerNo=#{code}
+	</select>
+	<!-- 单击列表查询浆员信息 -->
+	<select id="queryPlasmaProviderNo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tj.addressx as address,tp.name,tv.groupName,tv.num,tj.phone,tp.bloodType,tp.sex,tp.collectionDate,
+		tg.createDate as valencyDate,tp.providerNo,ty.immuneName,tp.immuneRegisterId,tg.effectiveValue,tp.icNumber,
+		tj.remarks,tp.imagez,tb.imgUrl,tk.registriesNo,tk.allId,fcg.roadFeeType,fcg.roadFee
+		FROM f_provider_baseinfo tp
+		LEFT JOIN f_detailed_info tj ON baseId=tp.id
+		LEFT JOIN (SELECT * FROM f_immune_assay WHERE providerNo=#{code} ORDER BY updateDate DESC LIMIT 1) tg ON tg.providerNo=tp.providerNo
+		LEFT JOIN f_provider_registries tk ON tk.providerNo=tp.providerNo
+		LEFT JOIN f_plasma_image tb ON tb.imgId=tk.id and tb.type=0
+		LEFT JOIN f_cost_grant fcg on fcg.allId=tk.allId
+		LEFT JOIN f_immune_setting ty ON tp.immuneId=ty.id
+		LEFT JOIN f_group tv ON tp.groupId=tv.id
+		WHERE tp.providerNo=#{code} and  tk.createDate LIKE CONCAT('%',#{createDate},'%');
+	</select>
+	<!-- 查询浆员今天是否存在登记号 -->
+	<select id="queryRegisterNumber" resultType="java.lang.Integer" parameterType="com.fadl.registries.entity.ProviderRegistries">
+		SELECT registriesNo FROM f_provider_registries WHERE providerNo=#{providerNo} and  createDate LIKE CONCAT('%',#{createDate},'%');
+	</select>
+	<!-- 查询登记拒绝情况 -->
+	<select id="queryRefuseSituation" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT fp.providerNo,fc.validDate,fv.areaId,fp.plasmaState,MAX(DATE_FORMAT(fr.createDate,'%Y-%m-%d')) maxtime,
+		((
+			YEAR (now()) - YEAR (birthday) - 1
+		) + (
+			DATE_FORMAT(NOW(), '%m%d') > DATE_FORMAT(birthday, '%m%d')
+		))age,
+		(SELECT COUNT(*) FROM f_plasm_collection WHERE createDate>=DATE_SUB(NOW(),INTERVAL 6 MONTH) AND providerNo=#{providerNo}) count,
+		MAX(DATE_FORMAT(fp.collectionDate,'%Y-%m-%d')) collectionMax,tt.newcount
+		FROM f_provider_baseinfo AS fp
+		LEFT JOIN f_detailed_info fc
+		ON fp.id=fc.baseId AND fc.type=0
+		LEFT JOIN f_group_area fv
+		ON fp.groupId=fv.groupId
+		LEFT JOIN f_provider_registries AS fr 
+		ON fp.providerNo = fr.providerNo 
+		LEFT JOIN (SELECT COUNT(*) as newcount,providerNo FROM f_plasm_collection WHERE providerNo=#{providerNo}) tt
+		ON fp.providerNo = tt.providerNo 
+		WHERE fp.providerNo=#{providerNo}
+		GROUP BY fp.providerNo  
+	</select>
+	<!-- 导出下载浆员信息数据-->
+	<select id="downloadRegistries" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.icNumber,tp.providerNo,tp.name,tp.idNo,tg.registriesNo,tp.sex,td.immuneName as plasmaType,tg.type as registriesType,
+		tr.name as registrant,tm.imgUrl,tg.createDate as registerDate,tp.createDate,tp.status,tk.phone,tk.addressx,tk.remarks FROM f_provider_registries tg
+		INNER JOIN f_plasma_image tm
+		ON tg.id=tm.imgId AND tm.type=0
+		INNER JOIN f_provider_baseinfo tp
+		ON tp.providerNo=tg.providerNo
+		INNER JOIN f_detailed_info tk
+		ON tp.id=tk.baseId AND tk.type=0
+		INNER JOIN f_admin tr ON tr.id = tp.creater
+		LEFT JOIN f_immune_setting td
+		ON tp.type=td.id
+		where 1=1
+		<if test="providerNo!=null and providerNo!='' ">
+			AND tp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND tp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+		<if test="name!=null and name!='' ">
+			AND tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="icNumber!=null and icNumber!='' ">
+			AND tp.icNumber LIKE CONCAT('%',#{icNumber},'%')
+		</if>
+		<if test="creater!=null and creater!='' ">
+			AND tp.creater = #{creater}
+		</if>
+		<if test="registerStart!=null and registerStart!='' ">
+			AND DATE_FORMAT(tg.createDate,'%Y-%m-%d') &gt;= #{registerStart}
+		</if>
+		<if test="registerEnd!=null and registerEnd!=''">
+			AND DATE_FORMAT(tg.createDate,'%Y-%m-%d') &lt;= #{registerEnd}
+		</if>
+		<if test="createStart!=null and createStart!='' ">
+		 	AND DATE_FORMAT(tp.createDate,'%Y-%m-%d') &gt;= #{createStart}
+		</if>
+		<if test="createEnd!=null and createEnd!='' ">
+		 	AND DATE_FORMAT(tp.createDate,'%Y-%m-%d') &lt;= #{createEnd}
+		</if>
+		<if test="plasmaType!=null and plasmaType!='' ">
+		 	AND tp.Type = #{plasmaType}
+		</if>
+	</select>
+	<!-- 浆员登记记录高级查询 -->
+	<select id="querySeniorRegistries" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.icNumber,tp.providerNo,tp.name,tp.idNo,tg.registriesNo,tp.sex,td.immuneName as plasmaType,tg.type as registriesType,
+		tr.name as registrant,tm.imgUrl,tg.createDate as registerDate,tp.createDate,tp.status,tk.phone,tk.addressx,tk.remarks FROM f_provider_registries tg
+		INNER JOIN f_plasma_image tm
+		ON tg.id=tm.imgId AND tm.type=0
+		INNER JOIN f_provider_baseinfo tp
+		ON tp.providerNo=tg.providerNo
+		INNER JOIN f_detailed_info tk
+		ON tp.id=tk.baseId AND tk.type=0
+		INNER JOIN f_admin tr ON tr.id = tp.creater
+		LEFT JOIN f_immune_setting td
+		ON tp.type=td.id
+		where 1=1
+		<if test="providerNo!=null and providerNo!='' ">
+			AND tp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND tp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+		<if test="name!=null and name!='' ">
+			AND tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="icNumber!=null and icNumber!='' ">
+			AND tp.icNumber LIKE CONCAT('%',#{icNumber},'%')
+		</if>
+		<if test="creater!=null and creater!='' ">
+			AND tp.creater = #{creater}
+		</if>
+		<if test="registerStart!=null and registerStart!='' ">
+			AND DATE_FORMAT(tg.createDate,'%Y-%m-%d') &gt;= #{registerStart}
+		</if>
+		<if test="registerEnd!=null and registerEnd!=''">
+			AND DATE_FORMAT(tg.createDate,'%Y-%m-%d') &lt;= #{registerEnd}
+		</if>
+		<if test="createStart!=null and createStart!='' ">
+		 	AND DATE_FORMAT(tp.createDate,'%Y-%m-%d') &gt;= #{createStart}
+		</if>
+		<if test="createEnd!=null and createEnd!='' ">
+		 	AND DATE_FORMAT(tp.createDate,'%Y-%m-%d') &lt;= #{createEnd}
+		</if>
+		<if test="plasmaType!=null and plasmaType!='' ">
+		 	AND tp.Type = #{plasmaType}
+		</if>
+		LIMIT ${pageNum},${pageSize}
+	</select>
+	<!-- 浆员登记记录高级查询 总数-->
+	<select id="querySeniorRegistriesCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+	select count(*) from (
+		SELECT tp.icNumber,tp.providerNo,tp.name,tp.idNo,tg.registriesNo,tp.sex,td.immuneName as plasmaType,tg.type as registriesType,
+		tr.name as registrant,tm.imgUrl,tg.createDate as registerDate,tp.createDate,tp.status,tk.phone,tk.addressx,tk.remarks FROM f_provider_registries tg
+		INNER JOIN f_plasma_image tm
+		ON tg.id=tm.imgId AND tm.type=0
+		INNER JOIN f_provider_baseinfo tp
+		ON tp.providerNo=tg.providerNo
+		INNER JOIN f_detailed_info tk
+		ON tp.id=tk.baseId AND tk.type=0
+		INNER JOIN f_admin tr ON tr.id = tp.creater
+		LEFT JOIN f_immune_setting td
+		ON tp.type=td.id
+		WHERE  1=1
+		<if test="providerNo!=null and providerNo!='' ">
+			AND tp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND tp.idNo LIKE CONCAT('%',#{idNo},'%')
+		</if>
+		<if test="name!=null and name!='' ">
+			AND tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="icNumber!=null and icNumber!='' ">
+			AND tp.icNumber LIKE CONCAT('%',#{icNumber},'%')
+		</if>
+		<if test="creater!=null and creater!='' ">
+			AND tp.creater = #{creater}
+		</if>
+		<if test="registerStart!=null and registerStart!='' ">
+			AND DATE_FORMAT(tg.createDate,'%Y-%m-%d') &gt;= #{registerStart}
+		</if>
+		<if test="registerEnd!=null and registerEnd!=''">
+			AND DATE_FORMAT(tg.createDate,'%Y-%m-%d') &lt;= #{registerEnd}
+		</if>
+		<if test="createStart!=null and createStart!='' ">
+		 	AND DATE_FORMAT(tp.createDate,'%Y-%m-%d') &gt;= #{createStart}
+		</if>
+		<if test="createEnd!=null and createEnd!='' ">
+		 	AND DATE_FORMAT(tp.createDate,'%Y-%m-%d') &lt;= #{createEnd}
+		</if>
+		<if test="plasmaType!=null and plasmaType!='' ">
+		 	AND tp.Type = #{plasmaType}
+		</if>
+		) tt
+	</select>
+	<!-- 小票打印查询浆员信息 -->
+	<select id="queryTicketInfo" resultType="java.util.HashMap" parameterType="java.util.Map">
+		SELECT tp.providerNo as code,td.name, CASE WHEN td.bloodType IS NULL THEN '无' WHEN td.bloodType='0' THEN 'A型' WHEN td.bloodType='1' THEN 'B型' WHEN td.bloodType='2' THEN 'O型'
+		WHEN td.bloodType='3' THEN 'AB型' ELSE td.bloodType END as blood,
+		tp.registriesNo as sample,DATE_FORMAT(tp.createDate,'%Y-%m-%d') as register,null as aboutDate,
+		DATE_FORMAT(td.collectionDate,'%Y-%m-%d') as collection,
+		(SELECT COUNT(*) FROM f_plasm_collection WHERE createDate>=DATE_SUB(NOW(),INTERVAL 6 MONTH) AND providerNo=#{providerNo}) count
+		FROM f_provider_registries tp
+		LEFT JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		WHERE DATE_FORMAT(tp.createDate,'%Y-%m-%d') =#{register}  AND tp.providerNo=#{providerNo}
+	</select>
+	<!-- 查询全登记号 -->
+	<select id="selectRegisterNumber" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT MAX(allId) FROM f_provider_registries  WHERE providerNo=#{providerNo}
+	</select>
+	<!-- 月总采浆次数 -->
+	<select id="queryCollectionCount" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+	SELECT IF(t.month is null,0,t.month) month,IF(t.year is null,0,t.year) year from (
+	SELECT(SELECT COUNT(*) as count FROM f_plasm_collection WHERE DATE_FORMAT(createDate,'%Y-%m')=#{month} AND providerNo=#{code} AND isCollection=1) as month,
+	(SELECT COUNT(*) as count FROM f_plasm_collection WHERE DATE_FORMAT(createDate,'%Y')=#{year} AND providerNo=#{code} AND isCollection=1) as year
+	)t
+	</select>
+	<!-- 查询满56岁前6个月内有两次采浆记录的查询 -->
+	<select id="queryAgeCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select COUNT(*) from f_plasm_collection where createDate between date_sub(now(),interval 6 month) and now() AND providerNo=#{providerNo}; 
+	</select>
+	<!-- 采浆记录统计人数 -->
+	<select id="queryCollectionCountPeople" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.providerNo,tp.name,tp.sex,tg.id as immuneId,tg.immuneName,tl.id as groupId,tl.groupName,tl.num,tq.id as inviteId,tq.name as adist,td.count,tb.money,td.amount,td.maxDate,tk.addressx,tp.birthday,tp.status,tp.examineStatus,tk.phone FROM f_provider_baseinfo tp
+		LEFT JOIN (SELECT providerNo,COUNT(*) as count,MAX(updateDate) as maxDate,SUM(plasmAmount) as amount,allId FROM f_plasm_collection WHERE isCollection=1  GROUP BY providerNo) td
+		ON tp.providerNo=td.providerNo
+		INNER JOIN f_detailed_info tk
+		ON tk.baseId=tp.id and tk.type=0
+		LEFT JOIN f_group tl
+		ON tp.groupId=tl.id
+		LEFT JOIN f_immune_setting tg
+		ON tp.immuneId=tg.id
+		LEFT JOIN f_propagandist tq
+		ON tk.inviteId=tq.id AND tk.inviteType!=0 and tq.type!=1
+		LEFT JOIN (SELECT SUM(money) as money,providerNo,allId FROM f_cost_grant where isRoadFee=1 GROUP BY providerNo) tb
+		ON td.providerNo=tb.providerNo and td.allId=tb.allId
+		where 1=1
+		<if test="providerNo!=null and providerNo!=''">
+		AND tp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="name!=null and name!=''">
+		AND tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="immuneId!=null and immuneId!=''">
+		AND tg.id=#{immuneId}
+		</if>
+		<if test="inviteId!=null and inviteId!=''">
+		AND tq.id=#{inviteId}
+		</if>
+		<if test="groupId!=null and groupId!=''">
+		AND tl.id = #{groupId}
+		</if>
+		<if test="addressx!=null and addressx!=''">
+		AND tk.addressx LIKE CONCAT('%',#{addressx},'%')
+		</if>
+		<if test="phone!=null and phone!=''">
+		AND tk.phone LIKE CONCAT('%',#{phone},'%')
+		</if>
+		 LIMIT ${pageNum},${pageSize}
+	</select>
+	<!-- 采浆记录统计人数 -->
+	<select id="queryCollectionCountPeopleCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT COUNT(*) FROM(
+		SELECT tp.providerNo,tp.name,tp.sex,tg.id as immuneId,tg.immuneName,tl.id as groupId,tl.groupName,tl.num,tq.id as inviteId,tq.name as adist,tk.addressx,tp.birthday,tp.status,tk.phone FROM f_provider_baseinfo tp
+		INNER JOIN f_detailed_info tk
+		ON tk.baseId=tp.id and tk.type=0
+		LEFT JOIN f_group tl
+		ON tp.groupId=tl.id
+		LEFT JOIN f_immune_setting tg
+		ON tp.immuneId=tg.id
+		LEFT JOIN f_propagandist tq
+		ON tk.inviteId=tq.id AND tk.inviteType!=0 and tq.type!=1
+		where 1=1
+		<if test="providerNo!=null and providerNo!=''">
+		AND tp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="name!=null and name!=''">
+		AND tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="immuneId!=null and immuneId!=''">
+		AND tg.id=#{immuneId}
+		</if>
+		<if test="inviteId!=null and inviteId!=''">
+		AND tq.id=#{inviteId}
+		</if>
+		<if test="groupId!=null and groupId!=''">
+		AND tl.id = #{groupId}
+		</if>
+		<if test="addressx!=null and addressx!=''">
+		AND tk.addressx LIKE CONCAT('%',#{addressx},'%')
+		</if>
+		<if test="phone!=null and phone!=''">
+		AND tk.phone LIKE CONCAT('%',#{phone},'%')
+		</if>
+		) tt
+	</select>
+	<!-- 采浆记录统计人数详情 -->
+	<select id="queryCollectionCountDetails" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tp.providerNo,tk.name,tp.plasmAmount,tp.updateDate,td.money FROM f_plasm_collection tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_cost_grant td
+		ON tp.providerNo=td.providerNo and tp.allId=td.allId
+		WHERE tp.isCollection=1 and tp.providerNo=#{providerNo}
+	</select>
+	<!-- 今日建档人数,今日登记人数,今日采浆人数,今日采浆重量(首页数据) -->
+	<select id="queryTodayPeopleInfo" resultType="com.fadl.common.DataRow">
+		SELECT (SELECT COUNT(*) FROM f_provider_baseinfo WHERE createDate BETWEEN DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')) as record,
+		(SELECT COUNT(*) FROM f_provider_registries WHERE createDate BETWEEN DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')) as register,
+		COUNT(*) as collection,SUM(plasmAmount) as plasmAmount FROM f_plasm_collection
+		WHERE updateDate BETWEEN DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+	</select>
+	<!-- 建档人数统计(扇形图) -->
+	<select id="queryRecordPeople" resultType="com.fadl.common.DataRow">
+	SELECT (SELECT COUNT(*) FROM f_provider_baseinfo WHERE createDate BETWEEN DATE_FORMAT(NOW(),'%Y-%01-%01 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+	) as toYear,
+	COUNT(*) oldYear FROM f_provider_baseinfo 
+	WHERE createDate BETWEEN DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 year),'%Y-%01-%01 00:00:00') and DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 year),'%Y-%12-%31 23:59:59')
+	</select>
+	<!-- 登记人数统计(扇形图) -->
+	<select id="queryRegisterPeople" resultType="com.fadl.common.DataRow">
+	SELECT (SELECT COUNT(*) FROM f_provider_registries WHERE createDate BETWEEN DATE_FORMAT(NOW(),'%Y-%01-%01 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+	) as toYear,
+	COUNT(*) oldYear FROM f_provider_registries 
+	WHERE createDate BETWEEN DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 year),'%Y-%01-%01 00:00:00') and DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 year),'%Y-%12-%31 23:59:59')
+	</select>
+	<!-- 采浆人数统计(扇形图) -->
+	<select id="queryCollectionPeopleCount" resultType="com.fadl.common.DataRow">
+	SELECT (SELECT COUNT(*) FROM f_plasm_collection WHERE updateDate BETWEEN DATE_FORMAT(NOW(),'%Y-%01-%01 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+	)as toYear,COUNT(*) oldYear FROM f_plasm_collection WHERE updateDate BETWEEN DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 year),'%Y-%01-%01 00:00:00') and DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 year),'%Y-%12-%31 23:59:59')
+	</select>
+	<!-- 采浆量统计(扇形图) -->
+	<select id="queryPlasmAmountPeopleCount" resultType="com.fadl.common.DataRow">
+	SELECT (SELECT SUM(plasmAmount) FROM f_plasm_collection WHERE updateDate BETWEEN DATE_FORMAT(NOW(),'%Y-%01-%01 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+	) as toYear,
+	SUM(plasmAmount) as oldYear FROM f_plasm_collection WHERE updateDate BETWEEN DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 year),'%Y-%01-%01 00:00:00') and DATE_FORMAT(DATE_SUB(NOW(),INTERVAL 1 year),'%Y-%12-%31 23:59:59')
+	</select>
+	<!-- 建档人数(柱状图) -->
+	<select id="queryHistogramPeople" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		<if test="service == 'day' ">
+			SELECT * FROM (
+			select t.ohour,t.oldday,p.today from (
+			SELECT HOUR(createDate) as ohour,COUNT(*)as oldday FROM f_provider_baseinfo WHERE createDate BETWEEN #{oldDate} AND #{oldDateEnd}
+			GROUP BY ohour ORDER BY ohour) t
+			LEFT JOIN(
+			SELECT HOUR(createDate) as thour,COUNT(*)as today FROM f_provider_baseinfo WHERE createDate BETWEEN #{toDate} AND #{toDateEnd}
+			GROUP BY thour ORDER BY thour
+			) p
+			ON t.ohour=p.thour
+			) k
+			UNION
+			SELECT * FROM (
+			select p.thour,t.oldday,p.today from (
+			SELECT HOUR(createDate) as ohour,COUNT(*)as oldday FROM f_provider_baseinfo WHERE createDate BETWEEN #{oldDate} AND #{oldDateEnd}
+			GROUP BY ohour ORDER BY ohour) t
+			RIGHT JOIN(
+			SELECT HOUR(createDate) as thour,COUNT(*)as today FROM f_provider_baseinfo WHERE createDate BETWEEN #{toDate} AND #{toDateEnd}
+			GROUP BY thour ORDER BY thour
+			) p
+			ON t.ohour=p.thour	
+			) k
+			ORDER BY ohour
+		</if>
+		<if test="service == 'month' ">
+			SELECT * FROM(
+			SELECT o.ohour,oldday,today FROM (
+			SELECT DATE_FORMAT(createDate,'%d号') as ohour,COUNT(*) as oldday FROM f_provider_baseinfo WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			LEFT JOIN (
+			SELECT DATE_FORMAT(createDate,'%d号') as thour,COUNT(*) as today FROM f_provider_baseinfo WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) p
+			UNION
+			SELECT * FROM(
+			SELECT t.thour,oldday,today FROM (
+			SELECT DATE_FORMAT(createDate,'%d号') as ohour,COUNT(*) as oldday FROM f_provider_baseinfo WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			RIGHT JOIN (
+			SELECT DATE_FORMAT(createDate,'%d号') as thour,COUNT(*) as today FROM f_provider_baseinfo WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) v
+			ORDER BY ohour
+		</if>
+		<if test="service == 'year' ">
+			SELECT * from(
+			SELECT o.ohour,oldday,today FROM(
+			SELECT DATE_FORMAT(createDate,'%m月') as ohour,COUNT(*) as oldday FROM f_provider_baseinfo WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			LEFT JOIN(
+			SELECT DATE_FORMAT(createDate,'%m月') as thour,COUNT(*) as today FROM f_provider_baseinfo WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) p
+			UNION
+			SELECT * from(
+			SELECT t.thour,oldday,today FROM(
+			SELECT DATE_FORMAT(createDate,'%m月') as ohour,COUNT(*) as oldday FROM f_provider_baseinfo WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			RIGHT JOIN(
+			SELECT DATE_FORMAT(createDate,'%m月') as thour,COUNT(*) as today FROM f_provider_baseinfo WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) v
+			ORDER BY ohour
+		</if>
+	</select>
+	<!-- 登记人数(折线图) -->
+	<select id="queryRegistriesPeople" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+	<if test="service == 'day' ">
+	SELECT * FROM (
+			select t.ohour,t.oldday,p.today from (
+			SELECT HOUR(createDate) as ohour,COUNT(*)as oldday FROM f_provider_registries WHERE createDate BETWEEN #{oldDate} AND #{oldDateEnd}
+			GROUP BY ohour ORDER BY ohour) t
+			LEFT JOIN(
+			SELECT HOUR(createDate) as thour,COUNT(*)as today FROM f_provider_registries WHERE createDate BETWEEN #{toDate} AND #{toDateEnd}
+			GROUP BY thour ORDER BY thour
+			) p
+			ON t.ohour=p.thour
+			) k
+			UNION
+			SELECT * FROM (
+			select p.thour,t.oldday,p.today from (
+			SELECT HOUR(createDate) as ohour,COUNT(*)as oldday FROM f_provider_registries WHERE createDate BETWEEN #{oldDate} AND #{oldDateEnd}
+			GROUP BY ohour ORDER BY ohour) t
+			RIGHT JOIN(
+			SELECT HOUR(createDate) as thour,COUNT(*)as today FROM f_provider_registries WHERE createDate BETWEEN #{toDate} AND #{toDateEnd}
+			GROUP BY thour ORDER BY thour
+			) p
+			ON t.ohour=p.thour	
+			) k
+			ORDER BY ohour
+	</if>
+	<if test="service == 'month' ">
+	SELECT * FROM(
+			SELECT o.ohour,oldday,today FROM (
+			SELECT DATE_FORMAT(createDate,'%d号') as ohour,COUNT(*) as oldday FROM f_provider_registries WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			LEFT JOIN (
+			SELECT DATE_FORMAT(createDate,'%d号') as thour,COUNT(*) as today FROM f_provider_registries WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) p
+			UNION
+			SELECT * FROM(
+			SELECT t.thour,oldday,today FROM (
+			SELECT DATE_FORMAT(createDate,'%d号') as ohour,COUNT(*) as oldday FROM f_provider_registries WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			RIGHT JOIN (
+			SELECT DATE_FORMAT(createDate,'%d号') as thour,COUNT(*) as today FROM f_provider_registries WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) v
+			ORDER BY ohour
+	</if>
+	<if test="service == 'year' ">
+	SELECT * from(
+			SELECT o.ohour,oldday,today FROM(
+			SELECT DATE_FORMAT(createDate,'%m月') as ohour,COUNT(*) as oldday FROM f_provider_registries WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			LEFT JOIN(
+			SELECT DATE_FORMAT(createDate,'%m月') as thour,COUNT(*) as today FROM f_provider_registries WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) p
+			UNION
+			SELECT * from(
+			SELECT t.thour,oldday,today FROM(
+			SELECT DATE_FORMAT(createDate,'%m月') as ohour,COUNT(*) as oldday FROM f_provider_registries WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			RIGHT JOIN(
+			SELECT DATE_FORMAT(createDate,'%m月') as thour,COUNT(*) as today FROM f_provider_registries WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) v
+			ORDER BY ohour
+	</if>
+	</select>
+	<!-- 采浆人数(柱状图) -->
+	<select id="queryCollectionPeople" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+	<if test="service == 'day' ">
+	SELECT * FROM (
+			select t.ohour,t.oldday,p.today from (
+			SELECT HOUR(updateDate) as ohour,COUNT(*)as oldday FROM f_plasm_collection WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+			GROUP BY ohour ORDER BY ohour) t
+			LEFT JOIN(
+			SELECT HOUR(updateDate) as thour,COUNT(*)as today FROM f_plasm_collection WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+			GROUP BY thour ORDER BY thour
+			) p
+			ON t.ohour=p.thour
+			) k
+			UNION
+			SELECT * FROM (
+			select p.thour,t.oldday,p.today from (
+			SELECT HOUR(updateDate) as ohour,COUNT(*)as oldday FROM f_plasm_collection WHERE createDate BETWEEN  #{toDate} AND #{toDateEnd}
+			GROUP BY ohour ORDER BY ohour) t
+			RIGHT JOIN(
+			SELECT HOUR(updateDate) as thour,COUNT(*)as today FROM f_plasm_collection WHERE createDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+			GROUP BY thour ORDER BY thour
+			) p
+			ON t.ohour=p.thour	
+			) k
+			ORDER BY ohour
+	</if>
+	<if test="service == 'month' ">
+	SELECT * FROM(
+			SELECT o.ohour,oldday,today FROM (
+			SELECT DATE_FORMAT(updateDate,'%d号') as ohour,COUNT(*) as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			LEFT JOIN (
+			SELECT DATE_FORMAT(updateDate,'%d号') as thour,COUNT(*) as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) p
+			UNION
+			SELECT * FROM(
+			SELECT t.thour,oldday,today FROM (
+			SELECT DATE_FORMAT(updateDate,'%d号') as ohour,COUNT(*) as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			RIGHT JOIN (
+			SELECT DATE_FORMAT(updateDate,'%d号') as thour,COUNT(*) as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) v
+			ORDER BY ohour
+	</if>
+	<if test="service == 'year' ">
+	SELECT * from(
+			SELECT o.ohour,oldday,today FROM(
+			SELECT DATE_FORMAT(updateDate,'%m月') as ohour,COUNT(*) as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			LEFT JOIN(
+			SELECT DATE_FORMAT(updateDate,'%m月') as thour,COUNT(*) as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) p
+			UNION
+			SELECT * from(
+			SELECT t.thour,oldday,today FROM(
+			SELECT DATE_FORMAT(updateDate,'%m月') as ohour,COUNT(*) as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			RIGHT JOIN(
+			SELECT DATE_FORMAT(updateDate,'%m月') as thour,COUNT(*) as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) v
+			ORDER BY ohour
+	</if>
+	</select>
+	<!-- 采浆重量(柱状图) -->
+	<select id="queryPlasmAmountPeople" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+	<if test="service == 'day' ">
+	SELECT * FROM (
+			select t.ohour,t.oldday,p.today from (
+			SELECT HOUR(updateDate) as ohour,SUM(plasmAmount)/1000 as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+			GROUP BY ohour ORDER BY ohour) t
+			LEFT JOIN(
+			SELECT HOUR(updateDate) as thour,SUM(plasmAmount)/1000 as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+			GROUP BY thour ORDER BY thour
+			) p
+			ON t.ohour=p.thour
+			) k
+			UNION
+			SELECT * FROM (
+			select p.thour,t.oldday,p.today from (
+			SELECT HOUR(updateDate) as ohour,SUM(plasmAmount)/1000 as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+			GROUP BY ohour ORDER BY ohour) t
+			RIGHT JOIN(
+			SELECT HOUR(updateDate) as thour,SUM(plasmAmount)/1000 as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+			GROUP BY thour ORDER BY thour
+			) p
+			ON t.ohour=p.thour	
+			) k
+			ORDER BY ohour
+	</if>
+	<if test="service == 'month' ">
+	SELECT * FROM(
+			SELECT o.ohour,oldday,today FROM (
+			SELECT DATE_FORMAT(updateDate,'%d号') as ohour,SUM(plasmAmount)/1000 as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			LEFT JOIN (
+			SELECT DATE_FORMAT(updateDate,'%d号') as thour,SUM(plasmAmount)/1000 as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) p
+			UNION
+			SELECT * FROM(
+			SELECT t.thour,oldday,today FROM (
+			SELECT DATE_FORMAT(updateDate,'%d号') as ohour,SUM(plasmAmount)/1000 as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			RIGHT JOIN (
+			SELECT DATE_FORMAT(updateDate,'%d号') as thour,SUM(plasmAmount)/1000 as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) v
+			ORDER BY ohour
+	</if>
+	<if test="service == 'year' ">
+	SELECT * from(
+			SELECT o.ohour,oldday,today FROM(
+			SELECT DATE_FORMAT(updateDate,'%m月') as ohour,SUM(plasmAmount)/1000 as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			LEFT JOIN(
+			SELECT DATE_FORMAT(updateDate,'%m月') as thour,SUM(plasmAmount)/1000 as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) p
+			UNION
+			SELECT * from(
+			SELECT t.thour,oldday,today FROM(
+			SELECT DATE_FORMAT(updateDate,'%m月') as ohour,SUM(plasmAmount)/1000 as oldday FROM f_plasm_collection WHERE updateDate BETWEEN  #{oldDate} AND #{oldDateEnd}
+						GROUP BY ohour ORDER BY ohour
+			) o
+			RIGHT JOIN(
+			SELECT DATE_FORMAT(updateDate,'%m月') as thour,SUM(plasmAmount)/1000 as today FROM f_plasm_collection WHERE updateDate BETWEEN  #{toDate} AND #{toDateEnd}
+						GROUP BY thour ORDER BY thour
+			) t
+			ON o.ohour=t.thour
+			) v
+			ORDER BY ohour
+	</if>
+	</select>
+	<!-- 查询当天的登记号 -->
+	<select id="queryBrokenNumber" resultType="com.fadl.common.DataRow">
+		select registriesNo from f_provider_registries where DATE_FORMAT(createDate,'%Y-%m-%d')= DATE_FORMAT(NOW(),'%Y-%m-%d') ORDER BY registriesNo
+	</select>
+	<!-- 定时任务自动淘汰55-60岁小于两次采浆记录,60岁直接淘汰的记录 -->
+	<select id="queryEliminateYearOld" resultType="com.fadl.common.DataRow">
+		SELECT * FROM(
+		SELECT tp.providerNo,((YEAR (now()) - YEAR (birthday) - 1) + (DATE_FORMAT(NOW(), '%m%d') > DATE_FORMAT(birthday, '%m%d'))) as age,count FROM f_provider_baseinfo tp
+		LEFT JOIN (SELECT providerNo,COUNT(*) as count FROM f_plasm_collection WHERE createDate>=DATE_SUB(NOW(),INTERVAL 6 MONTH) GROUP BY providerNo) td
+		ON tp.providerNo=td.providerNo
+		WHERE td.count&lt;2 HAVING age&gt;55
+		) tc
+		WHERE tc.providerNo
+		NOT IN (SELECT providerNo FROM f_refuse_info b)
+	</select>
+</mapper>
+

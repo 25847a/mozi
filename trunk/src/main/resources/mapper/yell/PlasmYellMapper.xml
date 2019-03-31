@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.yell.dao.PlasmYellMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.yell.entity.PlasmYell">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="allId" property="allId" />
+        <result column="status" property="status" />
+        <result column="type" property="type" />
+        <result column="isIdentity" property="isIdentity" />
+        <result column="isImmune" property="isImmune" />
+        <result column="assayDate" property="assayDate" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, allId, status, type, isIdentity, assayDate, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+	<!-- 查询采浆验证列表 -->
+	<select id="queryplasmaYellList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fd.phone,fb.name,fb.sex,fr.plasmaType,fp.* FROM f_plasm_yell AS fp 
+		INNER JOIN f_provider_baseinfo AS fb 
+		ON fp.providerNo = fb.providerNo 
+		INNER JOIN f_provider_registries AS fr 
+		ON fp.allId = fr.allId
+		INNER JOIN f_detailed_info AS fd 
+		ON fb.id = fd.baseId 
+		WHERE fp.status=#{status} 
+		<choose>
+			<when test="status==1">
+				AND fp.createDate BETWEEN #{startDate} AND #{endDate}
+			</when>
+			<otherwise>
+				AND fp.createDate BETWEEN #{assayDate} AND #{endDate}
+			</otherwise>
+		</choose>
+		
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo=#{providerNo}
+		</if>
+		<if test="allId!=null and allId!='' ">
+			AND fp.allId=#{allId}
+		</if>
+		ORDER BY fp.allId DESC
+	</select>
+	<!-- 采浆验证打印条码 -->
+	<select id="queryPlasmYellPrintInfo" resultType="java.util.HashMap" parameterType="java.lang.String"> 
+		SELECT fb.name,DATE_FORMAT(fp.createDate,'%Y-%m-%d')validate,fp.providerNo code,fb.bloodType,fs.serialNO serumCode,DATE_FORMAT(fs.updateDate,'%Y-%m-%d') retention,
+		fp.allId sample,fb.type,fp.allId typeSample,fp.allId register,fr.plasmaType visibleName FROM f_plasm_yell AS fp 
+		INNER JOIN f_provider_baseinfo AS fb
+		ON fp.providerNo = fb.providerNo 
+		INNER JOIN f_provider_registries AS fr 
+		ON fr.allId = fp.allId
+		INNER JOIN f_serum_electrophoresis fs 
+		ON fb.providerNo = fs.providerNo 
+		WHERE fp.allId=#{allId}  
+		ORDER BY fs.updateDate DESC
+		LIMIT 1
+	</select>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.inspection.dao.TestConfigMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.inspection.entity.TestConfig">
+		<id column="id" property="id" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="templateName" property="templateName" />
+		<result column="isDefault" property="isDefault" />
+		<result column="status" property="status" />
+		<result column="isSample" property="isSample" />
+		<result column="fixedProteinMin" property="fixedProteinMin" />
+		<result column="fixedProteinMax" property="fixedProteinMax" />
+		<result column="unfixedProteinMin" property="unfixedProteinMin" />
+		<result column="unfixedProteinMax" property="unfixedProteinMax" />
+		<result column="delFlag" property="delFlag" />
+		<result column="cmDate" property="cmDate" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, createDate, updateDate, creater, updater, templateName, isDefault,
+		status, isSample, tFixedProteinMin, tFixedProteinMax,
+		tUnfixedProteinMin, tUnfixedProteinMax, delFlag, cmDate, plasmaId
+	</sql>
+	<!-- 联合查询用 -->
+	<sql id="testConfigJoins">
+
+	</sql>
+
+	<select id="findAllConfigByStatusWithEnable">
+		select tc.* from f_test_config as tc
+		inner join f_test_config_info as tci on tc.id = tci.tcid
+		and tc.status = 1 and NOW() BETWEEN tci.startDate and tci.endTime ;
+	</select>
+
+
+	<!-- 修改检验配置的固定和非固定浆员的蛋白信息 -->
+	<update id="updateWithProtein">
+		UPDATE f_test_config SET
+		isSample = #{isSample},
+		fixedProteinMin = #{fixedProteinMin},
+		fixedProteinMax =
+		#{fixedProteinMax},
+		unfixedProteinMin = #{unfixedProteinMin},
+		unfixedProteinMax = #{unfixedProteinMax}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 逻辑删除检验配置 -->
+	<update id="deleteByIdWithDelFlag">
+		UPDATE f_test_config SET
+		delFlag = 1
+		WHERE id = #{id}
+	</update>
+
+</mapper>

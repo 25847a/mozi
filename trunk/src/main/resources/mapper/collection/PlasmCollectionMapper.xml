@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.collection.dao.PlasmCollectionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.collection.entity.PlasmCollection">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="allId" property="allId" />
+        <result column="typeId" property="typeId" />
+        <result column="machineId" property="machineId" />
+        <result column="roomId" property="roomId" />
+        <result column="plasmAmount" property="plasmAmount" />
+        <result column="wholeBlood" property="wholeBlood" />
+        <result column="knAmount" property="knAmount" />
+        <result column="loopCount" property="loopCount" />
+        <result column="runTime" property="runTime" />
+        <result column="veinCount" property="veinCount" />
+        <result column="isAmple" property="isAmple" />
+        <result column="type" property="type" />
+        <result column="isIdentity" property="isIdentity" />
+        <result column="situation" property="situation" />
+        <result column="suppliesId" property="suppliesId" />
+        <result column="result" property="result" />
+        <result column="isCollection" property="isCollection" />
+        <result column="status" property="status" />
+        <result column="remarks" property="remarks" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+        <result column="scrapUserId" property="scrapUserId" />
+        <result column="scrapDate" property="scrapDate" />
+        <result column="isSendOff" property="isSendOff" />
+		<result column="sendPerson" property="sendPerson" />
+		<result column="isSuppliesCheck" property="isSuppliesCheck" />
+		<result column="collectionStart" property="collectionStart" />
+		<result column="collectionEnd" property="collectionEnd" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, allId, typeId, machineId, roomId, plasmAmount, wholeBlood, knAmount, loopCount, runTime, veinCount, isAmple, type, isIdentity, situation, suppliesId, result, isCollection, status, remarks, createDate, updateDate, creater, updater, plasmaId
+    	,scrapUserId,scrapDate,isSendOff,sendPerson,isSuppliesCheck,collectionStart,collectionEnd
+    </sql>
+    
+	<!-- 查询采浆列表 -->
+	<select id="queryPlasmCollectionList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fb.name,fb.sex,bloodType,fr.plasmaType,fa.name AS fname,fp.*,fr.plasmaType FROM f_plasm_collection AS fp 
+		INNER JOIN f_provider_baseinfo AS fb 
+		ON fp.providerNo = fb.providerNo 
+		INNER JOIN f_provider_registries AS fr 
+		ON fp.allId = fr.allId
+		LEFT JOIN f_admin AS fa
+		ON fp.userId = fa.id
+		WHERE fp.createDate BETWEEN #{startDate} AND  #{endDate}
+		AND fp.isCollection=#{isCollection} 
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo=#{providerNo}
+		</if>
+		<if test="allId!=null and allId!='' ">
+			AND fp.allId=#{allId}
+		</if> 
+		ORDER BY fp.allId DESC
+	</select>
+	
+	<!-- 根据 id 查询详情 -->
+	<select id="queryPlasmCollectionById" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+		SELECT fp.*,fc.money FROM f_plasm_collection AS fp 
+		LEFT JOIN f_cost_grant AS fc 
+		ON fp.allId = fc.allId 
+		WHERE fp.id=#{id}
+	</select>
+	
+	<!-- 采浆高级查询全表查询(啊健) -->	
+	<select id="queryPlasmCollectionCountList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fp.*,fb.name,fb.sex,bloodType,fa.name AS fname,fm.name AS rname,fy.name AS yname,fu.name AS uname,fs.name AS sname FROM(
+		SELECT * FROM  f_plasm_collection LIMIT ${pageNum},${pageSize}
+		) fp
+		LEFT JOIN f_provider_baseinfo AS fb
+		ON fp.providerNo = fb.providerNo 
+		LEFT JOIN f_admin AS fa
+		ON fp.userId = fa.id
+		LEFT JOIN f_room AS fm 
+		ON fp.roomId = fm.id
+		LEFT JOIN f_plasm_type AS fy 
+		ON fp.typeId = fy.id 
+		LEFT JOIN f_machine_number AS fu 
+		ON fp.machineId = fu.id
+		LEFT JOIN f_situation_config AS fs 
+		ON fp.situation = fs.id
+		WHERE 1=1
+		<if test="startTime!=null and startTime!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') >= #{startTime}
+		</if>
+		<if test="endTime!=null and endTime!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &lt;= #{endTime}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo = #{providerNo}
+		</if>
+		<if test="name!=null and name!='' ">
+			AND fb.name = #{name}
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND fb.idNo = #{idNo}
+		</if>
+		<if test="icNumber!=null and icNumber!='' ">
+			AND fb.icNumber = #{icNumber}
+		</if>
+		<if test="situation!=null and situation!='' ">
+			AND fp.situation = #{situation}
+		</if>
+		<if test="result!=null and result!='' ">
+			AND fp.result = #{result}
+		</if>
+		<if test="allId1!=null and allId1!='' ">
+			AND fp.allId >= #{allId1}
+		</if>
+		<if test="allId2!=null and allId2!='' ">
+			AND fp.allId &lt;= #{allId2}
+		</if>
+		<if test="isAmple!=null and isAmple!='' ">
+			AND fp.isAmple = #{isAmple}
+		</if>
+		<if test="roomId!=null and roomId!='' ">
+			AND fp.roomId = #{roomId}
+		</if>
+		<if test="typeId!=null and typeId!='' ">
+			AND fp.typeId = #{typeId}
+		</if>
+		<if test="machineId!=null and machineId!='' ">
+			AND fp.machineId = #{machineId}
+		</if>
+	</select>
+	<!-- 查询采浆全表查询总数(啊健) -->
+	<select id="queryPlasmCollectionListCount" resultType="java.lang.Integer">
+	SELECT COUNT(*) FROM f_plasm_collection
+	</select>
+	<!-- 采浆高级查询 -->	
+	<select id="querySeniorQueryPlasmCollectionList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fp.*,fb.name,fb.sex,bloodType,fa.name AS fname,fm.name AS rname,fy.name AS yname,fu.name AS uname,fs.name AS sname FROM f_plasm_collection AS fp
+		LEFT JOIN f_provider_baseinfo AS fb 
+		ON fp.providerNo = fb.providerNo 
+		LEFT JOIN f_admin AS fa
+		ON fp.userId = fa.id
+		LEFT JOIN f_room AS fm 
+		ON fp.roomId = fm.id
+		LEFT JOIN f_plasm_type AS fy 
+		ON fp.typeId = fy.id 
+		LEFT JOIN f_machine_number AS fu 
+		ON fp.machineId = fu.id
+		LEFT JOIN f_situation_config AS fs 
+		ON fp.situation = fs.id
+		WHERE 1=1
+		<if test="startTime!=null and startTime!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') >= #{startTime}
+		</if>
+		<if test="endTime!=null and endTime!='' ">
+			AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &lt;= #{endTime}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fp.providerNo = #{providerNo}
+		</if>
+		<if test="name!=null and name!='' ">
+			AND fb.name = #{name}
+		</if>
+		<if test="idNo!=null and idNo!='' ">
+			AND fb.idNo = #{idNo}
+		</if>
+		<if test="icNumber!=null and icNumber!='' ">
+			AND fb.icNumber = #{icNumber}
+		</if>
+		<if test="situation!=null and situation!='' ">
+			AND fp.situation = #{situation}
+		</if>
+		<if test="result!=null and result!='' ">
+			AND fp.result = #{result}
+		</if>
+		<if test="allId1!=null and allId1!='' ">
+			AND fp.allId >= #{allId1}
+		</if>
+		<if test="allId2!=null and allId2!='' ">
+			AND fp.allId &lt;= #{allId2}
+		</if>
+		<if test="isAmple!=null and isAmple!='' ">
+			AND fp.isAmple = #{isAmple}
+		</if>
+		<if test="roomId!=null and roomId!='' ">
+			AND fp.roomId = #{roomId}
+		</if>
+		<if test="typeId!=null and typeId!='' ">
+			AND fp.typeId = #{typeId}
+		</if>
+		<if test="machineId!=null and machineId!='' ">
+			AND fp.machineId = #{machineId}
+		</if>
+		LIMIT ${pageNum},${pageSize}
+	</select>
+	<!-- 查询采浆总数 -->
+	<select id="querySeniorQueryPlasmCollectionListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT COUNT(*) FROM (
+			SELECT fp.id
+			FROM
+				f_plasm_collection AS fp
+			INNER JOIN f_provider_baseinfo AS fb ON fp.providerNo = fb.providerNo
+			WHERE
+				1 = 1 
+				<if test="startTime!=null and startTime!='' ">
+					AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') >= #{startTime}
+				</if>
+				<if test="endTime!=null and endTime!='' ">
+					AND DATE_FORMAT(fp.createDate,'%Y-%m-%d') &lt;= #{endTime}
+				</if>
+				<if test="providerNo!=null and providerNo!='' ">
+					AND fp.providerNo = #{providerNo}
+				</if>
+				<if test="name!=null and name!='' ">
+					AND fb.name = #{name}
+				</if>
+				<if test="idNo!=null and idNo!='' ">
+					AND fb.idNo = #{idNo}
+				</if>
+				<if test="icNumber!=null and icNumber!='' ">
+					AND fb.icNumber = #{icNumber}
+				</if>
+				<if test="situation!=null and situation!='' ">
+					AND fp.situation = #{situation}
+				</if>
+				<if test="result!=null and result!='' ">
+					AND fp.result = #{result}
+				</if>
+				<if test="allId1!=null and allId1!='' ">
+					AND fp.allId >= #{allId1}
+				</if>
+				<if test="allId2!=null and allId2!='' ">
+					AND fp.allId &lt;= #{allId2}
+				</if>
+				<if test="isAmple!=null and isAmple!='' ">
+					AND fp.isAmple = #{isAmple}
+				</if>
+				<if test="roomId!=null and roomId!='' ">
+					AND fp.roomId = #{roomId}
+				</if>
+				<if test="typeId!=null and typeId!='' ">
+					AND fp.typeId = #{typeId}
+				</if>
+				<if test="machineId!=null and machineId!='' ">
+					AND fp.machineId = #{machineId}
+				</if>
+			)t
+	</select>
+	
+	<!-- 修改血浆状态 -->
+	<update id="updatePlasmStatus" parameterType="java.util.Map">
+		UPDATE f_plasm_collection SET status=#{status} WHERE allId=#{allId} AND providerNo=#{providerNo}
+	</update>
+	
+	<!-- 查询采浆护士列表 -->
+	<select id="queryCollectionAdminList" resultType="com.fadl.common.DataRow">
+		SELECT fi.id,fi.name FROM f_sys_role AS fs 
+		INNER JOIN f_sys_admin_role AS fa 
+		ON fs.id = fa.roleId 
+		INNER JOIN f_admin AS fi 
+		ON fa.adminId = fi.id
+		WHERE fs.name='采浆护士'
+	</select>
+	<!-- 给免疫流程判断是否需要特免登记 -->
+	<select id="queryImmuneCollectionCount" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT MIN(updateDate) as minDate,COUNT(*) as count FROM f_plasm_collection WHERE providerNo=#{providerNo} and updateDate BETWEEN DATE_SUB(NOW(),INTERVAL 3 MONTH) AND NOW()
+	</select>
+	
+	<!-- 查询浆员采浆次数 -->
+	<select id="queryPlasmaCollectionCount" resultType="java.lang.Integer" parameterType="com.fadl.common.DataRow">
+		SELECT COUNT(*) FROM f_plasm_collection WHERE providerNo=#{providerNo} AND updateDate BETWEEN #{startDate}  AND #{endDate}
+	</select>
+	
+	<!-- 献血浆者采浆记录表 -->
+	<select id="queryPrintPlasmaCollectionRecordList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fc.providerNo,fc.allId,fp.name,fp.sex,fi.immuneName,fp.bloodType,fc.isIdentity,ft.name tname,fc.loopCount,fc.runTime,fc.wholeBlood,
+		fc.knAmount,fn.name AS nname,fc.plasmAmount,fc.result,ff.name AS fname,fc.suppliesId as templateId,fad.name AS cname
+		FROM f_plasm_collection AS fc 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fc.providerNo = fp.providerNo 
+		LEFT JOIN f_immune_setting AS fi 
+		ON fp.immuneId = fi.id 
+		INNER JOIN f_plasm_type AS ft 
+		ON fc.typeId = ft.id 
+		INNER JOIN f_machine_number AS fn 
+		ON fc.machineId = fn.id 
+		INNER JOIN f_situation_config AS ff 
+		ON fc.situation = ff.id
+		INNER JOIN f_admin AS fad 
+		ON fc.updater = fad.id
+		WHERE fc.updateDate >=#{startDate} AND fc.updateDate &lt;= #{endDate}
+	</select>
+	
+	<!-- 查询未送样列表 -->
+	<select id="querySendSimpleList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fp.*,fr.plasmaType FROM f_plasma_stock AS fp 
+		INNER JOIN f_provider_registries AS fr 
+		ON fp.allId = fr.allId 
+		WHERE fp.id IN 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</select>
+</mapper>

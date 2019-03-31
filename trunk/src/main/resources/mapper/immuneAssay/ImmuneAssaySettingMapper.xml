@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.immuneAssay.dao.ImmuneAssaySettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.immuneAssay.entity.ImmuneAssaySetting">
+        <id column="id" property="id" />
+        <result column="immuneId" property="immuneId" />
+        <result column="effectiveMin" property="effectiveMin" />
+        <result column="effectiveMax" property="effectiveMax" />
+        <result column="packingEffective" property="packingEffective" />
+        <result column="packingImmuneId" property="packingImmuneId" />
+        <result column="isDelete" property="isDelete" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, immuneId, effectiveMin, effectiveMax, packingEffective, packingImmuneId, createDate, updateDate, creater, updater, plasmaId,isDelete
+    </sql>
+
+
+	<!-- 效价值列表 -->
+	<select id="queryAssaySettingList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tk.*,ts.immuneName as packingName FROM (
+		SELECT tp.id,tp.immuneId,td.type,td.immuneName,tp.effectiveMin,tp.effectiveMax,tp.packingEffective,tp.packingImmuneId,tp.createDate,tp.isDelete FROM f_immune_assay_setting tp
+		inner JOIN f_immune_setting td
+		ON tp.immuneId=td.id
+		) tk
+		INNER JOIN f_immune_setting ts
+		ON tk.packingImmuneId=ts.id
+		WHERE 1=1
+		<if test="type==1">
+		AND tk.type!=1
+		</if>
+		<if test="isDelete!=null and isDelete!=''">
+		AND td.isDelete=#{isDelete}
+		</if>
+		<if test="immuneId!=null and immuneId!=''">
+		AND td.immuneId=#{immuneId}
+		</if>
+	</select>
+</mapper>

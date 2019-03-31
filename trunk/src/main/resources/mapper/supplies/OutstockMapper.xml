@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.supplies.dao.OutstockMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.supplies.entity.Outstock">
+        <result column="id" property="id" />
+        <result column="orderId" property="orderId" />
+        <result column="suppliesId" property="suppliesId" />
+        <result column="outNumber" property="outNumber" />
+        <result column="batchNumber" property="batchNumber" />
+        <result column="expiryTime" property="expiryTime" />
+        <result column="status" property="status" />
+        <result column="isDisable" property="isDisable" />
+        <result column="remarks" property="remarks" />
+        <result column="stockId" property="stockId" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, orderId, suppliesId, outNumber, batchNumber, expiryTime, status, remarks, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+<!-- 提供给谢鑫检验查询 -->
+	<select id="queryTestList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,td.name,tp.batchNumber,tp.status,tk.name as supply,ss.startTime,ss.endTime,ss.expiryTime 
+		<if test="type!=null and type!='' and type ==1">
+		FROM f_elisa_qc AS eq 
+    	LEFT JOIN f_supplies_outstock tp ON eq.stockId = tp.id
+		</if>
+		<if test="type!=null and type!='' and type ==0">
+		FROM   f_supplies_outstock tp  
+		</if>
+		LEFT JOIN f_supplies_stock ss ON tp.stockId=ss.id
+		LEFT JOIN f_supplies_info td ON tp.suppliesId=td.id
+		LEFT JOIN f_supplies_supply tk ON td.supplyId=tk.id
+		WHERE td.apply=1 
+		<if test="type!=null and type!=''">
+		AND td.type=#{type}
+		</if>
+		<if test="status!=null and status!=''">
+		AND tp.status=#{status}
+		</if>
+	</select>
+	<select id="queryById" resultType="com.fadl.common.DataRow" >
+	SELECT so.*,ss.startTime,ss.endTime,ss.expiryTime FROM f_supplies_outstock AS so  
+	LEFT JOIN f_supplies_stock AS ss ON so.stockId=ss.id
+	WHERE so.id=#{id}
+	</select>
+	<!-- 提供给谢鑫检验查询2 -->
+	<select id="queryTestPage" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		select ss.id,ss.batchNumber from f_supplies_outstock   as ss
+		
+		LEFT JOIN `f_test_config_info` as tci on ss.id = tci.reagentBatch
+		LEFT JOIN `f_elisa_template` AS  et ON  et.projectId = tci.projectName
+		where ss.status=0
+		and unix_timestamp(tci.startDate)&lt; unix_timestamp(now())
+		and unix_timestamp(now())&lt; unix_timestamp(tci.endTime)
+		and tci.del_flag= 0 
+		<if test="type != null">
+			<if test="type == '0'">
+				AND ss.type=#{type}
+			</if>
+			<if test="type == '1'">
+				AND ss.type=#{type}
+			</if>
+		</if>
+		<if test="id != null">
+		AND et.id=#{id}
+		</if>
+		group by tci.reagentBatch
+	</select>
+	<!-- 出库列表 -->
+	<select id="queryoutstockList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tl.name,tl.type as category,tk.name as type,tf.name as unit,tg.name as supply,tp.batchNumber,tp.outNumber,tp.expiryTime,tp.createDate  FROM f_supplies_outstock tp
+		LEFT JOIN f_supplies_info tl
+		ON tp.suppliesId=tl.id
+		LEFT JOIN f_supplies_type tk
+		ON tk.id=tl.typeId
+		LEFT JOIN f_supplies_supply tg 
+		ON tg.id = tl.supplyId
+		LEFT JOIN f_unit tf
+		ON tf.id=tl.unitId
+		WHERE 1=1
+	<if test="startTime!=null and startTime!='' ">
+		 	AND DATE_FORMAT(tp.createDate,'%Y-%m-%d') &gt;= #{startTime}
+		</if>
+		<if test="endTime!=null and endTime!='' ">
+		 	AND DATE_FORMAT(tp.createDate,'%Y-%m-%d') &lt;= #{endTime}
+		</if>
+		<if test="batchNumber!=null and batchNumber!='' ">
+			AND tp.batchNumber LIKE CONCAT('%',#{batchNumber},'%')
+		</if>
+		<if test="expiryTime!=null and expiryTime!=''">
+			AND DATE_FORMAT(tp.expiryTime,'%Y-%m-%d') = #{expiryTime}
+		</if>
+		ORDER BY createDate DESC
+	</select>
+	<!-- 提供给免疫查询的列表 -->
+	<select id="queryVaccineList" resultType="com.fadl.common.DataRow">
+		SELECT tp.suppliesId,td.name FROM f_supplies_outstock tp
+		LEFT JOIN  f_supplies_info td
+		ON tp.suppliesId=td.id
+		WHERE td.apply=2
+		GROUP BY tp.suppliesId
+	</select>
+	<!-- 查询免疫查询的批号列表 -->
+	<select id="queryVaccineBatchNumber" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.batchNumber,td.createDate FROM f_supplies_outstock tp
+		LEFT JOIN f_order_form td
+		ON tp.orderId=td.id
+		where 1=1
+		<if test="suppliesId!=null">
+		AND tp.suppliesId =#{suppliesId}
+		</if>
+		<if test="batchNumber!=null">
+		AND batchNumber=#{batchNumber}
+		</if>
+		GROUP BY tp.batchNumber
+	</select>
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.inspection.dao.TestConfigInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.inspection.entity.TestConfigInfo">
+        <id column="id" property="id" />
+        <result column="tcid" property="tcid" />
+        <result column="projectName" property="projectName" />
+        <result column="tcMark" property="tcMark" />
+        <result column="venderid" property="venderid" />
+        <result column="reagentid" property="reagentid" />
+        <result column="defaultValue" property="defaultValue" />
+        <result column="reagentBatch" property="reagentBatch" />
+        <result column="testAdminid" property="testAdminid" />
+        <result column="checkAdminid" property="checkAdminid" />
+        <result column="reportAdminid" property="reportAdminid" />
+        <result column="testingMethodid" property="testingMethodid" />
+        <result column="del_flag" property="delFlag" />
+        <result column="termOfValidity" property="termOfValidity" />
+        <result column="createDate" property="createDate" />
+        <result column="startDate" property="startDate" />
+        <result column="endTime" property="endTime" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tcid, projectName,tcMark, venderid, reagentid, defaultValue, reagentBatch, testAdminid, checkAdminid, reportAdminid, testingMethodid, del_flag, termOfValidity, createDate, startDate, endTime, updateDate, creater, updater, plasmaId
+    </sql>
+	<!-- 带多表的结果列 -->
+    <sql id="testConfigInfoColumns">
+    a.id AS id, 
+    a.tcId AS tcId, 
+    a.projectId AS projectId, 
+    a.venderId AS venderId, 
+    a.reagentId AS reagentId, 
+    a.defaultValue AS defaultValue, 
+    a.reagentBatch AS reagentBatch, 
+    a.termOfValidity AS termOfValidity, 
+    a.startDate AS startDate, 
+    a.endTime AS endTime, 
+    a.testAdminId AS testAdminId, 
+    a.checkAdminId AS checkAdminId, 
+    a.reportAdminId AS reportAdminId, 
+    a.testingMethodId AS testingMethodId, 
+    a.createDate AS createDate, 
+    a.updateDate AS updateDate, 
+    a.creater AS creater, 
+    a.updater AS updater
+    </sql>
+   	<!-- 联合查询用 -->
+	<sql id="testConfigJoins">
+		LEFT JOIN f_test_config t2 ON t2.id = a.tcId
+	</sql>
+
+	<!-- 查询单个信息 -->
+	<select id="queryById" resultType="com.fadl.inspection.entity.TestConfigInfo">
+		SELECT 
+			<include refid="testConfigInfoColumns"/>
+		FROM f_test_config_info a
+		<include refid="testConfigJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	<!-- 根据检测配置ID获取info列表 -->
+	<select id="queryByTCId" resultType="com.fadl.inspection.entity.TestConfigInfo">
+		SELECT 
+			<include refid="testConfigInfoColumns"/>
+		FROM f_test_config_info a
+		<include refid="testConfigJoins"/>
+		WHERE t2.id = #{tcId}
+	</select>
+	<!-- 逻辑删除检验配置 -->
+	<update id="deleteByIdWithDelFlag">
+		UPDATE f_test_config_info SET 
+		del_flag = 1
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 查询检验项目配置列表 -->
+	<select id="queryTestConfigInfoListByTcid" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+		SELECT fa.name,fb.name jname,fc.name hname,fg.templateName,ft.projectName,fy.name yname,fi.name fname,fs.batchNumber,fcc.lable,fcc1.lable as plable,ft.* FROM f_test_config_info AS ft 
+		LEFT JOIN f_admin as fa  ON ft.testAdminid = fa.id
+		LEFT JOIN f_admin as fb  ON ft.checkAdminid = fb.id
+		LEFT JOIN f_admin as fc  ON ft.checkAdminid = fc.id
+		LEFT JOIN f_test_config AS fg ON ft.tcid = fg.id
+		LEFT JOIN f_supplies_supply AS fy ON ft.venderid = fy.id
+		LEFT JOIN f_supplies_info AS fi  ON ft.reagentid = fi.id
+		LEFT JOIN f_supplies_outstock AS fs  ON ft.reagentBatch = fs.id 
+		LEFT JOIN f_config as fcc ON ft.testingMethodid = fcc.value AND fcc.type='check_method'
+		LEFT JOIN f_config as fcc1 ON ft.projectName = fcc1.value AND fcc1.type='elisa_check_project'
+		WHERE ft.tcid=#{id} AND ft.del_flag=0
+	</select>
+	
+	
+	<select id="queryByEtId" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+		SELECT ss.batchNumber ,tci.* FROM f_test_config_info AS tci
+		INNER JOIN  f_elisa_info AS ei  ON tci.id = ei.tciId
+		INNER JOIN f_supplies_outstock AS ss ON tci.reagentBatch = ss.id
+		WHERE ei.etId = #{etId} 
+		GROUP BY tci.id
+	</select>
+	<!-- 根据项目编号查询有效的试剂名称 -->
+	<select id="querySuppliesListByProjectId" resultType="com.fadl.common.DataRow" >
+		SELECT si.id,ss.batchNumber AS name FROM f_test_config_info tci
+		INNER JOIN f_supplies_info si ON  si.id = tci.reagentid
+		INNER JOIN f_supplies_outstock ss ON ss.id = tci. reagentBatch 
+		AND TO_DAYS(tci.termOfValidity) &gt; TO_DAYS(NOW()) AND TO_DAYS(tci.startDate)  &lt;= TO_DAYS(NOW()) AND TO_DAYS(tci.endTime) &gt;TO_DAYS(NOW())
+		AND tci.projectName = #{projectName}
+		GROUP BY tci. reagentid , tci.reagentBatch
+	
+	</select>
+</mapper>

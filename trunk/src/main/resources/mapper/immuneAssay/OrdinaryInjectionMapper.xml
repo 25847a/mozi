@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.immuneAssay.dao.OrdinaryInjectionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.immuneAssay.entity.OrdinaryInjection">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="immuneId" property="immuneId" />
+        <result column="num" property="num" />
+        <result column="injection" property="injection" />
+        <result column="vaccineId" property="vaccineId" />
+        <result column="status" property="status" />
+        <result column="remarks" property="remarks" />
+        <result column="isShot" property="isShot" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, immuneId, num, injection, vaccineId, status, remarks, isShot, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+	
+	<!-- 普免基础针 未注射人员 -->
+	<select id="notShotOrdBaseList" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tp.id,td.icNumber,td.providerNo,td.name,td.sex,tl.registriesNo,tk.immuneName,td.type,tp.num,admin.name as admin FROM f_ordinary_injection tp
+		INNER JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		LEFT JOIN (SELECT * FROM f_provider_registries WHERE  DATE_FORMAT(createDate,'%Y-%m-%d')=#{updateDate}) tl
+		ON tp.providerNo=tl.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0 AND DATE_FORMAT(createDate,'%Y-%m-%d')=#{updateDate}) tb
+		ON tl.id=tb.imgId
+		INNER JOIN f_admin admin 
+		on tp.updater = admin.id
+		WHERE tp.isShot=0 AND DATE_FORMAT(tp.createDate,'%Y-%m-%d')=#{updateDate}
+	</select>
+	
+	<!-- 普免基础针 已注射人员 -->
+	<select id="shotOrdBaseList" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tp.id,td.icNumber,td.providerNo,td.name,td.sex,tl.registriesNo,tk.immuneName,td.type,tp.num,admin.name as admin FROM f_ordinary_injection tp
+		INNER JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		LEFT JOIN (SELECT * FROM f_provider_registries WHERE  DATE_FORMAT(createDate,'%Y-%m-%d')=#{updateDate}) tl
+		ON tp.providerNo=tl.providerNo
+		LEFT JOIN (SELECT * FROM f_plasma_image WHERE type=0 AND DATE_FORMAT(createDate,'%Y-%m-%d')=#{updateDate}) tb
+		ON tl.id=tb.imgId
+		INNER JOIN f_admin admin 
+		on tp.updater = admin.id
+		WHERE tp.isShot=1 AND DATE_FORMAT(tp.createDate,'%Y-%m-%d')=#{updateDate}
+	</select>
+	
+	<!-- 普免基础针 头部内容 -->
+	<select id="ordinaryBaseHead" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		select inject.id,base.`name`,base.sex,base.bloodType,base.type,immu.immuneName,base.icNumber,inject.providerNo,inject.updateDate,inject.immuneId,
+		admin.`name` as zsName,inject.num,inject.injection,inject.vaccineId,tr.name as supplies,inject.status,inject.remarks,base.immuneRegisterId,base.photo,inject.isShot
+		from f_ordinary_injection inject 
+		INNER JOIN f_immune_setting immu ON inject.immuneId = immu.id 
+		INNER JOIN f_provider_baseinfo base on inject.providerNo = base.providerNo 
+		INNER JOIN f_admin admin ON admin.id = inject.updater
+		LEFT JOIN f_vaccine_setting tc
+		ON inject.vaccineId=tc.id
+		LEFT JOIN f_supplies_info tr
+		ON tc.suppliesId=tr.id
+		where inject.id = #{id} and DATE_FORMAT(inject.createDate,'%Y-%m-%d') = #{updateDate}
+	</select>
+	<!-- 注射信息查询(啊健) -->
+	<select id="queryShotMsg" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT immuneId,updateDate,providerNo,name,supplies,standard,batchNumber,supply,injection,validMonth,num,isShot,remarks,admin,type FROM (
+		SELECT tp.immuneId,tp.updateDate,tp.providerNo,td.name,tj.name as supplies,tj.standard,tc.batchNumber,tb.name as supply,tc.injection,tc.validMonth,(IFNULL(tp.num,0)+IFNULL(tm.num,0)) as num,tp.isShot,tp.remarks,tt.name as admin,0 as type FROM f_ordinary_injection tp
+		LEFT JOIN f_ordinary_strengthen_injection tm
+		ON tp.providerNo=tm.providerNo AND tp.immuneId=tm.immuneId
+		LEFT JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		LEFT JOIN f_vaccine_setting tc
+		ON tp.vaccineId=tc.id
+		LEFT JOIN f_supplies_info tj
+		ON tc.suppliesId=tj.id
+		LEFT JOIN f_supplies_supply tb
+		ON tj.supplyId=tb.id
+		LEFT JOIN f_admin tt
+		ON tp.updater=tt.id
+		UNION ALL
+		SELECT tp.immuneId,tp.updateDate,tp.providerNo,td.name,tj.name as supplies,tj.standard,tc.batchNumber,tb.name as supply,tc.injection,tc.validMonth,(IFNULL(tp.num,0)+IFNULL(tm.num,0)) as num,tp.isShot,tp.remarks,tt.name as admin,1 as type FROM f_privilege_injection tp
+		LEFT JOIN f_privilege_strengthen_injection tm
+		ON tp.providerNo=tm.providerNo AND tp.immuneId=tm.immuneId
+		LEFT JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		LEFT JOIN f_vaccine_setting tc
+		ON tp.vaccineId=tc.id
+		LEFT JOIN f_supplies_info tj
+		ON tc.suppliesId=tj.id
+		LEFT JOIN f_supplies_supply tb
+		ON tj.supplyId=tb.id
+		LEFT JOIN f_admin tt
+		ON tp.updater=tt.id
+		) tc
+		where 1=1
+		<if test="providerNo!=null and providerNo!=''">
+		AND tc.providerNo=#{providerNo}
+		</if>
+		<if test="name!=null and name!=''">
+		AND tc.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="num!=null and num!=''">
+		AND tc.num=#{num}
+		</if>
+		<if test="isShot!=null and isShot!=''">
+		AND tc.isShot=#{isShot}
+		</if>
+		<if test="startDate!=null and startDate!=''">
+		AND DATE_FORMAT(tc.updateDate,'%Y-%m-%d') &gt;= #{startDate}
+		</if>
+		<if test="endDate!=null and endDate!=''">
+		AND DATE_FORMAT(tc.updateDate,'%Y-%m-%d') &lt;= #{endDate}
+		</if>
+		<if test="immuneId!=null and immuneId!=''">
+		AND tc.immuneId=#{immuneId}
+		</if>
+		ORDER BY tc.updateDate DESC
+	</select>
+	
+	<!-- 免疫注射信息      免疫基本信息baseInjectMsg(啊健) -->
+	<select id="imuneMsg" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+	SELECT * FROM (
+		SELECT tt.providerNo,tt.name,tt.immuneId,tt.immuneName,tt.jc,tr.jq FROM (
+		SELECT tp.providerNo,td.name,tp.immuneId,tk.immuneName,COUNT(*) as jc FROM f_ordinary_injection tp
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo= td.providerNo AND tp.isShot=1
+		LEFT JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		GROUP BY tp.providerNo,tp.immuneId
+		) tt
+		LEFT JOIN (
+		SELECT tp.providerNo,tp.immuneId,COUNT(*) as jq FROM f_ordinary_strengthen_injection tp
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo= td.providerNo AND tp.isShot=1
+		LEFT JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		GROUP BY tp.providerNo,tp.immuneId
+		) tr
+		ON tt.providerNo=tr.providerNo AND tt.immuneId=tr.immuneId
+		UNION ALL
+		SELECT tt.providerNo,tt.name,tt.immuneId,tt.immuneName,tt.jc,tr.jq FROM (
+		SELECT tp.providerNo,td.name,tp.immuneId,tk.immuneName,COUNT(*) as jc FROM f_privilege_injection tp
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo= td.providerNo AND tp.isShot=1
+		LEFT JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		GROUP BY tp.providerNo,tp.immuneId
+		) tt
+		LEFT JOIN (
+		SELECT tp.providerNo,tp.immuneId,COUNT(*) as jq FROM f_privilege_strengthen_injection tp
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo= td.providerNo AND tp.isShot=1
+		LEFT JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		GROUP BY tp.providerNo,tp.immuneId
+		) tr
+		ON tt.providerNo=tr.providerNo AND tt.immuneId=tr.immuneId
+		) tm
+		WHERE 1=1
+		<if test="providerNo!=null and providerNo!=''">
+		AND providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="immuneId!=null and immuneId!=''">
+		AND immuneId=#{immuneId}
+		</if>
+		<if test="name!=null and name!=''">
+		AND name LIKE CONCAT('%',#{name},'%')
+		</if>
+	</select>
+	
+	<!-- 免疫注射信息     基础针注射信息(啊健) -->
+	<select id="baseInjectMsg" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT providerNo,immuneId,immuneName,num,updateDate,isShot,supplies,injection,batchNumber,admin,supply,status,remarks FROM (
+		SELECT tp.providerNo,tp.immuneId,td.immuneName,tp.num,tp.updateDate,tp.isShot,tb.name as supplies,tp.injection,tj.batchNumber,tc.name as admin,tw.name as supply,tp.status,tp.remarks FROM f_ordinary_injection tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting td
+		ON tp.immuneId=td.id
+		LEFT JOIN f_vaccine_setting tj
+		ON tp.vaccineId=tj.id
+		LEFT JOIN f_supplies_info tb
+		ON tj.suppliesId=tb.id
+		LEFT JOIN f_admin tc
+		ON tp.creater=tc.id
+		LEFT JOIN f_supplies_supply tw
+		ON tb.supplyId=tw.id
+		UNION ALL
+		SELECT tp.providerNo,tp.immuneId,td.immuneName,tp.num,tp.updateDate,tp.isShot,tb.name as supplies,tp.injection,tj.batchNumber,tc.name as admin,tw.name as supply,tp.status,tp.remarks FROM f_privilege_injection tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting td
+		ON tp.immuneId=td.id
+		LEFT JOIN f_vaccine_setting tj
+		ON tp.vaccineId=tj.id
+		LEFT JOIN f_supplies_info tb
+		ON tj.suppliesId=tb.id
+		LEFT JOIN f_admin tc
+		ON tp.creater=tc.id
+		LEFT JOIN f_supplies_supply tw
+		ON tb.supplyId=tw.id
+		) tt
+		WHERE tt.providerNo=#{providerNo} and tt.immuneId=#{immuneId}
+	</select>
+	
+	<!-- 免疫注射信息     加强针注射信息(啊健) -->
+	<select id="strengthenInjectMsg" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT providerNo,immuneId,immuneName,num,updateDate,isShot,supplies,injection,batchNumber,admin,supply,status,remarks FROM (
+		SELECT tp.providerNo,tp.immuneId,td.immuneName,tp.num,tp.updateDate,tp.isShot,tb.name as supplies,tp.injection,tj.batchNumber,tc.name as admin,tw.name as supply,tp.status,tp.remarks FROM f_ordinary_strengthen_injection tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting td
+		ON tp.immuneId=td.id
+		LEFT JOIN f_vaccine_setting tj
+		ON tp.vaccineId=tj.id
+		LEFT JOIN f_supplies_info tb
+		ON tj.suppliesId=tb.id
+		LEFT JOIN f_admin tc
+		ON tp.creater=tc.id
+		LEFT JOIN f_supplies_supply tw
+		ON tb.supplyId=tw.id
+		UNION ALL
+		SELECT tp.providerNo,tp.immuneId,td.immuneName,tp.num,tp.updateDate,tp.isShot,tb.name as supplies,tp.injection,tj.batchNumber,tc.name as admin,tw.name as supply,tp.status,tp.remarks FROM f_privilege_strengthen_injection tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting td
+		ON tp.immuneId=td.id
+		LEFT JOIN f_vaccine_setting tj
+		ON tp.vaccineId=tj.id
+		LEFT JOIN f_supplies_info tb
+		ON tj.suppliesId=tb.id
+		LEFT JOIN f_admin tc
+		ON tp.creater=tc.id
+		LEFT JOIN f_supplies_supply tw
+		ON tb.supplyId=tw.id
+		) tt
+		WHERE tt.providerNo=#{providerNo} and tt.immuneId=#{immuneId}
+	</select>
+	
+	<!-- 获取所有基础免疫类别 相关信息-->
+	<select id="getBaseImmuneTypes" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tk.name,td.batchNumber,tp.id as vaccineId,tk.standard,tp.injection,tp.validMonth,tg.name as supply FROM f_vaccine_setting tp
+		LEFT JOIN f_supplies_stream td
+		ON tp.suppliesId=td.suppliesId AND tp.batchNumber=td.batchNumber
+		LEFT JOIN f_supplies_info tk
+		ON tp.suppliesId=tk.id
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		LEFT JOIN f_supplies_supply tg 
+		ON tk.supplyId=tg.id
+		WHERE tp.immuneId=#{id} AND tp.injectionType=0 ORDER BY tp.createDate DESC LIMIT 1
+	</select>
+	<!-- 获取疫苗信息(啊健)基础针 -->
+	<select id="queryVaccineInfo" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+	SELECT tj.id,tj.immuneName,tk.name,td.batchNumber,tg.name as supply,tp.id as vaccineId,validMonth,injection,standard FROM f_vaccine_setting tp
+		LEFT JOIN f_supplies_stream td
+		ON tp.suppliesId=td.suppliesId AND tp.batchNumber=td.batchNumber
+		LEFT JOIN f_supplies_info tk
+		ON tp.suppliesId=tk.id
+		LEFT JOIN f_supplies_supply tg
+		ON tk.supplyId=tg.id
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId=tj.id
+		WHERE tp.id=#{immune} AND tp.injectionType=0
+	</select>
+	<!-- 啊健(查询普免登记表信息) -->
+	<select id="queryInjectionInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT * FROM f_ordinary_injection WHERE providerNo=#{providerNo} ORDER BY createDate DESC LIMIT 0,1 
+	</select>
+	<!-- 注射信息查询(啊健) -->
+	<select id="downloadImmune" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT immuneId,updateDate,providerNo,name,supplies,standard,batchNumber,supply,injection,validMonth,num,isShot,remarks,admin,type FROM (
+		SELECT tp.immuneId,tp.updateDate,tp.providerNo,td.name,tj.name as supplies,tj.standard,tc.batchNumber,tb.name as supply,tc.injection,tc.validMonth,(IFNULL(tp.num,0)+IFNULL(tm.num,0)) as num,tp.isShot,tp.remarks,tt.name as admin,0 as type FROM f_ordinary_injection tp
+		LEFT JOIN f_ordinary_strengthen_injection tm
+		ON tp.providerNo=tm.providerNo AND tp.immuneId=tm.immuneId
+		LEFT JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		LEFT JOIN f_vaccine_setting tc
+		ON tp.vaccineId=tc.id
+		LEFT JOIN f_supplies_info tj
+		ON tc.suppliesId=tj.id
+		LEFT JOIN f_supplies_supply tb
+		ON tj.supplyId=tb.id
+		LEFT JOIN f_admin tt
+		ON tp.updater=tt.id
+		UNION ALL
+		SELECT tp.immuneId,tp.updateDate,tp.providerNo,td.name,tj.name as supplies,tj.standard,tc.batchNumber,tb.name as supply,tc.injection,tc.validMonth,(IFNULL(tp.num,0)+IFNULL(tm.num,0)) as num,tp.isShot,tp.remarks,tt.name as admin,1 as type FROM f_privilege_injection tp
+		LEFT JOIN f_privilege_strengthen_injection tm
+		ON tp.providerNo=tm.providerNo AND tp.immuneId=tm.immuneId
+		LEFT JOIN f_immune_setting tk
+		ON tp.immuneId=tk.id
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		LEFT JOIN f_vaccine_setting tc
+		ON tp.vaccineId=tc.id
+		LEFT JOIN f_supplies_info tj
+		ON tc.suppliesId=tj.id
+		LEFT JOIN f_supplies_supply tb
+		ON tj.supplyId=tb.id
+		LEFT JOIN f_admin tt
+		ON tp.updater=tt.id
+		) tc
+		where tc.type=#{type}
+		<if test="providerNo!=null and providerNo!=''">
+		AND tc.providerNo=#{providerNo}
+		</if>
+		<if test="name!=null and name!=''">
+		AND tc.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="num!=null and num!=''">
+		AND tc.num=#{num}
+		</if>
+		<if test="isShot!=null and isShot!=''">
+		AND tc.isShot=#{isShot}
+		</if>
+		<if test="startDate!=null and startDate!=''">
+		AND DATE_FORMAT(tc.updateDate,'%Y-%m-%d') &gt;= #{startDate}
+		</if>
+		<if test="endDate!=null and endDate!=''">
+		AND DATE_FORMAT(tc.updateDate,'%Y-%m-%d') &lt;= #{endDate}
+		</if>
+		<if test="immuneId!=null and immuneId!=''">
+		AND tc.immuneId=#{immuneId}
+		</if>
+		ORDER BY tc.updateDate DESC
+	</select>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.check.dao.CheckRepeatMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.check.entity.CheckRepeat">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="allId" property="allId" />
+        <result column="isCheck" property="isCheck" />
+        <result column="type" property="type" />
+        <result column="isIdentity" property="isIdentity" />
+        <result column="tz" property="tz" />
+        <result column="tw" property="tw" />
+        <result column="mb" property="mb" />
+        <result column="xya" property="xya" />
+        <result column="xyb" property="xyb" />
+        <result column="xb" property="xb" />
+        <result column="fb" property="fb" />
+        <result column="pf" property="pf" />
+        <result column="wg" property="wg" />
+        <result column="sz" property="sz" />
+        <result column="heart" property="heart" />
+        <result column="liver" property="liver" />
+        <result column="spleen" property="spleen" />
+        <result column="lung" property="lung" />
+        <result column="consult" property="consult" />
+        <result column="consultResult" property="consultResult" />
+        <result column="result" property="result" />
+        <result column="reason" property="reason" />
+        <result column="userId" property="userId" />
+        <result column="isDel" property="isDel" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+        <result column="checkType" property="checkType" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, allId, isCheck, type, isIdentity, tz, tw, mb, xya, xyb, xb, fb, pf, wg, sz, heart, liver, spleen, lung, consult, consultResult, result, reason, userId, isDel, createDate, updateDate, creater, updater, plasmaId, checkType
+    </sql>
+
+</mapper>

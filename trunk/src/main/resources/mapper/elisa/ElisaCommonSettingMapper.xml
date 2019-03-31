@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.elisa.dao.ElisaCommonSettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.elisa.entity.ElisaCommonSetting">
+        <id column="id" property="id" />
+        <result column="etId" property="etId" />
+        <result column="useNegativeThreshold" property="useNegativeThreshold" />
+        <result column="usePositiveThreshold" property="usePositiveThreshold" />
+        <result column="positiveMinOperator" property="positiveMinOperator" />
+        <result column="positiveMaxOperator" property="positiveMaxOperator" />
+        <result column="positiveMinValue" property="positiveMinValue" />
+        <result column="positiveMaxValue" property="positiveMaxValue" />
+        <result column="negativeMinOperator" property="negativeMinOperator" />
+        <result column="negativeMaxOperator" property="negativeMaxOperator" />
+        <result column="negativeMinValue" property="negativeMinValue" />
+        <result column="negativemaxValue" property="negativemaxValue" />
+        <result column="detectionEffectiveness" property="detectionEffectiveness" />
+        <result column="negativeMeanOperator" property="negativeMeanOperator" />
+        <result column="negativeMeanValue" property="negativeMeanValue" />
+        <result column="negativeHoleValue" property="negativeHoleValue" />
+        <result column="negativeHoleOperator" property="negativeHoleOperator" />
+        <result column="blankMeanOperator" property="blankMeanOperator" />
+        <result column="blankMeanValue" property="blankMeanValue" />
+        <result column="blankHoleOperator" property="blankHoleOperator" />
+        <result column="blankHoleValue" property="blankHoleValue" />
+        <result column="positiveMeanOperator" property="positiveMeanOperator" />
+        <result column="positiveMeanValue" property="positiveMeanValue" />
+        <result column="ecspositiveMinValue" property="ecspositiveMinValue" />
+        <result column="ecspositiveMaxValue" property="ecspositiveMaxValue" />
+        <result column="ecsnegativeMinValue" property="ecsnegativeMinValue" />
+        <result column="ecsnegativemaxValue" property="ecsnegativemaxValue" />
+        <result column="positive2MeanOperator" property="positive2MeanOperator" />
+        <result column="positive2MeanValue" property="positive2MeanValue" />
+        <result column="positiveHoleOperator" property="positiveHoleOperator" />
+        <result column="positiveHoleValue" property="positiveHoleValue" />
+        <result column="positive2HoleOperator" property="positive2HoleOperator" />
+        <result column="positive2HoleValue" property="positive2HoleValue" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, etId, useNegativeThreshold, usePositiveThreshold,ecspositiveMinValue,ecspositiveMaxValue,ecsnegativeMinValue,ecsnegativemaxValue, positiveMinOperator, positiveMaxOperator, positiveMinValue, positiveMaxValue, negativeMinOperator, negativeMaxOperator, negativeMinValue, negativemaxValue, detectionEffectiveness, negativeMeanOperator, negativeMeanValue, negativeHoleValue, negativeHoleOperator, blankMeanOperator, blankMeanValue, blankHoleOperator, blankHoleValue, positiveMeanOperator, positiveMeanValue, positive2MeanOperator, positive2MeanValue, positiveHoleOperator, positiveHoleValue, positive2HoleOperator, positive2HoleValue, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+</mapper>

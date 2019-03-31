@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.immuneAssay.dao.ImmuneControlMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.immuneAssay.entity.ImmuneControl">
+        <id column="id" property="id" />
+        <result column="immunetypeId" property="immunetypeId" />
+        <result column="frequency" property="frequency" />
+        <result column="controlId" property="controlId" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, immunetypeId, frequency, control, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+	<!--免疫针次控制设置 列表 -->
+	<select id="immuneControlList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.*,tk.immuneName,td.controlName FROM f_immune_control tp
+		LEFT JOIN f_immune_setting tk
+		ON tp.immunetypeId=tk.id
+		LEFT JOIN f_control td
+		ON tp.controlId=td.id
+		where 1=1
+		<if test="immunetypeId!=null and immunetypeId!=''">
+		and immunetypeId=#{immunetypeId}
+		</if>
+	</select>
+</mapper>

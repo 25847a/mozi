@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="UTF-8" />
+		<title>浆库高级查询 </title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet" />
+		<link th:href="@{/css/common.css}" rel="stylesheet" />
+		<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+		<style type="text/css">
+			.newolod {padding-left: 35%;}
+			.colsur {
+				width: auto !important
+			} 
+			.bustrNew .phyegistrS {	width: 37%;} 
+			.bustrNew .phytable {width: 62% !important;}
+		</style>
+	</head> 
+	<body id="newpray">
+			<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid">
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion">
+						<div class="row newregistr" id="search">
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi"><la>姓名</la>：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control newfrin" name="name"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+					<label class="control-label UserC"><ls style="    letter-spacing: 4px;  margin-right: -3px;">IC卡号</ls>：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control" name="icNumber"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">身份证号：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control" name="idNo"/>
+									</div>
+								</div> 
+							</div>
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">献浆卡号：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control" name="providerNo"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">全登记号：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control" name="allId"/>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi"><la>箱号</la>：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control" name="boxId"/>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">采浆日期：</label>
+									<div class="input-group inhemog">
+										<div class="col-xs-5 advancol">
+											<input  class="form-control" name="startDate" id="startDate" readonly="readonly"/>
+										</div>
+										<div class="col-xs-1 advancolS">
+											--
+										</div>
+										<div class="col-xs-5 advancol">
+											<input  class="form-control" name="endDate" id="endDate" readonly="readonly"/>
+										</div>
+									</div>
+								</div> 
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">是否入库：</label>
+									<div class="input-group inhemog">
+										<select name="isStorage" class="form-control">
+											<option value="">请选择</option>
+											<option value="0">未入库</option>
+											<option value="1">已入库</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">血浆编号：</label>
+									<div class="input-group inhemog">
+										<input  class="form-control" name="plasmaNo"/>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">浆员类型：</label>
+									<div class="input-group inhemog">
+										<select name="type" class="form-control">
+											<option value="">请选择</option>
+											<option value="0">普通</option>
+											<option value="1">普免</option>
+											<option value="2">特免</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagoi">是否报废：</label>
+									<div class="input-group inhemog">
+										<select name="status" class="form-control">
+											<option value="">请选择</option>
+											<option value="0">正常</option>
+											<option value="1">报废</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row newrowseg">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr" style="">
+								<button type="button" class="btn  btn-info" id="query">查询</button>
+								<button type="button" class="btn  btn-info" id="rest">重置</button>
+								<shiro:hasPermission name="check:down">
+									<button type="button" class="btn  btn-info" id="export">导出到excel</button>
+								</shiro:hasPermission>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gray-bg">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row UserA">
+					<div class="col-xs-12">
+						<div class="ibox">
+							<div class="ibox-content" style="padding: 0;">
+								<div class="row form-horizontal">
+									<div class="col-xs-5 colikra" style="margin-left:-2em; width:28%">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4">浆员信息列表</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+					<div class="row busr">
+					<div class="col-md-12 bustrNew" style="margin: 0 !IMPORTANT;">
+						<table class="layui-table" id="stock" lay-filter="demo" style=" MARGIN-TOP: -2EM;"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<script th:src="@{/js/plasmaStock/query_stock_list.js}"></script>
+	</body>
+
+</html>

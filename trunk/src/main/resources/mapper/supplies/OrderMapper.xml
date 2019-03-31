@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.supplies.dao.OrderMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.fadl.supplies.entity.Order">
+		<id column="id" property="id" />
+		<result column="orderformId" property="orderformId" />
+		<result column="depotId" property="depotId" />
+		<result column="suppliesId" property="suppliesId" />
+		<result column="num" property="num" />
+		<result column="money" property="money" />
+		<result column="sumMoney" property="sumMoney" />
+		<result column="remarks" property="remarks" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, orderformId, depotId, suppliesId, num, money, sumMoney, remarks, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+	<!-- 订单审核列表 -->
+	<select id="queryOrderList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,oddNumber,paymentType,tp.status,tp.sumMoney,tp.remarks,tf.name as depot,tp.createDate FROM f_order_form tp
+		LEFT JOIN f_supplies_order tg
+		ON tp.id=tg.orderformId
+		LEFT JOIN f_depot tf
+		ON tg.depotId=tf.id
+		where (tp.status=0 or tp.status=1)
+		<if test="depotId!=null and depotId!=''">
+		and tg.depotId=#{depotId}
+		</if>
+		<if test="status!=null and status!=''">
+		and tp.status=#{status}
+		</if>
+		<if test="oddNumber!=null and oddNumber!=''">
+		and oddNumber LIKE CONCAT('%',#{oddNumber},'%')
+		</if>
+		<if test="startTime!=null and startTime!=''">
+		and DATE_FORMAT(tp.createDate,'%Y-%m-%d') &gt;=#{startTime}
+		</if>
+		<if test="endTime!=null and endTime!=''">
+		and DATE_FORMAT(tp.createDate,'%Y-%m-%d') &lt;=#{endTime}
+		</if>
+		GROUP BY oddNumber
+	</select>
+</mapper>

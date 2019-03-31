@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.immuneAssay.dao.ImmuneAssayMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.immuneAssay.entity.ImmuneAssay">
+        <id column="id" property="id" />
+        <result column="allId" property="allId" />
+        <result column="number" property="number" />
+        <result column="providerNo" property="providerNo" />
+        <result column="effectiveValue" property="effectiveValue" />
+        <result column="result" property="result" />
+        <result column="isAssay" property="isAssay" />
+        <result column="remarks" property="remarks" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="immuneId" property="immuneId" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, allId, number, providerNo, effectiveValue, result, createDate, updateDate, creater, updater,isAssay,remarks,immuneId, plasmaId
+    </sql>
+	
+	<!-- 免疫化验   特免化验（未化验） -->
+	<select id="specialNotAssay" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tp.id,tp.number,tp.providerNo,tk.name,tk.type,tj.immuneName,tp.oldImmuneId,tk.immuneRegisterId,tk.sex,tk.bloodType,tc.sampleNo,tp.isAssay,tg.imgUrl,tp.allId FROM f_immune_assay tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting tj
+		ON tp.oldImmuneId = tj.id
+		LEFT JOIN (SELECT id,providerNo,registriesNo,allId,sampleNo FROM f_provider_registries) tc
+		ON tp.providerNo=tc.providerNo  AND tp.allId=tc.allId
+		LEFT JOIN (SELECT imgId,imgUrl,type FROM f_plasma_image) tg
+		ON tc.id=tg.imgId AND tg.type=0
+		WHERE tp.isAssay=0 AND DATE_FORMAT(tp.updateDate,'%Y-%m-%d')=#{createDate}
+		ORDER BY number DESC
+	</select>
+	
+	<!-- 免疫化验   特免化验（已化验） -->
+	<select id="specialHaveAssay" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tp.id,tp.number,tp.providerNo,tk.name,tk.type,ts.immuneName as oldimmuneName,tp.oldImmuneId,tj.immuneName,tp.immuneId,tk.immuneRegisterId,tk.sex,tk.bloodType,tp.effectiveValue,tp.result,tc.sampleNo,tp.isAssay,tg.imgUrl,tp.allId FROM f_immune_assay tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting tj
+		ON tp.immuneId = tj.id
+		LEFT JOIN f_immune_setting ts
+		ON tp.oldImmuneId = ts.id
+		LEFT JOIN (SELECT id,providerNo,registriesNo,allId,sampleNo FROM f_provider_registries) tc
+		ON tp.providerNo=tc.providerNo  AND tp.allId=tc.allId
+		LEFT JOIN (SELECT imgId,imgUrl,type FROM f_plasma_image) tg
+		ON tc.id=tg.imgId AND tg.type=0
+		WHERE tp.isAssay=1 AND DATE_FORMAT(tp.updateDate,'%Y-%m-%d')=#{createDate}
+		ORDER BY number DESC
+	</select>
+	
+	<!-- 免疫化验(根据全登记号查询已献浆的浆员信息)(啊健) -->
+	<select id="queryImmuneTodayCollection" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT tp.id,tp.number,td.providerNo,td.name,td.sex,td.type,td.immuneId,tk.allId,td.immuneRegisterId,td.bloodType,tk.sampleNo,tg.imgUrl,tp.updater FROM f_immune_assay tp
+		INNER JOIN f_provider_baseinfo td	
+		ON tp.providerNo=td.providerNo
+		INNER JOIN (SELECT id,providerNo,registriesNo,allId,sampleNo FROM f_provider_registries WHERE allId=#{allId}) tk
+		ON tp.allId=tk.allId
+		INNER JOIN (SELECT imgId,imgUrl,type FROM f_plasma_image) tg
+		ON tk.id=tg.imgId and tg.type=0
+		WHERE tk.allId=#{allId}
+	</select>
+	<!-- 扫描器自动更新浆员信息 -->
+	<update id="updateAssayNumber" parameterType="java.lang.String">
+		update f_immune_assay SET number=#{number} WHERE allId=#{allId}
+	</update>
+	<!-- 判断是否扫面过 -->
+	<select id="queryScanningNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT * FROM f_immune_assay WHERE allId=#{allId}
+	</select>
+	<!-- 根据时间和卡号查询头部信息 -->
+	<select id="queryHeadInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,td.providerNo,td.name,td.sex,td.type,tp.oldImmuneId,td.immuneRegisterId,td.bloodType,tk.sampleNo,tg.imgUrl,tp.effectiveValue,tp.creater,tp.result,tp.remarks,tp.number,tp.allId FROM f_immune_assay tp
+		INNER JOIN f_provider_baseinfo td
+		ON tp.providerNo=td.providerNo
+		INNER JOIN (SELECT id,providerNo,registriesNo,allId,sampleNo FROM f_provider_registries) tk
+		ON tp.providerNo=tk.providerNo AND tp.allId=tk.allId
+		INNER JOIN (SELECT imgId,imgUrl,type FROM f_plasma_image) tg
+		ON tk.id=tg.imgId and tg.type=0
+		WHERE tp.providerNo=#{providerNo} AND tp.allId=#{allId}
+	</select>
+	<!-- 特免检测查询 -->
+	<select id="querySpecialImmune" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.providerNo,tk.name,tk.sex,tk.immuneRegisterId,tp.immuneId,td.immuneName,tp.updateDate,tp.effectiveValue,tp.result,tj.name admin FROM f_immune_assay tp
+		INNER JOIN f_provider_baseinfo tk
+		ON tp.providerNo=tk.providerNo
+		LEFT JOIN f_immune_setting td
+		ON tp.immuneId=td.id
+		LEFT JOIN f_admin tj
+		ON tp.updater = tj.id
+		where 1=1
+		<if test="result!=null and result!=''">
+		and tp.result=#{result}
+		</if>
+		<if test="name!=null and name!=''">
+		and tk.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="immuneId!=null and immuneId!=''">
+		and tp.immuneId=#{immuneId}
+		</if>
+		<if test="providerNo!=null and providerNo!=''">
+		and tp.providerNo LIKE CONCAT('%',#{providerNo},'%')
+		</if>
+		<if test="startDate!=null and startDate!=''">
+		AND DATE_FORMAT(tp.updateDate,'%Y-%m-%d') &gt;= #{startDate}
+		</if>
+		<if test="endDate!=null and endDate!=''">
+		AND DATE_FORMAT(tp.updateDate,'%Y-%m-%d') &lt;= #{endDate}
+		</if>
+		<if test="minValue!=null and minValue!=''">
+		AND tp.effectiveValue &gt;= #{minValue}
+		</if>
+		<if test="maxValue!=null and maxValue!=''">
+		AND tp.effectiveValue &lt;= #{maxValue}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="UTF-8" />
+		<title>血清电泳</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}" />
+		<!--bootstarp-->
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+		<link rel="stylesheet" th:href="@{/css/style.min862f.css?v=4.1.0}" />
+		<link rel="stylesheet" th:href="@{/css/common.css}" />
+		<link rel="stylesheet" th:href="@{/css/list/log.css}" />
+		<style type="text/css">
+			.newolod {padding-left: 35%;}
+	 
+			.gray-bg .wrapper .colnewo {padding-right: 0px;}
+			.layui-layer-content{color:#FFF}
+		</style>
+	</head>
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+		 
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion">
+						<div class="col-xs-9" id="basic">
+							<div class="row newregistr">
+								<div class="col-xs-4 colxsgray">
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi"><la>姓名</la>：</label>
+										<div class="input-group inhemog">
+											<input value="" id="name" name="name" title="" class="form-control newfrin" />
+										</div>
+									</div>
+									<div class="form-group newikrd">
+												<label class="control-label UserC"><ls style="    letter-spacing: 4px;  margin-right: -3px;">IC卡号</ls>：</label>
+										<div class="input-group inhemog">
+											<input  id="icNumber" name="icNumber" class="form-control newfrin" />
+										</div>
+									</div>
+									 
+								</div>
+								<div class="col-xs-4 colxsgray">
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi"><la>性别</la>：</label>
+										<div class="input-group inhemog">
+											<input value="" id="sex" title="" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi">献浆卡号：</label>
+										<div class="input-group inhemog">
+											
+											<input value="" id="providerNo" title="" name="providerNo" class="form-control newfrin" />
+										</div>
+									</div> 
+								</div>
+								<div class="col-xs-4 colxsgray">
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi"><la>血型</la>：</label>
+										<div class="input-group inhemog">
+											<input value="" id="bloodType" title="" class="form-control newfrin" />
+										</div>
+									</div> 
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi">发证日期：</label>
+										<div class="input-group inhemog">
+											<input  id="createDate" name="createDate" class="form-control newfrin" />
+										</div>
+									</div>
+								</div> 
+							</div> 
+						</div>
+						<div class="col-xs-3">
+							<div class="row newregistr">
+								<div class="layui-upload-list" style=" text-align: center;">
+									<img id="idCard" class="layui-upload-img" style="width: auto;  height: 10em;margin-top: -1em;" src="/img/new_pa1.png" />
+							</div>
+							</div> 
+						</div> 
+					</div>
+				<div class="row newrowseg" style="    margin-top: -4em;  margin-bottom: 0.5em;  float: left;   width: 100%;">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr" style="margin-left: 25%;">
+								<input type="hidden" id="id" name="id" />
+								<button type="button" class="btn  btn-info" id="add">添加</button>
+								<button type="button" class="btn  btn-info" id="confirm">确定</button>
+								<button type="button" class="btn  btn-info" id="update">修改</button>
+								<button type="button" class="btn  btn-info" id="delete">删除</button>
+								<button type="button" class="btn  btn-info" id="report">打印</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gray-bg" id="" style=" ">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row UserA" style=" ">
+					<div class="col-xs-12">
+						<div class="ibox">
+							<div class="ibox-content" style="padding: 0;">
+										<div class="row form-horizontal" style="  margin-top: 0.8em;">
+									<div class="col-xs-5 colikra" style=" margin-left:-2em ">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-4" style=" ">浆员信息列表</label>
+										</div>
+									</div>
+						 
+									<div class="col-xs-3">
+										<div class="form-group newformcol">
+											<label class="control-label UserCS" style=" WIDTH: 42%;">献浆卡号：</label>
+											<div class="input-group">	
+												<input  class="form-control newfrin" id="providerNo_query"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-3">
+										<div class="form-group newformcol">
+											<label class="control-label col-xs-5">日期</label>
+											<div class="input-group">
+												<input name="time" id="time" type="text" placeholder="工作日期" title="请输入工作日期" class="form-control"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-1">
+										<div class="form-group newformcol">
+											<div class="pull-right">
+												<button type="button" class="btn  btn-info" id="query">查询</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="row busr">
+				 
+					<div class="col-md-12 bustrNew">
+						<table class="layui-hide" id="electrophoresis" lay-filter="newtest_lay"></table>
+						<div class="row">
+							<div class="col-md-7 col-sm-12">
+								<div class="dataTables_paginate bootstrap_full_number">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/jquery.webcam.js}"></script>
+		<script th:src="@{/js/zoom.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<!--layer插件包-->
+		<script charset="utf-8" th:src="@{/layui-master/src/layui.js}"></script>
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/electrophoresis/electrophoresis.js}"></script>
+					<script th:src="@{/js/imgx.js}"></script>
+ 
+	<img src="" alt="" class="bigimg" />
+<div class="mask">
+	<img src="" alt="" />
+</div>
+	</body>
+
+</html>

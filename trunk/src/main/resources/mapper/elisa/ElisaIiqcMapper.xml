@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.elisa.dao.ElisaIiqcMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.elisa.entity.ElisaIiqc">
+        <id column="id" property="id" />
+        <result column="tciid" property="tciid" />
+        <result column="qcId" property="qcId" />
+        <result column="opAdmin" property="opAdmin" />
+        <result column="eiId" property="eiId" />
+        <result column="targetValue" property="targetValue" />
+        <result column="standardDeviation" property="standardDeviation" />
+        <result column="cv" property="cv" />
+        <result column="frameCV" property="frameCV" />
+        <result column="frameStandardDeviation" property="frameStandardDeviation" />
+        <result column="frameTargetValue" property="frameTargetValue" />
+        <result column="odValue" property="odValue" />
+        <result column="altValue" property="altValue" />
+        <result column="sDivideCO" property="sDivideCO" />
+        <result column="cutOffvalue" property="cutOffvalue" />
+        <result column="altFrameCV" property="altFrameCV" />
+        <result column="altFrameStandardDeviation" property="altFrameStandardDeviation" />
+        <result column="altFrameTargetValue" property="altFrameTargetValue" />
+        <result column="altTargetValue" property="altTargetValue" />
+        <result column="altStandardDeviation" property="altStandardDeviation" />
+        <result column="altCV" property="altCV" />
+        <result column="criticalResult" property="criticalResult" />
+        <result column="siMAX" property="siMAX" />
+        <result column="siMIN" property="siMIN" />
+        <result column="n2s" property="n2s" />
+        <result column="n3s" property="n3s" />
+        <result column="altSIMAX" property="altSIMAX" />
+        <result column="altSIMIN" property="altSIMIN" />
+        <result column="altN2S" property="altN2S" />
+        <result column="altN3S" property="altN3S" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tciid,qcId, opAdmin, eiId,targetValue, standardDeviation, cv, frameCV, frameStandardDeviation, frameTargetValue, odValue, altValue, sDivideCO, cutOffvalue,altFrameCV,
+        altFrameStandardDeviation,altFrameTargetValue,altTargetValue,altStandardDeviation,altCV,
+        criticalResult,siMAX,siMIN,n2s,n3s,altSIMAX,altSIMIN,altN2S,altN3S, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+	<select id="findByPageNo" resultType="com.fadl.common.DataRow" parameterType="com.fadl.common.DataRow">
+		SELECT ei.* ,fa.name,tci.testingMethodid,tci.projectName,tci.termOfValidity,ss.batchNumber,
+		fss.name AS ssName,qcss.batchNumber AS qcBatchNumber ,
+		qcfss.name AS qcName, qcss.expiryTime AS qcExpiryTime,
+		er.elisaEquipmentAndManufacturers, er.useWavelength, 
+		er.detectionUnit,	fc1.lable  as checkMethod,fc.lable as checkProjectName
+		FROM f_elisa_iiqc AS ei 
+		INNER JOIN f_elisa_info AS fei ON fei.id= ei.eiId
+		INNER JOIN f_test_config_info AS tci ON tci.id = ei.tciid
+		INNER JOIN f_config AS fc ON fc.value = tci.projectName AND fc.type =#{elisa_check_project}
+		INNER JOIN f_config AS fc1 ON fc1.value = tci.testingMethodid AND fc1.type =#{check_method}
+		INNER JOIN f_admin AS fa ON fa.id = ei.opAdmin
+		INNER JOIN f_supplies_outstock AS ss ON ss.id = tci.reagentBatch
+		INNER JOIN f_supplies_info AS si ON si.id = ss.suppliesId
+		INNER JOIN f_supplies_supply AS fss ON fss.id = si.supplyId
+		INNER JOIN f_supplies_stock AS qcss ON qcss.id = fei.qcId
+		INNER JOIN f_supplies_info AS qcsi ON qcsi.id = qcss.suppliesId
+		INNER JOIN f_supplies_supply AS qcfss ON qcfss.id = qcsi.supplyId
+	    INNER JOIN f_elisa_report AS er ON er.etId = fei.etId
+		WHERE fei.qcId = #{qcId}
+		AND fei.tciId = #{tciid}
+		ORDER BY ei.createDate
+		LIMIT #{stratRow},#{endRow}
+	</select>
+	<select id="findByPageNoCount" resultType="java.lang.Integer" parameterType="com.fadl.common.DataRow">
+		SELECT COUNT(1)
+		FROM f_elisa_iiqc AS ei 
+		INNER JOIN f_elisa_info AS fei ON fei.id= ei.eiId
+		INNER JOIN f_test_config_info AS tci ON tci.id = ei.tciid
+		INNER JOIN f_config AS fc ON fc.value = tci.projectName AND fc.type =#{elisa_check_project}
+		INNER JOIN f_config AS fc1 ON fc1.value = tci.testingMethodid AND fc1.type =#{check_method}
+		INNER JOIN f_admin AS fa ON fa.id = ei.opAdmin
+		INNER JOIN f_supplies_outstock AS ss ON ss.id = tci.reagentBatch
+		INNER JOIN f_supplies_info AS si ON si.id = ss.suppliesId
+		INNER JOIN f_supplies_supply AS fss ON fss.id = si.supplyId
+		INNER JOIN f_supplies_outstock AS qcss ON qcss.id = fei.qcId
+		INNER JOIN f_supplies_info AS qcsi ON qcsi.id = qcss.suppliesId
+		INNER JOIN f_supplies_supply AS qcfss ON qcfss.id = qcsi.supplyId
+	    INNER JOIN f_elisa_report AS er ON er.etId = fei.etId
+		WHERE fei.qcId = #{qcId}
+		AND fei.tciId = #{tciid}
+	</select>
+</mapper>

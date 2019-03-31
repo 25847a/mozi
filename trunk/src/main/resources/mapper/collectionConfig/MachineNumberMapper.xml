@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.collectionConfig.dao.MachineNumberMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.fadl.collectionConfig.entity.MachineNumber">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="status" property="status" />
+		<result column="plasmTypeId" property="plasmTypeId" />
+		<result column="type" property="type" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, status, plasmTypeId, type, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+	<select id="queryMachineNumberList" resultType="com.fadl.common.DataRow"  parameterType="java.util.Map">
+		SELECT fn.id,fn.name,fn.status,ft.name as plasmTypeId,
+		fn.type,fn.createDate,fn.updateDate FROM f_machine_number fn 
+		LEFT JOIN f_plasm_type ft ON fn.plasmTypeId=ft.id
+		LEFT JOIN f_room fr ON ft.roomId=fr.id
+		WHERE fn.isDelete=0
+		<if test="name!=null and name!='' ">
+			AND fn.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="roomId!=null and roomId!='' ">
+			AND fr.id=#{roomId}
+		</if>
+		<if test="PlasmTypeId!=null and PlasmTypeId!='' ">
+			AND ft.id=#{PlasmTypeId}
+		</if>
+	</select>
+	
+</mapper>

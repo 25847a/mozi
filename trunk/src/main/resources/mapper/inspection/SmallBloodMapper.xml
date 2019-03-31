@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.inspection.dao.SmallBloodMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.inspection.entity.SmallBlood">
+		<id column="id" property="id" />
+		<result column="allId" property="allId" />
+		<result column="providerNo" property="providerNo" />
+		<result column="isCollection" property="isCollection" />
+		<result column="type" property="type" />
+		<result column="isSendOff" property="isSendOff" />
+		<result column="sendPerson" property="sendPerson" />
+		<result column="isIdentity" property="isIdentity" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, providerNo, isCollection, type,isSendOff,sendPerson, isIdentity, createDate,
+		updateDate,
+		creater, updater, plasmaId
+	</sql>
+	<select id="queryListByCreateDateAndIsCollection"
+		resultType="com.fadl.common.DataRow">
+
+		SELECT sb.*, pb.name, pb.sex, pr.registriesNo, pb.type AS pbType,
+		pb.bloodType,
+		pb.icNumber , pr.plasmaType ,  (select count(pc1.id) from f_plasm_collection AS
+		pc1
+		WHERE
+		pc1.providerNo = sb.providerNo ) AS scount FROM f_small_blood AS
+		sb INNER
+		JOIN
+		f_provider_baseinfo AS pb ON sb.providerNo = pb.providerNo
+		INNER
+		JOIN
+		f_provider_registries as pr ON sb.allId = pr.allId
+		WHERE
+		sb.updateDate BETWEEN #{startTime} AND #{endTime}
+		<if test="isCollection != null ">
+			AND sb.isCollection = #{isCollection}
+		</if>
+		<if test="providerNo != null and providerNo!=''">
+		AND sb.providerNo=#{providerNo}
+		</if>
+		ORDER BY sb.isSendOff
+	</select>
+	<!-- 根据日期,浆员卡号查询查询采小血的id,采浆次数(啊健) -->
+	<select id="querySmallBloodHeadInfo"
+		resultType="com.fadl.common.DataRow">
+		SELECT sb.id,(select count(pc1.id) from f_plasm_collection AS pc1
+		WHERE pc1.providerNo = sb.providerNo AND pc1.allId=sb.allId) AS scount FROM f_small_blood AS sb
+		WHERE sb.allId=#{allId} AND sb.providerNo=#{providerNo} AND sb.isCollection = 0
+	</select>
+	<select id="querySmallBloodByEntity"
+		resultType="com.fadl.common.DataRow">
+		SELECT sb.*, pb.name, pb.sex,
+		pb.type AS pbType,
+		pb.bloodType,pimg.imgUrl,pb.imagez,pb.photo,
+		pb.icNumber FROM f_small_blood AS sb 
+		INNER JOIN f_provider_baseinfo AS pb ON sb.providerNo = pb.providerNo
+		INNER JOIN f_provider_registries AS pr ON sb.allId = pr.allId
+		INNER JOIN f_plasma_image AS pimg ON pimg.imgId=pr.id AND pimg.type=0
+		AND sb.id = #{id}
+	</select>
+	
+		<!-- 根据修改时间查询送样的报表记录 -->
+	<select id="querySendInfosByUpdateDate" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT sc.*, pb.sex,pb.name,cc.lable, ad.name as adName FROM 
+		f_small_blood AS sc 
+		LEFT JOIN f_provider_baseinfo AS pb ON pb.providerNo = sc.providerNo
+		LEFT JOIN f_blood_red_protein_content AS brpc ON brpc.allid = sc.allid
+		LEFT JOIN f_config AS cc ON cc.type = 'cuso_config' AND cc.value = brpc.resultId
+		LEFT JOIN f_admin AS ad ON ad.id = sc.updater
+		WHERE sc.isSendOff = 1 AND TO_DAYS(sc.updateDate) = TO_DAYS(#{updateDate});
+	</select>
+
+	<update id="updateWithCollection">
+		UPDATE f_small_blood SET
+		isCollection=#{isCollection}
+		WHERE id=#{id}
+	</update>
+
+</mapper>

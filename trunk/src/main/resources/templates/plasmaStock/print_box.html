@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+		<meta charset="UTF-8" />
+		<title>打印装箱条码</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+	</head>
+	<body>
+		<!-- <div class="row newrowseg">
+			<div class="col-xs-12 colx8 colnewo">
+				<div class="row newregis indegirtion" style="margin-left: 30%;">
+					<label style="float: left;">箱号</label>
+					<input  class="form-control newfrin" style="width: 50%" id="boxId"/>
+				</div>
+				<div class="form-group newikrd">
+					<div class="input-group newInpa butnewikr" style="margin-left: 40%;">
+						<button type="button" class="btn  btn-info" id="print">打印</button>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+				<!--基本信息及验证-->
+				<div class="col-xs-12 colx8 colnewo"> 
+					<div class="row newregis" style=" border-bottom: 0px solid #e7e7e7 !important;" id="basic"> 
+						<div class="row newregistr">
+							<div class="col-xs-9 colxsgray"> 
+								<div class="form-group newikrd">
+									<label class="control-label UserC" style="float: left;    line-height: 2.5em;"><la>箱号</la>：</label>
+									<div class="input-group">
+											<input  class="form-control newfrin"  id="start"/>-
+											<input  class="form-control newfrin"  id="end"/>
+									</div>
+								</div> 
+							</div>
+							 <div class="col-xs-2 colxsgray"> 
+							 <div class="form-group newikrd">
+					<div class="input-group newInpa butnewikr" style="margin-left: 40%;">
+						<button type="button" class="btn  btn-info" id="print">打印</button>
+					</div>
+				</div>
+							 	</div>
+						</div>
+					</div>
+					 
+				</div>
+		 
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<script th:src="@{/js/plasmaStock/print_box.js}"></script>
+	</body>
+</html>

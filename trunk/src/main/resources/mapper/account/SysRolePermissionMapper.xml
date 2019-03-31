@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.account.dao.SysRolePermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.account.entity.SysRolePermission">
+        <id column="id" property="id" />
+        <result column="roleId" property="roleId" />
+        <result column="permissionId" property="permissionId" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, roleId, permissionId, plasmaId
+    </sql>
+    <!-- 根据当前角色查询拥有权限，授权处初始化角色权限 -->
+    <select id="queryRolePermissionList" resultType="java.lang.String" parameterType="java.util.List">
+        select permission from f_sys_role_permission fsrp
+        left join f_sys_permission  fsp
+        on fsrp.permissionId=fsp.id where fsrp.roleId in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+         #{item}
+      </foreach>
+    </select>
+    <!-- 批量插入权限 -->
+    <insert id="insertRolePermission" parameterType="java.util.List">
+        insert into f_sys_role_permission (roleId,permissionId) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.roleId},#{item.permissionId})
+        </foreach>
+    </insert>
+</mapper>

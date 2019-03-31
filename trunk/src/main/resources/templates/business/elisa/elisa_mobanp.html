@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+
+<head>
+<meta charset="UTF-8" />
+<title>模板配置</title>
+<link th:href="@{/layui-master/src/css/layui.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap.min14ed.css?v=3.3.6}" rel="stylesheet" />
+<link th:href="@{/css/font-awesome.min93e3.css?v=4.4.0}"
+	rel="stylesheet" />
+<link th:href="@{/css/fileinput.min.css}" rel="stylesheet" />
+<link rel="stylesheet" th:href="@{/css/icheck-bootstrap.css}" />
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+<link th:href="@{/css/style.min862f.css}" rel="stylesheet" />
+<style type="text/css">
+.newolod {
+	padding-left: 35%;
+}
+#newpray .busr{margin-left: -10px !important;}
+#tdata tr td input{width:100% !important;}
+button[disabled]{    background-color: #c2c2c2 !important;
+    border-color: #c2c2c2 !important;
+    opacity: 1;
+    color: #5d5d5d;}
+#newpray .gray-bg .colx8 .inhenagois {
+	width: auto !important;
+}
+.newikrd .butnewikr button{margin-left: 1%;}
+.newregistr {
+	margin-left: 1%;
+}
+
+.ralckr .layui-table .layui-table-cell {
+	height: 19px;
+	font-size: 12px;
+	line-height: 19px;
+}
+
+.newrowseg {
+	margin: inherit;
+}
+
+.btn-info {
+	padding: 0.3em 5%;
+	font-size: 13px;
+}
+
+#budjad .input-group {
+	margin-right: 1%;
+}
+
+#newpray .gray-bg .colx8 .UserC {
+	font-size: 12px
+}
+.wrapper .newikrd .inhemog{width: 63% !important;}
+#moeban .layui-table-view {
+	margin: 0
+}
+
+.col-md-12 {
+	padding: inherit;
+}
+
+.layui-table tr td {
+	padding: 3px 1px;
+}
+</style>
+</head>
+
+<body id="newpray" class="elisda">
+<form id="addFrom">
+	<input type="hidden" id="id" name="id"/>
+	<input type="hidden" id="etvs" name="etvs"/>
+	<input type="hidden" id="apiId" name="apiId"/>
+	<div class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight weralid"
+			style="">
+			<div class="col-xs-12 colx8 colnewo">
+				<div class="mobanpr">
+					<label class="moad0"> <input type="radio" name="vehicle" value="0" checked="checked"/> 标准(STD) </label> 
+					<label class="moad1"> <input type="radio" name="vehicle" value="1" /> 样品(SMP) </label>
+					<label class="moad2"> <input type="radio" name="vehicle" value="2" /> 阳性对照(PC) </label> 
+					<label class="moad3"> <input type="radio" name="vehicle" value="3" />阳性对照II(PCII) </label>
+					<label class="moad4"> <input type="radio" name="vehicle" value="4" />阴性对照(NC) </label> 
+					<label class="moad5"> <input type="radio" name="vehicle" value="5" />质检(QC) </label> 
+					<label class="moad6"> <input type="radio" name="vehicle" value="6" />空白(BLK) </label>
+					<label class="moad11"> <input type="radio" name="vehicle" value="7" />无 </label>
+				</div>
+				<div class="moabkr">
+					<div class="col-xs-3 colxsgray" style="width: 13%;">
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagois">项目代号 ：</label>
+							<div class="input-group inhemog">
+								<select name="projectName" id="projectName" class="form-control" onchange="initTable();">
+								</select>
+								
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-1 colxsgray" style="width: 5%;">
+						<div class="form-group newikrd">
+							<select class="form-control buse" id="arrangement" name="arrangement">
+											<option value="0">横向</option>
+											<option value="1">纵向</option>
+										</select>
+						</div>
+					</div>
+					<div class="col-xs-1 colxsgray" style="width: 6%;">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr" >
+								<button type="button" class="btn  btn-info" id="ealoshemb" >设置</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div class="gray-bg" id="" style="padding: initial">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row busr">
+					<div class="col-md-12 bustrNew ralckr" id="elsia">
+						<div class="layui-form">
+							<table class="layui-table" >
+								<thead>
+									<tr>
+										<th>@</th>
+										<th>1</th>
+										<th>2</th>
+										<th>3</th>
+										<th>4</th>
+										<th>5</th>
+										<th>6</th>
+										<th>7</th>
+										<th>8</th>
+										<th>9</th>
+										<th>10</th>
+										<th>11</th>
+										<th>12</th>
+									</tr>
+								</thead>
+								<tbody id="tdata">
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="gray-bg" style="padding: 1.5em 0 0.8em 0 !important;">
+		<div class="wrapper wrapper-content animated fadeInRight weralid">
+			<div class="col-xs-12 colx8 colnewo">
+				<div class="moabkr">
+					<div class="col-xs-3 colxsgray">
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagois">Cutoff值计算公式：</label>
+							<div class="input-group inhemog" style="width:53% !important;">
+								<input value=" " title="" id="cutoffFormula" name="cutoffFormula" class="form-control newfrin" />
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-3 colxsgray">
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagois"><ls>模板名</ls>：</label>
+							<div class="input-group inhemog">
+								<input value=" " title="" id="templateName" name="templateName" class="form-control newfrin"  style="width: 75%;"/>
+								<select name="templateNameT" id="templateNameT" class="form-control" onchange="init(); "  style="width: 24% !important;">
+							
+								</select>
+								 
+							</div>
+							
+						</div> 
+					</div>
+					
+					<div class="col-xs-3 colxsgray" >
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagois">检测项目：</label>
+							<div class="input-group inhemog">
+								 <select name="projectId" id="projectId" class="form-control" onchange="initSupplies()">
+								</select>
+							</div>
+							
+						</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagois">使用试剂：</label>
+							<div class="input-group inhemog">
+								 <select name="reagentId" id="reagentId" class="form-control" >
+								</select>
+							</div>
+							
+						</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagois">使用质控品：</label>
+							<div class="input-group inhemog">
+								 <select name="qcId" id="qcId" class="form-control" >
+								</select>
+							</div>
+							
+						</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+						<div class="form-group newikrd">
+							<label class="control-label UserC inhenagois">自动化仪器使用：</label>
+							<div class="input-group inhemog">
+								 <select name="isAuto" id="isAuto" class="form-control" >
+								 	<option value ="0">否</option>
+								 	<option value ="1">是</option>
+								</select>
+							</div>
+							
+						</div>
+							</div>
+					<div class="col-xs-3 colxsgray">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr"
+								style="margin: initial;     width: 100% !important;">
+								<shiro:hasPermission name="etemp:save">
+								<button type="submit" class="btn  btn-info" id="">保存</button>
+								</shiro:hasPermission>
+								<button type="button" class="btn  btn-info" id="resetFrom">还原</button>
+								<button type="button" class="btn  btn-info" id="cleanUp">清除</button>
+								<shiro:hasPermission name="etemp:delete">
+								<button type="button" class="btn  btn-info" id="delById">删除</button>
+								</shiro:hasPermission>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="gray-bg">
+		<div class="wrapper wrapper-content animated fadeInRight weralid">
+			<!--基本信息及验证-->
+			<div class="col-xs-12 colx8 colnewo">
+				<div class="row newregis indegirtion">
+					<div class="row newrowseg">
+						<div class="col-xs-3 coload" style="width: 35%;">
+							<div class="coloadDi mobang" style="width: 100% !important;">
+								<div class="newIdr">计量方式设置</div>
+								<div class="form-group">
+									<div class="radiojia boaroe">
+										<label class="bordlaer">
+											<div class="radioloa roamobd rliarormo">
+
+												<div class="radio icheck-success">
+													<input type="radio" id="default4" class="optionsValue" name="elisaMeasurementMethod.optionsValue" checked="checked" value="0"/> <label
+														for="default4">定性</label>
+												</div>
+											</div>
+										</label> <label class="bordlaer">
+											<div class="radioloa roamobd rliarormo">
+												<div class="radio icheck-success">
+													<input type="radio" id="default5" class="optionsValue" name="elisaMeasurementMethod.optionsValue" value="1"/> <label
+														for="default5">半定量</label>
+												</div>
+											</div>
+										</label> <label class="bordlaer">
+											<div class="radioloa roamobd rliarormo">
+												<div class="radio icheck-success">
+													<input type="radio" id="default6" class="optionsValue" name="elisaMeasurementMethod.optionsValue" value="2"/> <label
+														for="default6">标准曲线</label>
+												</div>
+											</div>
+										</label> <label class="bordlaer">
+											<div class="radioloa roamobd rliarormo">
+												<div class="radio icheck-success">
+													<input type="radio" id="default7" class="optionsValue" name="elisaMeasurementMethod.optionsValue" value="3"/> <label
+														for="default7">线性拟合</label>
+												</div>
+											</div>
+										</label> <label class="bordlaer">
+											<div class="radioloa roamobd rliarormo">
+												<div class="radio icheck-success">
+													<input type="radio" id="default8" class="optionsValue" name="elisaMeasurementMethod.optionsValue"  value="4"/> <label
+														for="default8">多项式拟合</label>
+												</div>
+											</div>
+										</label>
+									</div>
+									<div class="tablejia">
+										<div class="col-md-12 bustrNews ralckr" id="moeban">
+											<div class="rdadiv">
+												<p class="raipcl">
+													<span>编号</span><span>值</span>
+												</p>
+												<p>
+													<span>STD1</span><input type="text" class="emmstd" id="std1" name="elisaMeasurementMethod.std1" value=""/>
+												</p>
+												<p>
+													<span>STD2</span><input type="text" class="emmstd" id="std2" name="elisaMeasurementMethod.std2" value=""/>
+												</p>
+												<p>
+													<span>STD3</span><input type="text" class="emmstd" id="std3" name="elisaMeasurementMethod.std3" value=""/>
+												</p>
+												<p>
+													<span>STD4</span><input type="text" class="emmstd" id="std4" name="elisaMeasurementMethod.std4" value=""/>
+												</p>
+												<p>
+													<span>STD5</span><input type="text" class="emmstd" id="std5" name="elisaMeasurementMethod.std5" value=""/>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-7 coload" style="width: 64.333333%">
+							<div class="coloadDi mobang">
+								<div class="newIdr">灰区设置</div>
+								<div class="form-group">
+									<div class="radiojia joiaka" style="width: 100%">
+										<label>
+											<div class="radioloa roamobd">
+												<div class="radio icheck-success">
+													<input type="radio" id="default1" class="egaOptionsValue" name="elisaGrayAreaSettings.optionsValue"  value="1"
+														checked="checked" /> <label for="default1">比例</label>
+												</div>
+											</div>
+											<div class="input-group inhemog chrainput">
+												<input value="" id="proportionValue" name="elisaGrayAreaSettings.proportionValue" title="" class="form-control" />
+											</div> <span>Cutoff值*(1-比例值)&lt;=&gt;Cutoff值</span><span id="showSpan1" style="display: none;">*(1+比例值)</span>
+										</label> <label>
+											<div class="radioloa roamobd">
+												<div class="radio icheck-success">
+													<input type="radio" id="default2" class="egaOptionsValue" name="elisaGrayAreaSettings.optionsValue" value="0" /> <label
+														for="default2">常规</label>
+												</div>
+											</div>
+											<div class="input-group inhemog chrainput">
+												<input  name="elisaGrayAreaSettings.conventionalValue" id="conventionalValue" class="form-control" />
+											</div> <span>Cutoff值-灰区值&lt;=&gt;Cutoff值</span><span id="showSpan2" style="display: none;">+灰区值</span>
+										</label> <label>
+											<div class="radioloa roamobd">
+												<div class="radio icheck-success">
+													<input type="radio" id="default3" class="egaOptionsValue" name="elisaGrayAreaSettings.optionsValue"  value="2"/> <label
+														for="default3">定值</label>
+												</div>
+											</div>
+											<div class="input-group inhemog chrainput" style="width: 28.8%;">
+												<div class="col-xs-5 advancol">
+													<input  id="gasMinValue" name="elisaGrayAreaSettings.minValue" class="form-control" />
+												</div>
+												<div class="col-xs-1 advancolS">--</div>
+												<div class="col-xs-5 advancol">
+													<input  id="gasMaxValue" name="elisaGrayAreaSettings.maxValue" class="form-control" />
+												</div>
+											</div> <span>最小值&lt;=&gt;最大值</span>
+										</label>
+									</div>
+									<label class="bordlaer" style="float: right;">
+										<div class="radioloa roamobd rliarormo">
+											<div class="checkbox icheck-success">
+												<input type="checkbox" checked="checked" id="isMaxWithCutOff" name="elisaGrayAreaSettings.isMaxWithCutOff" value="1"  /> <label for="isMaxWithCutOff">上限为Cutoff值</label>
+											</div>
+										</div>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row newrowseg" style="margin-top: 2em">
+						<div class="col-xs-4 coload" style="width: 35%;">
+							<div class="coloadDi mobang">
+								<div class="newIdr">报表配置</div>
+								<div class="form-group">
+									<div class="tablejiaS">
+										<div class="col-md-12 bustrNews ralckr" id="moeban">
+											<div class="rdadivsd">
+													<p class="raipcl"><span>名称</span><span>值</span></p>
+													<div class="radispan">
+													<p><span>报表签名</span><input type="text" id="elisaReport_reportSignature" name="elisaReport.reportSignature" value=""/></p>
+													<p><span>报表名称</span><input id="elisaReport_reportName" name="elisaReport.reportName" type="text" value=""/></p>
+													<p><span>报表编号</span><input id="elisaReport_reportNO" name="elisaReport.reportNO" type="text" value=""/></p>
+													<p><span>送检单位</span><input id="elisaReport_inspectionUnit" name="elisaReport.inspectionUnit" type="text" value=""/></p>
+													<p><span>送检标本</span><input id="elisaReport_inspectionSpecimen" name="elisaReport.inspectionSpecimen" type="text" value=""/></p>
+													<p><span>检测单位</span><input id="elisaReport_detectionUnit" name="elisaReport.detectionUnit" type="text" value=""/></p>
+													<p><span>酶标仪型号及厂家</span><input id="elisaReport_elisaEquipmentAndManufacturers" name="elisaReport.elisaEquipmentAndManufacturers" type="text" value=""/></p>
+													<p><span>洗板机型号及厂家</span><input id="elisaReport_cleaningEquipmentAndManufacturers" name="elisaReport.cleaningEquipmentAndManufacturers" type="text" value=""/></p>
+													<p><span>质控品批号</span><input id="elisaReport_qualityControlProducts" name="elisaReport.qualityControlProducts" type="text" value=""/></p>
+													<p><span>使用波长</span><input id="elisaReport_useWavelength" name="elisaReport.useWavelength" type="text" value=""/></p>
+													<p><span>结果判断</span><input id="elisaReport_criticalResult" name="elisaReport.criticalResult" type="text" value=""/></p>
+													<p><span>质控记录编号</span><input id="elisaReport_qualityControlNO" name="elisaReport.qualityControlNO" type="text" value=""/></p>
+													<p><span>生效日期</span><input id="elisaReport_effectiveDate" name="elisaReport.effectiveDate" type="text" value=""/></p>
+												</div>
+												</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-7 coload" style="width: 64.333333%">
+							<div class="coloadDi mobang"
+								style="margin-bottom: 2em; padding: 1.5em 0 0 1em !important;">
+								<div class="newIdr">
+									<label class="bordlaer">
+										<div class="radioloa roamobd rliarormo">
+											<div class="checkbox icheck-success">
+												<input type="checkbox" checked="checked" id="useNegativeThreshold" name="elisaCommonSetting.useNegativeThreshold" value="1"/> <label
+													for="useNegativeThreshold">使用阴性阈值</label>
+											</div>
+										</div>
+									</label>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-4 joiaka mobandre">
+										<label>
+											<div class="radioloa">阴性阈值:</div>
+											<div class="input-group inhemog chrainput mobinputS">
+												<input  class="form-control" id="negativeThresholdValue" name="elisaCommonSetting.negativeThresholdValue" />
+											</div>
+										</label>
+									</div>
+									<div class="col-xs-8 joiaka mobandre">
+										<label>
+											<div class="radioloa">上限:</div>
+											<div class="input-group inhemog chrainput mobinput">
+												<select name="elisaCommonSetting.negativeMaxOperator" id="elisaCommonSetting_negativeMaxOperator" class="form-control miaderlS">
+													<option value="0">大于</option>
+													<option value="1">大于等于</option>
+												</select> <select name="elisaCommonSetting.negativemaxValue" id="negativemaxValue" class="form-control miaderl" onchange="showText(this,'ecsnegativemaxValue')">
+													<option value="1000">使用阴性平均值</option>
+													<option value="0">使用指定固定值</option>
+												</select> <input  name="elisaCommonSetting.ecsnegativemaxValue" id="ecsnegativemaxValue" class="form-control miaderla" style="display: none;"/>
+											</div>
+										</label>
+									</div>
+									<div class="col-xs-12 joiaka mobandre">
+										<label>
+											<div class="radioloa">
+												<sur style="letter-spacing: 16px;margin-right: -23px; margin-left: -2px;">
+												下限 </sur> :
+											</div>
+											<div class="input-group inhemog chrainput mobinput">
+												<select name="elisaCommonSetting.negativeMinOperator" id="elisaCommonSetting_negativeMinOperator" class="form-control miaderlS">
+													<option value="0">小于</option>
+													<option value="1">小于等于</option>
+												</select> <select name="elisaCommonSetting.negativeMinValue" id="negativeMinValue" class="form-control miaderl" onchange="showText(this,'ecsnegativeMinValue')">
+													<option value="1000">使用阴性平均值</option>
+													<option value="0">使用指定固定值</option>
+												</select> <input  name="elisaCommonSetting.ecsnegativeMinValue" id="ecsnegativeMinValue" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="coloadDi mobang"
+								style="padding: 1.5em 0 0 1em !important;">
+								<div class="newIdr">
+									<label class="bordlaer">
+										<div class="radioloa roamobd rliarormo">
+											<div class="checkbox icheck-success">
+												<input type="checkbox" id="usePositiveThreshold" name="elisaCommonSetting.usePositiveThreshold" value="1"/> <label
+													for="usePositiveThreshold">使用阳性阈值</label>
+											</div>
+										</div>
+									</label>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-4 joiaka mobandre">
+										<label>
+											<div class="radioloa">阳性阈值:</div>
+											<div class="input-group inhemog chrainput mobinputS">
+												<input  id="positiveThresholdValue" class="form-control" name="elisaCommonSetting.positiveThresholdValue"/>
+											</div>
+										</label>
+									</div>
+									<div class="col-xs-8 joiaka mobandre">
+										<label>
+											<div class="radioloa">上限:</div>
+											<div class="input-group inhemog chrainput mobinput">
+												<select name="elisaCommonSetting.positiveMaxOperator" id="elisaCommonSetting_positiveMaxOperator" class="form-control miaderlS" >
+													<option value="0">大于</option>
+													<option value="1">大于等于</option>
+												</select> 
+												<select name="elisaCommonSetting.positiveMaxValue" id="positiveMaxValue" class="form-control miaderl" onchange="showText(this,'ecspositiveMaxValue')">
+													<option value="1000">使用阳性平均值</option>
+													<option value="0">使用指定的固定值</option>
+												</select> 
+												<input  id="ecspositiveMaxValue" name="elisaCommonSetting.ecspositiveMaxValue" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label>
+									</div>
+									<div class="col-xs-12 joiaka mobandre">
+										<label>
+											<div class="radioloa">
+												<sur style="letter-spacing: 16px;margin-right: -23px; margin-left: -2px;">
+												下限 </sur> :
+											</div>
+											<div class="input-group inhemog chrainput mobinput">
+												<select name="elisaCommonSetting.positiveMinOperator" id="elisaCommonSetting_positiveMinOperator" class="form-control miaderlS">
+													<option value="0">小于</option>
+													<option value="1">小于等于</option>
+												</select> <select name="elisaCommonSetting.positiveMinValue" id="positiveMinValue" class="form-control miaderl" onchange="showText(this,'ecspositiveMinValue')">
+													<option value="1000">使用阳性平均值</option>
+													<option value="0">使用指定的固定值</option>
+												</select> <input  id="ecspositiveMinValue" name="elisaCommonSetting.ecspositiveMinValue" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row newrowseg" style="margin-top: 2em">
+
+						<div class="col-xs-12 coload">
+							<div class="coloadDi mobang"
+								style="padding: 1.5em 0 0 1em !important;">
+								<div class="newIdr">
+
+									<label class="bordlaer">
+										<div class="radioloa roamobd rliarormo">
+											<div class="checkbox icheck-success">
+												<input type="checkbox" id="detectionEffectiveness" name="elisaCommonSetting.detectionEffectiveness" value="" /> <label for="detectionEffectiveness">检测有效性</label>
+											</div>
+										</div>
+									</label>
+								</div>
+								<div class="form-group">
+									<div class="col-xs-4 joiaka mobandre">
+										<label>
+											<div class="radioloa sizemoba">阴性均值：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.negativeMeanOperator" id="negativeMeanOperator" class="form-control miaderl" onchange="showText(this,'negativeMeanValue')">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select> <input value="" name="elisaCommonSetting.negativeMeanValue" id="negativeMeanValue" title="" style="display: none;"  class="form-control miaderla" />
+											</div>
+										</label> <label>
+											<div class="radioloa sizemoba">阴性孔值：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.negativeHoleOperator" id="negativeHoleOperator" class="form-control miaderl" onchange="showText(this,'negativeHoleValue')">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select> <input value="" name="elisaCommonSetting.negativeHoleValue" id="negativeHoleValue" title="" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label> <label>
+										<div class="radioloa sizemrigt" style="letter-spacing: 2px;  margin-right">阳性II均值：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.positive2MeanOperator" id="positive2MeanOperator" class="form-control miaderl" onchange="showText(this,'positive2MeanValue')">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select>
+												<input value="" name="elisaCommonSetting.positive2MeanValue" id="positive2MeanValue" title="" class="form-control miaderla" style="display: none;" />
+											
+											</div>
+										</label>
+									</div>
+
+									<div class="col-xs-4 joiaka mobandre">
+										<label>
+											<div class="radioloa sizemoba">阳性均值：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.positiveMeanOperator" id="positiveMeanOperator" class="form-control miaderl" onchange="showText(this,'positiveMeanValue')">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select> 
+												<input value="" name="elisaCommonSetting.positiveMeanValue" id="positiveMeanValue" title="" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label> <label>
+											<div class="radioloa sizemoba">阳性孔值：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.positiveHoleOperator" id="positiveHoleOperator" class="form-control miaderl" onchange="showText(this,'positiveHoleValue')">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select> 
+												<input value="" name="elisaCommonSetting.positiveHoleValue" id="positiveHoleValue" title="" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label> <label>
+												<div class="radioloa sizemrigt" style="letter-spacing: 2px;  margin-right">阳性II孔值：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.positive2HoleOperator" id="positive2HoleOperator" class="form-control miaderl" onchange="showText(this,'positive2HoleValue')">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select> <input value="" name="elisaCommonSetting.positive2HoleValue" id="positive2HoleValue" title="" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label>
+									</div>
+
+									<div class="col-xs-4 joiaka mobandre">
+										<label>
+											<div class="radioloa sizemobaf" style="letter-spacing: 24px !important;    margin-right: -24px !important;">R方：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.R" class="form-control miaderl" disabled="disabled">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select> 
+											</div>
+										</label> <label>
+											<div class="radioloa sizemoba">空白均值：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.blankMeanOperator" id="blankMeanOperator" class="form-control miaderl" onchange="showText(this,'blankMeanValue')">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select> <input value="" id="blankMeanValue" name="elisaCommonSetting.blankMeanValue" title="" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label> <label>
+											<div class="radioloa sizemoba">空白孔值：</div>
+											<div class="input-group inhemog chrainput mobinput elisamoban">
+												<select name="elisaCommonSetting.blankHoleOperator" id="blankHoleOperator" class="form-control miaderl" onchange="showText(this,'blankHoleValue')">
+													<option value="1000">无</option>
+													<option value="1">大于</option>
+													<option value="2">大于等于</option>
+													<option value="3">小于</option>
+													<option value="4">小于等于</option>
+												</select> <input value="" id="blankHoleValue" name="elisaCommonSetting.blankHoleValue" title="" class="form-control miaderla" style="display: none;" />
+											</div>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+	<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery-form.js}"></script>
+	<!--  jQuery Validation plugin javascript -->
+	<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+	<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<!--bootstarp表格插件-->
+	<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}"></script>
+	<!--mbb酶标板JS-->
+	<script th:src="@{/js/business/elisa/elisa_mobanp.js}"></script>
+</body>
+
+</html>

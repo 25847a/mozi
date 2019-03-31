@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.collectionDetail.dao.PlasmCollectionDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.collectionDetail.entity.PlasmCollectionDetail">
+        <id column="id" property="id" />
+        <result column="collectionId" property="collectionId" />
+        <result column="num" property="num" />
+        <result column="speed" property="speed" />
+        <result column="amount" property="amount" />
+        <result column="returnSpeed" property="returnSpeed" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, collectionId, num, speed, amount, returnSpeed, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+</mapper>

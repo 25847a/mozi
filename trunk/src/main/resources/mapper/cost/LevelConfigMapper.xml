@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.cost.dao.LevelConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.cost.entity.LevelConfig">
+        <id column="id" property="id" />
+        <result column="level" property="level" />
+        <result column="proportion" property="proportion" />
+        <result column="people" property="people" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, level, proportion, people, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+    
+    <!-- 邀请设置to绑定信息列表（条件查询） -->
+    <select id="queryLevelConfigList" parameterType="java.util.Map" resultType="com.fadl.common.DataRow">
+    	select config.id,config.level,config.proportion,config.people,config.num,config.createDate,config.updateDate,admin.`name` as creater,ad.`name` as updater from f_level_config config
+		INNER JOIN f_admin admin ON config.creater = admin.id 
+		INNER JOIN f_admin ad on config.updater = ad.id where 1=1
+    	<if test="creater != null and creater != '' ">and admin.`name` LIKE CONCAT('%',#{creater},'%')</if>
+    	<if test="level != null and level!='' ">and config.level = #{level}</if>
+    </select>
+    
+    <!-- *************************************邀请绑定****************************************************** -->
+    
+    <!-- 绑定信息列表查询列 -->
+	<select id="queryBindMsgList" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from v_bind_list where 1=1 
+		<if test="invited!=null and invited!='' ">and providerNo = #{invited}</if>
+		<!-- <if test="startDate!=null and startDate!='' ">and inviteDate &gt; #{startDate}</if>
+		<if test="endDate!=null and endDate!='' ">and inviteDate &lt; #{endDate}</if> -->
+		<if test="inviter!=null and inviter!='' ">and num = #{inviter}</if>
+	</select>
+	
+	<!-- 费用管理 to 邀请绑定to解绑 -->
+	<update id="unbind" parameterType="java.lang.Long">
+		update f_detailed_info set inviteId = null,inviteType = null,inviteDate = null where id = #{id}
+	</update>
+	
+	<!-- 当邀请人类型为0时，查询浆员基本信息表，并根据邀请人身份证号码查询主键id -->
+	<select id="queBaseIdByIDNo" parameterType="java.lang.String" resultType="java.lang.Long">
+		select id from f_provider_baseinfo where idNo = #{IDNo}	
+	</select>
+	
+	<!-- 当邀请人类型为1时，查询宣传员表，并根据邀请人身份证号码查询主键id -->
+	<select id="quePropIdByIDNo" parameterType="java.lang.String" resultType="java.lang.Long">
+		select id from f_propagandist where idNo = #{IDNo}	
+	</select>
+	
+	<!-- 根据id确定浆员详细信息表具体修改那一条记录 -->
+	<update id="addBind" parameterType="java.util.Map">
+		update f_detailed_info set inviteId = #{inviteId},inviteType=#{inviterType},inviteDate= now() where id = #{id}
+	</update>
+	
+	<!-- 統計邀請人總人數 -->
+	<select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) as total from f_detailed_info where 
+		inviteId = #{inviteId} and inviteType = #{inviterType};
+	</select>
+	
+	<!-- 修改邀請人總人數（浆员基本信息表） -->
+	<update id="updateBaseLevel" parameterType="java.util.Map">
+		update f_provider_baseinfo set level = #{level} where id = #{inviteId}
+	</update>
+	
+	<!-- 修改人總人數（宣传员表） -->
+	<update id="updatePropLevel" parameterType="java.util.Map">
+		update f_propagandist set level = #{level} where id = #{inviteId}
+	</update>
+    
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.elisa.dao.TestResultMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.elisa.entity.TestResult">
+        <id column="id" property="id" />
+        <result column="batchPlate" property="batchPlate" />
+        <result column="sampleNo" property="sampleNo" />
+        <result column="row" property="row" />
+        <result column="col" property="col" />
+        <result column="od" property="od" />
+        <result column="holeType" property="holeType" />
+        <result column="strResultValue" property="strResultValue" />
+        <result column="proName" property="proName" />
+        <result column="testDate" property="testDate" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+        <result column="plateNo" property="plateNo" />
+        <result column="qcBatchNo" property="qcBatchNo" />
+        <result column="reagentBatchNo" property="reagentBatchNo" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, batchPlate, sampleNo, row, col, od, holeType, strResultValue, proName, testDate, createDate, updateDate, creater, updater, plasmaId, plateNo, qcBatchNo, reagentBatchNo
+    </sql>
+
+</mapper>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.inspection.dao.NewCardMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.inspection.entity.NewCard">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="sampleNo" property="sampleNo" />
+        <result column="protein" property="protein" />
+        <result column="bloodTciId" property="bloodTciId" />
+        <result column="proteinValue" property="proteinValue" />
+        <result column="bloodRedProtein" property="bloodRedProtein" />
+        <result column="bloodRedProteinValue" property="bloodRedProteinValue" />
+        <result column="wholeBlood" property="wholeBlood" />
+        <result column="syphilis" property="syphilis" />
+        <result column="alt" property="alt" />
+        <result column="serumProtein" property="serumProtein" />
+        <result column="hbsag" property="hbsag" />
+        <result column="hcv" property="hcv" />
+        <result column="hiv" property="hiv" />
+        <result column="blood" property="blood" />
+        <result column="remarks" property="remarks" />
+        <result column="isAssay" property="isAssay" />
+        <result column="result" property="result" />
+        <result column="type" property="type" />
+        <result column="reportAdminid" property="reportAdminid" />
+        <result column="rechecked" property="rechecked" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, protein,bloodTciId, bloodRedProtein,bloodRedProteinValue, wholeBlood, syphilis, alt, serumProtein, HBsAg, hcv, hiv, blood,reportAdminid, remarks, isAssay, result, type,rechecked, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+    
+        <!-- 查询已化验浆员信息, 带分页 需要指定查询日期和是否新老浆员  -->
+    <select id="queryListByCreateDateAndIsAssayWith1" resultType="com.fadl.common.DataRow">
+    	SELECT nc.*, pb.name, pb.sex, pr.registriesNo, pb.type AS pbType, pb.createDate AS prCreateDate,
+		pb.bloodType, pr.isNew, pr.plasmaType, pb.icNumber , ri.opinion , ri.day
+		FROM `f_new_card` AS nc 
+    	INNER JOIN f_provider_baseinfo AS pb ON nc.providerNo = pb.providerNo
+		INNER JOIN f_provider_registries AS pr ON nc.allId = pr.allId
+		LEFT JOIN f_refuse_info AS ri ON ri.providerNo = pr.providerNo AND ri.isRefuse = 1
+		WHERE 1=1
+		<if test ="isAssay !=null">
+			AND nc.`isAssay` = 1 
+		</if>
+		<if test="startTime != null and startTime != '' and endTime != null and endTime != '' ">
+  			AND TO_DAYS(nc.updateDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime})
+  		</if>
+		<if test="type != null "> 
+			AND nc.type = #{type}
+		</if>
+		<if test ="result !=null"><!-- 目前这个查询是直接查找已经复检的信息, 不是查询需要复检的信息 -->
+			 AND nc.rechecked = 1
+		</if>
+		GROUP BY nc.providerNo ORDER BY nc.updateDate, ri.opinion DESC   
+	</select>
+	        <!-- 查询已化验浆员信息, 不带分页 需要指定查询日期  -->
+    <select id="queryListByUpdateDateAndIsAssayWith1" resultType="com.fadl.common.DataRow">
+    	SELECT nc.id AssayNo,'0' BodyCheckNo,pb.idNo,pb.providerNo,nc.sampleNo SmallNo,nc.updateDate AssayDate,nc.updater AssayWorker,'0' IsRepeat,nc.hbsag HBsAg, 
+    	nc.hcv HCV,nc.alt ALT,nc.hiv HIV,nc.proteinValue Proteide,nc.syphilis Syphilis,nc.wholeBlood AllBlood,'0' Icterus,'' TempletNo,'1' AssayResult,
+		'' IsTemplet,'' docResult,'' refuseday,nc.remarks Remark,'0' IsAuditing,'0' Assessor,'0' YMShang,'-1' YMXia,'' BZHG,'' BZBHG,'' KangA,'' KangB,
+		'' AHSBao,'' BHSBao,'' PDXX,'' LJZT,'' JGPD,'≥115' LSTJG,'' ZSYKDZ,'' DBZJG,'' XHDB_JCZ,'' XHDB_JG,(SELECT value FROM f_config WHERE id=21) org_id,
+		'0' update_flag,'' update_date,'-1' web_flag,nc.sampleNo XYH_SmallNo
+    	FROM f_box_info bi 
+    	INNER JOIN f_plasma_stock ps ON bi.id =  ps.boxId
+    	INNER JOIN f_new_card nc ON  ps.allId = nc.allId AND nc.`isAssay` = 1 
+		INNER JOIN f_provider_baseinfo pb ON pb.providerNo = nc.providerNo
+		LEFT JOIN f_refuse_info ri ON ri.allId = nc.allId AND ri.isRefuse = 1
+		WHERE bi.status=1 AND bi.id BETWEEN #{startTime} AND #{endTime}
+	</select>
+            <!-- 查询化验浆员信息  -->
+    <select id="selectInfoById" resultType="com.fadl.common.DataRow">
+    	SELECT nc.*, pb.name, pb.sex, pr.registriesNo, pb.type AS pbType, pb.imagespot, pb.createDate AS prCreateDate,
+		pb.bloodType, pr.isNew, pr.plasmaType, pb.icNumber ,pimg.imgUrl,pb.imagez
+		FROM `f_new_card` AS nc 
+    	INNER JOIN f_provider_baseinfo AS pb ON nc.providerNo = pb.providerNo
+		INNER JOIN f_provider_registries AS pr ON nc.allId = pr.allId
+		LEFT JOIN f_plasma_image AS pimg ON pimg.imgId=pr.id AND pimg.type=0
+		WHERE nc.id = #{id} 
+	</select>
+    
+    <!-- 查询未化验浆员信息  -->
+    <select id="queryListByCreateDateAndIsAssay" resultType="com.fadl.common.DataRow">
+		SELECT sc.*, pb.name, pb.sex, pr.registriesNo, pb.type AS pbType, pb.createDate AS prCreateDate,
+		pb.bloodType, pr.isNew, pr.plasmaType, pb.icNumber
+		FROM f_new_card AS sc 
+		INNER JOIN f_provider_baseinfo AS pb ON sc.providerNo = pb.providerNo
+		INNER JOIN f_provider_registries as pr ON sc.allId = pr.allId
+		
+		WHERE 1=1
+		<if test ="isAssay !=null">
+			AND sc.isAssay = 0
+		</if>
+		<if test="startTime != null and startTime != '' and endTime != null and endTime != '' ">
+  			AND TO_DAYS(sc.updateDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime})
+  		</if>
+		<if test="type != null ">
+			AND sc.type = #{type}
+		</if>
+		
+		ORDER BY sc.sampleNo desc, sc.updateDate
+		
+	</select>
+    
+    <select id="queryListsByCreateDate" resultType="com.fadl.common.DataRow">
+    	SELECT sc.*, pb.name, pb.sex, pr.registriesNo, pb.type AS pbType,
+		pb.bloodType, pr.isNew, pr.plasmaType,
+		pb.icNumber  FROM f_new_card AS
+		sc INNER JOIN
+		f_provider_baseinfo AS pb ON sc.providerNo = pb.providerNo
+		INNER JOIN
+		f_provider_registries as pr ON sc.allId = pr.allId
+		WHERE
+		TO_DAYS(sc.createDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime})
+		AND TO_DAYS(pr.updateDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime})
+    	AND sc.isAssay=0
+    </select>
+    
+    <select id="queryListsByNewCard" resultType="com.fadl.common.DataRow">
+    	SELECT sc.*, pb.name, pb.sex, pr.registriesNo, pb.type AS pbType, pb.bloodType, pr.isNew, pr.plasmaType, pb.icNumber  
+		FROM f_new_card AS sc 
+		INNER JOIN f_provider_baseinfo AS pb ON sc.providerNo = pb.providerNo
+		INNER JOIN f_provider_registries as pr ON sc.allId = pr.allId
+		<if test="sampleType == 1 " >
+			INNER JOIN f_elisa_values as ev ON  sc.allId = ev.allId AND ev.sampleType=1
+		</if>
+		<if test="startTime != null and startTime != '' and endTime != null and endTime != '' ">
+			AND
+				TO_DAYS(sc.createDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime})
+			AND
+				TO_DAYS(pr.updateDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime})
+		</if>
+		<if test="isAssay != null">
+			AND sc.isAssay=#{isAssay}
+		</if>
+		<if test="startSampleNo != null and endSampleNo != null">
+			AND sampleNo between #{startSampleNo} AND #{endSampleNo}
+		</if>
+		ORDER BY sc.sampleNo, sc.updateDate DESC, sc.sampleNo
+    </select>
+    
+    
+    
+    <select id="queryListsByCondition" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+    SELECT nc.*,pb.name,pb.sex,pb.type AS pdType,pr.plasmaType,fa.name AS hname,ri.opinion,ri.eliminateReason,ri.day 
+    FROM f_new_card AS nc
+	LEFT JOIN f_elisa_values AS ev ON ev.newCardId= nc.id
+	LEFT JOIN f_elisa_info AS ei ON ev.eiId = ei.id
+	INNER JOIN f_blood_red_protein_content AS brpc ON brpc.allId = nc.allId
+	INNER JOIN f_detection_proteins AS dp ON  dp.allId = nc.allId
+	INNER JOIN f_protein_content AS pc ON pc.allId = nc.allId
+	LEFT JOIN f_refuse_info as ri ON ri.allId= nc.allId
+	INNER JOIN f_provider_registries AS pr ON pr.allId = nc.allId
+	INNER JOIN f_provider_baseinfo AS pb ON pb.providerNo = nc.providerNo
+	INNER JOIN f_admin AS fa ON fa.id = nc.updater
+	<where>
+	1=1
+	<if test="startTime != null and startTime != '' and endTime != null and endTime != '' ">
+	AND (TO_DAYS(ev.updateDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime}) OR 
+	TO_DAYS(brpc.updateDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime}) OR
+	TO_DAYS(dp.updateDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime}) OR
+	TO_DAYS(pc.updateDate) BETWEEN TO_DAYS(#{startTime}) AND TO_DAYS(#{endTime}))
+	</if>
+	<if test="opAdmin !=null and opAdmin !=''">
+		AND(ei.opAdmin = #{opAdmin} OR brpc.checkedAdminId =#{opAdmin} OR dp.updater =#{opAdmin} OR pc.updater=#{opAdmin})
+	</if>
+	<if test="idNo !=null and idNo !=''">
+		AND pb.idNo = #{idNo}
+	</if>
+	<if test="providerNo != null and providerNo !=''">
+		AND pb.providerNo = #{providerNo}
+	</if>
+	<if test="name !=null and name !=''">
+		AND pb.name = #{name}
+	</if>
+	<if test="icNumber != null and icNumber !=''">
+		AND pb.icNumber = #{icNumber}
+	</if>
+	<if test="proteinValue !=null and icNumber !=''">
+		AND nc.proteinValue= #{proteinValue}
+	</if>
+	<if test="syphilis !=null and syphilis != 'null'">
+		<if test="syphilis != ''">
+			AND nc.syphilis =#{syphilis}
+		</if>
+		<if test="syphilis == ''">
+			AND nc.syphilis IS NULL
+		</if>
+	</if>
+	<if test="alt != null and alt != 'null'">
+		<if test="alt != ''">
+			AND nc.alt =#{alt}
+		</if>
+		<if test="alt == ''">
+			AND nc.alt IS NULL
+		</if>
+	</if>
+	<if test="hcv != null and hcv !='null'">
+		<if test="hcv != ''">
+			AND nc.hcv =#{hcv}
+		</if>
+		<if test="hcv == ''">
+			AND nc.hcv IS NULL
+		</if>
+	</if>
+	<if test="hbsag != null and hbsag != 'null'">
+		<if test="hbsag != ''">
+			AND nc.hbsag =#{hbsag}
+		</if>
+		<if test="hbsag == ''">
+			AND nc.hbsag IS NULL
+		</if>
+	</if>
+	<if test="wholeBlood !=null and wholeBlood != 'null'">
+		<if test="wholeBlood != ''">
+			AND nc.wholeBlood =#{wholeBlood}
+		</if>
+		<if test="wholeBlood == ''">
+			AND nc.wholeBlood IS NULL
+		</if>
+	</if>
+	<if test ="result != null and result!='' "><!-- 目前这个查询是直接查找已经复检的信息, 不是查询需要复检的信息 -->
+			 AND nc.rechecked = 1
+	</if>
+	
+	<if test="isAssay != null and isAssay!='' ">
+		AND nc.isAssay=#{isAssay}
+	</if>
+	<if test="plasmaType != null and plasmaType!='' ">
+		AND pr.plasmaType=#{plasmaType}
+	</if>
+	
+	</where>
+	
+	ORDER BY nc.sampleNo DESC 
+    </select>
+    <!-- 查询当天的化验记录信息 -->
+    <select id="queryLists" resultType="com.fadl.common.DataRow">
+    SELECT nc.*, ri.eliminateReason, pb.name
+    FROM f_new_card  AS nc  
+	LEFT JOIN f_refuse_info AS ri ON nc.allId = ri.allId
+	INNER JOIN f_provider_baseinfo AS pb ON pb.providerNo = nc.providerNo
+	WHERE nc.result = #{result} AND nc.isAssay = #{isAssay} AND TO_DAYS (nc.updateDate ) = TO_DAYS(#{startTime})
+    </select>
+</mapper>

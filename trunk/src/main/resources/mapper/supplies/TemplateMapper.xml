@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.supplies.dao.TemplateMapper">
+
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.supplies.entity.Template">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="isDisable" property="isDisable" />
+		<result column="apply" property="apply" />
+		<result column="depotId" property="depotId" />
+		<result column="startDate" property="startDate" />
+		<result column="endDate" property="endDate" />
+		<result column="isDelete" property="isDelete" />
+		<result column="remarks" property="remarks" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, name, isDisable, apply, depotId, startDate, endDate, remarks,
+		createDate, updateDate, creater, updater, plasmaId
+	</sql>
+	<!-- 查询耗材模板配置列表 -->
+	<select id="queryTemplateList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tp.name,tp.isDisable,tp.apply,ty.name as
+		depot,tp.startDate,tp.endDate,tp.remarks,tp.isDelete
+		from f_supplies_template tp
+		LEFT JOIN f_depot ty
+		ON tp.depotId=ty.id
+		where 1=1
+		<if test="apply!=null and apply!=''">
+		AND apply=#{apply}
+		</if>
+		<choose>
+			<when test="isDelete!=null and isDelete!=''">
+			AND tp.isDelete=#{isDelete}
+			</when>
+			<otherwise>
+			AND tp.isDelete=0
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 添加耗材模板的耗材列表 -->
+	<select id="queryTemplateSuppliesInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.suppliesId,tk.name,tg.name as unit,tp.surplusNumber,tp.batchNumber,tp.expiryTime,tp.status,tk.apply,tf.depotId  FROM f_supplies_stock tp
+		LEFT JOIN f_order_form tj
+		ON tp.orderId= tj.id
+		LEFT JOIN f_supplies_order tf
+		ON tj.id = tf.orderformId
+		LEFT JOIN f_supplies_info tk
+		ON tp.suppliesId =tk.id
+		LEFT JOIN f_unit tg
+		ON tk.unitId=tg.id
+		WHERE tp.status='0' AND tp.type='0' AND tp.surplusNumber!=0 AND tf.depotId=#{depotId} AND tk.apply =#{apply}
+		GROUP BY tp.id
+	</select>
+	<!-- 采浆打印需要查询耗材编号 -->
+	<select id="queryDetailedCollection" resultType="com.fadl.common.DataRow" parameterType="java.lang.Integer">
+		SELECT tp.suppliesId,number,tt.name,tp.batchNumber,tc.name as supply,tv.expiryTime FROM f_supplies_detailed tp
+		LEFT JOIN f_supplies_info tt
+		ON tp.suppliesId=tt.id
+		LEFT JOIN f_supplies_supply tc
+		ON tt.supplyId=tc.id
+		LEFT JOIN f_supplies_stock tv
+		ON tp.batchNumber = tv.batchNumber
+		WHERE templateId=#{templateId}
+	</select>
+</mapper>

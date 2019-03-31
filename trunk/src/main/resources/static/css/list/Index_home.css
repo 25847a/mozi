@@ -1,0 +1,246 @@
+body {
+	-webkit-perspective: 800px;
+	perspective: 800px;
+	height: 100vh;
+	margin: 0;
+	overflow: hidden;
+	font-family: 'Gudea', sans-serif;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#EA5C54 ', endColorstr='#bb6dec', GradientType=1);
+	/* IE6-9 fallback on horizontal gradient */
+}
+
+.inpod {
+	background: initial !important;
+	*background: initial !important;
+}
+
+.navbar-static-side {
+	/* margin-top: 1.81em; */
+	margin-left: 1em;
+}
+
+.inpod .gray-bg {
+	background: red !important;
+}
+
+.roll-right.J_tabRight {
+	right: 0
+}
+
+#content-main {
+	height: calc(100% - 40px);
+}
+
+.sidebar-collaload .navbar-collapse {display: block;padding-left: 2rem;float: left;width: 75%;}
+
+.navbar-collapse .nav {
+	flex-direction: inherit;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: flex;
+	height: 4em;
+}
+
+.navbar-collapse .nav li>a {
+	float: left;
+	color: #107214;
+	font-size: 17px;
+	text-decoration: none;
+	height: 3.3em;
+	border-bottom: 3px solid #107214;
+}
+
+.navbar-collapse .nav li>a:hover {
+	text-decoration: none;
+}
+
+@media (min-width: 1300px) {
+	.navbar-collapse .nav li {
+		margin-left: 0;
+		padding-bottom: 3.5%;
+		letter-spacing: 1px;
+		text-align: center;
+		margin-top: -0.1em;
+	}
+	.navbar-collapse .nav .J-yes {
+		height: 3.5em;
+		color: #107214;
+		font-weight: 500;
+		font-size: 16px;
+	}
+	.inpod .lids_left {
+		font-size: 22px;
+		float: left;
+		color: #FFF;
+		text-indent: 4em;
+		padding-top: 0.2em;
+	}
+}
+
+@media (min-width: 1900px) {
+	.navbar-collapse .nav li {
+		margin-left: 2%;
+		padding-bottom: 3.5%;
+		letter-spacing: 1px;
+		text-align: center;
+		margin-top: -0.7em;
+	}
+	.navbar-collapse .nav .J-yes {
+		height: 4em;
+		color: #107214;
+		font-weight: 500;
+		font-size: 16px;
+	}
+	.inpod .lids_left {
+		font-size: 23px;
+		float: left;
+		color: #FFF;
+text-indent: 4em;
+		padding-top: 0.2em;
+	}
+}
+
+
+/*	.navbar-collapse .nav li {
+				margin-left: 2%;
+				padding-bottom: 3.5%;
+				letter-spacing: 1px;
+				text-align: center;
+				margin-top: -0.7em;
+			}*/
+
+.navbar-collapse .nav .J-no {
+	border-bottom: 0px solid #107214;
+	
+	color: #FFF;
+	font-weight: 500;
+	font-size: 16px;
+}
+
+.UserA row {}
+
+.navbar-collapse .lurda {
+	flex-direction: row-reverse;
+	width: auto;
+	position: absolute;
+	top: 11px;
+	right: 3%;
+	left: 0;
+	bottom: 0;
+	float: left;
+	height: 2em;
+	color: #FFF;
+}
+
+.navbar-collapse .lurda label {
+	font-size: 12px;
+	height: 2em;
+	float: left;
+	text-indent: 1em;
+}
+
+.navbar-collapse .lurda label a {
+	color: #FFF;
+}
+
+.navbar-collapse .lurda label ali {
+	font-size: 15px;
+	line-height: 1.2em;
+	cursor: pointer;
+}
+
+.ueskir .loge {
+	position: relative;
+	width: auto;
+	height: 80%;
+}
+
+.ueskir .loge .usekla {
+	background: #54a664;
+	text-align: center;
+	padding: 1em 0;
+	margin-bottom: 0.5em;
+	font-size: 16px;
+}
+
+.ueskir .loge .usekla img {
+	width: 21px;
+	height: 16px;
+}
+
+.navbar-static-side {
+	background: #FFF;
+	border: 1px solid #54a664;
+	/* margin-top: 1.81em; */
+	margin-left: 1.5em;
+}
+
+ll-right.J_tabRight {
+	right: 0
+}
+
+.inpod .usedS {
+	background: #f7f7f7;
+	height: 67em;
+	width: 100%;
+}
+
+@media (min-width: 1300px) {
+	body.canvas-menu .navbar-static-side,
+	body.fixed-sidebar .navbar-static-side {
+		position: fixed !important;
+		width: 19% !important;
+		z-index: 2001 !important;
+		height: 95% !important;
+		overflow: hidden;
+	}
+}
+
+@media (min-width:1900px) {
+	body.canvas-menu .navbar-static-side,
+	body.fixed-sidebar .navbar-static-side {
+		position: fixed !important;
+		width: 15% !important;
+		z-index: 2001 !important;
+		height: 95% !important;
+	}
+}
+
+#wrapper {
+	/* background-color: #f7f7f7 !important; */
+}
+
+.roll-right.btn-group {
+	right: 57px !important;
+}
+
+
+/*#bodyGray{background:url(../img/log_01.jpg) no-repeat;   min-width: 1200px; overflow-x: auto;}*/
+
+body .inpod {
+	background: initial;
+}
+
+body .wrabusr {
+	background-color: #f7f7f7 !important;
+	padding-top: 1em;
+}
+
+body .wrabusr .arabusimg {
+	background: #54a664;
+	text-align: center;
+	padding: 1em 0;
+	margin-bottom: 0.5em;
+	font-size: 16px;
+}
+
+body .wrabusr .arabusimg img {
+	width: 17px;
+	height: 16px;
+	MARGIN-TOP: -0.2EM;
+}
+
+.roll-right.btn-group button{width: 96px!important;
+}

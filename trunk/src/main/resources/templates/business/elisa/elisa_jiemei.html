@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+<meta charset="UTF-8" />
+<title>接酶标仪的酶标板</title>
+<link th:href="@{/layui-master/src/css/layui.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap.min14ed.css?v=3.3.6}" rel="stylesheet" />
+<link th:href="@{/css/font-awesome.min93e3.css?v=4.4.0}"
+	rel="stylesheet" />
+<link th:href="@{/css/fileinput.min.css}" rel="stylesheet" />
+<link th:href="@{/css/icheck-bootstrap.css}" rel="stylesheet" />
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+<link th:href="@{/css/list/echarts/jquery.contextMenu.css}" rel="stylesheet" />
+<link th:href="@{/css/style.min862f.css}" rel="stylesheet" />
+<style type="text/css">
+.newolod {
+	padding-left: 35%;
+}
+#arckae .layui-table-main{overflow: hidden;}
+#arckae tbody{    overflow-y: scroll;
+    max-height: 200px;
+    float: left;}
+.layui-border-box, .layui-border-box *{  }
+#newpray .busr{margin-left: -10px !important;}
+#tdata tr td input{width:100% !important;}
+#td1A input{    width: 100% !important;}
+.busr .bustrNew{    overflow-x: auto;}
+#eclaid{     display: none;}
+#newpray .gray-bg .colx8 .inhenagois {
+	width: auto !important;
+}
+#newpray .gray-bg .colx8 .input-group select{    height: 2.4em;    padding: 0;}
+.newregistr {
+	margin-left: 1%;
+}
+.wrapper .newikrd .inhemog{width: 54% !important;}
+.ralckr .layui-table .layui-table-cell {
+	height: 20px;
+	font-size: 12px;
+}
+
+.newrowseg {
+	margin: inherit;
+}
+
+.btn-info {
+	padding: 0.3em 5%;
+	font-size: 13px;
+}
+
+#budjad .input-group {
+	margin-right: 1.2%;
+}
+.jidmas {
+    width: 5em;
+    float: left;
+    margin-right: 1em;
+}
+#newpray .gray-bg .colx8 .UserC {
+	font-size: 12px
+</style>
+</head>
+<body id="newpray" class="elisda">
+	<input type="hidden" id="id" name="id" />
+	<input type="hidden" id="eiId" name="eiId" />
+	<input type="hidden" id="qcResult" name="qcResult" />
+	<div>
+		<div class="gray-bg">
+			<div class="wrapper wrapper-content animated fadeInRight weralid"
+				style="">
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion">
+						<div class="row newregistr">
+							<div class="col-xs-2 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">检测类型：</label>
+									<div class="input-group inhemog">
+										<select name="type" class="form-control">
+											<option value="0">基础检验</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-2 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">样本类型 ：</label>
+									<div class="input-group inhemog">
+										<select name="sampleType" id="sampleType" class="form-control">
+											<option value="-1">全部</option>
+											<option value="0">初检</option>
+											<option value="1">复检</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">小样号：</label>
+									<div class="input-group inhemog" style="    width: auto !important;" >
+										<div class="col-xs-5 advancol">
+											<input id="startSampleNo" name="startSampleNo"
+												class="form-control" />
+										</div>
+										<div class="col-xs-1 advancolS">--</div>
+										<div class="col-xs-5 advancol">
+											<input id="endSampleNo" name="endSampleNo"
+												class="form-control" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">化验日期：</label>
+									<div class="input-group inhemog" style="float: left;">
+										<div class="col-xs-5 advancol">
+											<input id="startTime" name="startTime" class="form-control" />
+										</div>
+										<div class="col-xs-1 advancolS">--</div>
+										<div class="col-xs-5 advancol">
+											<input id="endTime" name="endTime" class="form-control" />
+										</div>
+									</div>
+									<div style="margin-top: 0em; float: left;">
+										<div class="checkbox icheck-default">
+											<input type="checkbox" id="allTime" /> <label for="allTime">全部</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-1 colxsgray">
+								<div class="form-group newikrd">
+									<div class="input-group newInpa butnewikr">
+										<button type="button" class="btn  btn-info"
+											onclick="initTable1('jiemei');">样本查询</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="gray-bg">
+			<div class="wrapper wrapper-content animated fadeInRight" style=" padding-bottom: 0;">
+				<div class="row busr">
+					<div class="col-md-12 bustrNew ralckr" id="arckae">
+						<table class="layui-hide" id="jiemei" lay-filter="demo" style=""></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid"
+				style="">
+				<!--基本信息及验证-->
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis indegirtion"
+						style="float: left; width: 43% !important">
+						<div class="row newregistr">
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">操作日期：</label>
+									<div class="input-group inhemog">
+										<input value="" name="createDate" id="createDate" title=""  onchange="changeDate();"
+											class="form-control newfrin" />
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">序号：</label>
+									<div class="input-group inhemog">
+										<select  name="sequenceNumber" id="sequenceNumber" class="form-control">
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">操作人：</label>
+									<div class="input-group inhemog">
+
+										<select name="creater" id="creater" class="form-control">
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row newregistr">
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">模板类型：</label>
+									<div class="input-group inhemog">
+										<select class="form-control" id="templateName"
+											name="templateName" onchange="changeTable();">
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">试剂：</label>
+									<div class="input-group inhemog">
+										<select name="reagentId" id="reagentId" class="form-control">
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC inhenagois">质控品：</label>
+									<div class="input-group inhemog">
+										<select name="qcId" id="qcId" class="form-control">
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row newregis indegirtion"
+						style="float: left; width: 59% !important; padding-left: 3%; margin-left: 0;">
+						<div class="row newrowseg">
+							<div class="form-group newikrd">
+								<div class="jidmaas" style="float: left">
+									<div class="radio icheck-default" style="margin-left: -18%;">
+										<input type="radio" id="default1" name="default"
+											checked="checked" /> <label for="default1">查询</label>
+									</div>
+								</div>
+								<div class="jidma">
+									<label class="control-label UserC ">类型：</label>
+									<div class="input-group">
+										<select class="form-control buseS" name="eadbutS" id="eadbutS">
+											<option value="4">详细信息</option>
+											<option value="0">OD值</option>
+											<option value="1">原始OD值</option>
+											<option value="2">测值</option>
+											<option value="3">评定结果</option>
+										</select>
+									</div>
+								</div>
+								<div class="jidma"> 
+									<div class="checkbox icheck-default"> 
+											<input type="checkbox"   checked="checked" id="showSampleNo" name="showSampleNo" disabled="disabled" value="1"/>
+											<label for="allTime">显示小样号</label> 
+										</div>
+								</div>
+								<div id="budjad">
+									<div class="input-group">
+										<button type="button" class="btn  btn-info buseS" id=""
+											name="eadbutS" onclick="selectElisaInfoById(false);">板次查询</button>
+									</div>
+								  <div class="input-group">
+										<button type="button" class="btn  btn-info buseS jqDnR" id="printElisa"
+											name="eadbutS"   onclick="doPrintElisa(1);">板次打印</button> 
+									</div> 
+								</div>
+							</div>
+						</div>
+						<div class="row newrowseg">
+							<div class="form-group newikrd">
+								<div class="jidmaas" style="float: left">
+									<div class="radio icheck-default"  style="margin-left: -18%;">
+										<input type="radio" id="default2" name="default" />
+										 <label for="default2">化验</label>
+									</div>
+								</div>
+								<div class="jidma">
+									<label class="control-label UserC"> 插入方式：</label>
+									<div class="input-group" style="width:60%">
+										<select class="form-control buse" id="eadbut" name="eadbut">
+											<option value="0">横向</option>
+											<option value="1">纵向</option>
+										</select>
+									</div>
+								</div>
+								<div id="budjad">
+									<div class="input-group">
+										<button type="button" class="btn  btn-info buse" name="eadbut"
+											id="elisabut"  style="display: none;">参数配置</button>
+									</div>
+									<div class="input-group">
+										<button type="button" class="btn  btn-info buse" name="eadbut"
+											id="mobanp">模板配置</button>
+									</div>
+									<div class="input-group">
+										<button type="button" class="btn  btn-info buse alogd" name="eadbut"
+											id="batchInsert">批量插入</button>
+									</div>
+									<div class="input-group">
+										<button type="button" class="btn  btn-info buse" name="eadbut"
+											id="" onclick="doElisa();">酶标读板</button>
+									</div>
+									<div class="input-group">
+										<button type="button" class="btn  btn-info buse" name="eadbut"
+											id="haocp">耗材配置</button>
+									</div>
+
+
+								</div>
+							</div>
+						</div>
+						<div class="row newrowseg">
+							<div class="form-group newikrd">
+								<div class="jidmas">
+									<label class="control-label UserC ">行：</label>
+									<div class="input-group" style=" width: 58%;">
+										<select name="type" id="tdx" class="form-control">
+											<option value="A">A</option>
+											<option value="B">B</option>
+											<option value="C">C</option>
+											<option value="D">D</option>
+											<option value="E">E</option>
+											<option value="F">F</option>
+											<option value="G">G</option>
+											<option value="H">H</option>
+										</select>
+									</div>
+
+
+
+								</div>
+								<div class="jidmas">
+									<label class="control-label UserC ">列：</label>
+									<div class="input-group"  style=" width: 58%;">
+										<select name="type" id="tdy" class="form-control">
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+											<option value="11">11</option>
+											<option value="12">12</option>
+										</select>
+									</div>
+								</div>
+								<div id="budjad">
+
+									<!-- 化验-->
+									<div class="input-group">
+										<button type="button" class="btn  btn-info"
+											onclick="jumpOver();">跳过针孔</button>
+									</div>
+									
+									<!-- 查询 -->
+									<div id="chaja">
+										<div class="input-group">
+											<button type="button" class="btn  btn-info"
+												onclick="saveElisaInfo(false,0);">发布结果</button>
+										</div>
+										<div class="input-group">
+											<button type="button" class="btn  btn-info"
+												onclick="saveElisaInfo(true,0);">全部发布</button>
+										</div>
+										<div class="input-group">
+											<button type="button" class="btn  btn-info" onclick="saveElisaInfo(false,1);">取消发布</button>
+										</div>
+										<div class="input-group">
+											<button type="button" class="btn  btn-info" onclick="saveElisaInfo(true,1);">全部取消</button>
+										</div>
+									</div>
+									<div class="input-group">
+										<button type="button" class="btn  btn-info  pcboar" id="del" onclick="del()">整板删除</button>
+									</div>
+									<div class="input-group">
+										<button type="button" class="btn  btn-info  pcboar" id="" onclick="printQCReport(1)">质控报表</button>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="gray-bg" id="" style="padding: initial">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row busr">
+					<div class="col-md-12 bustrNew ralckr" id="elsia">
+						<table class="layui-table">
+							<thead>
+								<tr>
+									<th>@</th>
+									<th>1</th>
+									<th>2</th>
+									<th>3</th>
+									<th>4</th>
+									<th>5</th>
+									<th>6</th>
+									<th>7</th>
+									<th>8</th>
+									<th>9</th>
+									<th>10</th>
+									<th>11</th>
+									<th>12</th>
+								</tr>
+							</thead>
+							<tbody id="tdata">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery-form.js}"></script>
+	<!--  jQuery Validation plugin javascript -->
+	<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+	<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<!--bootstarp表格插件-->
+	<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}"></script>
+	<!--mbb酶标板JS-->
+	
+	<script th:src="@{/js/business/elisa/elisa_jiemei.js}"></script>
+	<script th:src="@{/css/list/echarts/jquery.contextMenu.js}"></script>
+	<script type="text/javascript">
+
+
+</script>
+</body>
+
+</html>

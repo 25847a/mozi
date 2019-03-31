@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.fadl.inspection.dao.BloodRedProteinContentMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.inspection.entity.BloodRedProteinContent">
+		<id column="id" property="id" />
+		<result column="providerNo" property="providerNo" />
+		<result column="bluestone" property="bluestone" />
+		<result column="resultId" property="resultId" />
+		<result column="allId" property="allId" />
+		<result column="tciId" property="tciId" />
+		<result column="checkedAdminId" property="checkedAdminId" />
+		<result column="createDate" property="createDate" javaType="java.util.Date" />
+		<result column="updateDate" property="updateDate"  javaType="java.util.Date" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, providerNo, bluestone, resultId,allId, tciId, createDate, updateDate, creater,
+		updater, plasmaId
+	</sql>
+
+
+	<select id="queryListByUpdateDate"
+		resultType="com.fadl.common.DataRow">
+		SELECT rpc.*,pb.name,pb.imagez, pb.sex, pb.type AS pbType,
+		pb.bloodType,
+		pb.icNumber, pr.plasmaType  FROM
+		f_blood_red_protein_content AS rpc
+		INNER JOIN f_provider_baseinfo AS pb ON pb.providerNo = rpc.providerNo
+		INNER JOIN f_provider_registries as pr ON rpc.allId = pr.allId
+		AND
+		rpc.updateDate BETWEEN #{startTime} AND #{endTime} 
+		<if test="providerNo!=null and providerNo!=''">
+		AND rpc.providerNo=#{providerNo} AND rpc.isCollection=0
+		</if>
+		ORDER BY rpc.resultId ASC 
+	</select>
+
+
+	<select id="queryBloodRedProteinContentById"
+		resultType="com.fadl.common.DataRow">
+
+		SELECT rpc.*, pb.name, pb.sex,pb.type AS pbType, pb.imagespot, pb.bloodType, pb.icNumber, pimg.imgUrl,pb.imagez
+		FROM f_blood_red_protein_content AS rpc 
+		INNER JOIN f_provider_baseinfo AS pb ON rpc.providerNo = pb.providerNo
+		INNER JOIN f_provider_registries as pr ON rpc.allId = pr.allId
+		LEFT JOIN f_plasma_image AS pimg ON pimg.imgId=pr.id  
+		WHERE rpc.id = #{id}
+		AND pimg.type=0
+	</select>
+	
+	<select id="queryInfosByChooseDate"
+		resultType="com.fadl.common.DataRow">
+		SELECT brp.*, pb.name,pb.sex, pr.sampleNo, c.lable FROM f_blood_red_protein_content AS brp 
+		INNER JOIN f_provider_baseinfo AS pb ON pb.providerNo = brp.providerNo
+		INNER JOIN f_provider_registries AS pr ON pr.allId = brp.allId
+		INNER JOIN f_config AS c ON c.type='cuso_config' AND c.value = brp.resultId
+		WHERE TO_DAYS(brp.updateDate) = TO_DAYS(#{chooseDate}) AND brp.resultId  IS NOT NULL;
+	
+	</select>
+</mapper>

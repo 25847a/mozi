@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.elisa.dao.ElisaApiMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.elisa.entity.ElisaApi">
+        <id column="id" property="id" />
+        <result column="projectName" property="projectName" />
+        <result column="isBlank" property="isBlank" />
+        <result column="isOscillation" property="isOscillation" />
+        <result column="isDuWaveDetection" property="isDuWaveDetection" />
+        <result column="programModel" property="programModel" />
+        <result column="inboardMode" property="inboardMode" />
+        <result column="oscillationSpeed" property="oscillationSpeed" />
+        <result column="oscillationTime" property="oscillationTime" />
+        <result column="mainFilter" property="mainFilter" />
+        <result column="subFilter" property="subFilter" />
+        <result column="extensionOfTime" property="extensionOfTime" />
+        <result column="readCount" property="readCount" />
+        <result column="intervals" property="intervals" />
+        <result column="isSelfTest" property="isSelfTest" />
+        <result column="canUseBlankHole" property="canUseBlankHole" />
+        <result column="delFlag" property="delFlag" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,  projectName, isBlank, isOscillation, isDuWaveDetection, programModel, inboardMode, oscillationSpeed, oscillationTime, mainFilter, subFilter, extensionOfTime, readCount, intervals, isSelfTest, canUseBlankHole, delFlag, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+</mapper>

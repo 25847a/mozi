@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+	<head>
+		<meta charset="UTF-8"/>
+		<title>酶标板打印</title>
+		<link th:href="@{/layui-master/src/css/layui.css}" rel="stylesheet" />
+<link th:href="@{/css/bootstrap.min14ed.css?v=3.3.6}" rel="stylesheet" />
+<link th:href="@{/css/font-awesome.min93e3.css?v=4.4.0}"
+	rel="stylesheet" />
+<link th:href="@{/css/fileinput.min.css}" rel="stylesheet" />
+<link rel="stylesheet" th:href="@{/css/icheck-bootstrap.css}"/>
+<link th:href="@{/css/common.css}" rel="stylesheet" />
+<link th:href="@{/css/list/log.css}" rel="stylesheet" />
+<link th:href="@{/css/style.min862f.css}" rel="stylesheet" />
+		<style type="text/css">	.newolod {padding-left: 35%;}</style>
+	</head>
+	<body id="newpray">
+		<div>
+			<div class="gray-bg ">
+				<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+					<!--基本信息及验证-->
+					<div class="col-xs-12 colx8 colnewo">
+						<div class="row newregis indegirtion">
+							<p class="grayP">
+								<label class="grayLa ">检验记录</label></p>
+							<div class="row newregistr">
+								<div class="col-xs-4 colxsgray">
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi">日期：</label>
+										<div class="input-group inhemog">
+											<div class="col-xs-5 advancol">
+												<input id="startDate" name="startDate"  class="form-control" />
+											</div>
+											<div class="col-xs-1 advancolS">
+												--
+											</div>
+											<div class="col-xs-5 advancol">
+												<input id="endDate"  name="endDate" class="form-control" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-4 colxsgray">
+									<div class="form-group newikrd">
+										<label class="control-label UserC inhenagoi">酶标板号：</label>
+										<div class="input-group inhemog">
+											<input value="" id="allSequenceNumber" name="allSequenceNumber" title="" class="form-control newfrin" />
+											
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-4 colxsgray">
+									<div class="row newrowseg" style="    margin-top: -0.2em;">
+										<div class="form-group newikrd">
+											<div class="input-group newInpa butnewikr" style="margin: 0;">
+												<button type="button" class="btn  btn-info" onclick="search();">查询</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="gray-bg">
+				<div class="wrapper wrapper-content animated fadeInRight">
+					<div class="row busr">
+						<div class="col-md-12 bustrNew">
+							<script type="text/html" id="barDemo">
+								<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="xiangq">查看详情</a>
+					<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+				</script>
+							<table class="layui-hide" id="toconig" lay-filter="demo" style=""></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+		</div>
+			<!--jQuery包-->
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/jquery-form.js}"></script>
+	<!--  jQuery Validation plugin javascript -->
+	<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+	<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+	<!-- 公共包 -->
+	<script th:src="@{/js/utils.js}"></script>
+	<script th:src="@{/js/common.js}"></script>
+	<!--bootstarp表格插件-->
+	<script  th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+	<!--layer插件包-->
+	<script th:src="@{/layui-master/src/layui.js}"></script>
+	<!--mbb酶标板JS-->
+	<script th:src="@{/js/business/elisa/elisa_jilv.js}"></script>
+	</body>
+</html>

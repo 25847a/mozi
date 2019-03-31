@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.supplies.dao.InfoMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.fadl.supplies.entity.Info">
+		<id column="id" property="id" />
+		<result column="number" property="number" />
+		<result column="typeId" property="typeId" />
+		<result column="unitId" property="unitId" />
+		<result column="supplyId" property="supplyId" />
+		<result column="name" property="name" />
+		<result column="money" property="money" />
+		<result column="minStock" property="minStock" />
+		<result column="maxStock" property="maxStock" />
+		<result column="apply" property="apply" />
+		<result column="remark" property="remark" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, number, typeId, unitId, supplyId, name, money, minStock, maxStock,
+		apply, remark, createDate, updateDate, creater, updater, plasmaId
+	</sql>
+
+	<select id="querySuppliesInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT tp.id,tp.number,tp.name,ty.name as type,tg.name as unit,tk.name as
+		supply,tp.type as category,tp.money,tp.minStock,tp.maxStock,tp.apply,tp.remark,tp.createDate,tp.updateDate,tp.creater,tp.updater
+		FROM f_supplies_info tp
+		LEFT JOIN f_supplies_type ty
+		ON tp.typeId=ty.id
+		LEFT JOIN f_unit tg
+		ON tp.unitId=tg.id
+		LEFT JOIN f_supplies_supply tk
+		ON tp.supplyId=tk.id
+		WHERE tp.isDelete=0
+		<if test="name!=null and name!=''">
+		and tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="type!=null and type!=''">
+		AND tp.type=#{type}
+		</if>
+		<if test="typeId!=null and typeId!=''">
+		AND ty.id=#{typeId}
+		</if>
+		<if test="apply!=null and apply!=''">
+		AND tp.apply=#{apply}
+		</if>
+		<if test="supply!=null and supply!=''">
+		 AND tp.supplyId =#{supply}
+		</if>
+	</select>
+
+</mapper>

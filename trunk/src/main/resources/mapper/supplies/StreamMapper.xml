@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.supplies.dao.StreamMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.supplies.entity.Stream">
+        <id column="id" property="id" />
+        <result column="orderId" property="orderId" />
+        <result column="suppliesId" property="suppliesId" />
+        <result column="batchNumber" property="batchNumber" />
+        <result column="sum" property="sum" />
+        <result column="expiryTime" property="expiryTime" />
+        <result column="lockingNumber" property="lockingNumber" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, orderId, suppliesId, batchNumber, sum,expiryTime,lockingNumber, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+	<!-- 使用耗材减少 -->
+	<update id="updateStream" parameterType="java.util.Map">
+		UPDATE f_supplies_stream SET sum=sum-#{num} WHERE suppliesId=#{suppliesId} and batchNumber=#{batchNumber} AND sum > 0
+	</update>
+	<!-- 查询剩余耗材数量 -->
+	<select id="queryStreamNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT sum FROM f_supplies_stream WHERE suppliesId=#{suppliesId} AND batchNumber=#{batchNumber}
+	</select>
+		<!-- 如果流水表存在同等批号和耗材ID的数据，叠加 -->
+	<update id="AddStreamNum" >
+		UPDATE f_supplies_stream SET sum=sum+#{sum} WHERE suppliesId=#{suppliesId} and batchNumber=#{batchNumber}
+	</update>
+	<!-- 流水表(又称临时表)获取已经出库正在使用的耗材(适用退还,报损,摧毁) -->
+	<select id="queryStreamInfo" resultType="com.fadl.common.DataRow">
+		SELECT tp.id,tp.orderId,tg.oddNumber,tp.suppliesId,td.name,tk.name as unit,tp.sum,tp.batchNumber,tp.expiryTime FROM f_supplies_stream tp
+		LEFT JOIN f_supplies_info td
+		ON tp.suppliesId=td.id
+		LEFT JOIN f_unit tk
+		ON td.unitId=tk.id
+		LEFT JOIN f_order_form tg
+		ON tp.orderId=tg.id
+		WHERE tp.sum!=0
+	</select>
+</mapper>

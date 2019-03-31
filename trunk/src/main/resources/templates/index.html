@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>浆站业务管理系统</title>
+		<link th:href="@{/css/font-awesome.min93e3.css?v=4.4.0}" rel="stylesheet"/>
+		<link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/index.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/Index_home.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min.css}" rel="stylesheet"/>
+		
+	</head>
+	<style>
+	.fa{    font-size: 13px;  margin-right: 3px;}
+	
+	.con_top ul ul{
+position: absolute;
+    list-style: none;
+    text-align: center;
+    display: none;
+}
+	.con_top ul ul a{
+float: left;
+    background: #79c057;
+    width: 7rem;
+    margin-left: -2.5rem;
+    margin-top: 0.4rem;
+    border-radius: 0.2rem;
+}
+.con_top ul:hover ul{
+display:block;
+}
+ 
+	</style> 
+	<body class="fixed-sidebar full-height-layout gray-bg" id="bodyGray" style="background: url(../img/log_01.jpg)no-repeat;   min-width: 1300px; overflow-x: auto;">
+		<div id="wrapper" class="inpod" style="background:inherit">
+			<div class="sidebar-collaload" style="position: relative; padding-top: 1.8em;height: 6em;">
+				<div class="lids_left">
+					浆站管理系统
+				</div>
+				<div class="navbar-collapse collapse ">
+					<ul id="menu-top" class="nav navbar-nav navbar-right lurda">
+						<label>
+							<a href="javascript:void(0)" id="exit"><i class="fa fa-power-off"></i>退出</a>
+						</label>
+					<div class="con_top">
+						<ul class="con_top" style=" position: relative;">
+									<i class="fa fa-user" style="display: inline-block;"></i>
+							<a th:text="${admin}"></a>
+							<ul><a id="update" >修改密码</a></ul>
+						</ul>
+					</div>
+						
+						<label onclick="launchFullscreen(document.documentElement)"> <ali>全屏显示</ali> </label>
+					</ul>
+					<ul id="menu-top" class="nav navbar-nav navbar-right">
+						<li>
+							<a class="J_menuItem J-yes menu-top-active" name="inb_S" th:href="@{/providerRegistries/index}">首页</a>
+						</li>
+
+						<li>
+							<a class="J_menuItem J-no" name="inb_S" th:href="@{/common/leftNavigation}">业务管理</a>
+						</li>
+						<li>
+							<a class="J_menuItem J-no" name="inb_S" th:href="@{/immuneSetting/immunePageManage}">免疫管理</a>
+						</li> 
+						<!-- <li>
+							<a class="J_menuItem J-no" name="inb_S" href="html/Business/3.html">检疫期管理</a>
+						</li> -->
+						<li>
+							<a class="J_menuItem J-no" name="inb_S" th:href="@{/suppliesStock/storageRoom}">库房管理</a>
+						</li>
+						<li>
+							<a class="J_menuItem J-no" name="inb_S" th:href="@{/admin/powerPage}">权限管理</a>
+						</li>
+						<li>
+							<a class="J_menuItem J-no" name="inb_S" th:href="@{/config/sysConfig}">设置管理</a>
+						</li>
+						<!--<li>
+							<a class="J_menuItem J-no" name="inb_S" href="html/Business/4.html">公司管理</a>
+						</li>-->
+						<!-- <li>
+							<a class="J_menuItem J-no" name="inb_S" href="html/Business/5.html">个人中心</a>
+						</li> -->
+					</ul>
+				</div>
+			</div>
+			<div class="row J_mainContent" id="content-main" style="background: #FFF; height: calc(100% - 91px);">
+				<iframe class="J_iframe" id="aiframe" frameborder="0" width="100%" height="100%" scrolling="no" src="../providerRegistries/index" seamless="" ></iframe>
+			</div>
+		</div>
+	
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+			<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+		<script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+		<script th:src="@{/js/contabs.min.js}"></script>
+		
+		<script th:src="@{/js/list/index.js}"></script>
+		<script type="text/javascript">
+			$(function(){
+				$("#exit").click(function(){
+					$.post('/log/loginOut',function(res){
+						if(res.code==-1){
+							location.href='/log/login';
+						}else{
+							alert('退出失败');
+						}
+					});
+				});
+			})
+		</script>
+	</body>
+</html>

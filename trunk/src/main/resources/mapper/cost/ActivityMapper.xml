@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.cost.dao.ActivityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.cost.entity.Activity">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="count" property="count" />
+        <result column="moneyType" property="moneyType" />
+        <result column="startDate" property="startDate" />
+        <result column="endDate" property="endDate" />
+        <result column="money" property="money" />
+        <result column="isNew" property="isNew" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+        <result column="endCount" property="endCount" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, count,  moneyType, startDate, endDate, money, isNew,createDate, updateDate, creater, updater, plasmaId,endCount
+    </sql>
+	
+	<!-- 活动发布表查询（列表查询或者根据活动名称进行查询） -->
+	<select id="queryActivity" parameterType="java.lang.String" resultType="com.fadl.cost.entity.Activity">
+		select * from f_activity where isDelete = 0
+		<if test="_parameter != null and _parameter !='' ">and name LIKE concat('%',#{_parameter},'%')</if>
+	</select>
+	
+	<!-- 活动发布表查询（根据id） -->
+	<select id="queryActivityById" parameterType="java.util.Map" resultType="com.fadl.cost.entity.Activity">
+		select * from f_activity where isDelete = 0 and id = #{id}
+	</select>
+	
+	<!-- 删除活动（逻辑删除） -->
+	<update id="updateActivity" parameterType="java.lang.Long">
+		update f_activity set isDelete = 1 where id = #{id}
+	</update>
+</mapper>

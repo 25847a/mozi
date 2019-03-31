@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.electrophoresis.dao.SerumElectrophoresisMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.electrophoresis.entity.SerumElectrophoresis">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="albumin" property="albumin" />
+        <result column="atlas" property="atlas" />
+        <result column="remarks" property="remarks" />
+        <result column="batchNO" property="batchNO" />
+        <result column="serialNO" property="serialNO" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+         <result column="allId" property="allId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, albumin, atlas, remarks, batchNO, serialNO, createDate, updateDate, creater, updater, plasmaId,allId
+    </sql>
+
+	<!-- 查询血清电泳列表 -->
+	<select id="querySerumElectrophoresisList" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fp.name,fp.sex,fp.bloodType,fp.type,fp.createDate AS ccreate,fs.*,fa.name fname FROM f_serum_electrophoresis AS fs 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON fs.providerNo = fp.providerNo 
+		INNER JOIN f_admin AS fa 
+		ON fs.creater = fa.id 
+		WHERE 1=1 
+		<if test="providerNo!=null and providerNo!='' ">
+			AND fs.providerNo=#{providerNo}
+		</if>
+		<if test="time!=null and time!='' ">
+			AND DATE_FORMAT(fs.createDate,'%Y-%m-%d')=#{time}
+		</if>
+	</select>
+	<!-- 根据更新日期查询蛋白电泳记录 -->
+	<select id="selectByUpdateDate"  resultType="com.fadl.common.DataRow" >
+	SELECT se.batchNO, se.serialNO, se.providerNo, se.albumin,  se.atlas, DATE_FORMAT(se.createDate, '%Y-%m-%d') AS 'createDate', DATE_FORMAT(se.updateDate, '%Y-%m-%d') AS 'updateDate', pb.sex, pb.name,  pb.bloodType
+	FROM f_serum_electrophoresis AS se
+    INNER JOIN f_provider_baseinfo AS pb ON se.providerNo = pb.providerNo 
+    AND TO_DAYS(se.updateDate) = TO_DAYS(#{updateDate})
+	</select>
+</mapper>

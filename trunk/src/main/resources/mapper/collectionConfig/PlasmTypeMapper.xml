@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.collectionConfig.dao.PlasmTypeMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.fadl.collectionConfig.entity.PlasmType">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="isSelected" property="isSelected" />
+		<result column="roomId" property="roomId" />
+		<result column="createDate" property="createDate" />
+		<result column="updateDate" property="updateDate" />
+		<result column="creater" property="creater" />
+		<result column="updater" property="updater" />
+		<result column="plasmaId" property="plasmaId" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, isSelected, roomId, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+	<select id="queryPlasmTypeList" resultType="com.fadl.common.DataRow"  parameterType="java.util.Map">
+		SELECT tp.id,tp.name,tp.isSelected,ty.name as room,tp.createDate,tp.updateDate,tp.creater,tp.updater FROM f_plasm_type tp
+		LEFT JOIN f_room ty
+		ON tp.roomId=ty.id
+		where tp.isDelete=0
+		<if test="name!=null and name!='' ">
+			AND tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		<if test="roomId!=null and roomId!='' ">
+			AND tp.roomId=#{roomId}
+		</if>
+	</select>
+</mapper>

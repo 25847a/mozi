@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.plasma.dao.ProviderBaseinfoTempMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.plasma.entity.ProviderBaseinfoTemp">
+        <id column="id" property="id" />
+        <result column="providerNo" property="providerNo" />
+        <result column="icNumber" property="icNumber" />
+        <result column="name" property="name" />
+        <result column="sex" property="sex" />
+        <result column="idNo" property="idNo" />
+        <result column="imagez" property="imagez" />
+        <result column="imagef" property="imagef" />
+        <result column="imagespot" property="imagespot" />
+        <result column="bloodType" property="bloodType" />
+        <result column="birthday" property="birthday" />
+        <result column="plasmaState" property="plasmaState" />
+        <result column="type" property="type" />
+        <result column="immuneId" property="immuneId" />
+        <result column="immuneRegisterId" property="immuneRegisterId" />
+        <result column="status" property="status" />
+        <result column="level" property="level" />
+        <result column="groupId" property="groupId" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="bloodGrade" property="bloodGrade" />
+        <result column="isGrantCard" property="isGrantCard" />
+        <result column="plasmaId" property="plasmaId" />
+        <result column="addressx" property="addressx" />
+        <result column="place" property="place" />
+        <result column="nation" property="nation" />
+        <result column="validDate" property="validDate" />
+        <result column="isMarry" property="isMarry" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, providerNo, icNumber, name, sex, idNo, imagez, imagef, imagespot, bloodType, birthday, plasmaState, type, immuneId, immuneRegisterId, status, level, groupId, createDate, updateDate, creater, updater, bloodGrade, isGrantCard, plasmaId, addressx, place, nation, validDate, isMarry
+    </sql>
+	
+	<!-- 查询临时表浆员详情 -->
+	<select id="queryBaseTempInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT ft.*,fp.id AS fid,fd.id AS did FROM f_provider_baseinfo_temp AS ft 
+		INNER JOIN f_provider_baseinfo AS fp 
+		ON ft.providerNo = fp.providerNo 
+		INNER JOIN f_detailed_info AS fd 
+		ON fp.id = fd.baseId
+		 WHERE 1=1 
+		<if test="id!=null and id!='' ">
+			AND ft.id=#{id}
+		</if>
+		<if test="providerNo!=null and providerNo!='' ">
+			AND ft.providerNo=#{providerNo}
+		</if>
+		<if test="status!=null and status!='' ">
+			AND ft.status=#{status}
+		</if>
+		ORDER BY ft.createDate DESC 
+		LIMIT 1
+	</select>
+	
+	<!-- 根据浆员卡号更新状态 -->
+	<update id="updateProviderBaseInfoTempByProvider" parameterType="java.util.HashMap">
+		UPDATE f_provider_baseinfo_temp SET status=1 WHERE providerNo=#{providerNo}
+	</update>
+</mapper>

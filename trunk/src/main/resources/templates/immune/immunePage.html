@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+ <head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+		<title>免疫管理</title>
+		<link rel="shortcut icon" href="favicon.ico"/>
+		<link th:href="@{/css/bootstrap.min14ed.css?v=3.3.6}" rel="stylesheet"/>
+		<link th:href="@{/css/font-awesome.min93e3.css?v=4.4.0}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/index.css}" rel="stylesheet"/>
+		<link th:href="@{/css/list/Index_home.css}" rel="stylesheet"/>
+	</head>
+
+	<body class="fixed-sidebar full-height-layout gray-bg">
+		<div id="wrapper" class="wrabusr">
+			<!--左侧导航开始-->
+			<nav class="navbar-default navbar-static-side" role="navigation">
+				<div class="arabusimg">
+					<img th:src="@{/img/Quud_03.png}" />
+					<label for="">免疫管理</label>
+				</div>
+				<div class="sidebar-collapse">
+					<ul class="nav" id="side-menu">
+						<li class="">
+							<a>
+								<i class="fa fa-pie-chart"></i>
+								<span class="nav-label">免疫设置</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
+								<li>
+									<a class="J_menuItem" th:href="@{/immuneSetting/immunePage}" data-index="1">免疫类别设置</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/basicRules/basicRulesPage}" data-index="2">基础针注册规则设置</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/basicRules/strongBasicRulesPage}" data-index="3">加强针注射规则设置</a>
+								</li>
+							<!-- 	<li>
+									<a class="J_menuItem" th:href="@{/immuneControl/immuneControlPage}" data-index="4">免疫针次控制设置</a>
+								</li> -->
+								<li>
+									<a class="J_menuItem" th:href="@{/vaccine/vaccinePage}" data-index="5">疫苗设置</a>
+								</li>
+								<!-- <li>
+									<a class="J_menuItem" th:href="@{/control/controlPage}" data-index="5">控制类型设置</a>
+								</li> -->
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-bar-chart"></i>
+								<span class="nav-label">免疫登记</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a class="J_menuItem" th:href="@{/immuneRegister/immuneRegisterPage}" data-index="6">普免登记</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/immuneRegister/teregisterPage}" data-index="7">特免登记</a>
+								</li>
+							<!-- 	<li>
+									<a class="J_menuItem" th:href="@{/order/examinePage}" data-index="8">老免疫信息登记</a>
+								</li> -->
+								<li>
+									<a class="J_menuItem" th:href="@{/immuneRegister/puregisterInfoPage}" data-index="9">普通免疫基本信息查询</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/immuneRegister/turegisterInfoPage}" data-index="10">特殊免疫基本信息查询</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#"><i class="fa fa-check-square-o"></i> <span class="nav-label">注射管理</span><span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a class="J_menuItem" th:href="@{/ordinaryInjection/toOrdinaryBaseShot}" data-index="11">普免基础针注射</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/ordinaryStrengthenInjection/toOrdinaryStrengthenShot}" data-index="12">普免加强针注射</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/privilegeInjection/toSpecialBaseShot}" data-index="13">特免基础针注射</a>
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/privilegeStrengthenInjection/toSpecialStrengthenShot}" data-index="14">特免加强针注射</a> 
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/ordinaryInjection/toShotMessageQuery}" data-index="15">当天注射记录统计</a> 
+								</li>
+								<li>
+									<a class="J_menuItem" th:href="@{/ordinaryInjection/toImmuneShotMessage}" data-index="15">注射针次记录查询</a> 
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#"><i class="fa fa-television"></i> <span class="nav-label">免疫化验</span><span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level collapse"> 
+								<li>
+									<a class="J_menuItem" th:href="@{/immuneAssay/toSpecialImmune}" data-index="16">特免化验</a>
+								</li>
+								<li> 
+									<a class="J_menuItem" th:href="@{/immuneAssay/toQuerySpecialImmune}" data-index="17">特免检测查询</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#"><i class="fa fa-television"></i> <span class="nav-label">特免转类</span><span class="fa arrow"></span></a>
+							<ul class="nav nav-second-level collapse"> 
+								<li>
+									<a class="J_menuItem" th:href="@{/conversionRecord/toSpecialTransfer}" data-index="18">特免转类</a>
+								</li>
+							</ul>
+						</li>
+					</ul> 
+				</div>
+			</nav>
+			<!--左侧导航结束-->
+			<!--右侧部分开始-->
+			<div id="page-wrapper" class="gray-bg dashbard-1">
+				<div class="row content-tabs">
+				<button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+                </button>
+					<nav class="page-tabs J_menuTabs">
+						<div class="page-tabs-content">
+							<a href="javascript:;" class="active J_menuTab" data-id="kufangxi.html">耗材信息</a>
+						</div>
+					</nav>
+					<button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+                </button>
+					<div class="btn-group roll-nav roll-right">
+						<button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+                    	</button>
+						<ul role="menu" class="dropdown-menu dropdown-menu-right">
+							<li class="J_tabShowActive">
+								<a>定位当前选项卡</a>
+							</li>
+							<li class="divider"></li>
+							<li class="J_tabCloseOther">
+								<a>关闭其他选项卡</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="row J_mainContent" id="content-main">
+					<iframe class="J_iframe" name="iframe0" width="100%" height="100%" th:src="@{/immuneSetting/immunePage}"  frameborder="0" data-id="" seamless=""></iframe>
+				</div>
+			</div>
+			<!--右侧部分结束-->
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<script th:src="@{/layui-master/src/layer.min.js}"></script>
+		<script th:src="@{/js/hplus.min.js}"></script>
+		<script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+		<script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+		<script th:src="@{/js/contabs.min.js}"></script>
+	</body>
+
+</html>

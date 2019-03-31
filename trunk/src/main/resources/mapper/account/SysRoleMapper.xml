@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.account.dao.SysRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.account.entity.SysRole">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="depict" property="depict" />
+        <result column="isDisable" property="isDisable" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, depict, isDisable, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+    <!-- 根据角色名称查询角色信息 -->
+    <select id="queryByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from f_sys_role where name=#{name}
+    </select>
+</mapper>

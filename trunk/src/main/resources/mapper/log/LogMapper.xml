@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.log.dao.LogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.log.entity.Log">
+        <id column="id" property="id" />
+        <result column="method" property="method" />
+        <result column="describe" property="describe" />
+        <result column="ip" property="ip" />
+        <result column="param" property="param" />
+        <result column="time" property="time" />
+        <result column="returnValue" property="returnValue" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+        <result column="providerNo" property="providerNo" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, method, describe, ip, param, time, returnValue, createDate, updateDate, creater, updater, plasmaId,providerNo
+    </sql>
+    
+    <select id="queryLog" resultType="com.fadl.common.DataRow" parameterType="java.util.Map">
+		SELECT fl.id,fl.method,fl.describe,fl.ip,
+		fl.param,fl.time,fl.returnValue,fa.name,
+		fl.createDate FROM f_log fl
+		INNER JOIN f_admin fa ON fl.creater=fa.id
+		WHERE 1=1
+		<if test="startTime!=null and startTime!=''">
+		and DATE_FORMAT(fl.createDate,'%Y-%m-%d') &gt;=#{startTime}
+		</if>
+		<if test="endTime!=null and endTime!=''">
+		and DATE_FORMAT(fl.createDate,'%Y-%m-%d') &lt;=#{endTime}
+		</if>
+		ORDER BY fl.createDate DESC
+	</select>
+
+</mapper>

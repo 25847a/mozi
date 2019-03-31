@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="renderer" content="webkit"/>
+		<title>费用发放查询</title>
+		<link rel="stylesheet" th:href="@{/layui-master/src/css/layui.css}"/>
+		<!--bootstarp-->
+		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+		<link th:href="@{/css/style.min862f.css?v=4.1.0}" rel="stylesheet"/>
+		<link th:href="@{/css/common.css}" rel="stylesheet"/>
+		<!--新献浆员登记css-->
+		<link th:href="@{/css/list/log.css}" rel="stylesheet"/>
+		<style type="text/css">
+			.newolod {
+				padding-left: 35%;
+			}
+		.layui-layer-page .layui-layer-content{
+				    overflow: hidden!important;
+				  padding: 1em 0;
+			}
+		</style>
+	</head>
+	<body id="newpray">
+		<div class="gray-bg ">
+			<div class="wrapper wrapper-content animated fadeInRight weralid" style="">
+				<!--基本信息及验证-->
+				<div class="col-xs-12 colx8 colnewo">
+					<div class="row newregis">
+						<div class="row newregistr" id="export">
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC">献浆卡号：</label>
+									<div class="input-group">
+										<input type="text"  class="form-control newfrin" id="providerNo" />
+									</div>
+								</div>
+
+								<div class="form-group newikrd">
+									<label class="control-label UserC">采浆日期：</label>
+									<div class="input-group">
+										<input type="text" class="form-control newfrin" id="createDateCol" />
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-3 colxsgray">
+
+									<div class="form-group newikrd">
+									<label class="control-label UserC"><ls style="    letter-spacing: 4px;  margin-right: -3px;">IC卡号</ls>：</label>
+									<div class="input-group">
+										<input type="text" class="form-control newfrin" id="icNumber" />
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC"><ls>发放人</ls>：</label>
+									<div class="input-group">
+										<input type="text" class="form-control newfrin" id="updater" />
+									</div>
+								</div>
+
+
+							</div>
+							<div class="col-xs-3 colxsgray">
+								<div class="form-group newikrd">
+									<label class="control-label UserC">固定浆员：</label>
+									<div class="input-group">
+										<select id="plasmaType" name="plasmaType" class="form-control">
+											<option value="">请选择</option>
+											<option value="1">固定浆员</option>
+											<option value="0">非固定浆员</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group newikrd">
+									<label class="control-label UserC">发放日期：</label>
+									<div class="input-group">
+										<input type="text" class="form-control newfrin" id="createDateCost" />
+									</div>
+								</div>
+
+							</div>
+<div class="col-xs-3 colxsgray">
+	<div class="form-group newikrd">
+		<label class="control-label UserC"><ls>身份证：</ls></label>
+		<div class="input-group">
+			<input type="text" class="form-control newfrin" id="idNo" />
+		</div>
+	</div>
+</div>
+						</div>
+					</div>
+			<div class="row newrowseg" style="margin-top: 1em;margin-bottom: 0.5em;">
+						<div class="form-group newikrd">
+							<div class="input-group newInpa butnewikr" style="">
+								<button type="button" class="btn  btn-info Phyegis" id="sub">查询</button>
+								<button type="button" class="btn  btn-info Phyegis" id="reset">重置</button>
+								<button type="button" class="btn  btn-info Phyegis"  id="exportToExcel">导出到EXCEL</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--上传证件及照片-->
+			</div>
+		</div>
+		<div class="gray-bg" id="" style=" ">
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<div class="row UserA" style=" ">
+				</div>
+				<div class="row busr">
+					<div class="col-md-12 bustrNew">
+							<table class="layui-hide" id="newtestS" lay-filter="demo"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--jQuery包-->
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/jquery.webcam.js}"></script>
+		<!--bootstarp表格插件-->
+		<script th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+		<!--layer插件包-->
+		<script th:src="@{/layui-master/src/layui.js}" charset="utf-8"></script>
+		<script th:src="@{/js/cost/cost_query_list.js}"></script>
+		<script th:src="@{/js/utils.js}"></script>
+		<script th:src="@{/js/dateUtil.js}"></script>
+	</body>
+</html>

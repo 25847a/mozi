@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.cost.dao.ActivityCostDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.cost.entity.ActivityCostDetail">
+        <id column="id" property="id" />
+        <result column="costId" property="costId" />
+        <result column="activityId" property="activityId" />
+        <result column="plasmaId" property="plasmaId" />
+        <result column="num" property="num" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, costId, activityId, plasmaId, num
+    </sql>
+
+	<!-- 查询费用明细 -->
+    <select id="queryActivityCostList" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+        SELECT fc.name,fa.num,fc.moneyType,fc.money FROM f_activity_cost_detail AS fa 
+		INNER JOIN f_activity AS fc 
+		ON fa.activityId = fc.id
+		WHERE fa.costId= #{id}
+    </select>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.elisa.dao.ElisaGrayAreaSettingsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.elisa.entity.ElisaGrayAreaSettings">
+        <id column="id" property="id" />
+        <result column="etId" property="etId" />
+        <result column="cutoffFormula" property="cutoffFormula" />
+        <result column="proportionValue" property="proportionValue" />
+        <result column="conventionalValue" property="conventionalValue" />
+        <result column="minValue" property="minValue" />
+        <result column="maxValue" property="maxValue" />
+        <result column="isMaxWithCutOff" property="isMaxWithCutOff" />
+        <result column="optionsValue" property="optionsValue" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+        <result column="plasmaId" property="plasmaId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, etId, cutoffFormula, proportionValue, conventionalValue, minValue, maxValue, isMaxWithCutOff, optionsValue, createDate, updateDate, creater, updater, plasmaId
+    </sql>
+
+</mapper>
