@@ -9,6 +9,8 @@ public class Caaa {
 		int lowpressure=7000;
 		int d = r.nextInt((lowpressure/10)*2)+(lowpressure-lowpressure/10)+1;
 		System.out.println(d);
+		
+		
 	}
 	
 	
