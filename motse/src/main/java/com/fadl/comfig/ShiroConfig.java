@@ -6,12 +6,16 @@ import java.util.Map;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,6 +23,8 @@ import com.fadl.account.entity.Auth;
 import com.fadl.account.service.AuthService;
 import com.fadl.comfig.shiro.MyShiroRealm;
 import com.fadl.common.StringHelper;
+
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 
 @Configuration
 public class ShiroConfig {
@@ -28,7 +34,30 @@ public class ShiroConfig {
 	
 	@Autowired
 	AuthService authService;
-	
+	@Value("${spring.redis.host}")
+	private String host;
+	@Value("${spring.redis.port}")
+	private int port;
+	@Value("${spring.redis.timeout}")
+	private int timeout;
+	@Value("${spring.redis.password}")
+	private String password;
+	/**
+	 * 管理shiro bean生命周期
+	 * @return
+	 */
+	@Bean
+    public static LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+	/**
+     * ShiroDialect，为了在thymeleaf里使用shiro的标签的bean
+     * @return
+     */
+    @Bean
+    public ShiroDialect shiroDialect() {
+        return new ShiroDialect();
+    }
 	@Bean
 	public ShiroFilterFactoryBean shirFilter(SecurityManager  securityManager){
 		ShiroFilterFactoryBean shiroFilterFactoryBean  = new ShiroFilterFactoryBean();
@@ -52,12 +81,12 @@ public class ShiroConfig {
 	     filterChainDefinitionMap.put("/layui-master*/**/**","anon");
 	     filterChainDefinitionMap.put("/log/**","anon");
 		 //过滤链定义，从上向下顺序执行，一般将/**放在最为下边:这是一个坑呢，一不小心代码就不好使了;
-	     List<Auth> auth =authService.queryAuthList();
+	 /*   List<Auth> auth =authService.queryAuthList();
 	     for(Auth au:auth){
 	    	 if(!StringHelper.isEmpty(au.getUrl()) && !StringHelper.isEmpty(au.getPermission())){
 	    		 filterChainDefinitionMap.put(au.getUrl(), "perms["+au.getPermission()+"]");
 	    	 }
-	     }
+	     }*/
 		 filterChainDefinitionMap.put("/**", "authc");
 		 shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		} catch (Exception e) {
@@ -83,7 +112,10 @@ public class ShiroConfig {
 	@Bean
 	public SecurityManager securityManager(){
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+		//设置realm.
 		securityManager.setRealm(myShiroRealm());
+		// 自定义缓存实现 使用redis
+	//	securityManager.setCacheManager(redisCacheManager());
 		return securityManager;
 	}
 	/**
@@ -110,5 +142,30 @@ public class ShiroConfig {
 		authorization.setSecurityManager(securityManager);
 		return authorization;
 	}
+	/**
+	 * 配置shiro redisManager
+	 * 使用的是shiro-redis开源插件
+	 * @return
 	
+	public RedisManager redisManager(){
+		RedisManager redis = new RedisManager();
+		redis.setHost(host);
+		redis.setPassword(password);
+		redis.setPort(port);
+		redis.setExpire(1800);
+		redis.setTimeout(timeout);
+		return redis;
+	} */
+	/**
+     * cacheManager 缓存 redis实现
+     * 使用的是shiro-redis开源插件
+     * @return
+    
+	@Bean
+	public RedisCacheManager redisCacheManager(){
+		RedisCacheManager redis = new RedisCacheManager();
+		redis.setRedisManager(redisManager());
+		return redis;
+	}
+ */
 }

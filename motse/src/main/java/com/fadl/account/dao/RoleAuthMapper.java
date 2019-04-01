@@ -21,5 +21,5 @@ public interface RoleAuthMapper extends BaseMapper<RoleAuth> {
 		 * @return
 		 * @throws SQLException
 		 */
-		public List<String> queryRoleAuthList()throws SQLException;
+		public List<String> queryRoleAuthList(List<Long> roleSize)throws SQLException;
 }

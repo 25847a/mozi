@@ -19,7 +19,7 @@
     </sql>
 
 
-	<select id="queryAdminRoleInfo" parameterType="java.util.Long" resultMap="BaseResultMap">
+	<select id="queryAdminRoleInfo" parameterType="java.lang.Long" resultMap="BaseResultMap">
 		SELECT * FROM admin_role WHERE man_id = #{id}
 	</select>
 </mapper>

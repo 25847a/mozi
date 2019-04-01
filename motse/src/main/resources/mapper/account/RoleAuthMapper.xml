@@ -17,7 +17,7 @@
     <sql id="Base_Column_List">
         id, role_id AS roleId, auth_id AS authId, createDate, updateDate, creater, updater
     </sql>
-		<select id="queryRoleAuthList" parameterType="java.util.List" resultMap="java.lang.String">
+		<select id="queryRoleAuthList" parameterType="java.util.List" resultType="java.lang.String">
 				SELECT permission FROM role_auth tp
 				LEFT JOIN auth td
 				ON tp.auth_id =td.id
