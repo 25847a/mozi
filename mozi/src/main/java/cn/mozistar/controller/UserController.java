@@ -781,10 +781,18 @@ public class UserController {
 	@ResponseBody
 	public ResultBase addHealth(@RequestBody JSONObject json){
 		ResultBase re = new ResultBase();
-		Integer userId = json.getInt("userId");
-		Healthdao healthdao = healthdaoService.getHealthdaoByUserId(userId);
-		User user = userService.getUser(userId);
-		re=HealthtoolUtils.addT14Health(json, user,healthdao,userService,healthdaoService, healthService,re);
+		System.out.println(json);
+		String waveform = json.getString("waveform");
+		if(!waveform.equals("")){
+			Integer userId = json.getInt("userId");
+			Healthdao healthdao = healthdaoService.getHealthdaoByUserId(userId);
+			User user = userService.getUser(userId);
+			re=HealthtoolUtils.addT14Health(json, user,healthdao,userService,healthdaoService, healthService,re);
+		}else{
+			re.setMessage("数据获取中断");
+			re.setCode(400);
+		}
+		
 		return re;
 	}
 	/**
