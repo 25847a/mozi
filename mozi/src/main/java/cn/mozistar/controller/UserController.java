@@ -111,6 +111,7 @@ public class UserController {
 			re.setCode(350);
 			re.setMessage("帐号不存在");
 		}
+		System.out.println(re.toString());
 		return re;
 	}
 
@@ -367,6 +368,7 @@ public class UserController {
 			map.put("name", name);
 			map.put("phone", phone);
 			map.put("avatar", avatar);
+			map.put("calibration", user.getCalibration());
 			map.put("coordinate", user.getCoordinate());
 			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
 			Health health = healthService.getHealthByUserId(integer);
@@ -468,6 +470,7 @@ public class UserController {
 		map.put("name", name);
 		map.put("phone", phone);
 		map.put("avatar", avatar);
+		map.put("calibration", user.getCalibration());
 		SimpleDateFormat updatetimedf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
 		String updatetime = updatetimedf.format(new Date());
 		map.put("updatetime", updatetime);

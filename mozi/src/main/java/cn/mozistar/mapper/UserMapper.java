@@ -34,7 +34,7 @@ public interface UserMapper {
 	int insertSelective(User record);
 
 	@Select({ "select", "id, account, password, name, age, gender, phone, address, avatar, createtime, ",
-			"atlasttime, weight, height, born, updatetime,coordinate, code", "from user", "where id = #{id,jdbcType=INTEGER}" })
+			"atlasttime, weight, height, born, updatetime,coordinate,calibration, code", "from user", "where id = #{id,jdbcType=INTEGER}" })
 	@Results({ @Result(column = "id", property = "id", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "account", property = "account", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "password", property = "password", jdbcType = JdbcType.VARCHAR),
@@ -51,6 +51,7 @@ public interface UserMapper {
 			@Result(column = "born", property = "born", jdbcType = JdbcType.TIMESTAMP),
 			@Result(column = "updatetime", property = "updatetime", jdbcType = JdbcType.TIMESTAMP),
 			@Result(column = "coordinate", property = "coordinate", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "calibration", property = "calibration", jdbcType = JdbcType.INTEGER),
 			@Result(column = "code", property = "code", jdbcType = JdbcType.VARCHAR) })
 	User selectByPrimaryKey(Integer id);
 
