@@ -134,14 +134,14 @@ public interface HealthMapper {
 	Health selecthealthMax(Map<String, Object> map);
 
 	@Select("<script>" + "<if test= 'keyWord != null and keyWord != \"\" and  keyWord == \"year\" '>"
-			+ "select * from  health  where year(createtime)= #{timedata}    and  userId =#{userId} ORDER BY lowBloodPressure LIMIT 1 ;"
+			+ "select * from  health  where year(createtime)= #{timedata}    and  userId =#{userId} ORDER BY lowBloodPressure LIMIT 1,1 ;"
 			+ "</if>" + "<if test='keyWord != null and keyWord != \"\" and  keyWord == \"month\" '>"
-			+ "select * from health  where month(createtime)= #{timedata} and  userId =#{userId} and year(createtime)= #{year} ORDER BY lowBloodPressure LIMIT 1 ;"
+			+ "select * from health  where month(createtime)= #{timedata} and  userId =#{userId} and year(createtime)= #{year} ORDER BY lowBloodPressure LIMIT 1,1 ;"
 			+ "</if>" + "<if test='keyWord != null and keyWord != \"\" and  keyWord == \"day\" '>"
 			+ "select * from health  where  day(createtime)= #{timedata} and  userId =#{userId} and year(createtime)= #{year}  and "
-			+ " month(createtime)= #{month} ORDER BY lowBloodPressure LIMIT 1;" + "</if>"
+			+ " month(createtime)= #{month} ORDER BY lowBloodPressure LIMIT 1,1;" + "</if>"
 			+ "<if test='keyWord != null and keyWord != \"\" and  keyWord == \"week\" '>"
-			+ " select * from health  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  userId =#{userId} ORDER BY lowBloodPressure LIMIT 1 ;"
+			+ " select * from health  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  userId =#{userId} ORDER BY lowBloodPressure LIMIT 1,1 ;"
 			+ " </if>" + " </script>")
 	Health selecthealthMin(Map<String, Object> map);
 }
