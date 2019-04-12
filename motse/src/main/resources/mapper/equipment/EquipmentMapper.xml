@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.equipment.dao.EquipmentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.equipment.entity.Equipment">
+        <id column="id" property="id" />
+        <result column="imei" property="imei" />
+        <result column="lordpower" property="lordpower" />
+        <result column="signalxhao" property="signalxhao" />
+        <result column="bluetooth_type" property="bluetoothType" />
+        <result column="eq_status" property="eqStatus" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+        <result column="eqtype" property="eqtype" />
+        <result column="bluetooth_name" property="bluetoothName" />
+        <result column="bluetooth_status" property="bluetoothStatus" />
+        <result column="bluetooth_list" property="bluetoothList" />
+        <result column="bluetooth_electricity" property="bluetoothElectricity" />
+        <result column="clock" property="clock" />
+        <result column="phone1" property="phone1" />
+        <result column="phone2" property="phone2" />
+        <result column="name" property="name" />
+        <result column="version" property="version" />
+        <result column="uploadtime" property="uploadtime" />
+        <result column="bluetoothmac" property="bluetoothmac" />
+        <result column="agentid" property="agentid" />
+        <result column="model" property="model" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, imei, lordpower, signalxhao, bluetooth_type AS bluetoothType, eq_status AS eqStatus, createtime, updatetime, eqtype, bluetooth_name AS bluetoothName, bluetooth_status AS bluetoothStatus, bluetooth_list AS bluetoothList, bluetooth_electricity AS bluetoothElectricity, clock, phone1, phone2, name, version, uploadtime, bluetoothmac, agentid, model
+    </sql>
+
+</mapper>

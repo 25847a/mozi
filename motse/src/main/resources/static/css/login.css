@@ -1,0 +1,123 @@
+body{
+	overflow: hidden;
+	background: #f1f2f7;
+	display: flex;
+	min-height: 100vh;
+  	flex-direction: column;
+}
+.header{
+	width: 100%;
+	background: url(../img/01.png) 100% 100%;
+	padding: 30px 0 13px 0;
+}
+.header .logo{
+	width: 420px;
+	margin: 0 auto;
+}
+.header .logo div{
+	width: 132px;
+	margin: 0 auto 25px;
+}
+.header .logo div img{
+	width: 100%;
+}
+.header h1{
+	color: #ffffff;
+	font-size: 24px;
+	text-align: center;
+}
+.content{
+	width: 100%;
+	flex:1;
+	
+}
+.content >div{
+	width: 1200px;
+	margin: 0 auto;
+	padding: 25px 0 80px 0;
+	background: url(../img/04.png)no-repeat 60%;
+}
+.content .login{
+	width: 410px;
+	margin: 0 auto;
+	background: #ffffff;
+	padding: 29px 25px 53px;
+	box-sizing: border-box;
+	border-radius: 5px;
+}
+.content .login h2{
+	text-align: center;
+	font-size: 18px;
+	color: #333333;
+}
+.content .login form{
+	padding-top:40px;
+	width: 360px; 
+}
+.content .login form .name{
+	display: flex;
+	height: 44px;
+	margin-bottom: 20px; 
+}
+.content .login form .name .username_icon{
+	width: 50px;
+}
+.content .login form .name .username_icon img{
+	width: 100%;
+}
+.content .login form .password{
+	display: flex;
+	height: 44px;
+	margin-bottom: 13px; 
+}
+.content .login form .password .password_icon{
+	width: 50px;
+}
+.content .login form .password .password_icon img{
+	width: 100%;
+}
+.content .login input{
+	width: 290px;
+	padding: 0 19px;
+	background: #f1f2f7;
+	border-bottom-right-radius:5px;
+	border-top-right-radius:5px;
+	border: 0;
+}
+.content .login .forget{	
+	text-align: right;
+	margin-bottom: 15px;
+	font-size: 12px;
+}
+.content .login .langing{
+	font-size: 16px;
+	border-radius: 5px;
+	background: #337ac7;
+	line-height: 44px;
+	text-align: center;
+	cursor:pointer;
+
+}
+.content .login .langing a{
+	color: #ffffff;
+}
+.content .login >img{
+	width: 680px;
+	height: 600px;
+}
+.footer{
+	width: 100%;
+	padding: 20px 0;
+	background: #0e3258;
+}
+.footer ul{
+	display: flex;
+	width: 1200px;
+	margin: 0 auto;
+	color: #ffffff;
+	font-size: 12px;
+}	
+.footer ul li:nth-of-type(odd){
+	width: 290px;
+	text-align: center;
+}

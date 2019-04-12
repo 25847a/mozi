@@ -1,0 +1,100 @@
+body{
+	padding: 10px;
+	overflow: hidden;
+}
+.header{
+	width: 100%;
+	display: flex;
+	padding: 15px 0;
+	background: #dfdfdf;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.header .img{
+	width: 15px;
+	margin-left: 20px;
+}
+.header .img img{
+	width: 100%;
+}
+
+.header .home{
+	font-size: 13px;
+	font-weight: bold;
+	text-indent: 0.5rem;
+	color: #aaaaaa;
+}
+
+.content{
+	width: 100%;
+	margin-top: 10px;
+	background: #ffffff;
+}
+.content .history{
+	display: flex;
+	padding: 15px 0;
+	background: #337ac7;	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+.content .history .icon{
+	width: 25px;
+	margin-left: 20px;
+}
+
+.content .history .icon img{
+	width: 100%;
+}
+
+
+.content .history p{
+	font-size: 16px;
+	font-weight: bold;
+	text-indent: 0.5rem;
+	color: #ecf1f8;
+}
+
+.content .table{
+	padding: 0 20px;
+	border-radius: 10px;
+	background: white;
+    padding-bottom: 80px;
+}
+.content .table .check{
+	padding: 15px 0;
+	display: flex;
+}
+.content .table .check .btn{
+	flex: 1;
+}
+.content .table .check .btn button{
+	width: 100px;
+}
+
+.content .table .check input{
+	width: 180px;
+	height: 30px;
+	padding:0 5px;
+	margin-right: 5px; 
+}
+.content .table .check button{
+	width: 80px;
+	height: 30px;
+	color: #ffffff;
+	background: #337ac7;
+	border: 0;
+}
+
+.v-table-htable {
+    color: #337ac7;
+    font-weight: bold;
+}
+
+.v-table-header-inner{
+	background-color: #f3f3f3;z-index: 200;
+}
+
+.v-table-views{
+	font-size: 13px;
+}

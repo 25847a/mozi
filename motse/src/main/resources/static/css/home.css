@@ -1,0 +1,173 @@
+body{
+	padding: 10px;
+}
+.header{
+	display: flex;
+}
+.header .pie{
+	width: 20%;
+	margin-right:10px; 
+}
+.header .pie h2{
+	padding: 15px 0;
+	text-align: center;
+	color: #ffffff;
+	font-size: 16px;
+	background: #337ac7;
+	margin-bottom: 10px; 
+}
+.header .pie #abb{
+	background: #ffffff;
+}
+#echartPieContainer{
+	box-shadow: 0px 0px 30px #ebebeb;
+	height:300px;
+	margin-bottom: 10px;
+	border-radius: 5px; 
+	padding-top: 20px; 
+}
+#echartPie{
+	box-shadow: 0px 0px 30px #ebebeb;
+	height:300px;
+	border-radius: 5px; 
+	padding-top: 20px; 
+}
+
+
+.header .table{
+	flex:1;
+	border-radius: 5px; 
+	background: #ffffff;
+	box-shadow: 0px 0px 30px #ebebeb;
+}
+.header .table .head{
+	padding: 15px 20px;
+	display: flex;
+	background: #fafafa;
+}
+.header .table .head h3{
+	flex:1;
+	font-size: 16px;
+	color: #3f3f3f;
+	font-weight: bold;
+}
+.header .table .head ul{
+	display: flex;
+}
+
+.header .table .head ul li{
+	display: flex;
+	margin: 0 30px;
+}
+.header .table .head ul li img{
+	width: 20px;
+    height: 20px;
+}
+.header .table .head ul li span{
+	padding-left:5px; 
+}
+
+
+#app{
+	padding: 5px 5px;
+}
+
+.v-table-htable{
+	background: #337ac7;
+	color: #ffffff;
+}
+
+.content{
+	width: 100%;
+	display: flex;
+	padding-top:10px; 
+}
+.content .rate{
+	width: 50%;
+	margin-right: 10px;
+	background: #ffffff;
+	padding-top:15px; 
+	border-radius: 5px;
+	box-shadow: 0px 0px 30px #ebebeb;
+}
+
+.content .blood{
+	width: 50%;
+	background: #ffffff;
+	border-radius: 5px;
+	box-shadow: 0px 0px 30px #ebebeb;
+}
+.content .blood h3{
+	padding: 10px 0; 
+	font-size: 16px;
+	text-indent: 1rem;
+	font-weight: bold;
+	background: #fafafa;
+}
+#echartfunnel{
+	padding-top:25px; 
+}
+
+.footer{
+	width: 100%;
+	display: flex;
+	padding-top: 10px;
+}
+
+.footer .ring{
+	width: 35%;
+	border-radius: 5px;
+	box-shadow: 0px 0px 30px #ebebeb;
+	background: #ffffff;
+	margin-right:10px; 
+}
+
+.footer .ring h3{
+	padding: 10px 0; 
+	font-size: 16px;
+	text-indent: 1rem;
+	font-weight: bold;
+	background: #fafafa;
+}
+
+.footer .tree{
+	width: 35%;
+	border-radius: 5px;
+	box-shadow: 0px 0px 30px #ebebeb;
+	background: #ffffff;
+	margin-right:10px; 
+}
+
+.footer .tree h3{
+	padding: 10px 0; 
+	font-size: 16px;
+	text-indent: 1rem;
+	font-weight: bold;
+	background: #fafafa;
+}
+
+#treechart{
+	padding-left:15px; 
+}
+
+.footer .breathe{
+	width: 35%;
+	border-radius: 5px;
+	box-shadow: 0px 0px 30px #ebebeb;
+	background: #ffffff;
+}
+
+.footer .breathe h3{
+	padding: 10px 0; 
+	font-size: 16px;
+	text-indent: 1rem;
+	font-weight: bold;
+	background: #fafafa;
+}
+td .vertical-border {
+     border-right-width: 0px!important; 
+}
+
+.v-table-views{
+	font-size: 13px;
+}
