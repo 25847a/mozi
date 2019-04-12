@@ -1,4 +1,0 @@
- $(function(){
-	getReportInfo(6);
- });
- 
