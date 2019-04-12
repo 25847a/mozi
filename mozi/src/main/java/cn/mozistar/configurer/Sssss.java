@@ -1,10 +1,15 @@
 package cn.mozistar.configurer;
 
+import java.util.Arrays;
+
+import org.springframework.util.Base64Utils;
+
+import cn.jiguang.common.utils.Base64;
 
 public class Sssss {
 
 	public static void main(String[] args) {
-		
+		/*
 		while(true){
 			try {
 				Thread.sleep(500);
@@ -14,7 +19,10 @@ public class Sssss {
 				e.printStackTrace();
 			}
 			
-		}
+		}*/
+		String data="JHxBMDoxDQoAAAAAAAAAAAAAAAA=";
+		byte[] fromBASE64 = Base64Utils.decodeFromString(data);
+		System.out.println(Arrays.toString(fromBASE64));
 	}
 	
 	

@@ -14,7 +14,6 @@ import cn.mozistar.pojo.Health;
 import cn.mozistar.pojo.Push;
 import cn.mozistar.pojo.User;
 import cn.mozistar.service.HealthService;
-import cn.mozistar.util.HealthtoolUtils;
 import cn.mozistar.util.JpushClientUtil;
 import cn.mozistar.vo.Chart;
 
@@ -52,7 +51,7 @@ public class HealthServiceImpl implements HealthService {
 	/**
 	 * 发送预警
 	 */
-	public void sendJpush(Health health) {
+	public void sendJpush(Health health,String registrationID) {
 		List<Push> pushs = pushMapper.selectPushByUserId(health.getUserId());
 
 		User user = userMapper.selectByPrimaryKey(health.getUserId());
@@ -67,7 +66,7 @@ public class HealthServiceImpl implements HealthService {
 					if (lowBloodPressure < push.getLbpstart() || lowBloodPressure > push.getLbpend()) {
 						Thread t = new Thread() {
 							public void run() {
-								JpushClientUtil.sendToAlias(push.getAlias().toString(), user.getName() + "的舒张压异常",
+								JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的舒张压异常",
 										"当前舒张压为" + lowBloodPressure,
 										"已经超过正常范围值" + push.getLbpstart() + "-" + push.getLbpend(), null, null);
 							}
@@ -78,7 +77,7 @@ public class HealthServiceImpl implements HealthService {
 					if (highBloodPressure < push.getHbpstart() || highBloodPressure > push.getHbpend()) {
 						Thread t = new Thread() {
 							public void run() {
-								JpushClientUtil.sendToAlias(push.getAlias().toString(), user.getName() + "的收缩压异常",
+								JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的收缩压异常",
 										"当前收缩压为" + highBloodPressure,
 										"已经超过正常范围值" + push.getHbpstart() + "-" + push.getHbpend(), null, null);
 							}
@@ -90,7 +89,7 @@ public class HealthServiceImpl implements HealthService {
 					if (heartRate > push.getHeartHigThd() || heartRate < push.getHeartLowThd()) {
 						Thread t = new Thread() {
 							public void run() {
-								JpushClientUtil.sendToAlias(push.getAlias().toString(), user.getName() + "的心率异常",
+								JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的心率异常",
 										"当前心率" + heartRate,
 										"已经超过正常范围值" + push.getHeartLowThd() + "-" + push.getHeartHigThd(), null, null);
 							}

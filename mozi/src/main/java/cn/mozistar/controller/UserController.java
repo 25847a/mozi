@@ -70,9 +70,16 @@ public class UserController {
 	private PushService pushService;
 	@Autowired
 	private PositionigService positionigService;
-	
-	
-
+	/**
+	 * 跳转android操作提示页面
+	 * @return
+	 */
+	@RequestMapping(value = "phone")
+	public ModelAndView phone() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("phone");
+		return mo;
+	}
 	/**
 	 * 用户登陆
 	 * @param m
@@ -375,8 +382,8 @@ public class UserController {
 			if (health == null) {
 				health = new Health();
 			}
-			//map.put("updatetime",health.getCreatetime()==null?"":sf.format(health.getCreatetime()));
-			map.put("updatetime",sf.format(health.getCreatetime()));
+			map.put("updatetime",health.getCreatetime()==null?"":sf.format(health.getCreatetime()));
+		//	map.put("updatetime",sf.format(health.getCreatetime()));
 			dmap.put("user", map);
 			map = new HashMap<String, Object>();
 			map.put("name", "heartrate");
@@ -789,7 +796,7 @@ public class UserController {
 			User user = userService.getUser(userId);
 			re=HealthtoolUtils.addT14Health(json, user,healthdao,userService,healthdaoService, healthService,re);
 		}else{
-			re.setMessage("数据获取中断");
+			re.setMessage("采集失败,请检查传感器");
 			re.setCode(400);
 		}
 		
