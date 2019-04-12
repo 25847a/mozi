@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet"href="../css/phone.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <title>Document</title>
+    
+</head>
+<body>
+    <div class="top">
+        <div class="huawei">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            华为手机
+        </div>
+        <div class="huawei-img">
+           <img src="../img/huawei.png" alt=""> 
+        </div>
+        
+    </div>
+    <div class="bottom">
+        <div class="xiaomi">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            小米手机
+        </div>
+        <div class="xiaomi-img">
+            <img src="../img/xiaomi.png" alt="">
+            <div id="top"></div>
+        </div>
+        
+    </div>
+    <script src="../js/jquery-1.11.3.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $(".huawei").click(function(){
+            $(".huawei-img").slideToggle();
+        })
+        
+        $(".xiaomi").click(function(){
+            $(".xiaomi-img").slideToggle();
+        })
+
+        $(function () {
+            $(".huawei").click(function (e) {
+                /*切换折叠指示图标*/
+                $(this).find("span").toggleClass("glyphicon-chevron-down");
+            });
+            $(".xiaomi").click(function (e) {
+                /*切换折叠指示图标*/
+                $(this).find("span").toggleClass("glyphicon-chevron-down");
+            });
+        });
+
+        $(function(){
+            $("#top").click(function() {
+                $("html,body").animate({scrollTop:0}, 500);
+            }); 
+        })
+    </script>
+</body>
+</html>

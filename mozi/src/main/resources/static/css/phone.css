@@ -1,0 +1,32 @@
+.top,.bottom{
+    width: 100%;
+}
+
+.huawei-img,.xiaomi-img{
+    display: none;
+    border: 2px solid #bbbbbb;
+    border-radius: .6px;
+}
+.huawei,.xiaomi{
+    color: #101010;
+    font-size: 1.5rem;
+    background: #e6e6e6;
+    border: 2px solid #bbbbbb;
+    border-radius: .6rem;
+    padding: 1rem 1.3rem;
+}
+
+img{
+    width:100%;
+    
+}
+.xiaomi-img{
+    position: relative;
+}
+#top{
+    position: absolute;
+    right: 1.2rem;
+    bottom: 2rem;
+    width: 4rem;
+    height: 4rem;
+}
