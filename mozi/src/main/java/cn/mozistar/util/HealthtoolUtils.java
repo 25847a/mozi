@@ -96,7 +96,7 @@ public class HealthtoolUtils {
 		try{
 				//健康数据
 				String data = json.getString("data");
-				String registrationID = json.getString("registrationID");
+				
 				String account = "mozistar" + String.valueOf(user.getId());
 				System.out.println(account);
 				String stattime = Uploadhealth(account, "123456", data, device_id, "T14");
@@ -307,8 +307,16 @@ public class HealthtoolUtils {
 							health.setPhone(user.getPhone());
 							health.setWaveform(sb.toString());
 							healthService.insertSelective(health);
-							//预警功能
-							healthService.sendJpush(health,registrationID);
+							if(json.containsKey("registrationID")){
+								//预警功能
+								String registrationID = json.getString("registrationID");
+								healthService.sendJpush(health,registrationID);
+								
+							}else{
+								healthService.sendJpush(health,"");
+							}
+							
+							
 						}
 					}else{
 						//波形图数据
@@ -475,8 +483,14 @@ public class HealthtoolUtils {
 						health.setPhone(user.getPhone());
 						health.setWaveform(sb.toString());
 						healthService.insertSelective(health);
-						//预警功能
-						healthService.sendJpush(health,registrationID);
+						if(json.containsKey("registrationID")){
+							//预警功能
+							String registrationID = json.getString("registrationID");
+							healthService.sendJpush(health,registrationID);
+							
+						}else{
+							healthService.sendJpush(health,"");
+						}
 					}
 					
 					re.setCode(200);

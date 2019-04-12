@@ -53,7 +53,6 @@ public class HealthServiceImpl implements HealthService {
 	 */
 	public void sendJpush(Health health,String registrationID) {
 		List<Push> pushs = pushMapper.selectPushByUserId(health.getUserId());
-
 		User user = userMapper.selectByPrimaryKey(health.getUserId());
 		Integer heartRate = health.getHeartRate();
 		Integer lowBloodPressure = health.getLowBloodPressure();
@@ -66,9 +65,16 @@ public class HealthServiceImpl implements HealthService {
 					if (lowBloodPressure < push.getLbpstart() || lowBloodPressure > push.getLbpend()) {
 						Thread t = new Thread() {
 							public void run() {
-								JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的舒张压异常",
-										"当前舒张压为" + lowBloodPressure,
-										"已经超过正常范围值" + push.getLbpstart() + "-" + push.getLbpend(), null, null);
+								if(registrationID.equals("")){
+									JpushClientUtil.sendToAlias(push.getAlias().toString(), user.getName() + "的舒张压异常",
+											"当前舒张压为" + lowBloodPressure,
+											"已经超过正常范围值" + push.getLbpstart() + "-" + push.getLbpend(), null, null);
+								}else{
+									JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的舒张压异常",
+											"当前舒张压为" + lowBloodPressure,
+											"已经超过正常范围值" + push.getLbpstart() + "-" + push.getLbpend(), null, null);
+								}
+								
 							}
 						};
 						t.start();
@@ -77,9 +83,16 @@ public class HealthServiceImpl implements HealthService {
 					if (highBloodPressure < push.getHbpstart() || highBloodPressure > push.getHbpend()) {
 						Thread t = new Thread() {
 							public void run() {
-								JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的收缩压异常",
-										"当前收缩压为" + highBloodPressure,
-										"已经超过正常范围值" + push.getHbpstart() + "-" + push.getHbpend(), null, null);
+								if(registrationID.equals("")){
+									JpushClientUtil.sendToAlias(push.getAlias().toString(), user.getName() + "的收缩压异常",
+											"当前收缩压为" + highBloodPressure,
+											"已经超过正常范围值" + push.getHbpstart() + "-" + push.getHbpend(), null, null);
+								}else{
+									JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的收缩压异常",
+											"当前收缩压为" + highBloodPressure,
+											"已经超过正常范围值" + push.getHbpstart() + "-" + push.getHbpend(), null, null);
+								}
+								
 							}
 						};
 						t.start();
@@ -89,9 +102,16 @@ public class HealthServiceImpl implements HealthService {
 					if (heartRate > push.getHeartHigThd() || heartRate < push.getHeartLowThd()) {
 						Thread t = new Thread() {
 							public void run() {
-								JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的心率异常",
-										"当前心率" + heartRate,
-										"已经超过正常范围值" + push.getHeartLowThd() + "-" + push.getHeartHigThd(), null, null);
+								if(registrationID.equals("")){
+									JpushClientUtil.sendToAlias(push.getAlias().toString(), user.getName() + "的心率异常",
+											"当前心率" + heartRate,
+											"已经超过正常范围值" + push.getHeartLowThd() + "-" + push.getHeartHigThd(), null, null);
+								}else{
+									JpushClientUtil.sendToRegistrationId(registrationID, user.getName() + "的心率异常",
+											"当前心率" + heartRate,
+											"已经超过正常范围值" + push.getHeartLowThd() + "-" + push.getHeartHigThd(), null, null);
+								}
+								
 							}
 						};
 						t.start();
