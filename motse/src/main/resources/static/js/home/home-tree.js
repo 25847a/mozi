@@ -15,12 +15,12 @@ new Vue({
 	mounted() {
 		// 基于准备好的dom，初始化echarts实例
 		this.treChart = echarts.init(document.getElementById('treechart'));
-	////	console.log('this.yAxis', this.yAxis)
-	////	console.log('this.xAxis', this.xAxis)
+		// console.log('this.yAxis', this.yAxis)
+		// console.log('this.xAxis', this.xAxis)
 	},
 	methods: {
 		goback: function () {
-		/////	console.log("11")
+			// console.log("11")
 			axios.get("https://www.apiopen.top/findStatistics?appKey=00d91e8e0cca2b76f515926a36db68f5").then(this.getnew)
 		},
 		getnew(res) {
@@ -45,14 +45,16 @@ new Vue({
 		inittree() {
 			let option = {
 				xAxis: {
+					name: '(%)',
 					type: 'category',
 					data: ['', '<94男性', '<94女性', '', '94-99女性', '94-99男性', '']
 				},
 				yAxis: {
+					name: '(人)',
 					type: 'value'
 				},
 				series: [{
-					data: [0, 1600, 1700, 0, 3800, 3400, 0],
+					data: [ , 1600, 1700, , 3800, 3400, ],
 					type: 'bar',
 					itemStyle: {
 						normal: {

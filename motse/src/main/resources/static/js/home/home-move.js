@@ -16,12 +16,12 @@ new Vue({
 	mounted() {
 		// 基于准备好的dom，初始化echarts实例
 		this.zstChart = echarts.init(document.getElementById('echartzst'));
-		console.log('this.yAxis', this.yAxis)
-		console.log('this.xAxis', this.xAxis)
+		// console.log('this.yAxis', this.yAxis)
+		// console.log('this.xAxis', this.xAxis)
 	},
 	methods: {
 		goback: function () {
-			console.log("11")
+			// console.log("11")
 			axios.get("https://www.apiopen.top/findStatistics?appKey=00d91e8e0cca2b76f515926a36db68f5").then(this.getnew)
 		},
 		getnew(res) {
@@ -51,6 +51,7 @@ new Vue({
 				tooltip: {
 					trigger: 'axis'
 				},
+				color:["#5ab1ef","#ffb980"],
 				legend: {
 					data: ['男性', '女性']
 				},
@@ -58,9 +59,10 @@ new Vue({
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: ['小于49次分', '50-59次分', '60-69次分', '70-79次分', '80-89次分', '90-100次分', '>100次分']
+					data: ['>49次分', '50-59次分', '60-69次分', '70-79次分', '80-89次分', '90-100次分', '>100次分']
 				},
 				yAxis: {
+					name: '(人)',
 					type: 'value',
 					axisLabel: {
 						formatter: '{value}'
@@ -76,6 +78,11 @@ new Vue({
 								{ type: 'max', name: '最大值' },
 								{ type: 'min', name: '最小值' }
 							]
+						},
+						lineStyle:{
+							normal:{
+								color:"#5ab1ef"
+							}
 						}
 					},
 					{
@@ -87,6 +94,11 @@ new Vue({
 								{ type: 'max', name: '最大值' },
 								{ type: 'min', name: '最小值' }
 							]
+						},
+						lineStyle:{
+							normal:{
+								color:"#ffb980"
+							}
 						}
 					}
 				]

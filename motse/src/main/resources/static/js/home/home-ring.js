@@ -18,13 +18,13 @@ new Vue({
 
 		this.pineChart = echarts.init(document.getElementById('echartring'));
 
-		////console.log('this.yAxis', this.yAxis)
-	/////	console.log('this.xAxis', this.xAxis)
+		// console.log('this.yAxis', this.yAxis)
+		// console.log('this.xAxis', this.xAxis)
 
 	},
 	methods: {
 		goback: function () {
-		//////	console.log("11")
+			// console.log("11")
 			axios.get("https://www.apiopen.top/findStatistics?appKey=00d91e8e0cca2b76f515926a36db68f5").then(this.getnew)
 		},
 		getnew(res) {
@@ -42,6 +42,9 @@ new Vue({
 				}
 			}
 			this.initPineEchart()
+
+			// console.log('this.xAxis', this.xAxis)
+			// console.log('this.yAxis', this.yAxis)
 		},
 		initPineEchart() {
 			let option = {
@@ -49,9 +52,9 @@ new Vue({
 					trigger: 'item',
 					formatter: "{a} <br/>{b}: {c} ({d}%)"
 				},
+				color:["#2ec7c9","#ffb980","#5ab1ef"],
 				legend: {
-					orient: 'vertical',
-					x: 'left',
+					x: 'center',
 					data:['50-70','70-80','>80'] 
 					//this.xAxis
 				},

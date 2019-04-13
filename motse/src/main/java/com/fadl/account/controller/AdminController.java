@@ -40,21 +40,37 @@ public class AdminController extends AbstractController{
 		return "/index";
 	}
     /**
-     * 加载左导航
+     * 跳转欢迎界面
      * @return
      */
-    @RequestMapping("/leftNavigation")
-    public String leftNavigation() {
-        return "/business/busblood/busines";
+    @RequestMapping("/welcome")
+    public String welcome() {
+        return "/welcome";
     }
     /**
-     * 登记信息查询页面
+     * 养老院页面
      * @return
      */
-    @RequestMapping("/registration")
-    public String regisinformation() {
-        return "/business/register/registration";
+    @RequestMapping("/beadhousePage")
+    public String beadhousePage(){
+    	return "/home/beadhouse";
     }
+    /**
+	 * 跳转代理商页面
+	 * @return
+	 */
+	@RequestMapping("/agentPage")
+	public String agentPage(){
+		return "/backstage/agent";
+	}
+	/**
+	 * 跳转用户管理页面
+	 * @return
+	 */
+	@RequestMapping("/adminPage")
+	public String health(){
+		return "/admin/admin";
+	}
     
     
     
@@ -64,6 +80,7 @@ public class AdminController extends AbstractController{
     public DataRow verifyRegister(){
     	try {
 			System.out.println("111111111111111111111111111");
+	//		WebSocketServer.sendInfo(message);
 		} catch (Exception e) {
 			logger.error("AdminController<<<<<<<<<<<<<<<<<<verifyRegister",e);
 		}

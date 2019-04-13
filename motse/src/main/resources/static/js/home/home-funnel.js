@@ -15,12 +15,12 @@ new Vue({
 	mounted() {
 		// 基于准备好的dom，初始化echarts实例
 		this.funnelChart = echarts.init(document.getElementById('echartfunnel'));
-	/////	console.log('this.yAxis', this.yAxis)
-	/////	console.log('this.xAxis', this.xAxis)
+		// console.log('this.yAxis', this.yAxis)
+		// console.log('this.xAxis', this.xAxis)
 	},
 	methods: {
 		goback: function () {
-		/////	console.log("11")
+			// console.log("11")
 			axios.get("https://www.apiopen.top/findStatistics?appKey=00d91e8e0cca2b76f515926a36db68f5").then(this.getnew)
 		},
 		getnew(res) {
@@ -44,23 +44,34 @@ new Vue({
 		},
 		initfunnel() {
 			let option = {
+				title : {
+			        subtext: '高压    低压',
+			        x: '55%',
+			        align: 'right'
+			    },
 				tooltip: {
 					trigger: 'item',
 					formatter: "{a} <br/>{b} : {c}%"
 				},
+				color: ['#8d98b3','#d87a80','#2ec7c9','#ffb980', '#b6a2de', '#5ab1ef', ],
 				legend: {
-					data: ['＜90/60', '90-120/60-80', '120-139/80-89', '140-159/90-99', '160-179/100-109','＞180/110']
+					type: 'scroll',
+					orient: 'vertical',
+					left: 10,
+					top: 20,
+					bottom: 20,
+					data: ['＜90/＜60', '90-120/60-80', '120-139/80-89', '140-159/90-99', '160-179/100-109','＞180/＞110']
 				},
 				calculable: true,
 				series: [
 					{
 						name: '漏斗图',
 						type: 'funnel',
-						left: '10%',
-						top: 60,
+						left: '25%',
+						top: 30,
 						//x2: 80,
 						bottom: 60,
-						width: '80%',
+						width: '70%',
 						// height: {totalHeight} - y - y2,
 						min: 0,
 						max: 100,
@@ -89,9 +100,9 @@ new Vue({
 							}
 						},
 						data: [
-							{ value: 20, name: '＞180/110' },
+							{ value: 20, name: '＞180/＞110' },
 							{ value: 40, name: '160-179/100-109' },
-							{ value: 60, name: '＜90/60' },
+							{ value: 60, name: '＜90/＜60' },
 							{ value: 80, name: '140-159/90-99' },
 							{ value: 100, name: '90-120/60-80' },
 							{ value: 120, name: '120-139/80-89' }

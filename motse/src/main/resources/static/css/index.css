@@ -54,7 +54,7 @@
 	color: #ffffff;
 	margin-bottom:0; 
 	line-height: 30px;
-	    float: right;
+	float: right;
 }
 .index-header ul li{
 	text-align: center;
@@ -116,6 +116,10 @@
 }
 
 
+.row li,.home{cursor: pointer}
+.row li:hover{background: #16508d;}
+.row ul .adds{background: #16508d;}
+.row div .adds{background: #16508d!important;}
 
 .panel-group .panel+.panel {
      margin-top: 0px !important; 

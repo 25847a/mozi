@@ -1,9 +1,11 @@
 package com.fadl.account.controller;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.fadl.common.AbstractController;
 
 /**
  * <p>
@@ -13,9 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
  * @author jian
  * @since 2019-03-27
  */
-@RestController
+@Controller
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController extends AbstractController{
 
+	private static Logger logger = LoggerFactory.getLogger(AuthController.class);
+	
+	/**
+	 * 跳转菜单页面
+	 * @return
+	 */
+	@RequestMapping("/authPage")
+	public String login(){
+		return "/admin/menu";
+	}
 }
 

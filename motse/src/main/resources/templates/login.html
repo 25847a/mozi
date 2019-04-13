@@ -1,74 +1,62 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
 	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>登录界面</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
-		<link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
-		<!--bootstarp框架样式-->
-		<link th:href="@{/iconfont/style.css}" type="text/css" rel="stylesheet"/>
-		<!--公共样式-->
-		<link th:href="@{/css/list/index.css}" type="text/css" rel="stylesheet"/>
-		
-<link th:href="@{/css/icheck-bootstrap.css}" rel="stylesheet" />
-		<!--样式-->
-		<link th:href="@{/css/list/log.css}" type="text/css" rel="stylesheet"/>
-	</head>
- 
-	<body class="loglogbody">
-		<div class="container wrap1">
-			<h2 class="mg-b20 text-center shucr">浆站业务管理系统</h2>
-			   
-			<div class="col-sm-8 col-md-5 center-auto pd-sm-50 pd-xs-20 main_content">
-				<div class="logia">
-					<p class="text-center font16">用户登录</p>
-					<div class="form-group mg-t20">
-						<i class=" userImg"><img src="/img/user_icon_copy.png"/></i>
-						<input type="text" name="" value="" minlength="2" maxlength="15" placeholder="2-15位用户名" class=" login_input reg_user" id="useID"/>
-						<span class="tip user_hint"></span>
-					</div>
-					<div class="form-group mg-t20">
-						<i class=" userImg"><img src="/img/lock_icon_copy.png"/></i>
-						<input type="password" name="" value="" minlength="6" maxlength="16" placeholder="6-16位密码" class="login_input reg_password" id="pwdID"/>
-						<span class="tip password_hint"></span>
-					</div>
-					<div class="checkbox mg-b25">
-						<!-- <label class="chracksize">
-                            <input type="checkbox"/>是否记住密码
-                        </label> -->
-                        <div class="checkbox icheck-default" style=" width: 59%;  float: left;   color: #3ca153;">
-											<input type="checkbox" id="allTime" checked="checked"/> <label for="allTime">是否记住账号</label>
-										</div>
-						<span class="chrackspan">
-                           <a href="logia.html"  class="log_xit">数据库配置</a>
-                        </span>
-					</div>
-					<button value="submit" class="login_btn"  >登 录</button>
-					<p id="p1" class="modal-dialog"></p>
-				</div>
+
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<title>Login</title>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<link th:href="@{/css/login.css}" rel="stylesheet"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+</head>
+
+<body>
+	<div class="header">
+		<div class="logo">
+			<div>
+				<img th:src="@{/img/logo.png}" alt=""/>
 			</div>
-		 
+			<h1>墨子星智慧健康数字化管理系统</h1>
 		</div>
-	</body>
-	
-	<!--jQueryUI包-->
-	<script type="text/javascript" th:src="@{/js/PlaJs/jquery.min.js}"></script>
-	<script type="text/javascript" th:src="@{/layui-master/src/lay/modules/layer.js}"></script>
-	<script type="text/javascript" th:src="@{/js/PlaJs/jquery-ui.min.js}"></script>
-	<!--页面节点特效-->
-	<script type="text/javascript" th:src="@{/js/PlaJs/stopExecutionOnTimeout.js?t=1}"></script>
-	<script type="text/javascript" th:src="@{/js/PlaJs/Particleground.js}"></script>
-	<script type="text/javascript" th:src="@{/js/PlaJs/jquery.mockjax.js}"></script>
-	<!--bootstarp-->
-	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
-	<script type="text/javascript" th:src="@{/js/login.js}"></script>
-<script>
-$(document).ready(function(){ 
-    var userName = localStorage.getItem('keyName');  
-    if(userName){ 
-        $('#useID').val(userName); 
-    } 
-});
-</script>
+	</div>
+	<div class="content">
+		<div>
+			<div class="login">
+				<h2>登录</h2>
+				<form id="ajaxForm" action="" method="post" accept-charset="utf-8">
+					<div class="name">
+						<label class="username_icon"><img th:src="@{/img/02.png}"/></label>
+						<input id="account" name="account" type="text" placeholder="请输入用户名" />
+					</div>
+					<div class="password">
+						<label class="password_icon"><img th:src="@{/img/03.png}"/></label>
+						<input id="passWord" class="txt2" name="passWord" type="password" placeholder="请输入密码" />
+					</div>
+					<div class="forget">
+						<a href="##">忘记密码？</a>
+					</div>
+					<div class="langing">
+						<a href="#">登录</a>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+	<div class="footer">
+		<ul>
+			 <li>广州市xxxxxxxxxxx公司</li><li>|</li>
+			<li>广州市中山大道多少多少号多少门牌</li><li>|</li>
+			<li>联系电话：400-165-0388</li><li>|</li>
+			<li>粤ICP 832546456546</li>
+		</ul>
+	</div>
+	<script th:src="@{/js/jquery-1.11.3.min.js}" type="text/javascript"></script>
+	<script th:src="@{/js/jquery.cookie.js}" type="text/javascript"></script>
+	<script th:src="@{/js/common/utils.js}" type="text/javascript"></script>
+	<script th:src="@{/js/login/login.js}" charset="utf-8" type="text/javascript" language="javascript"></script>
+</body>
 </html>

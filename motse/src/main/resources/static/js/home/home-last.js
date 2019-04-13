@@ -15,12 +15,12 @@ new Vue({
 	mounted() {
 		// 基于准备好的dom，初始化echarts实例
 		this.lastChart = echarts.init(document.getElementById('breathechart'));
-	////	console.log('this.yAxis', this.yAxis)
-	////	console.log('this.xAxis', this.xAxis)
+		// console.log('this.yAxis', this.yAxis)
+		// console.log('this.xAxis', this.xAxis)
 	},
 	methods: {
 		goback: function () {
-		////	console.log("11")
+			// console.log("11")
 			axios.get("https://www.apiopen.top/findStatistics?appKey=00d91e8e0cca2b76f515926a36db68f5").then(this.getnew)
 		},
 		getnew(res) {
@@ -43,31 +43,15 @@ new Vue({
 
 		},
 		initlast() {
-			let option = {
-				backgroundColor: '#ffffff',
-
+			let option = {				
 				title: {
 					text: '呼吸频率',
 					left: 'center',
 					top: 20,
 					textStyle: {
-						color: '#333'
+						
 					}
-				},
-
-				tooltip: {
-					trigger: 'item',
-					formatter: "{a} <br/>{b} : {c} ({d}%)"
-				},
-
-				visualMap: {
-					show: false,
-					min: 80,
-					max: 600,
-					inRange: {
-						colorLightness: [0, 1]
-					}
-				},
+				},				
 				series: [
 					{
 						name: '访问来源',
@@ -80,31 +64,6 @@ new Vue({
 							{ value: 274, name: '＞24次/分钟', itemStyle: { color: '#d87a80' } }
 						].sort(function (a, b) { return a.value - b.value; }),
 						roseType: 'radius',
-						label: {
-							normal: {
-								textStyle: {
-									color: '333'
-								}
-							}
-						},
-						labelLine: {
-							normal: {
-								lineStyle: {
-									color: '333'
-								},
-								smooth: 0.2,
-								length: 10,
-								length2: 20
-							}
-						},
-						itemStyle: {
-							normal: {
-								color: '#c23531',
-								shadowBlur: 200,
-								shadowColor: 'rgba(0, 0, 0, 0.5)'
-							}
-						},
-
 						animationType: 'scale',
 						animationEasing: 'elasticOut',
 						animationDelay: function (idx) {

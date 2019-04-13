@@ -1,5 +1,6 @@
 body{
 	padding: 10px;
+	    overflow-x: hidden;
 }
 .header{
 	display: flex;
@@ -58,6 +59,7 @@ body{
 .header .table .head ul li{
 	display: flex;
 	margin: 0 30px;
+	cursor: pointer;
 }
 .header .table .head ul li img{
 	width: 20px;
@@ -170,4 +172,7 @@ td .vertical-border {
 
 .v-table-views{
 	font-size: 13px;
+}
+.on{
+	color: #ff5400;
 }
