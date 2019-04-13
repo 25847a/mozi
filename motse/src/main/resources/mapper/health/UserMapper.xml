@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.User">
+        <id column="id" property="id" />
+        <result column="imei" property="imei" />
+        <result column="role" property="role" />
+        <result column="account" property="account" />
+        <result column="name" property="name" />
+        <result column="phone" property="phone" />
+        <result column="calibration" property="calibration" />
+        <result column="radius" property="radius" />
+        <result column="midpoint" property="midpoint" />
+        <result column="jfdataUpdateTime" property="jfdataUpdateTime" />
+        <result column="createtime" property="createtime" />
+        <result column="atlasttime" property="atlasttime" />
+        <result column="highpressure" property="highpressure" />
+        <result column="lowpressure" property="lowpressure" />
+        <result column="password" property="password" />
+        <result column="age" property="age" />
+        <result column="avatar" property="avatar" />
+        <result column="gender" property="gender" />
+        <result column="address" property="address" />
+        <result column="wechat" property="wechat" />
+        <result column="qq" property="qq" />
+        <result column="weight" property="weight" />
+        <result column="born" property="born" />
+        <result column="height" property="height" />
+        <result column="code" property="code" />
+        <result column="walkCount" property="walkCount" />
+        <result column="walkPushTime" property="walkPushTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, highpressure, lowpressure, password, age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime
+    </sql>
+
+</mapper>

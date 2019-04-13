@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.VersionhistoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.Versionhistory">
+        <id column="id" property="id" />
+        <result column="url" property="url" />
+        <result column="name" property="name" />
+        <result column="currentversion" property="currentversion" />
+        <result column="ziversion" property="ziversion" />
+        <result column="zhuversion" property="zhuversion" />
+        <result column="compilation" property="compilation" />
+        <result column="versiontype" property="versiontype" />
+        <result column="createtime" property="createtime" />
+        <result column="description" property="description" />
+        <result column="model" property="model" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, url, name, currentversion, ziversion, zhuversion, compilation, versiontype, createtime, description, model
+    </sql>
+
+</mapper>
