@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -26,6 +27,7 @@ import com.fadl.account.entity.Admin;
 import com.fadl.account.entity.AdminRole;
 import com.fadl.account.service.AdminRoleService;
 import com.fadl.account.service.AdminService;
+import com.fadl.common.CacheMap;
 import com.fadl.common.IConstants;
 
 
@@ -44,6 +46,7 @@ public class MyShiroRealm extends AuthorizingRealm{
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+		 logger.info("##################执行Shiro权限认证 shiro 自身缓存2分钟##################");
 		SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 		try {
 		Admin admin =(Admin) principals.getPrimaryPrincipal();
@@ -81,8 +84,7 @@ public class MyShiroRealm extends AuthorizingRealm{
 				throw new UnknownAccountException();
 			}
 			simpleAuthenticationInfo = new SimpleAuthenticationInfo(admin,admin.getPassWord(),ByteSource.Util.bytes(admin.getAccount()),getName());
-			//添加Session
-			Session session =  SecurityUtils.getSubject().getSession();
+			Session session = SecurityUtils.getSubject().getSession();
 			session.setAttribute(IConstants.SESSION_ADMIN_USER, admin);
 			session.setAttribute("userSessionId", admin.getId());
 		} catch (Exception e) {

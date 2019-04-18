@@ -25,7 +25,7 @@ public class EquipmentController extends AbstractController{
      * @return
      */
     @RequestMapping("/equipmentPage")
-    public String addUser(){
+    public String equipmentPage(){
     	return "/backstage/equipment";
     }
 }

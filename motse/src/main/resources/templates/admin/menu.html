@@ -1,36 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>Examples</title>
-	<meta name="description" content="">
-	<meta name="keywords" content="">
-	<link href="../css/global.css" rel="stylesheet">
-	<link href="../css/menu.css" rel="stylesheet">
-	<link rel="stylesheet" href="../css/vue-easytable.css">
-	<link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
-	<script src="../js/vue.js"></script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-	<script src="../js/echarts.js"></script>
-	<script src="../js/jquery-1.11.3.min.js"></script>
-	<!-- 引入组件库 -->
-	<!-- <script src="https://unpkg.com/vue-easytable/umd/js/index.js"></script> -->
-	<script src="../js/vue-easytable.js"></script>
+	<meta name="description" content=""/>
+	<meta name="keywords" content=""/>
+	<link th:href="@{/css/global.css}" rel="stylesheet"/>
+	<link th:href="@{/css/menu.css}" rel="stylesheet"/>
+	<link rel="stylesheet" th:href="@{/css/vue-easytable.css}"/>
+	<link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css"/>
+	<script th:src="@{/js/vue.js}"></script>
+	<script th:src="@{/js/axios.min.js}"></script>
+	<script th:src="@{/js/echarts/echarts.js}"></script>
+	<script th:src="@{/js/jquery-1.11.3.min.js}"></script>
+	<script th:src="@{/js/vue-easytable.js}"></script>
 </head>
 
 <body>
 	<div class="header">
 		<div class="img">
-			<img src="../img/home.png" alt="">
+			<img th:src="@{/img/home.png}" alt=""/>
 		</div>
 		<div class="home">主页＞菜单管理</div>
 	</div>
 	<div class="content">
 		<div class="history">
 			<div class="icon">
-				<img src="../img/menu.png" alt="">
+				<img th:src="@{/img/menu.png}" alt=""/>
 			</div>
 			<p>菜单列表</p>
 		</div>
@@ -40,27 +39,26 @@
 					<button type="">新增</button>
 				</div>
 				<span style="font-size: 12px;color: #337ac7; font-weight: bold;    line-height: 30px;">菜单名称：</span>
-				<input type="text" name="" value="" placeholder="请输入名称">
+				<input type="text" name="" value="" placeholder="请输入名称"/>
 				<button type="">查询</button>
 			</div>
 			<div id="app">
 				<div>
-					<v-table is-vertical-resize :vertical-resize-offset='60' is-horizontal-resize style="width:100%"
+					<v-table
 						:multiple-sort="false" :min-height="350" even-bg-color="#f2f2f2"
 						:title-rows="tableConfig.titleRows" :columns="tableConfig.columns"
 						:table-data="tableConfig.tableData" row-hover-color="#eee" row-click-color="#edf7ff"
-						@sort-change="sortChange" :paging-index="(pageIndex-1)*pageSize" @on-custom-comp="customCompFunc"></v-table>
+						v-on:sort-change="sortChange" :paging-index="(pageIndex-1)*pageSize" v-on:on-custom-comp="customCompFunc"></v-table>
 
 					<div class="mt20 mb20 bold"></div>
-					<v-pagination @page-change="pageChange" @page-size-change="pageSizeChange" :total="50"
+					<v-pagination v-on:page-change="pageChange" v-on:page-size-change="pageSizeChange" :total="50"
 						:page-size="pageSize" :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"
 						style="padding: 20px 100px 20px 0;float: right;"></v-pagination>
 				</div>
 			</div>
 		</div>
 	</div>
-	</div>
+<script th:src="@{/js/admin/menu-table.js}"></script>
 </body>
 
 </html>
-<script src="../js/menu-table.js"></script>

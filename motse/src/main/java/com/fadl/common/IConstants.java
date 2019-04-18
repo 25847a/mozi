@@ -20,6 +20,12 @@ public class IConstants {
     public static final String RESULT_SUCCESS_CODE="-1";
     public static final String RESULT_ERROR_CODE="-2";
     public static final String RESULT_INTERFACE_CODE="-3";
+    /**
+     * 7.养老院  8.城市合伙人 9.总公司
+     */
+    public static final String RESULT_BEADHOUSE="7";//养老院
+    public static final String RESULT_PARTNER="8";//城市合伙人
+    public static final String RESULT_HEADQUARTERS="9";//总公司
     /* **************************  成功、失败  通用封装返回  end  **************************/
 
     /* **************************  权限控制提示 start *******************************/

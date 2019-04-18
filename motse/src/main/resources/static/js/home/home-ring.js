@@ -1,4 +1,4 @@
-new Vue({
+var ring = new Vue({
 	el: "#echring",
 	data() {
 		return {
@@ -9,87 +9,70 @@ new Vue({
 			pieDatArray: []
 		}
 	},
-
-	created() {
-		this.goback()
-	},
 	mounted() {
 		// 基于准备好的dom，初始化echarts实例
-
 		this.pineChart = echarts.init(document.getElementById('echartring'));
-
-		// console.log('this.yAxis', this.yAxis)
-		// console.log('this.xAxis', this.xAxis)
-
 	},
 	methods: {
-		goback: function () {
-			// console.log("11")
-			axios.get("https://www.apiopen.top/findStatistics?appKey=00d91e8e0cca2b76f515926a36db68f5").then(this.getnew)
-		},
-		getnew(res) {
-			let data = res.data.data
-			for (let i = 0; i < data.length; i++) {
-				if (this.xAxis.indexOf(data[i].type) == -1) {
-					this.xAxis.push(data[i].type)
-					if (data[i].count < 10000) {
-						this.yAxis.push(data[i].count * 100000)
-					} else {
-						this.yAxis.push(data[i].count)
-					}
-					this.pieDatArray.push({ value: data[i].count, name: data[i].type })
-
-				}
-			}
-			this.initPineEchart()
-
-			// console.log('this.xAxis', this.xAxis)
-			// console.log('this.yAxis', this.yAxis)
-		},
-		initPineEchart() {
+		
+		initPineEchart(microcirculation) {
 			let option = {
-				tooltip: {
-					trigger: 'item',
-					formatter: "{a} <br/>{b}: {c} ({d}%)"
-				},
-				color:["#2ec7c9","#ffb980","#5ab1ef"],
-				legend: {
-					x: 'center',
-					data:['50-70','70-80','>80'] 
-					//this.xAxis
-				},
-				series: [
-					{
-						name: '访问来源',
-						type: 'pie',
-						radius: ['50%', '70%'],
-						avoidLabelOverlap: false,
-						label: {
-							normal: {
-								show: false,
-								position: 'center'
-							},
-							emphasis: {
-								show: true,
-								textStyle: {
-									fontSize: '30',
-									fontWeight: 'bold'
-								}
-							}
-						},
-						labelLine: {
-							normal: {
-								show: false
-							}
-						},
-						data: [
-							{ value: 10, name: '50-70' },
-							{ value: 30, name: '70-80' },
-							{ value: 70, name: '>80' }
-						],
-						// data: this.pieDatArray
-					}
-				]
+					tooltip: {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b}: {c} ({d}%)"
+				    },
+				    color:["#2ec7c9","#ffb980","#5ab1ef"],
+				    legend: {
+				        x: 'center',
+				        data: ['50-70','70-80','>80'] 
+				    },
+				    series: [
+
+				        {
+				            name: '墨子星',
+				            type: 'pie',
+				            radius: ['30%', '55%'],
+				            labelLine: {
+				                normal: {
+				                    length: 20,
+				                    length2: 70,
+				                    lineStyle: {
+				                        color: '#333'
+				                    }
+				                }
+				            },
+				          /*  label: {
+				                normal: {
+				                    formatter: '{b|{b}}{a|{d}%}\n\n',
+				                    borderWidth: 20,
+				                    borderRadius: 4,
+				                    padding: [0, -70],
+				                    rich: {
+				                        a: {
+				                            color: '#333',
+				                            fontSize: 12,
+				                            lineHeight: 20
+				                        },
+				                        b: {
+				                            fontSize: 12,
+				                            lineHeight: 20,
+				                            color: '#333'
+				                        }
+				                    }
+				                }
+				            },*/
+				            data: [{
+				                value: microcirculation.microcirculation3,
+				                name: '50-70:'+microcirculation.microcirculation3+'人'
+				            }, {
+				                value: microcirculation.microcirculation2,
+				                name: '70-80:'+microcirculation.microcirculation2+'人'
+				            }, {
+				                value: microcirculation.microcirculation1,
+				                name: '>80:'+microcirculation.microcirculation1+'人'
+				            }]
+				        }
+				    ]
 			};
 
 			this.pineChart.setOption(option)

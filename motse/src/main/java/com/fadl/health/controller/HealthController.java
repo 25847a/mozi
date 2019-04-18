@@ -1,15 +1,20 @@
 package com.fadl.health.controller;
 
 
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
-
-import com.fadl.account.controller.AdminController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import com.fadl.common.AbstractController;
+import com.fadl.common.DataRow;
+import com.fadl.health.service.EquipmentService;
+import com.fadl.health.service.HealthService;
+import com.fadl.health.service.UserService;
 
 /**
  * <p>
@@ -25,7 +30,12 @@ public class HealthController extends AbstractController{
 
 	private static Logger logger = LoggerFactory.getLogger(HealthController.class);
 	
-	
+	@Autowired
+	UserService userService;
+	@Autowired
+	EquipmentService equipmentService;
+	@Autowired
+	HealthService healthService;
 	/**
 	 * 跳转历史健康数据页面
 	 * @return
@@ -48,7 +58,23 @@ public class HealthController extends AbstractController{
 	 */
 	@RequestMapping("/healthPage")
 	public String healthPage(){
-		return "/health/health";
+		return "/backstage/health";
+	}
+	
+	
+	/**
+	 * 养老院所有的数据都是从这个接口获取
+	 */
+	@RequestMapping("queryBeadhouseList")
+	@ResponseBody
+	public DataRow queryBeadhouseList(){
+		try {
+		//	List<DataRow> tableData = healthService.queryHealthList();//列表数据
+			//messageMap.initSuccess(tableData);
+		} catch (Exception e) {
+			logger.error("HealthController>>>>>>>>>>>>>queryBeadhouseList",e);
+		}
+		return messageMap;
 	}
 }
 

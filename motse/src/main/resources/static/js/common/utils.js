@@ -60,8 +60,54 @@ function getDateDay(d){
     };
 }
 
-
-
+/**
+ *  去尾法 进一法 四舍五入法
+ */
+/**
+ * 格式化数字
+ * @param num 要格式化的数字
+ * @param len 保留小数位数默认2
+ * @param type 格式化方式0:四舍五入 1:进一  2:舍去 默认0
+ * @return string
+ */
+function format_number(num,len,type) {
+    len = len > 0 && len <= 20 ? len : 2;
+    var result = parseFloat(num);
+    num=isNaN(result)?0:result;
+    var numpow=Math.pow(10,len);
+    var numcheng=accMul(num,numpow);
+    if(type==1){//ceil进一 
+    	result = Math.ceil(numcheng);
+    }else if(type==2){//floor舍去
+    	result = Math.floor(numcheng);
+    }else{//round四舍五入 
+    	result = Math.round(numcheng);
+    }
+    result =accDiv(result,numpow);
+    var s_x = result.toString();
+    var pos_decimal = s_x.indexOf('.');
+    if (pos_decimal < 0) {pos_decimal = s_x.length;s_x += '.';}
+    while (s_x.length <= pos_decimal + len) {s_x += '0';}
+    return s_x;
+}
+//乘法函数
+function accMul(arg1, arg2) {
+    var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+    try {m += s1.split(".")[1].length;}catch (e) {}
+    try {m += s2.split(".")[1].length;}catch (e) {}
+    return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+}
+//除法函数
+function accDiv(arg1, arg2) {
+    var t1 = 0, t2 = 0, r1, r2;
+    try {t1 = arg1.toString().split(".")[1].length;}catch (e) {}
+    try {t2 = arg2.toString().split(".")[1].length;}catch (e) {}
+    with (Math) {
+        r1 = Number(arg1.toString().replace(".", ""));
+        r2 = Number(arg2.toString().replace(".", ""));
+        return (r1 / r2) * pow(10, t2 - t1);
+    }
+}
 
 
 

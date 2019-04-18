@@ -22,5 +22,93 @@
     <sql id="Base_Column_List">
         id, HRV AS hrv, sbp_ave AS sbpAve, dbp_ave AS dbpAve, Heartrate, Bloodoxygen, microcirculation, Amedicalreport, respirationrate, phone, imei, createtime
     </sql>
-
+    <!-- 查询首页健康数据列表 -->
+    <select id="queryHealthList" resultType="com.fadl.common.DataRow" parameterType="java.lang.Integer">
+    	set @rownum=#{pageNum};
+    	SELECT @rownum:=@rownum+1 as id,tc.name,tx.* FROM(
+		SELECT HRV,CONCAT(sbp_ave,'/',dbp_ave) as blood,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
+		RIGHT JOIN(
+		SELECT MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
+		) tt
+		ON tp.createtime=tt.createtime
+		)tx
+		LEFT JOIN user tc
+		ON tx.phone=tc.id
+		LIMIT #{pageNum},#{pageSize}
+    </select>
+    <!-- 查询首页健康数据列表总数 -->
+    <select id="queryHealthListCount" resultType="java.lang.Integer">
+    	SELECT COUNT(*) FROM (
+		SELECT tc.name,tx.* FROM(
+		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
+		RIGHT JOIN(
+		SELECT MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
+		) tt
+		ON tp.createtime=tt.createtime
+		)tx
+		LEFT JOIN user tc
+		ON tx.phone=tc.id
+		) tb
+    </select>
+	<!-- 首页当天心率统计图 -->
+	<select id="queryHeartrateCount" resultType="com.fadl.common.DataRow">
+		SELECT tg.gender,
+		SUM(IF(tg.Heartrate &lt;= 49,1,0)) as heartrate1,
+		SUM(IF((tg.Heartrate &gt;= 50 AND tg.Heartrate &lt;= 59),1,0)) as heartrate2,
+		SUM(IF((tg.Heartrate &gt;= 60 AND tg.Heartrate &lt;= 69),1,0)) as heartrate3,
+		SUM(IF((tg.Heartrate &gt;= 70 AND tg.Heartrate &lt;= 79),1,0)) as heartrate4,
+		SUM(IF((tg.Heartrate &gt;= 80 AND tg.Heartrate &lt;= 89),1,0)) as heartrate5,
+		SUM(IF((tg.Heartrate &gt;= 90 AND tg.Heartrate &lt;= 100),1,0)) as heartrate6,
+		SUM(IF((tg.Heartrate &gt; 100),1,0)) as heartrate7
+		 FROM (
+		SELECT td.*,CASE WHEN tc.gender='男' THEN 0 WHEN tc.gender='女' THEN 1 ELSE 2 END AS gender FROM (
+		SELECT Heartrate,substring(phone,9) as phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+		) td
+		LEFT JOIN user tc
+		ON td.phone=tc.id
+		) tg
+		GROUP BY tg.gender
+	</select>
+	<!-- 首页当天血压统计图 -->
+	<select id="queryBloodCount" resultType="com.fadl.common.DataRow">
+		SELECT
+		SUM(IF((sbp_ave&lt;90 AND dbp_ave&lt;60),1,0)) as blood1,
+		SUM(IF((sbp_ave&gt;=90  AND sbp_ave&lt;120 AND dbp_ave&gt;=60 AND dbp_ave&lt;80),1,0)) as blood2,
+		SUM(IF((sbp_ave&gt;=120 AND sbp_ave&lt;139 AND dbp_ave&gt;=80 AND dbp_ave&lt;89),1,0)) as blood3,
+		SUM(IF((sbp_ave&gt;=140 AND sbp_ave&lt;159 AND dbp_ave&gt;=90 AND dbp_ave&lt;99),1,0)) as blood4,
+		SUM(IF((sbp_ave&gt;=160 AND sbp_ave&lt;179 AND dbp_ave&gt;=100 AND dbp_ave&lt;109),1,0)) as blood5,
+		SUM(IF((sbp_ave&gt;=180 AND dbp_ave&gt;110),1,0)) as blood6
+		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+	</select>
+	<!-- 首页当天微循环统计图 -->
+	<select id="queryMicrocirculationCount" resultType="com.fadl.common.DataRow">
+		SELECT 
+		SUM(IF((microcirculation&gt;=80),1,0)) as microcirculation1,
+		SUM(IF((microcirculation&gt;=70 AND microcirculation&lt;80),1,0)) as microcirculation2,
+		SUM(IF((microcirculation&gt;=50 AND microcirculation&lt;70),1,0)) as microcirculation3
+		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+	</select>
+	
+	<!-- 首页当天血氧统计图 -->
+	<select id="queryBloodoxygenCount" resultType="com.fadl.common.DataRow">
+		SELECT tg.gender,
+		SUM(IF(tg.Bloodoxygen&lt;94,1,0)) as bloodoxygen1,
+		SUM(IF((tg.Bloodoxygen&gt;=94 AND tg.Bloodoxygen&lt;=99),1,0)) as bloodoxygen2
+		 FROM (
+		SELECT td.*,CASE WHEN tc.gender='男' THEN 0 WHEN tc.gender='女' THEN 1 ELSE 2 END AS gender FROM (
+		SELECT Bloodoxygen,substring(phone,9) as phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+		) td
+		LEFT JOIN user tc
+		ON td.phone=tc.id
+		) tg
+		GROUP BY tg.gender
+	</select>
+	<!-- 首页当天呼吸统计图 -->
+	<select id="queryRespirationrateCount" resultType="com.fadl.common.DataRow">
+		SELECT 
+		SUM(IF((respirationrate&gt;=24),1,0)) as respirationrate1,
+		SUM(IF((respirationrate&gt;=12 AND respirationrate&lt;24),1,0)) as respirationrate2,
+		SUM(IF((respirationrate&lt;12),1,0)) as respirationrate3
+		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+	</select>
 </mapper>

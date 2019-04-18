@@ -71,9 +71,11 @@
 		                        <li class="list-group-item" id="headquarters">
 		                               总公司
 		                            </li>
+		                            <shiro:hasPermission name="beadhouse:view">
 		                            <li class="list-group-item" id="beadhouse">
 		                                养老院
 		                            </li>
+		                            </shiro:hasPermission>
 		                            <li class="list-group-item" id="cityPartner">
 		                               城市合伙人
 		                            </li>
@@ -269,7 +271,7 @@
 		        //添加用户
 		        $(function () {
 		            $('#addUser').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/admin/addUserPage')
+		                $(window.parent.document).find('#iframe').attr('src', '/user/addUserPage')
 		                $(".version").addClass('adds')
 		                $(".history").removeClass('adds')
 		                $(".index-home").removeClass('adds')
@@ -303,7 +305,7 @@
 		        //设备管理
 		        $(function () {
 		            $('#equipment').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', 'equipment/equipmentPage')
+		                $(window.parent.document).find('#iframe').attr('src', '/equipment/equipmentPage')
 		                $(".equipment").addClass('adds')
 		                $(".history").removeClass('adds')
 		                $(".index-home").removeClass('adds')
@@ -320,7 +322,7 @@
 		        //版本管理
 		        $(function () {
 		            $('#version').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', 'versionhistory/versionPage')
+		                $(window.parent.document).find('#iframe').attr('src', '/versionhistory/versionPage')
 		                $(".version").addClass('adds')
 		                $(".history").removeClass('adds')
 		                $(".index-home").removeClass('adds')
@@ -337,7 +339,7 @@
 		        //健康数据管理
 		        $(function () {
 		            $('#health').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', 'health/healthPage')
+		                $(window.parent.document).find('#iframe').attr('src', '/health/healthPage')
 		                $(".health").addClass('adds')
 		                $(".history").removeClass('adds')
 		                $(".index-home").removeClass('adds')

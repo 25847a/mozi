@@ -37,5 +37,8 @@
     <sql id="Base_Column_List">
         id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, highpressure, lowpressure, password, age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime
     </sql>
-
+    <!-- 查询使用者男女数量饼状图 -->
+	<select id="queryUserGender" resultType="com.fadl.common.DataRow">
+		SELECT SUM(CASE WHEN gender='男' THEN 1 ELSE 0 END) AS male, SUM(CASE WHEN gender='女' THEN 1 ELSE 0 END) AS female,SUM(CASE WHEN gender='男' THEN 0 WHEN gender='女' THEN 0 ELSE 1 END) as other FROM user 
+	</select>
 </mapper>

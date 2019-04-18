@@ -176,3 +176,18 @@ td .vertical-border {
 .on{
 	color: #ff5400;
 }
+
+#app .v-table-class{
+	width: 100%!important;
+}
+.v-table-rightview{
+	width:93%!important;
+}
+.v-table-header,.v-table-body{
+	width: 100%!important;
+}
+
+.column-cell-class-name-test{
+	color:red;
+	font-weight:bold;
+}

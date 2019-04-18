@@ -94,3 +94,6 @@ td .vertical-border {
 .v-table-views{
 	font-size: 13px;
 }
+.v-table-views{
+	width:100%!important;
+}

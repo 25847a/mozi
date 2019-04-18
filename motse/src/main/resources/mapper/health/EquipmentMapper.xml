@@ -32,5 +32,9 @@
     <sql id="Base_Column_List">
         id, imei, lordpower, signalxhao, bluetooth_type AS bluetoothType, eq_status AS eqStatus, createtime, updatetime, eqtype, bluetooth_name AS bluetoothName, bluetooth_status AS bluetoothStatus, bluetooth_list AS bluetoothList, bluetooth_electricity AS bluetoothElectricity, clock, phone1, phone2, name, version, uploadtime, bluetoothmac, agentid, model
     </sql>
-
+    <!-- 获取设备在线离线数量饼状图 -->
+	<select id="queryEquipmentState" resultType="com.fadl.common.DataRow">
+		SELECT COUNT(*) AS count,SUM(CASE WHEN eq_status='H:0' THEN 1 ELSE 0 END) AS online,SUM(CASE WHEN eq_status='H:1' THEN 1 ELSE 0 END) AS offline FROM equipment
+	</select>
+	
 </mapper>

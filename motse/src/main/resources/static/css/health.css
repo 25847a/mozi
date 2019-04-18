@@ -92,3 +92,6 @@ body{
 .v-table-views{
 	font-size: 12px;
 }
+.v-table-rightview , .v-table-views{
+	width:100%!important;
+}

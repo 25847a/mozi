@@ -11,7 +11,7 @@
 	<link th:href="@{/css/global.css}" rel="stylesheet"/>
 	<link th:href="@{/css/history.css}" rel="stylesheet"/>
 	<link rel="stylesheet" th:href="@{/css/vue-easytable.css}"/>
-	<link rel="stylesheet" th:href="@{/css/beadhouse/index.css}"/>
+	<link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css"/>
 	<script th:src="@{/js/vue.js}"></script>
 	<script th:src="@{/js/axios.min.js}"></script>
 	<script th:src="@{/js/echarts/echarts.js}"></script>
@@ -20,7 +20,12 @@
 	<!-- <script src="https://unpkg.com/vue-easytable/umd/js/index.js"></script> -->
 	<script th:src="@{/js/vue-easytable.js}"></script>
 </head>
-
+<style>
+	.colum-cell-class-name-test{
+		color:red;
+		font-weight:bold;
+	}
+</style>
 <body>
 	<div class="header">
 		<div class="img">
@@ -56,7 +61,7 @@
 			</div>
 		</div>
 	</div>
-	<script th:src="@{/js/history-table.js}"></script>
+	<script th:src="@{/js/health/history-table.js}"></script>
 </body>
 
 </html>

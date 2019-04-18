@@ -52,6 +52,7 @@ public class AdminController extends AbstractController{
      * @return
      */
     @RequestMapping("/beadhousePage")
+    @RequiresPermissions("beadhouse:view")
     public String beadhousePage(){
     	return "/home/beadhouse";
     }

@@ -3,21 +3,26 @@ package com.fadl.common;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import javax.servlet.http.HttpSession;
+import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import com.fadl.SpringContextHolder;
+import com.fadl.health.service.HealthService;
 
 @ServerEndpoint("/websocket")
 @Component
 public class WebSocketServer {
+	
 		private static Logger logger = LoggerFactory.getLogger(WebSocketServer.class); 
 		//静态变量，用来记录当前在线连接数。应该把它设计成线程安全的.
 		private static int onlineCount=0;
@@ -27,23 +32,18 @@ public class WebSocketServer {
 		//与某个客户端的连接会话，需要通过它来给客户端发送数据
 		private Session session;
 		
-		//接收sid
-		private String sid="";
 		/**
 		 * 连接建立成功调用的方法
 		 * @param session
 		 * @param sid
 		 */
 		@OnOpen
-		public void onOpen(Session session,@PathParam("sid") String sid){
+		public void onOpen(Session session,EndpointConfig config){
 			try {
-				
-			
 			this.session=session;
 			webSocketServer.add(this);
 			addOnlineCount();
-			logger.error("有新的通讯建立："+sid+",当前在线的用户为："+getOnlineCount());
-			this.sid=sid;
+			logger.error("有新的通讯建立:当前在线的用户为："+getOnlineCount());
 			logger.error("<<<<<<<<<<<<<<<<websocket：连接成功>>>>>>>>>>>>>>>>>>>");
 			} catch (Exception e) {
 				logger.error("websocket连接成功产生异常:>>>>>>>>>>>>>>>>>>>",e);
@@ -58,7 +58,7 @@ public class WebSocketServer {
 			try {
 				webSocketServer.remove(this);
 				subOnlineCount();
-				logger.error("<<<<<<<<<<当前有一个连接"+sid+"关闭！当前在线人数为>>>>>>>>>>"+getOnlineCount());
+				logger.error("<<<<<<<<<<当前有一个连接关闭！当前在线人数为>>>>>>>>>>"+getOnlineCount());
 			} catch (Exception e) {
 				logger.error("websocket连接失败产生异常:>>>>>>>>>>>>>>>>>>>",e);
 			}
@@ -90,13 +90,20 @@ public class WebSocketServer {
 		}
 		
 		/**
-		 * 实现服务器主动推送
+		 * 实现客户端主动推送
 		 * @param message
 		 * @throws IOException
 		 */
-		public  void sendMessage(String message)throws IOException{
-			System.out.println("实现服务器主动推送"+message);
-			this.session.getBasicRemote().sendText(message);
+		public void sendMessage(String page)throws IOException{
+			System.out.println(page);
+			DataRow messageMap = new DataRow();
+			try {
+				messageMap=	SpringContextHolder.getApplicationContext().getBean(HealthService.class).queryBeadhouseList(messageMap,page);
+			} catch (Exception e) {
+				logger.error("sendMessage推送异常:>>>>>>>>>>>>>>>>>>>",e);
+			}
+			String msg = JsonUtil.getMapper().writeValueAsString(messageMap);
+			this.session.getBasicRemote().sendText(msg);
 		}
 		/**
 		 * 群发自定义消息
@@ -106,7 +113,7 @@ public class WebSocketServer {
 		public static void sendInfo(String message)throws IOException{
 			for(WebSocketServer item:webSocketServer){
 				try {
-					item.sendMessage(message);
+					item.sendMessage(JsonUtil.getMapper().writeValueAsString(message));
 				} catch (Exception e) {
 					logger.error("websocket群发自定义消息:>>>>>>>>>>>>>>>>>>>",e);
 				}
