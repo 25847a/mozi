@@ -20,6 +20,6 @@ public interface HealthService {
 
 	Health selecthealthMin(Map<java.lang.String, Object> map);
 
-	void sendJpush(Health health,String registrationID);
+	void sendJpush(Health health);
 	
 }

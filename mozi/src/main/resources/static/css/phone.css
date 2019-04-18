@@ -3,7 +3,7 @@
 }
 
 .huawei-img,.xiaomi-img{
-    display: none;
+   /* display: none;*/
     border: 2px solid #bbbbbb;
     border-radius: .6px;
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +34,7 @@ import cn.mozistar.pojo.User;
 import cn.mozistar.pojo.UserCode;
 import cn.mozistar.service.HealthService;
 import cn.mozistar.service.HealthdaoService;
+import cn.mozistar.service.HealthsService;
 import cn.mozistar.service.InvitationListService;
 import cn.mozistar.service.PositionigService;
 import cn.mozistar.service.PushService;
@@ -63,6 +66,8 @@ public class UserController {
 	@Autowired
 	private HealthService healthService;
 	@Autowired
+	private HealthsService healthsService;
+	@Autowired
 	private HealthdaoService healthdaoService;
 	@Autowired
 	private InvitationListService invitationListService;
@@ -78,6 +83,16 @@ public class UserController {
 	public ModelAndView phone() {
 		ModelAndView mo = new ModelAndView();
 		mo.setViewName("phone");
+		return mo;
+	}
+	/**
+	 * 跳转android测量结果说明页面
+	 * @return
+	 */
+	@RequestMapping(value = "measure")
+	public ModelAndView measure() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("measure");
 		return mo;
 	}
 	/**
@@ -345,12 +360,11 @@ public class UserController {
 	@RequestMapping("selectHomePage")
 	@ResponseBody
 	public ResultData<List<Object>> selectHomePage(@RequestBody JSONObject json) {
-
 		ResultData<List<Object>> re = new ResultData<>();
 		List<Object> arrayList = new ArrayList<>();
 
 		int userId = json.getInt("userId");
-
+		logger.info("APP首页访问>>>>>>>>>>>>>>>>>>>>>>>:===="+userId);
 		// 查询我观察的用户Id
 		List<Integer> observeIdList = new ArrayList<>();
 		observeIdList.add(userId);
@@ -788,18 +802,36 @@ public class UserController {
 	@ResponseBody
 	public ResultBase addHealth(@RequestBody JSONObject json){
 		ResultBase re = new ResultBase();
-		System.out.println(json);
+		
 		String waveform = json.getString("waveform");
+		Integer userId = json.getInt("userId");
+		logger.info("userId:"+userId+">>>data:>>>>"+json.getString("data"));
+		logger.info("userId:"+userId+">>>waveform:>>>>"+json.getString("waveform"));
 		if(!waveform.equals("")){
-			Integer userId = json.getInt("userId");
 			Healthdao healthdao = healthdaoService.getHealthdaoByUserId(userId);
 			User user = userService.getUser(userId);
-			re=HealthtoolUtils.addT14Health(json, user,healthdao,userService,healthdaoService, healthService,re);
+			re=HealthtoolUtils.addT14Health(json, user,healthdao,userService,healthdaoService, healthService,re,healthsService);
 		}else{
-			re.setMessage("采集失败,请检查传感器");
+			String data=json.getString("data");
+			byte[] fromBASE64 = Base64Utils.decodeFromString(data);
+			System.out.println(Arrays.toString(fromBASE64));
+			int headA = fromBASE64[3];//A0	//48:0  49:1 A0:0  A1:1
+			int headB = fromBASE64[5];//0
+			int clothC = fromBASE64[23];//A1
+			int clothD = fromBASE64[25];//0
+			if(headA==48){
+				if(headB==48){
+					re.setMessage("检测到传感器被拔除");
+				}else if(clothC==49){
+					if(clothD==48){
+						re.setMessage("检测到传感器未穿戴");
+					}else{
+						re.setMessage("采集数据失败,请检查传感器");
+					}
+				}
+			}
 			re.setCode(400);
 		}
-		
 		return re;
 	}
 	/**
