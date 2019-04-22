@@ -34,7 +34,7 @@ var funnel = new Vue({
 					left: 10,
 					top: 20,
 					bottom: 20,
-					data: ['＞180/＞110','160-179/100-109','140-159/90-99','120-139/80-89','90-120/60-80','＜90/＜60']
+					data: ['＞180/＞110:'+blood.blood6+'人','160-179/100-109:'+blood.blood5+'人','140-159/90-99:'+blood.blood4+'人','120-139/80-89:'+blood.blood3+'人','90-120/60-80:'+blood.blood2+'人','＜90/＜60:'+blood.blood1+'人']
 				},
 				calculable: true,
 				series: [
@@ -74,12 +74,12 @@ var funnel = new Vue({
 							}
 						},
 						data: [
-							{ value: blood.blood6, name: '＞180/＞110' },
-							{ value: blood.blood5, name: '160-179/100-109' },
-							{ value: blood.blood4, name: '140-159/90-99'},
-							{ value: blood.blood3, name: '120-139/80-89' },
-							{ value: blood.blood2, name: '90-120/60-80' },
-							{ value: blood.blood1, name: '＜90/＜60' }
+							{ value: blood.blood6, name: '＞180/＞110:'+blood.blood6+'人' },
+							{ value: blood.blood5, name: '160-179/100-109:'+blood.blood5+'人' },
+							{ value: blood.blood4, name: '140-159/90-99:'+blood.blood4+'人'},
+							{ value: blood.blood3, name: '120-139/80-89:'+blood.blood3+'人'},
+							{ value: blood.blood2, name: '90-120/60-80:'+blood.blood62+'人'},
+							{ value: blood.blood1, name: '＜90/＜60:'+blood.blood61+'人'}
 						]
 					}
 				]

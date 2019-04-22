@@ -11,33 +11,45 @@ var tableList=new Vue({
                 	[
                 ]	,
                 columns: [
-                    { field: 'love', width: 50, columnAlign: 'center', isFrozen: true },
+                    { field: 'love', width: 50, columnAlign: 'center',isFrozen: true,
+                        formatter: function (rowData) {
+                        	if(rowData.love==1){
+                        		return '<img src="'+'../img/love.png'+'"/>';
+                        	}
+                     }, isResize: true },
+                    
+                    
                     {
-                        field: 'id', width: 50, titleAlign: 'center', columnAlign: 'center',isFrozen: true/*
-                        formatter: function (rowData, index, pagingIndex) {
-                        	index=14;
-                        	pagingIndex=2;
-                            var currentIndex = index + pagingIndex;
-                            return currentIndex < 3 ? '<span style="color:red;font-weight: bold;">' + (currentIndex + 1) + '</span>' : currentIndex + 1*/
-                        // }, isFrozen: true
+                        field: 'id', width: 50, titleAlign: 'center', columnAlign: 'center',isFrozen: true,
                     },
-                    { field: 'name', width: 147, columnAlign: 'center', isResize: true  },
-                    { field: 'Heartrate', width: 137, columnAlign: 'center', isResize: true },
-                    { field: 'blood', width: 147, columnAlign: 'center',  isResize: true },
-                    { field: 'HRV', width: 137, columnAlign: 'center', isResize: true },
-                    { field: 'microcirculation', width: 137, columnAlign: 'center', isResize: true },
-                    { field: 'Bloodoxygen', width: 137, columnAlign: 'center', isResize: true },
-                    { field: 'respirationrate', width: 137, columnAlign: 'center', isResize: true },
-                    { field: 'createtime', width: 205, columnAlign: 'center', isResize: true }
+                    { field: 'name', width: 133, columnAlign: 'center', isResize: true  },
+                    { field: 'Heartrate', width: 110, columnAlign: 'center', isResize: true,
+                        formatter: function (rowData) {
+                        		 return rowData.Heartrate.toString().replace("A","");
+                     } },
+                    { field: 'sbp_ave', width: 130, columnAlign: 'center',  isResize: true,
+                         formatter: function (rowData) {
+                    		 return rowData.sbp_ave.toString().replace("A","");
+                 }  },
+                    { field: 'dbp_ave', width: 130, columnAlign: 'center',  isResize: true,
+                     formatter: function (rowData) {
+                		 return rowData.dbp_ave.toString().replace("A","");
+             }  },
+                    { field: 'HRV', width: 120, columnAlign: 'center', isResize: true },
+                    { field: 'microcirculation', width: 120, columnAlign: 'center', isResize: true },
+                    { field: 'Bloodoxygen', width: 120, columnAlign: 'center', isResize: true },
+                    { field: 'respirationrate', width: 120, columnAlign: 'center', isResize: true },
+                    { field: 'createtime', width: 200, columnAlign: 'center', isResize: true }
                 ],
                 titleRows: [
 
                     [
                         { fields: ['love'], title: '', titleAlign: 'center' },
-                        { fields: ['id'], title: 'id', titleAlign: 'center' },
+                        { fields: ['id'], title: '序号', titleAlign: 'center' },
                         { fields: ['name'], title: '姓名', titleAlign: 'center' },
                         { fields: ['Heartrate'], title: '心率', titleAlign: 'center', },//orderBy: ''
-                        { fields: ['blood'], title: '血压', titleAlign: 'center' },
+                        { fields: ['sbp_ave'], title: '收缩压', titleAlign: 'center' },
+                        { fields: ['dbp_ave'], title: '舒张压', titleAlign: 'center' },
                         { fields: ['HRV'], title: '心率变异性', titleAlign: 'center' },
                         { fields: ['microcirculation'], title: '微循环', titleAlign: 'center' },
                         { fields: ['Bloodoxygen'], title: '血氧', titleAlign: 'center' },
@@ -50,7 +62,13 @@ var tableList=new Vue({
     },
     methods: {
         columnCellClass(rowIndex,columnName,rowData){
-        	if(parseInt(rowData.Heartrate)>0 && columnName=='Heartrate'){
+        	if(rowData.Heartrate.toString().search("A")!=-1 && columnName=='Heartrate'){
+        		return 'column-cell-class-name-test';
+        	}
+        	if(rowData.sbp_ave.toString().search("A")!=-1 && columnName=='sbp_ave'){
+        		return 'column-cell-class-name-test';
+        	}
+        	if(rowData.dbp_ave.toString().search("A")!=-1 && columnName=='dbp_ave'){
         		return 'column-cell-class-name-test';
         	}
         },
@@ -99,26 +117,13 @@ var tableList=new Vue({
             }
         },
         goback:function(){
-            // console.log('haha');
-          //  axios.post(GetURLInfo()+"health/queryBeadhouseList").then(this.getnew)
-
-        },
-        getnew(res){
-        
-        //	var tableData=JSON.stringify(res.data.data);
-         //    console.log(res.data.data[0]);
-          //   for(var i=0;i<res.data.data.length;i++){
-         //   	 this.tableConfig.tableData.push(res.data.data[i]);
-         //    }
-         	 
+        	var page = $("#page").val();
+           axios.post(GetURLInfo()+"health/queryBeadhouseList?page="+page);
         }
     },
-    // created() {
-    //     this.getTableData();
-    // },
     mounted(){
         this.goback();
-        // this.item = setInterval(this.goback,3000)
+        setInterval(this.goback,20000);
     },
     beforeDestroy(){
         clearInterval(this.item);

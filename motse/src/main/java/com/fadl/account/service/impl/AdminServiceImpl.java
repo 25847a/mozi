@@ -3,7 +3,12 @@ package com.fadl.account.service.impl;
 import com.fadl.account.entity.Admin;
 import com.fadl.account.dao.AdminMapper;
 import com.fadl.account.service.AdminService;
+import com.fadl.common.DataRow;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+
+import java.sql.SQLException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +35,17 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 	@Override
 	public Admin queryAdminInfo(String account) throws Exception {
 		return adminMapper.queryAdminInfo(account);
+	}
+	/**
+	 * 查询代理商列表
+	 * @return
+	 * @throws SQLException
+	 */
+	@Override
+	public DataRow queryAdminList(DataRow messageMap) throws SQLException {
+		List<DataRow> list =adminMapper.queryAdminList();
+		messageMap.initSuccess(list);
+		return messageMap;
 	}
 
 }

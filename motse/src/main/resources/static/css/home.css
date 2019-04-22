@@ -191,3 +191,6 @@ td .vertical-border {
 	color:red;
 	font-weight:bold;
 }
+.v-table-body-cell img{
+	display: inline-block;
+}

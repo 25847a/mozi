@@ -5,6 +5,7 @@ import com.fadl.health.entity.Health;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -33,6 +34,12 @@ public interface HealthMapper extends BaseMapper<Health> {
 	 * @throws SQLException
 	 */
 	public int queryHealthListCount()throws SQLException;
+	/**
+	 * 查询重点关爱的使用者
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<DataRow> queryHealthListLove(@Param("pageNum")Integer pageNum,@Param("pageSize")Integer pageSize)throws SQLException;
 	/**
 	 * 首页当天心率统计图
 	 * @return
@@ -63,4 +70,18 @@ public interface HealthMapper extends BaseMapper<Health> {
 	 * @throws SQLException
 	 */
 	public DataRow queryRespirationrateCount()throws SQLException;
+	/**
+	 * 查询历史健康数据
+	 * @param adminId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<DataRow> queryHistoryList(Map<String,Object> map)throws SQLException;
+	/**
+	 * 查询健康数据管理列表
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<DataRow> queryHealthInfoList()throws SQLException;
+	
 }

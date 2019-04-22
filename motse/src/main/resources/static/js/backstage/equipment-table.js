@@ -1,95 +1,69 @@
+var tableDate = new Array();
 new Vue({
     el: '#app',
     data() {
         return {
             pageIndex: 1,
             pageSize: 10,
+            total:'',
             tableConfig: {
                 multipleSort: false,
                 tableData: [
-                    { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                     { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                      { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                       { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                        { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                         { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                          { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                           { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                            { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                            { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                           { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                            { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                            { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                           { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
-                            { 'imei': '867186039369706', 'main': '0', 'signal': '13', 'type': '0', 'state': '离线', 'phone1': '13679628008', 'phone2': '13679628008', 'version': '2_13_18072202_2', 'time': '2018-09-30 12:03'},
 
                 ],
                 columns: [
                     
                     { field: 'imei', width: 150, columnAlign: 'center', isResize: true },
-                    { field: 'main', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'signal', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'type', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'state', width: 100, columnAlign: 'center', isResize: true},
+                    { field: 'lordpower', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'signalxhao', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'bluetooth_type', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'eq_status', width: 100, columnAlign: 'center', isResize: true},
                     { field: 'phone1', width: 150, columnAlign: 'center', isResize: true },
                     { field: 'phone2', width: 150, columnAlign: 'center', isResize: true },
                     { field: 'version', width: 200, columnAlign: 'center', isResize: true },
-                    { field: 'time', width: 200, columnAlign: 'center', isResize: true },
+                    { field: 'updatetime', width: 200, columnAlign: 'center', isResize: true },
                     { field: 'fuck', width: 350, columnAlign: 'center', isResize: true ,componentName:'table-operation'}
 
                 ],
                 titleRows: [
                     [                        
                         { fields: ['imei'], title: 'imei', titleAlign: 'center' },
-                        { fields: ['main'], title: '主机电量', titleAlign: 'center' },
-                        { fields: ['signal'], title: '主机信号', titleAlign: 'center' },
-                        { fields: ['type'], title: '蓝牙类型', titleAlign: 'center', },//orderBy: ''
-                        { fields: ['state'], title: '设备在线状态', titleAlign: 'center' },
+                        { fields: ['lordpower'], title: '主机电量', titleAlign: 'center' },
+                        { fields: ['signalxhao'], title: '主机信号', titleAlign: 'center' },
+                        { fields: ['bluetooth_type'], title: '蓝牙类型', titleAlign: 'center', },
+                        { fields: ['eq_status'], title: '设备在线状态', titleAlign: 'center' },
                         { fields: ['phone1'], title: '紧急联系人1', titleAlign: 'center' },
                         { fields: ['phone2'], title: '紧急联系人2', titleAlign: 'center' },
                         { fields: ['version'], title: '版本', titleAlign: 'center' },
-                        { fields: ['time'], title: '更新时间', titleAlign: 'center' },
+                        { fields: ['updatetime'], title: '更新时间', titleAlign: 'center' },
                         { fields: ['fuck'], title: '操作', titleAlign: 'center' },
                     ],
                 ],
             }
         }
     },
+    created() {
+    	
+    },
+    mounted(){
+        this.goback();
+        this.getTableData();
+    },
     methods: {
         getTableData() {
 
-            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
+            this.total = tableDate.length;
         },
         pageChange(pageIndex) {
-
             this.pageIndex = pageIndex;
-            // this.getTableData();
-            console.log(pageIndex)
+            this.getTableData();
+            console.log(pageIndex);
         },
         pageSizeChange(pageSize) {
-
             this.pageIndex = 1;
             this.pageSize = pageSize;
-            // this.getTableData();
-        },
-        sortChange(params) {
-
-            if (params.height.length > 0) {
-
-                this.tableConfig.tableData.sort(function (a, b) {
-
-                    if (params.height === 'asc') {
-
-                        return a.height - b.height;
-                    } else if (params.height === 'desc') {
-
-                        return b.height - a.height;
-                    } else {
-
-                        return 0;
-                    }
-                });
-            }
+            this.getTableData();
         },
         customCompFunc(params){
 
@@ -109,25 +83,17 @@ new Vue({
             //数据请求
         goback:function(){
             // console.log('haha');
-            axios.post("https://www.apiopen.top/satinApi?type=1&page=1").then(this.getnew)
+            axios.post(GetURLInfo()+"equipment/queryEquipmentList").then(this.getnew)
 
         },
         getnew(res){
-            let data = res.data.data
-            // console.log(data)
-            this.item = data
-            // console.log(this.item)
+        	if(res.data.code==-1){
+        		for(var i=0;i<res.data.data.length;i++){
+        			tableDate.push(res.data.data[i]);
+        			this.getTableData();
+                        }
+        	}
         }
-    },
-    // created() {
-    //     this.getTableData();
-    // },
-    mounted(){
-        this.goback();
-        // this.item = setInterval(this.goback,3000)
-    },
-    beforeDestroy(){
-        clearInterval(this.item);
     }
 })
 

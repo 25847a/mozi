@@ -1,15 +1,24 @@
 package com.fadl.account.controller;
 
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fadl.account.entity.Admin;
+import com.fadl.account.service.AdminService;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
+import com.fadl.common.IConstants;
+import com.fadl.common.SessionUtil;
+import com.fadl.common.WebSocketServer;
 
 /**
  * <p>
@@ -23,6 +32,9 @@ import com.fadl.common.DataRow;
 @RequestMapping("/admin")
 public class AdminController extends AbstractController{
 	private static Logger logger = LoggerFactory.getLogger(AdminController.class);
+	
+	@Autowired
+	AdminService adminService;
 	/**
 	 * 跳转登录页面
 	 * @return
@@ -53,7 +65,10 @@ public class AdminController extends AbstractController{
      */
     @RequestMapping("/beadhousePage")
     @RequiresPermissions("beadhouse:view")
-    public String beadhousePage(){
+    public String beadhousePage(Model model){
+    	Session session = SecurityUtils.getSubject().getSession();
+    	Admin admin = (Admin) session.getAttribute(IConstants.SESSION_ADMIN_USER);
+    	model.addAttribute("adminId", admin.getId());
     	return "/home/beadhouse";
     }
     /**
@@ -74,29 +89,17 @@ public class AdminController extends AbstractController{
 	}
     
     
-    
-    @RequestMapping("/verifyRegister")
-    @RequiresPermissions("admin:add")
+    /**
+     * 查询代理商列表
+     * @return
+     */
+    @RequestMapping("/queryAdminList")
     @ResponseBody
     public DataRow verifyRegister(){
     	try {
-			System.out.println("111111111111111111111111111");
-	//		WebSocketServer.sendInfo(message);
+    		messageMap = adminService.queryAdminList(messageMap);
 		} catch (Exception e) {
-			logger.error("AdminController<<<<<<<<<<<<<<<<<<verifyRegister",e);
-		}
-		return messageMap;
-    }
-    
-    
-    @RequestMapping("/readPlasmaProviderNo")
-    @RequiresPermissions("admin:query")
-    @ResponseBody
-    public DataRow readPlasmaProviderNo(){
-    	try {
-			System.out.println("111111111111111111111111111");
-		} catch (Exception e) {
-			logger.error("AdminController<<<<<<<<<<<<<<<<<<readPlasmaProviderNo",e);
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<queryAdminList",e);
 		}
 		return messageMap;
     }

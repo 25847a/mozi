@@ -5,6 +5,7 @@ import com.fadl.health.entity.Health;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
 
@@ -18,12 +19,20 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface HealthService extends IService<Health> {
 	/**
+	 * 获取养老院页面的数据
+	 * @param messageMap
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
+	public DataRow queryBeadhouseList(DataRow messageMap,String page)throws Exception;
+	/**
 	 * 查询首页健康数据列表
 	 * @param map
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryHealthList(Integer pageNum,Integer pageSize)throws SQLException;
+	public List<DataRow> queryHealthList(Integer page)throws SQLException;
 	/**
 	 * 查询首页健康数据列表总数
 	 * @param map
@@ -31,6 +40,12 @@ public interface HealthService extends IService<Health> {
 	 * @throws SQLException
 	 */
 	public int queryHealthListCount()throws SQLException;
+	/**
+	 * 查询重点关爱的使用者
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<DataRow> queryHealthListLove(Integer pageNum,Integer pageSize)throws SQLException;
 	/**
 	 * 首页当天心率统计图
 	 * @return
@@ -54,13 +69,24 @@ public interface HealthService extends IService<Health> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryBloodoxygenCount()throws SQLException;
+	public Object[] queryBloodoxygenCount()throws SQLException;
 	/**
 	 * 首页当天呼吸统计图
 	 * @return
 	 * @throws SQLException
 	 */
 	public DataRow queryRespirationrateCount()throws SQLException;
-	
-	public DataRow queryBeadhouseList(DataRow messageMap,String page)throws Exception;
+	/**
+	 * 查询历史健康数据
+	 * @param adminId
+	 * @return
+	 * @throws SQLException
+	 */
+	public DataRow queryHistoryList(Map<String,Object> map,DataRow messageMap)throws SQLException;
+	/**
+	 * 查询健康数据管理列表
+	 * @return
+	 * @throws SQLException
+	 */
+	public DataRow queryHealthInfoList(DataRow messageMap)throws SQLException;
 }

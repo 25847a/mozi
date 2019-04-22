@@ -37,4 +37,9 @@
 		SELECT COUNT(*) AS count,SUM(CASE WHEN eq_status='H:0' THEN 1 ELSE 0 END) AS online,SUM(CASE WHEN eq_status='H:1' THEN 1 ELSE 0 END) AS offline FROM equipment
 	</select>
 	
+	<!-- 查询设备数据列表 -->
+	<select id="queryEquipmentList" resultType="com.fadl.common.DataRow">
+		SELECT id,imei,lordpower,signalxhao,bluetooth_type,eq_status,phone1,phone2,version,DATE_FORMAT(updatetime,'%Y-%m-%d %H:%i:%s') as updatetime from equipment LIMIT 0,50	
+	</select>
+	
 </mapper>

@@ -53,4 +53,10 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
 	 * @throws SQLException
 	 */
 	public DataRow queryRespirationrateCount()throws SQLException;
+	/**
+	 * 查询代理商列表
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<DataRow> queryEquipmentList()throws SQLException;
 }

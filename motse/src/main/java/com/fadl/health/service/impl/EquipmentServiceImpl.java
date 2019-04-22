@@ -6,6 +6,8 @@ import com.fadl.health.dao.EquipmentMapper;
 import com.fadl.health.service.EquipmentService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.sql.SQLException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,17 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 	@Override
 	public DataRow queryEquipmentState() throws SQLException {
 		return equipmentMapper.queryEquipmentState();
+	}
+	/**
+	 * 查询代理商列表
+	 * @return
+	 * @throws SQLException
+	 */
+	@Override
+	public DataRow queryEquipmentList(DataRow messageMap) throws SQLException {
+		List<DataRow> list = equipmentMapper.queryEquipmentList();
+		messageMap.initSuccess(list);
+		return messageMap;
 	}
 	
 

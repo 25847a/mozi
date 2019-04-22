@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.UploaddownloadMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.Uploaddownload">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="url" property="url" />
+        <result column="imei" property="imei" />
+        <result column="currentversion" property="currentversion" />
+        <result column="ziversion" property="ziversion" />
+        <result column="zhuversion" property="zhuversion" />
+        <result column="compilation" property="compilation" />
+        <result column="versiontype" property="versiontype" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+        <result column="description" property="description" />
+        <result column="model" property="model" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, url, imei, currentversion, ziversion, zhuversion, compilation, versiontype, createtime, updatetime, description, model
+    </sql>
+    <!-- 查询版本更新列表 -->
+	<select id="queryUploaddownloadList" resultType="com.fadl.common.DataRow">
+			SELECT id,name,imei,currentversion,ziversion,zhuversion,compilation,versiontype,description,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM uploaddownload
+	</select>
+</mapper>

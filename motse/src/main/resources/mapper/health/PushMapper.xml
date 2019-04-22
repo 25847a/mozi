@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.PushMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.Push">
+        <id column="id" property="id" />
+        <result column="userId" property="userId" />
+        <result column="alias" property="alias" />
+        <result column="allNotifyOn" property="allNotifyOn" />
+        <result column="heartNotifyOn" property="heartNotifyOn" />
+        <result column="boolPreNotifyOn" property="boolPreNotifyOn" />
+        <result column="fallNotifyOn" property="fallNotifyOn" />
+        <result column="walkNotifyOn" property="walkNotifyOn" />
+        <result column="fenceNotifyOn" property="fenceNotifyOn" />
+        <result column="heartLowThd" property="heartLowThd" />
+        <result column="heartHigThd" property="heartHigThd" />
+        <result column="boolLowThd" property="boolLowThd" />
+        <result column="boolHigThd" property="boolHigThd" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+        <result column="lbpstart" property="lbpstart" />
+        <result column="lbpend" property="lbpend" />
+        <result column="hbpstart" property="hbpstart" />
+        <result column="hbpend" property="hbpend" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, userId, alias, allNotifyOn, heartNotifyOn, boolPreNotifyOn, fallNotifyOn, walkNotifyOn, fenceNotifyOn, heartLowThd, heartHigThd, boolLowThd, boolHigThd, createTime, updateTime, lbpstart, lbpend, hbpstart, hbpend
+    </sql>
+
+</mapper>

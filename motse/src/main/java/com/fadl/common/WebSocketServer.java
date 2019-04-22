@@ -1,26 +1,30 @@
 package com.fadl.common;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import javax.servlet.http.HttpSession;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import com.fadl.SpringContextHolder;
 import com.fadl.health.service.HealthService;
 
-@ServerEndpoint("/websocket")
+@ServerEndpoint("/websocket/{adminId}")
 @Component
+@Scope("prototype")
 public class WebSocketServer {
 	
 		private static Logger logger = LoggerFactory.getLogger(WebSocketServer.class); 
@@ -31,19 +35,21 @@ public class WebSocketServer {
 		
 		//与某个客户端的连接会话，需要通过它来给客户端发送数据
 		private Session session;
-		
+		//接收adminId
+	    private String adminId="";
 		/**
 		 * 连接建立成功调用的方法
 		 * @param session
 		 * @param sid
 		 */
 		@OnOpen
-		public void onOpen(Session session,EndpointConfig config){
+		public void onOpen(Session session,@PathParam("adminId") String adminId){
 			try {
 			this.session=session;
 			webSocketServer.add(this);
 			addOnlineCount();
-			logger.error("有新的通讯建立:当前在线的用户为："+getOnlineCount());
+			logger.error("有新的窗口开始监听:"+adminId+":当前在线的用户为："+getOnlineCount());
+			this.adminId=adminId;
 			logger.error("<<<<<<<<<<<<<<<<websocket：连接成功>>>>>>>>>>>>>>>>>>>");
 			} catch (Exception e) {
 				logger.error("websocket连接成功产生异常:>>>>>>>>>>>>>>>>>>>",e);
@@ -70,8 +76,10 @@ public class WebSocketServer {
 		 */
 		@OnMessage
 		public void onMessage(String message,Session session){
+			logger.info("收到来自窗口"+adminId+"的信息:"+message);
 			try {
 				for(WebSocketServer item:webSocketServer){
+					
 					item.sendMessage(message);
 				}
 			} catch (Exception e) {
@@ -86,34 +94,45 @@ public class WebSocketServer {
 		 */
 		@OnError
 		public void onError(Session session,Throwable error){
+			webSocketServer.remove(this);
+			subOnlineCount();
 			logger.error("websocket异常:>>>>>>>>>>>>>>>>>>>",error);
 		}
 		
 		/**
-		 * 实现客户端主动推送
+		 * 实现服务器主动推送
 		 * @param message
 		 * @throws IOException
 		 */
-		public void sendMessage(String page)throws IOException{
-			System.out.println(page);
-			DataRow messageMap = new DataRow();
+		public void sendMessage(String message)throws IOException{
+			
+		//	DataRow messageMap = new DataRow();
 			try {
-				messageMap=	SpringContextHolder.getApplicationContext().getBean(HealthService.class).queryBeadhouseList(messageMap,page);
+			//	messageMap=	SpringContextHolder.getApplicationContext().getBean(HealthService.class).queryBeadhouseList(messageMap,page);
+				//	this.session.getBasicRemote().sendText("1111");
 			} catch (Exception e) {
 				logger.error("sendMessage推送异常:>>>>>>>>>>>>>>>>>>>",e);
 			}
-			String msg = JsonUtil.getMapper().writeValueAsString(messageMap);
-			this.session.getBasicRemote().sendText(msg);
+		//	String msg = JsonUtil.getMapper().writeValueAsString(messageMap);
+		//	synchronized (this.session) {
+			this.session.getBasicRemote().sendText(message);
+		//	}
 		}
 		/**
 		 * 群发自定义消息
 		 * @param message
 		 * @throws IOException
 		 */
-		public static void sendInfo(String message)throws IOException{
+		public static void sendInfo(String message,String adminId)throws IOException{
 			for(WebSocketServer item:webSocketServer){
 				try {
-					item.sendMessage(JsonUtil.getMapper().writeValueAsString(message));
+					//item.sendMessage(JsonUtil.getMapper().writeValueAsString(message));
+					//这里可以设定只推送给这个sid的，为null则全部推送
+	            	if(adminId==null) {
+	            		item.sendMessage(message);
+	            	}else if(item.adminId.equals(adminId)){
+	            		item.sendMessage(message);
+	            	}
 				} catch (Exception e) {
 					logger.error("websocket群发自定义消息:>>>>>>>>>>>>>>>>>>>",e);
 				}

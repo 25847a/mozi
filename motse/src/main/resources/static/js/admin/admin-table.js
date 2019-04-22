@@ -1,24 +1,29 @@
+var tableDate =  [
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
+
+];
+
 new Vue({
     el: '#app',
     data() {
         return {
             pageIndex: 1,
             pageSize: 10,
+            total:'',
             tableConfig: {
                 multipleSort: false,
                 tableData: [
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
-                    { 'role': 'admin','name': '黄才健', 'user': '25847a', 'state': '启用', 'login': '2987', 'ip': '192.168.1.122','time': '2018-09-30 12:03'},
 
                 ],
                 columns: [
@@ -51,39 +56,21 @@ new Vue({
     },
     methods: {
         getTableData() {
-
-            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
+            this.total = tableDate.length;
+            console.log("A");
         },
         pageChange(pageIndex) {
 
             this.pageIndex = pageIndex;
-            // this.getTableData();
-            console.log(pageIndex)
+            this.getTableData();
+            console.log("B");
         },
         pageSizeChange(pageSize) {
 
             this.pageIndex = 1;
             this.pageSize = pageSize;
-            // this.getTableData();
-        },
-        sortChange(params) {
-
-            if (params.height.length > 0) {
-
-                this.tableConfig.tableData.sort(function (a, b) {
-
-                    if (params.height === 'asc') {
-
-                        return a.height - b.height;
-                    } else if (params.height === 'desc') {
-
-                        return b.height - a.height;
-                    } else {
-
-                        return 0;
-                    }
-                });
-            }
+             this.getTableData();
         },
         customCompFunc(params){
 
@@ -125,15 +112,12 @@ new Vue({
             // console.log(this.item)
         }
     },
-    // created() {
-    //     this.getTableData();
-    // },
+     created() {
+        
+     },
     mounted(){
         this.goback();
-        // this.item = setInterval(this.goback,3000)
-    },
-    beforeDestroy(){
-        clearInterval(this.item);
+        this.getTableData();
     }
 })
 

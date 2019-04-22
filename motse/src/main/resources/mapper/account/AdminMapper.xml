@@ -32,4 +32,11 @@
 	<select id="queryAdminInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
 		SELECT * FROM admin WHERE account=#{account}
 	</select>
+	
+	<!-- 查询代理商列表 -->
+	<select id="queryAdminList" resultType="com.fadl.common.DataRow">
+		SELECT tp.id,tp.name,tp.age,tp.gender,tp.account,tp.address,DATE_FORMAT(tp.createDate,'%Y-%m-%d %H:%i:%s') as createDate,CASE WHEN tt.count is null THEN 0 else tt.count end AS count FROM admin tp
+		LEFT JOIN (SELECT agentid,COUNT(*) AS count FROM equipment GROUP BY agentid) tt
+		ON tp.id=tt.agentid
+	</select>
 </mapper>

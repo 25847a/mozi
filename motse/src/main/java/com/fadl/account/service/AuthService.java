@@ -1,6 +1,7 @@
 package com.fadl.account.service;
 
 import com.fadl.account.entity.Auth;
+import com.fadl.common.DataRow;
 
 import java.util.List;
 
@@ -21,4 +22,10 @@ public interface AuthService extends IService<Auth> {
 	 * @throws Exception
 	 */
 	public List<Auth> queryAuthList()throws Exception;
+	/**
+	 * 查询设备数据列表
+	 * @param map
+	 * @return
+	 */
+	public DataRow queryAuthList(DataRow messageMap)throws Exception;
 }

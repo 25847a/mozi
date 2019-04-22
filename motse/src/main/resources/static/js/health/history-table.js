@@ -1,55 +1,45 @@
-new Vue({
+var tableDate = new Array();
+var id ="";
+var name ="";
+var tableList=new Vue({
     el: '#app',
     data() {
         return {
             pageIndex: 1,
             pageSize: 10,
+            total:'',
             tableConfig: {
-                multipleSort: false,
                 tableData: [
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小红', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小蓝', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小芳', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小春', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小明', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小芬', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小艾', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小燕', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小丽', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小华', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小聪', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小飞', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
-                    { 'imei': '414243000432', 'custome': '28681', 'name': '小环', 'age': '77', 'rate': '125', 'gender': '67', 'low': '65', 'hobby': '65', 'breathe': '12', 'blood': '96', 'address': '56', 'time': '2019/3/22 17:33' },
                     
                 ],
                 columns: [
                     { field: 'imei', width: 150, columnAlign: 'center', isResize: true },
-                    { field: 'custome', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'id', width: 100, columnAlign: 'center', isResize: true },
                     { field: 'name', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'rate', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'gender', width: 100, columnAlign: 'center',  isResize: true },
-                    { field: 'low', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'hobby', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'breathe', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'blood', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'address', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'time', width: 200, columnAlign: 'center', isResize: true }
+                    { field: 'Heartrate', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'sbp_ave', width: 100, columnAlign: 'center',  isResize: true },
+                    { field: 'dbp_ave', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'microcirculation', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'respirationrate', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'Bloodoxygen', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'HRV', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'createtime', width: 200, columnAlign: 'center', isResize: true }
 
                 ],
                 titleRows: [
 
                     [
                         { fields: ['imei'], title: 'IMEI', titleAlign: 'center' },
-                        { fields: ['custome'], title: 'ID', titleAlign: 'center' },
+                        { fields: ['id'], title: 'ID', titleAlign: 'center' },
                         { fields: ['name'], title: '姓名', titleAlign: 'center' },
-                        { fields: ['rate'], title: '心率', titleAlign: 'center', },//orderBy: ''
-                        { fields: ['gender'], title: '高压', titleAlign: 'center' },
-                        { fields: ['low'], title: '低压', titleAlign: 'center' },
-                        { fields: ['hobby'], title: '微循环', titleAlign: 'center' },
-                        { fields: ['breathe'], title: '呼吸', titleAlign: 'center' },
-                        { fields: ['blood'], title: '血氧', titleAlign: 'center' },
-                        { fields: ['address'], title: '心率变异性', titleAlign: 'center' },
-                        { fields: ['time'], title: '更新时间', titleAlign: 'center' }
+                        { fields: ['Heartrate'], title: '心率', titleAlign: 'center', },//orderBy: ''
+                        { fields: ['sbp_ave'], title: '高压', titleAlign: 'center' },
+                        { fields: ['dbp_ave'], title: '低压', titleAlign: 'center' },
+                        { fields: ['microcirculation'], title: '微循环', titleAlign: 'center' },
+                        { fields: ['respirationrate'], title: '呼吸', titleAlign: 'center' },
+                        { fields: ['Bloodoxygen'], title: '血氧', titleAlign: 'center' },
+                        { fields: ['HRV'], title: '心率变异性', titleAlign: 'center' },
+                        { fields: ['createtime'], title: '更新时间', titleAlign: 'center' }
                     ],
                 ],
             }
@@ -58,59 +48,58 @@ new Vue({
     methods: {
         getTableData() {
 
-            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
+            this.total = tableDate.length;
         },
+       
         pageChange(pageIndex) {
 
             this.pageIndex = pageIndex;
-//            this.getTableData();
-            console.log(pageIndex)
+            this.getTableData();
         },
         pageSizeChange(pageSize) {
 
             this.pageIndex = 1;
             this.pageSize = pageSize;
-//            this.getTableData();
-        },
-        sortChange(params) {
-
-            if (params.height.length > 0) {
-
-                this.tableConfig.tableData.sort(function (a, b) {
-
-                    if (params.height === 'asc') {
-
-                        return a.height - b.height;
-                    } else if (params.height === 'desc') {
-
-                        return b.height - a.height;
-                    } else {
-
-                        return 0;
-                    }
-                });
-            }
+            this.getTableData();
         },
         goback:function(){
-            console.log('haha');
-            axios.post("https://www.apiopen.top/satinApi?type=1&page=1").then(this.getnew)
+        	var params = new URLSearchParams()
+        	 params.append('id',id);
+        	 params.append('name',name);
+            axios.post(GetURLInfo()+"health/queryHistoryList",params).then(this.getnew);
 
         },
         getnew(res){
-            let data = res.data.data
-            console.log(data)
-            this.item = data
-            // console.log(this.item)
+        	if(res.data.code==-1){
+        		tableDate=[];
+        		for(var i=0;i<res.data.data.length;i++){
+        			tableDate.push(res.data.data[i]);
+        			this.getTableData();
+                        }
+        	}
         }
+    }
+   ,
+    created() {
+        console.log("进入历史查询页面");
     },
-//    created() {
-//        this.getTableData();
-//    },
     mounted(){
         this.goback();
-        // this.item = setInterval(this.goback,3000)
-    },
-    beforeDestroy(){
-        clearInterval(this.item);
+        this.getTableData();
     }
-})
+   
+});
+function query(){
+	id = $("#id").val();
+	name = $("#name").val();
+	tableList.goback();
+}
+//刷新按钮
+function refresh(){
+	location.reload();
+}
+//重置按钮
+function empty(){
+	$("#search_par input").val("");
+}

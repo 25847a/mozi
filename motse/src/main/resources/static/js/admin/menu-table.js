@@ -1,34 +1,30 @@
+var tableDate = new Array();
 new Vue({
     el: '#app',
     data() {
         return {
             pageIndex: 1,
             pageSize: 10,
+            total:'',
             tableConfig: {
                 multipleSort: false,
                 tableData: [
-                    { 'name': '用户查询', 'type': 'button', 'path': 'admin/queryAdminList', 'tag': 'admin.view', 'forbidden': '启用'},
-                    { 'name': '用户添加', 'type': 'button', 'path': 'admin/insertAdmin', 'tag': 'admin.view', 'forbidden': '启用'},
-                    { 'name': '用户查询', 'type': 'button', 'path': 'admin/queryAdminList', 'tag': 'admin.view', 'forbidden': '启用'},
-                    { 'name': '用户添加', 'type': 'button', 'path': 'admin/deleteAdmin', 'tag': 'admin.view', 'forbidden': '启用'},
-                    { 'name': '用户查询', 'type': 'button', 'path': 'admin/insertAdmin', 'tag': 'admin.view', 'forbidden': '启用'},
-                    { 'name': '用户添加', 'type': 'button', 'path': '空版本', 'tag': 'admin.view', 'forbidden': '启用'},
-                    { 'name': '用户查询', 'type': 'button', 'path': 'admin/insertAdmin', 'tag': 'admin.view','forbidden': '启用'},
-                    { 'name': '用户添加', 'type': 'button', 'path': '空版本', 'tag': 'admin.view', 'forbidden': '启用' },
-                    { 'name': '用户查询', 'type': 'button', 'path': '空版本', 'tag': 'admin.view', 'forbidden': '启用' },
-                    { 'name': '角色查询', 'type': 'button', 'path': '空版本', 'tag': 'admin.view', 'forbidden': '启用'},
-                    { 'name': '用户查询', 'type': 'button', 'path': '空版本', 'tag': 'admin.view', 'forbidden': '启用'},
-                    { 'name': '角色查询', 'type': 'button', 'path': '空版本', 'tag': 'admin.view', 'forbidden': '启用' },
 
                 ],
                 columns: [
                     
-                    { field: 'type', width: 200, columnAlign: 'center', isResize: true },
-                    { field: 'name', width: 250, columnAlign: 'center', isResize: true },
-                    { field: 'path', width: 250, columnAlign: 'center', isResize: true },
-                    { field: 'tag', width: 250, columnAlign: 'center', isResize: true },
-                    { field: 'forbidden', width: 200, columnAlign: 'center',  isResize: true },
-                    { field: 'time', width: 250, columnAlign: 'center', isResize: true },
+                    { field: 'name', width: 200, columnAlign: 'center', isResize: true },
+                    { field: 'masterType', width: 250, columnAlign: 'center', isResize: true },
+                    { field: 'url', width: 250, columnAlign: 'center', isResize: true },
+                    { field: 'permission', width: 250, columnAlign: 'center', isResize: true },
+                    { field: 'isDisable', width: 200, columnAlign: 'center',  isResize: true ,formatter: function (rowData) {
+                    	if(rowData.isDisable==0){
+                    		return '可用';
+                    	}else{
+                    		return '不可用';
+                    	}
+                    }},
+                    { field: 'createDate', width: 250, columnAlign: 'center', isResize: true },
                     { field: 'fuck', width: 200, columnAlign: 'center', isResize: true ,componentName:'table-operation'}
 
                 ],
@@ -36,12 +32,12 @@ new Vue({
 
                     [
                         
-                        { fields: ['type'], title: '类型', titleAlign: 'center' },
-                        { fields: ['name'], title: '名称', titleAlign: 'center' },
-                        { fields: ['path'], title: '路径', titleAlign: 'center' },
-                        { fields: ['tag'], title: '权限标记', titleAlign: 'center', },//orderBy: ''
-                        { fields: ['forbidden'], title: '是否禁用', titleAlign: 'center' },
-                        { fields: ['time'], title: '创建时间', titleAlign: 'center' },
+                        { fields: ['name'], title: '类型', titleAlign: 'center' },
+                        { fields: ['masterType'], title: '名称', titleAlign: 'center' },
+                        { fields: ['url'], title: '路径', titleAlign: 'center' },
+                        { fields: ['permission'], title: '权限标记', titleAlign: 'center', },//orderBy: ''
+                        { fields: ['isDisable'], title: '是否禁用', titleAlign: 'center' },
+                        { fields: ['createDate'], title: '创建时间', titleAlign: 'center' },
                         { fields: ['fuck'], title: '操作', titleAlign: 'center' },
                     ],
                 ],
@@ -51,38 +47,20 @@ new Vue({
     methods: {
         getTableData() {
 
-            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
+            this.total = tableDate.length;
+            console.log("A");
         },
         pageChange(pageIndex) {
 
             this.pageIndex = pageIndex;
-            // this.getTableData();
-            console.log(pageIndex)
+             this.getTableData();
+            console.log(pageIndex);
         },
         pageSizeChange(pageSize) {
-
             this.pageIndex = 1;
             this.pageSize = pageSize;
-            // this.getTableData();
-        },
-        sortChange(params) {
-
-            if (params.height.length > 0) {
-
-                this.tableConfig.tableData.sort(function (a, b) {
-
-                    if (params.height === 'asc') {
-
-                        return a.height - b.height;
-                    } else if (params.height === 'desc') {
-
-                        return b.height - a.height;
-                    } else {
-
-                        return 0;
-                    }
-                });
-            }
+            this.getTableData();
         },
         customCompFunc(params){
 
@@ -101,26 +79,24 @@ new Vue({
             },
             //数据请求
         goback:function(){
-            // console.log('haha');
-            axios.post("https://www.apiopen.top/satinApi?type=1&page=1").then(this.getnew)
+        	axios.post(GetURLInfo()+"auth/queryAuthList").then(this.getnew);
 
         },
         getnew(res){
-            let data = res.data.data
-            // console.log(data)
-            this.item = data
-            // console.log(this.item)
+        	if(res.data.code==-1){
+        		for(var i=0;i<res.data.data.length;i++){
+        			tableDate.push(res.data.data[i]);
+        			this.getTableData();
+                        }
+        	}
         }
     },
-    // created() {
-    //     this.getTableData();
-    // },
+     created() {
+         this.getTableData();
+    },
     mounted(){
         this.goback();
-        // this.item = setInterval(this.goback,3000)
-    },
-    beforeDestroy(){
-        clearInterval(this.item);
+        this.getTableData();
     }
 })
 

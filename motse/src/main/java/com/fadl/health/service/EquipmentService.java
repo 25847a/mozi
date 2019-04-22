@@ -4,8 +4,6 @@ import com.fadl.common.DataRow;
 import com.fadl.health.entity.Equipment;
 
 import java.sql.SQLException;
-import java.util.List;
-
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -24,5 +22,11 @@ public interface EquipmentService extends IService<Equipment> {
 	 * @throws SQLException
 	 */
 	public DataRow queryEquipmentState()throws SQLException;
+	/**
+	 * 查询代理商列表
+	 * @return
+	 * @throws SQLException
+	 */
+	public DataRow queryEquipmentList(DataRow messageMap)throws SQLException;
 	
 }

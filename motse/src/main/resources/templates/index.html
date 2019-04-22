@@ -99,9 +99,9 @@
 		                            <li class="list-group-item history" id="changeToSet">
 		                                历史健康数据
 		                            </li>
-		                              <li class="list-group-item love" id="changelove">
+		                          <!--     <li class="list-group-item love" id="changelove">
 		                                重点关爱管理
-		                            </li>
+		                            </li> -->
 		                        </ul>
 		                    </div>
 		                </div>
@@ -235,7 +235,7 @@
 		        });
 		     // 历史健康数据
 		        $(function () {
-		            $('#healthData').on('click', function () {
+		            $('#changeToSet').on('click', function () {
 		                $(window.parent.document).find('#iframe').attr('src', '/health/historyPage')
 		                $(".history").addClass('adds')
 		                $(".index-home").removeClass('adds')
@@ -251,7 +251,7 @@
 		                
 		            })
 		        });
-		        // 重点关爱管理
+		      /*   // 重点关爱管理
 		        $(function () {
 		            $('#changelove').on('click', function () {
 		                $(window.parent.document).find('#iframe').attr('src', '/health/lovePage')
@@ -267,7 +267,7 @@
 		                $(".equipment").removeClass('adds')
 		                $(".add").removeClass('adds')
 		            })
-		        });
+		        }); */
 		        //添加用户
 		        $(function () {
 		            $('#addUser').on('click', function () {

@@ -25,8 +25,8 @@
     <!-- 查询首页健康数据列表 -->
     <select id="queryHealthList" resultType="com.fadl.common.DataRow" parameterType="java.lang.Integer">
     	set @rownum=#{pageNum};
-    	SELECT @rownum:=@rownum+1 as id,tc.name,tx.* FROM(
-		SELECT HRV,CONCAT(sbp_ave,'/',dbp_ave) as blood,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
+    	SELECT @rownum:=@rownum+1 as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM(
+		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
 		RIGHT JOIN(
 		SELECT MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
 		) tt
@@ -49,6 +49,20 @@
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
 		) tb
+    </select>
+    <!-- 查询重点关爱的使用者 -->
+    <select id="queryHealthListLove" resultType="com.fadl.common.DataRow">
+		SELECT '置顶' as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tc.love FROM(
+		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
+		RIGHT JOIN(
+		SELECT MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
+		) tt
+		ON tp.createtime=tt.createtime
+		)tx
+		LEFT JOIN user tc
+		ON tx.phone=tc.id
+		WHERE tc.love=1
+		LIMIT #{pageNum},#{pageSize}
     </select>
 	<!-- 首页当天心率统计图 -->
 	<select id="queryHeartrateCount" resultType="com.fadl.common.DataRow">
@@ -110,5 +124,27 @@
 		SUM(IF((respirationrate&gt;=12 AND respirationrate&lt;24),1,0)) as respirationrate2,
 		SUM(IF((respirationrate&lt;12),1,0)) as respirationrate3
 		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+	</select>
+	<!-- 查询历史健康数据 -->
+	<select id="queryHistoryList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT tp.imei,tp.id,tt.name,Heartrate,sbp_ave,dbp_ave,microcirculation,respirationrate,Bloodoxygen,HRV,DATE_FORMAT(tp.createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM jfhealth tp
+		LEFT JOIN equipment td
+		ON tp.imei=td.imei
+		LEFT JOIN user tt
+		ON substring(tp.phone,9)=tt.id
+		WHERE td.agentid=#{agentid}
+		<if test="id!=null and id!=''">
+		AND tp.id=#{id}
+		</if>
+		<if test="name!=null and name!=''">
+		AND tt.name=#{name}
+		</if>
+		ORDER BY createtime DESC
+		LIMIT 0,16
+	</select>
+	<!-- 查询健康数据管理列表 -->
+	<select id="queryHealthInfoList" resultType="com.fadl.common.DataRow">
+		SELECT imei,substring(phone,9) as phone,Heartrate,sbp_ave,dbp_ave,microcirculation,respirationrate,Bloodoxygen,HRV,Amedicalreport,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM jfhealth 
+LIMIT 0,100
 	</select>
 </mapper>

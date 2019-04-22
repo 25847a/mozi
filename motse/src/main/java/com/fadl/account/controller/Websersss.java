@@ -33,7 +33,7 @@ public class Websersss  extends AbstractController{
 			while(true){
 				//Thread.sleep(2000);
 				i++;
-				WebSocketServer.sendInfo(""+i);
+			//	WebSocketServer.sendInfo(""+i);
 			}
 		} catch (Exception e) {
 			logger.error("Websersss<<<<<<<<<<<<<<<<<<webserver",e);

@@ -1,7 +1,11 @@
 package com.fadl.account.dao;
 
 import com.fadl.account.entity.Admin;
+import com.fadl.common.DataRow;
+
 import java.sql.SQLException;
+import java.util.List;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -20,4 +24,10 @@ public interface AdminMapper extends BaseMapper<Admin> {
 	 * @throws Exception
 	 */
 	public Admin queryAdminInfo(String account)throws SQLException;
+	/**
+	 * 查询代理商列表
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<DataRow> queryAdminList()throws SQLException;
 }

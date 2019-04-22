@@ -14,4 +14,9 @@ public class PasswordUtil {
     public static  String encryptPassWord(String passWord,String account){
 		return new SimpleHash(hashAlgorithmName,passWord,ByteSource.Util.bytes(account),hashIterations).toHex();
     }
+    
+    public static void main(String[] args) {
+    System.out.println(new SimpleHash(hashAlgorithmName,"123",ByteSource.Util.bytes("123"),hashIterations).toHex());
+
+	}
 }

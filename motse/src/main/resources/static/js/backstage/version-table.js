@@ -1,37 +1,36 @@
+var tableDate = new Array();
 new Vue({
     el: '#app',
     data() {
         return {
             pageIndex: 1,
             pageSize: 10,
+            total:'',
             tableConfig: {
                 multipleSort: false,
                 tableData: [
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
-                    { 'custome': '98', 'version': '18072202量产版本','imei': '批量升级',  'current': '', 'main': '2', 'son': '13', 'compile': '18072202', 'type': '发布', 'describe': '18072202量产版本', 'time': '2018-09-30 12:03' },
 
                 ],
                 columns: [
                     
-                    { field: 'custome', width: 100, columnAlign: 'center',  isResize: true },
-                    { field: 'version', width: 200, columnAlign: 'center',  isResize: true },
+                    { field: 'id', width: 100, columnAlign: 'center',  isResize: true },
+                    { field: 'name', width: 200, columnAlign: 'center',  isResize: true },
                     { field: 'imei', width: 200, columnAlign: 'center',  isResize: true },
-                    { field: 'current', width: 100, columnAlign: 'center',  isResize: true },
-                    { field: 'main', width: 100, columnAlign: 'center',  isResize: true },
-                    { field: 'son', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'compile', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'type', width: 100, columnAlign: 'center', isResize: true },
-                    { field: 'describe', width: 300, columnAlign: 'center', isResize: true },
-                    { field: 'time', width: 200, columnAlign: 'center', isResize: true },
+                    { field: 'currentversion', width: 100, columnAlign: 'center',  isResize: true },
+                    { field: 'ziversion', width: 100, columnAlign: 'center',  isResize: true },
+                    { field: 'zhuversion', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'compilation', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'versiontype', width: 100, columnAlign: 'center', isResize: true ,formatter: function (rowData) {
+                    	if(rowData.versiontype==1){
+                    		return '公测';
+                    	}else if(rowData.versiontype==2){
+                    		return '发布';
+                    	}else{
+                    		return '测试';
+                    	}
+                    }},
+                    { field: 'description', width: 300, columnAlign: 'center', isResize: true },
+                    { field: 'createtime', width: 200, columnAlign: 'center', isResize: true },
                     { field: 'fuck', width: 100, columnAlign: 'center', isResize: true ,componentName:'table-operation'}
 
                 ],
@@ -39,16 +38,16 @@ new Vue({
 
                     [
                         
-                        { fields: ['custome'], title: 'ID', titleAlign: 'center' },
-                        { fields: ['version'], title: '版本标题', titleAlign: 'center' },
+                        { fields: ['id'], title: 'ID', titleAlign: 'center' },
+                        { fields: ['name'], title: '版本标题', titleAlign: 'center' },
                         { fields: ['imei'], title: 'IMEI', titleAlign: 'center' },
-                        { fields: ['current'], title: '当前版本', titleAlign: 'center', },//orderBy: ''
-                        { fields: ['main'], title: '主版本号', titleAlign: 'center' },
-                        { fields: ['son'], title: '子版本号', titleAlign: 'center' },
-                        { fields: ['compile'], title: '编译号', titleAlign: 'center' },
-                        { fields: ['type'], title: '版本类型', titleAlign: 'center' },
-                        { fields: ['describe'], title: '版本描述', titleAlign: 'center' },
-                        { fields: ['time'], title: '上传时间', titleAlign: 'center' },
+                        { fields: ['currentversion'], title: '当前版本', titleAlign: 'center', },//orderBy: ''
+                        { fields: ['ziversion'], title: '主版本号', titleAlign: 'center' },
+                        { fields: ['zhuversion'], title: '子版本号', titleAlign: 'center' },
+                        { fields: ['compilation'], title: '编译号', titleAlign: 'center' },
+                        { fields: ['versiontype'], title: '版本类型', titleAlign: 'center' },
+                        { fields: ['description'], title: '版本描述', titleAlign: 'center' },
+                        { fields: ['createtime'], title: '上传时间', titleAlign: 'center' },
                         { fields: ['fuck'], title: '操作', titleAlign: 'center' },
                     ],
                 ],
@@ -58,38 +57,19 @@ new Vue({
     methods: {
         getTableData() {
 
-            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
+            this.total = tableDate.length;
         },
         pageChange(pageIndex) {
 
             this.pageIndex = pageIndex;
-            // this.getTableData();
+           this.getTableData();
             console.log(pageIndex)
         },
         pageSizeChange(pageSize) {
-
             this.pageIndex = 1;
             this.pageSize = pageSize;
-            // this.getTableData();
-        },
-        sortChange(params) {
-
-            if (params.height.length > 0) {
-
-                this.tableConfig.tableData.sort(function (a, b) {
-
-                    if (params.height === 'asc') {
-
-                        return a.height - b.height;
-                    } else if (params.height === 'desc') {
-
-                        return b.height - a.height;
-                    } else {
-
-                        return 0;
-                    }
-                });
-            }
+            this.getTableData();
         },
         customCompFunc(params){
 
@@ -108,26 +88,24 @@ new Vue({
             },
             //数据请求
         goback:function(){
-            // console.log('haha');
-            axios.post("https://www.apiopen.top/satinApi?type=1&page=1").then(this.getnew)
+            axios.post(GetURLInfo()+"versionhistory/queryUploaddownloadList").then(this.getnew);
 
         },
         getnew(res){
-            let data = res.data.data
-            // console.log(data)
-            this.item = data
-            // console.log(this.item)
+        	if(res.data.code==-1){
+        		for(var i=0;i<res.data.data.length;i++){
+        			tableDate.push(res.data.data[i]);
+        			this.getTableData();
+                        }
+        	}
         }
     },
-    // created() {
-    //     this.getTableData();
-    // },
+     created() {
+         this.getTableData();
+     },
     mounted(){
         this.goback();
-        // this.item = setInterval(this.goback,3000)
-    },
-    beforeDestroy(){
-        clearInterval(this.item);
+        this.getTableData();
     }
 })
 

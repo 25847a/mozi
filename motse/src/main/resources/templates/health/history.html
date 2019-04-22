@@ -5,7 +5,7 @@
 <head>
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<title>Examples</title>
+	<title>历史健康数据</title>
 	<meta name="description" content=""/>
 	<meta name="keywords" content=""/>
 	<link th:href="@{/css/global.css}" rel="stylesheet"/>
@@ -13,7 +13,7 @@
 	<link rel="stylesheet" th:href="@{/css/vue-easytable.css}"/>
 	<link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css"/>
 	<script th:src="@{/js/vue.js}"></script>
-	<script th:src="@{/js/axios.min.js}"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script th:src="@{/js/echarts/echarts.js}"></script>
 	<script th:src="@{/js/jquery-1.11.3.min.js}"></script>
 	<!-- 引入组件库 -->
@@ -41,9 +41,12 @@
 			<p>历史健康数据</p>
 		</div>
 		<div class="table">
-			<div class="check">
-				<input type="text" name="" value="" placeholder="用户ID"/>
-				<button type="">查询</button>
+			<div class="check" id="search_par">
+				<input type="text" id="id" name="" value="" placeholder="用户ID"/>
+				<input type="text" id="name" name="" value="" placeholder="用户姓名"/>
+				<button type="button" onclick="query()" >查询</button>
+				<button type="button" onclick="empty()" >重置</button>
+				<button type="button" onclick="refresh()" >刷新</button>
 			</div>
 			<div id="app">
 				<div>
@@ -51,17 +54,20 @@
 						:multiple-sort="false" :min-height="350" even-bg-color="#f2f2f2"
 						:title-rows="tableConfig.titleRows" :columns="tableConfig.columns"
 						:table-data="tableConfig.tableData" row-hover-color="#eee" row-click-color="#edf7ff"
-						v-on:sort-change="sortChange" :paging-index="(pageIndex-1)*pageSize"></v-table>
+						:paging-index="(pageIndex-1)*pageSize"></v-table>
 
 					<div class="mt20 mb20 bold"></div>
-					<v-pagination v-on:page-change="pageChange" v-on:page-size-change="pageSizeChange" :total="50"
+					<v-pagination v-on:page-change="pageChange" v-on:page-size-change="pageSizeChange" :total="total"
 						:page-size="pageSize" :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"
 						style="padding: 20px 100px 20px 0;float: right;"></v-pagination>
 				</div>
 			</div>
 		</div>
 	</div>
+	<!-- 公共JS -->
+	<script th:src="@{/js/common/utils.js}"></script>
 	<script th:src="@{/js/health/history-table.js}"></script>
+	
 </body>
 
 </html>

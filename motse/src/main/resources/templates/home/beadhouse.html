@@ -25,13 +25,16 @@
 				<div id="abb">
 					<div id="echartPieContainer"></div>
 					<div id="echartPie"></div>
+					
 				</div>
 			</div>
 			<div class="table">
 				<div id="app">
 					<div class="head">
 						<h3>健康管理</h3>
-						<ul>
+						<input id="id" th:value="${adminId}"/>
+						<input id="page" value=""/>
+					<!-- 	<ul>@{adminId}
 							<li v-on:click="tabClick(1)" class="on">
 								<img th:src="@{/img/warning.png}" alt=""/><span>预警</span>
 							</li>
@@ -43,7 +46,7 @@
 								<img th:src="@{/img/all.png}" alt=""/>
 								<span>全部</span>
 							</li>
-						</ul>
+						</ul> -->
 					</div>
 					<div v-show="tab==1">
 						<v-table ref="table1"

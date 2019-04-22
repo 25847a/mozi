@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.UserEqMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.UserEq">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="eq_id" property="eqId" />
+        <result column="typeof" property="typeof" />
+        <result column="authorized" property="authorized" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id AS userId, eq_id AS eqId, typeof, authorized
+    </sql>
+	<!-- 查询使用者关联的监护者ID -->
+	<select id="queryUserEqInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT * FROM user_eq WHERE eq_id=(SELECT eq_id FROM user_eq WHERE user_id=#{userId}) AND typeof=0
+	</select>
+</mapper>

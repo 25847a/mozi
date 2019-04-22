@@ -3,6 +3,7 @@ package com.fadl.account.service.impl;
 import com.fadl.account.entity.Auth;
 import com.fadl.account.dao.AuthMapper;
 import com.fadl.account.service.AuthService;
+import com.fadl.common.DataRow;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import java.util.List;
@@ -31,6 +32,12 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Auth> implements Au
 	@Override
 	public List<Auth> queryAuthList() throws Exception {
 		return authMapper.queryAuthList();
+	}
+	@Override
+	public DataRow queryAuthList(DataRow messageMap) throws Exception {
+		List<Auth> list = this.selectList(null);
+		messageMap.initSuccess(list);
+		return messageMap;
 	}
 
 }

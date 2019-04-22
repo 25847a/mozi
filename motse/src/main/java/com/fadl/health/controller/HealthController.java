@@ -1,8 +1,11 @@
 package com.fadl.health.controller;
 
 
-import java.util.List;
 import java.util.Map;
+
+import javax.websocket.server.PathParam;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.fadl.account.entity.Admin;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
+import com.fadl.common.JsonUtil;
+import com.fadl.common.SessionUtil;
+import com.fadl.common.WebSocketServer;
 import com.fadl.health.service.EquipmentService;
 import com.fadl.health.service.HealthService;
 import com.fadl.health.service.UserService;
@@ -60,19 +67,56 @@ public class HealthController extends AbstractController{
 	public String healthPage(){
 		return "/backstage/health";
 	}
-	
+  
+    /**
+     * 养老院页面
+     * @return
+     */
+    @RequestMapping("/queryBeadhouseList")
+  //  @RequiresPermissions("admin:query")
+    @ResponseBody
+    public DataRow queryBeadhouseList(@PathParam(value = "page") String page){
+    	try {
+    		if(page.equals("")){
+    			page="1";
+    		}
+    		Admin admin = SessionUtil.getSessionAdmin();
+        	System.out.println(admin.getAccount()+">>>>>>>>>>>>>");
+        	messageMap=healthService.queryBeadhouseList(messageMap,page);
+        	WebSocketServer.sendInfo(JsonUtil.getMapper().writeValueAsString(messageMap), String.valueOf(admin.getId()));
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<readPlasmaProviderNo",e);
+		}
+		return messageMap;
+    }
 	
 	/**
-	 * 养老院所有的数据都是从这个接口获取
+	 * 查询历史健康数据
 	 */
-	@RequestMapping("queryBeadhouseList")
+	@RequestMapping("/queryHistoryList")
 	@ResponseBody
-	public DataRow queryBeadhouseList(){
+	public DataRow queryBeadhouseList(@RequestParam Map<String,Object> map){
 		try {
-		//	List<DataRow> tableData = healthService.queryHealthList();//列表数据
-			//messageMap.initSuccess(tableData);
+		Admin admin = SessionUtil.getSessionAdmin();
+		map.put("agentid", admin.getId());
+		messageMap=healthService.queryHistoryList(map,messageMap);
 		} catch (Exception e) {
 			logger.error("HealthController>>>>>>>>>>>>>queryBeadhouseList",e);
+		}
+		return messageMap;
+	}
+	/**
+	 * 查询健康数据管理列表
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/queryHealthInfoList")
+	@ResponseBody
+	public DataRow queryHealthInfoList(@RequestParam Map<String,String> map){
+		try {
+		messageMap=healthService.queryHealthInfoList(messageMap);
+		} catch (Exception e) {
+			logger.error("HealthController>>>>>>>>>>>>>queryHealthInfoList",e);
 		}
 		return messageMap;
 	}

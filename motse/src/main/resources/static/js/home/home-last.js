@@ -19,7 +19,7 @@ var last =new Vue({
 		initlast(respirationrate) {
 			let option = {				
 				title: {
-					text: '呼吸频率',
+					text: '',
 					left: 'center',
 					top: 20,
 					textStyle: {
