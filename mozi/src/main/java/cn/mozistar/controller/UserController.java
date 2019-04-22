@@ -802,14 +802,15 @@ public class UserController {
 	@ResponseBody
 	public ResultBase addHealth(@RequestBody JSONObject json){
 		ResultBase re = new ResultBase();
-		
 		String waveform = json.getString("waveform");
 		Integer userId = json.getInt("userId");
-		logger.info("userId:"+userId+">>>data:>>>>"+json.getString("data"));
+		User user = userService.getUser(userId);
+		logger.info("userId:"+userId+">>>名字:>>>>>>>>>>>>>>>>>>>>>>>>>"+user.getName());
+	//	logger.info("userId:"+userId+">>>data:>>>>"+json.getString("data"));
 		logger.info("userId:"+userId+">>>waveform:>>>>"+json.getString("waveform"));
 		if(!waveform.equals("")){
 			Healthdao healthdao = healthdaoService.getHealthdaoByUserId(userId);
-			User user = userService.getUser(userId);
+			
 			re=HealthtoolUtils.addT14Health(json, user,healthdao,userService,healthdaoService, healthService,re,healthsService);
 		}else{
 			String data=json.getString("data");

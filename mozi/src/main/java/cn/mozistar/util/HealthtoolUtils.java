@@ -406,80 +406,129 @@ public class HealthtoolUtils {
 						}
 					 health.setHighBloodPressure(highpressure);//高压
 					 health.setLowBloodPressure(lowpressure);//低压*/
+							// 高压值检测值
+							double gy = Integer.parseInt(bloodrArr[0]);
+					 		//低压检测值
+							double dy = Integer.parseInt(bloodrArr[1]);
 							 //心率校准值
-		              	double heartrdao = healthdao.getHeartRate()==0?80:healthdao.getHeartRate();
+		              		double heartrdao = healthdao.getHeartRate()==0?80:healthdao.getHeartRate();
 							// 高压值校准值
-							Integer highpressure = healthdao.getHighBloodPressure()==0?120:healthdao.getHighBloodPressure();
+		              		double highpressure = healthdao.getHighBloodPressure()==0?120:healthdao.getHighBloodPressure();
 							// 低压校准值
-							Integer lowpressure = healthdao.getLowBloodPressure()==0?80:healthdao.getLowBloodPressure();
+		              		double lowpressure = healthdao.getLowBloodPressure()==0?80:healthdao.getLowBloodPressure();
 							// 心率 检测值
 							 double hear = Double.parseDouble(heartRate);
-							 int num=0;
+							 int gnum=0;
+							 int dnum=0;
 							  if(hear<heartrdao && hear!=0){
 								  double sum =(double)hear/(double)heartrdao*100;
 								   if(97<sum && sum<=100){
-									   num =  (int) (97+Math.random()*(100-97+1));
+									   gnum = (int) (97+Math.random()*(100-97+1));
+									   dnum = (int) (97+Math.random()*(100-97+1));
 									 }else if(94<sum && sum<=97){
-										 num = (int) (94+Math.random()*(96-94+1));
+										 gnum = (int) (94+Math.random()*(96-94+1));
+										 dnum = (int) (97+Math.random()*(100-97+1));
 									 } else if(92<sum && sum<=94){
-										 num =  (int) (92+Math.random()*(93-92+1));
+										 gnum =  (int) (92+Math.random()*(93-92+1));
+										 dnum = (int) (97+Math.random()*(100-97+1));
 									 }else if(90<=hear && hear<=92){
-										 num =  (int) (90+Math.random()*(91-90+1));
+										 gnum =  (int) (90+Math.random()*(91-90+1));
+										 dnum = (int) (97+Math.random()*(100-97+1));
 									 }else{
 										 hear =hear*(97+Math.random()*(100-97+1))/100;
-										 num=(int)(97+Math.random()*(100-97+1));;
+										 gnum=(int)(97+Math.random()*(100-97+1));;
+										 dnum = (int) (97+Math.random()*(100-97+1));
 									 }
-								   highpressure=(int) (highpressure*num/100);
-								   lowpressure = (int) (lowpressure*num/100);
+								   highpressure=(int) (highpressure*gnum/100);
+								   lowpressure = (int) (lowpressure*dnum/100);
 							  }else if(hear>=heartrdao){
 								  double sum =(double)hear/(double)heartrdao*100;
+								  double gysum =(double)highpressure/(double)gy*100;//求出高压占校准值的比例
+								  double dysum =(double)lowpressure/(double)dy*100;//求出低压占校准值的比例
 								   if(100<=sum && sum<104){
-									   num = (int) (100+Math.random()*(102-100+1));
+									   if(90<=gysum && gysum<110){
+										   highpressure=gy;
+										   gnum=100;
+									   }else{
+										   gnum = (int) (100+Math.random()*(102-100+1));
+									   }
+									if(90<=dysum && dysum<110){
+										   lowpressure=dy;
+										   dnum=100; 
+									   }else{
+										   dnum = (int) (100+Math.random()*(102-100+1));
+									   }
 									 }else if(104<=sum && sum<108){
-										 num = (int) (103+Math.random()*(104-103+1));
+										 if(90<=gysum && gysum<110){
+											   highpressure=gy;
+											   gnum=100;
+										   }else{
+											   gnum = (int) (103+Math.random()*(104-103+1));
+										   }
+										 if(90<=dysum && dysum<110){
+											   lowpressure=dy;
+											   dnum=100; 
+										   }else{
+											   dnum = (int) (103+Math.random()*(104-103+1));
+										   }
 									 } else if(108<=sum && sum<112){
-										 num = (int) (105+Math.random()*(106-105+1));
+										 gnum = (int) (105+Math.random()*(106-105+1));
+										 dnum = (int) (103+Math.random()*(104-103+1));
 									 }else if(112<=sum && sum<116){
-										 num = (int) (107+Math.random()*(108-107+1));
+										 gnum = (int) (107+Math.random()*(108-107+1));
+										 dnum = (int) (103+Math.random()*(104-103+1));
 									 }else if(116<=sum && sum<120){
-										 num = (int) (109+Math.random()*(110-109+1));
+										 gnum = (int) (109+Math.random()*(110-109+1));
+										 dnum = (int) (103+Math.random()*(104-103+1));
 									 }else if(120<=sum && sum<124){
-										 num = (int) (110+Math.random()*(112-110+1));
+										 gnum = (int) (110+Math.random()*(112-110+1));
+										 dnum = (int) (103+Math.random()*(104-103+1));
 									 }else if(124<=sum && sum<128){
-										 num = (int) (113+Math.random()*(114-113+1));
+										 gnum = (int) (113+Math.random()*(114-113+1));
+										 dnum = (int) (103+Math.random()*(104-103+1));
 									 }else if(128<=sum && sum<132){
-										 num = (int) (115+Math.random()*(116-115+1));
+										 gnum = (int) (115+Math.random()*(116-115+1));
+										 dnum = (int) (115+Math.random()*(116-115+1));
 									 }else if(132<=sum && sum<136){
-										 num = (int) (117+Math.random()*(118-117+1));
+										 gnum = (int) (117+Math.random()*(118-117+1));
+										 dnum = (int) (117+Math.random()*(118-117+1));
 									 }else if(136<=sum && sum<140){
-										 num = (int) (119+Math.random()*(120-119+1));
+										 gnum = (int) (119+Math.random()*(120-119+1));
+										 dnum = (int) (119+Math.random()*(120-119+1));
 									 }else if(140<=sum && sum<144){
-										 num = (int) (121+Math.random()*(122-121+1));
+										 gnum = (int) (121+Math.random()*(122-121+1));
+										 dnum = (int) (121+Math.random()*(122-121+1));
 									 }else if(144<=sum && sum<148){
-										 num = (int) (123+Math.random()*(124-123+1));
+										 gnum = (int) (123+Math.random()*(124-123+1));
+										 dnum = (int) (123+Math.random()*(124-123+1));
 									 }else if(148<=sum && sum<152){
-										 num = (int) (125+Math.random()*(127-125+1));
+										 gnum = (int) (125+Math.random()*(127-125+1));
+										 dnum = (int) (125+Math.random()*(127-125+1));
 									 }else if(152<=sum && sum<156){
-										 num = (int) (128+Math.random()*(130-128+1));
+										 gnum = (int) (128+Math.random()*(130-128+1));
+										 dnum = (int) (128+Math.random()*(130-128+1));
 									 }else if(156<=sum && sum<158){
-										 num = (int) (130+Math.random()*(131-130+1));
+										 gnum = (int) (130+Math.random()*(131-130+1));
+										 dnum = (int) (130+Math.random()*(131-130+1));
 									 }else{
 										 hear =hear*(100+Math.random()*(104-100+1))/100;
-										 num=(int)(100+Math.random()*(104-100+1));;
+										 gnum=(int)(100+Math.random()*(104-100+1));
+										 dnum=(int)(100+Math.random()*(104-100+1));
 									 }
-								  highpressure=(int) (highpressure*num/100);
-								  lowpressure = (int) (lowpressure*num/100);
+								  highpressure=(int) (highpressure*gnum/100);
+								  lowpressure = (int) (lowpressure*dnum/100);
 							  }else{
 								  hear =heartrdao*(98+Math.random()*(102-98+1))/100;
-								  num=(int)(98+Math.random()*(102-98+1));;
-								  highpressure=(int) (highpressure*num/100);
-								  lowpressure = (int) (lowpressure*num/100);
+								  gnum=(int)(98+Math.random()*(102-98+1));
+								  dnum=(int)(98+Math.random()*(102-98+1));
+								  highpressure=(int) (highpressure*gnum/100);
+								  lowpressure = (int) (lowpressure*dnum/100);
 							  }
 							  health.setHeartRate((int)hear);;
 							  // 高压
-							  health.setHighBloodPressure(highpressure);
+							  health.setHighBloodPressure((int)highpressure);
 							  // 低压
-							  health.setLowBloodPressure(lowpressure);
+							  health.setLowBloodPressure((int)lowpressure);
 						// 报告
 						health.setAmedicalreport(amedical);
 						// 血氧
