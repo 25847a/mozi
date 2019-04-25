@@ -5,6 +5,7 @@ import com.fadl.common.DataRow;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -30,4 +31,17 @@ public interface AdminMapper extends BaseMapper<Admin> {
 	 * @throws SQLException
 	 */
 	public List<DataRow> queryAdminList()throws SQLException;
+	/**
+	 * 查询用户的角色
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	public DataRow queryAdminRoleInfo(Long id)throws SQLException;
+	/**
+	 * 查询用户管理列表
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<DataRow> queryAdminInfoList(Map<String,String> map)throws SQLException;
 }

@@ -78,6 +78,13 @@ public interface HealthMapper extends BaseMapper<Health> {
 	 */
 	public List<DataRow> queryHistoryList(Map<String,Object> map)throws SQLException;
 	/**
+	 * 查询历史健康数据总数
+	 * @param adminId
+	 * @return
+	 * @throws SQLException
+	 */
+	public int queryHistoryListCount(Map<String,Object> map)throws SQLException;
+	/**
 	 * 查询健康数据管理列表
 	 * @return
 	 * @throws SQLException

@@ -1,3 +1,4 @@
+$("#chen").html("用户总人数 : "+$("#count").val());
 var tableList=new Vue({
     el: '#app',
     data() {

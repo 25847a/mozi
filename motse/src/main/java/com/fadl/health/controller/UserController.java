@@ -3,6 +3,7 @@ package com.fadl.health.controller;
 
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class UserController extends AbstractController{
      * @return
      */
     @RequestMapping("/addUserPage")
+    @RequiresPermissions("addUser:view")
     public String addUserPage(){
     	return "/user/addUser";
     }

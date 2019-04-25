@@ -92,7 +92,7 @@
 		SUM(IF((sbp_ave&gt;=140 AND sbp_ave&lt;159 AND dbp_ave&gt;=90 AND dbp_ave&lt;99),1,0)) as blood4,
 		SUM(IF((sbp_ave&gt;=160 AND sbp_ave&lt;179 AND dbp_ave&gt;=100 AND dbp_ave&lt;109),1,0)) as blood5,
 		SUM(IF((sbp_ave&gt;=180 AND dbp_ave&gt;110),1,0)) as blood6
-		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 	</select>
 	<!-- 首页当天微循环统计图 -->
 	<select id="queryMicrocirculationCount" resultType="com.fadl.common.DataRow">
@@ -100,7 +100,7 @@
 		SUM(IF((microcirculation&gt;=80),1,0)) as microcirculation1,
 		SUM(IF((microcirculation&gt;=70 AND microcirculation&lt;80),1,0)) as microcirculation2,
 		SUM(IF((microcirculation&gt;=50 AND microcirculation&lt;70),1,0)) as microcirculation3
-		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 	</select>
 	
 	<!-- 首页当天血氧统计图 -->
@@ -110,7 +110,7 @@
 		SUM(IF((tg.Bloodoxygen&gt;=94 AND tg.Bloodoxygen&lt;=99),1,0)) as bloodoxygen2
 		 FROM (
 		SELECT td.*,CASE WHEN tc.gender='男' THEN 0 WHEN tc.gender='女' THEN 1 ELSE 2 END AS gender FROM (
-		SELECT Bloodoxygen,substring(phone,9) as phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+		SELECT Bloodoxygen,substring(phone,9) as phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 		) td
 		LEFT JOIN user tc
 		ON td.phone=tc.id
@@ -123,7 +123,7 @@
 		SUM(IF((respirationrate&gt;=24),1,0)) as respirationrate1,
 		SUM(IF((respirationrate&gt;=12 AND respirationrate&lt;24),1,0)) as respirationrate2,
 		SUM(IF((respirationrate&lt;12),1,0)) as respirationrate3
-		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+		FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 	</select>
 	<!-- 查询历史健康数据 -->
 	<select id="queryHistoryList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
@@ -140,7 +140,25 @@
 		AND tt.name=#{name}
 		</if>
 		ORDER BY createtime DESC
-		LIMIT 0,16
+		LIMIT #{pageNum},#{pageSize}
+	</select>
+	<!-- 查询历史健康数据总数 -->
+	<select id="queryHistoryListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+		SELECT tp.imei,tp.id,tt.name,Heartrate,sbp_ave,dbp_ave,microcirculation,respirationrate,Bloodoxygen,HRV,DATE_FORMAT(tp.createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM jfhealth tp
+		LEFT JOIN equipment td
+		ON tp.imei=td.imei
+		LEFT JOIN user tt
+		ON substring(tp.phone,9)=tt.id
+		WHERE td.agentid=#{agentid}
+		<if test="id!=null and id!=''">
+		AND tp.id=#{id}
+		</if>
+		<if test="name!=null and name!=''">
+		AND tt.name=#{name}
+		</if>
+		ORDER BY createtime DESC
+		) tr
 	</select>
 	<!-- 查询健康数据管理列表 -->
 	<select id="queryHealthInfoList" resultType="com.fadl.common.DataRow">

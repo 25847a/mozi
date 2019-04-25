@@ -1,6 +1,7 @@
 package com.fadl.account.controller;
 
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fadl.account.entity.Role;
 import com.fadl.account.service.RoleService;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
@@ -52,6 +54,22 @@ public class RoleController extends AbstractController{
 		messageMap=roleService.queryRoleList(messageMap);
 		} catch (Exception e) {
 			logger.error("RoleController>>>>>>>>>>>>>queryRoleList",e);
+		}
+		return messageMap;
+	}
+	/**
+	 * 查询角色管理信息
+	 * @param map
+	 * @return
+	 */
+	@RequestMapping("/queryRoleInfo")
+	@ResponseBody
+	public DataRow queryRoleInfo(){
+		try {
+			List<Role> list = roleService.selectList(null);
+			messageMap.initSuccess(list);
+		} catch (Exception e) {
+			logger.error("RoleController>>>>>>>>>>>>>queryRoleInfo",e);
 		}
 		return messageMap;
 	}

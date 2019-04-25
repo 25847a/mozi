@@ -246,8 +246,14 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 */
 	@Override
 	public DataRow queryHistoryList(Map<String,Object> map,DataRow messageMap) throws SQLException {
+		int pageNum = Integer.valueOf((String) map.get("pageNum"));
+		int pageSize = Integer.valueOf((String) map.get("pageSize"));
+		map.put("pageNum", (pageNum-1)*pageSize);
+		map.put("pageSize", pageSize);
 		List<DataRow> result = healthMapper.queryHistoryList(map);
+		int total = healthMapper.queryHistoryListCount(map);
 		messageMap.initSuccess(result);
+		messageMap.put("total", total);
 		return messageMap;
 	}
 	/**

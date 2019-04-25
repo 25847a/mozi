@@ -1,6 +1,9 @@
 package com.fadl.account.controller;
 
 
+import java.sql.SQLException;
+import java.util.Map;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
@@ -10,15 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.fadl.account.entity.Admin;
 import com.fadl.account.service.AdminService;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
 import com.fadl.common.IConstants;
-import com.fadl.common.SessionUtil;
-import com.fadl.common.WebSocketServer;
+import com.fadl.health.entity.User;
+import com.fadl.health.service.UserService;
 
 /**
  * <p>
@@ -35,6 +40,8 @@ public class AdminController extends AbstractController{
 	
 	@Autowired
 	AdminService adminService;
+	@Autowired
+	UserService userService;
 	/**
 	 * 跳转登录页面
 	 * @return
@@ -48,7 +55,16 @@ public class AdminController extends AbstractController{
 	 * @return
 	 */
 	@RequestMapping("index")
-	public String index(){
+	public String index(Model model){
+		Session session = SecurityUtils.getSubject().getSession();
+		Admin admin = (Admin) session.getAttribute(IConstants.SESSION_ADMIN_USER);
+		try {
+			DataRow row=adminService.queryAdminRoleInfo(admin.getId());
+			model.addAttribute("name", row.getString("name"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
 		return "/index";
 	}
     /**
@@ -68,7 +84,11 @@ public class AdminController extends AbstractController{
     public String beadhousePage(Model model){
     	Session session = SecurityUtils.getSubject().getSession();
     	Admin admin = (Admin) session.getAttribute(IConstants.SESSION_ADMIN_USER);
+    	EntityWrapper<User> ew = new EntityWrapper<User>();
+    	ew.eq("role", "使用者");
+    	int count =userService.selectCount(ew);
     	model.addAttribute("adminId", admin.getId());
+    	model.addAttribute("count", count);
     	return "/home/beadhouse";
     }
     /**
@@ -100,6 +120,20 @@ public class AdminController extends AbstractController{
     		messageMap = adminService.queryAdminList(messageMap);
 		} catch (Exception e) {
 			logger.error("AdminController<<<<<<<<<<<<<<<<<<queryAdminList",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 查询用户管理列表
+     * @return
+     */
+    @RequestMapping("/queryAdminInfoList")
+    @ResponseBody
+    public DataRow queryAdminInfoList(@RequestParam Map<String,String> map){
+    	try {
+    		messageMap = adminService.queryAdminInfoList(map,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<queryAdminInfoList",e);
 		}
 		return messageMap;
     }

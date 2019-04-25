@@ -83,6 +83,11 @@ var pie = new Vue({
 								{ value: x, name: '男性:'+x+'人', itemStyle: { color: '#5ab1ef' } },
 								{ value: y, name: '女性'+y+'人', itemStyle: { color: '#ffb980' } }
 							],
+							labelLine:{  
+				                normal:{  
+				                    length:1
+				                }  
+				            }, 
 						itemStyle: {
 							emphasis: {
 								shadowBlur: 10,

@@ -47,26 +47,23 @@ var tableList=new Vue({
     },
     methods: {
         getTableData() {
-
-            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
-            this.total = tableDate.length;
+            this.tableConfig.tableData = tableDate;//.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
         },
        
         pageChange(pageIndex) {
-
             this.pageIndex = pageIndex;
-            this.getTableData();
+        	this.goback();
         },
         pageSizeChange(pageSize) {
-
             this.pageIndex = 1;
             this.pageSize = pageSize;
             this.getTableData();
         },
         goback:function(){
-        	var params = new URLSearchParams()
+        	var params = new URLSearchParams();
         	 params.append('id',id);
-        	 params.append('name',name);
+        	 params.append('pageNum',this.pageIndex);
+        	 params.append('pageSize',this.pageSize);
             axios.post(GetURLInfo()+"health/queryHistoryList",params).then(this.getnew);
 
         },
@@ -75,8 +72,10 @@ var tableList=new Vue({
         		tableDate=[];
         		for(var i=0;i<res.data.data.length;i++){
         			tableDate.push(res.data.data[i]);
-        			this.getTableData();
                         }
+        		this.total= res.data.total;
+        		this.getTableData();
+        		 
         	}
         }
     }
@@ -103,3 +102,4 @@ function refresh(){
 function empty(){
 	$("#search_par input").val("");
 }
+

@@ -48,6 +48,7 @@ public class HealthController extends AbstractController{
 	 * @return
 	 */
 	@RequestMapping("/historyPage")
+	@RequiresPermissions("history:view")
 	public String historyPage(){
 		return "/health/history";
 	}

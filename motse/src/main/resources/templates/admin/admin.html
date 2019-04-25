@@ -34,23 +34,22 @@
 			<p>系统用户列表</p>
 		</div>
 		<div class="table">
-			<div class="check">
+			<div class="check" id="search_par">
 				<div class="btn">
-					<button type="">新增</button>
-					<button type="">批量删除</button>
+					<button type="button">新增</button>
+					<button type="button">批量删除</button>
 				</div>
 				<span>角色：</span>
-				<select>
-				  <option value ="volvo">请选择</option>
-				  <option value ="saab">Saab</option>
-				  <option value="opel">Opel</option>
-				  <option value="audi">Audi</option>
+				<select id="role">
+				  <option value ="">请选择</option>
 				</select>
 				<span>姓名：</span>
-				<input type="text" name="" value="" placeholder="请输入姓名"/>
-				<span>电话：</span>
-				<input type="text" name="" value="" placeholder="请输入电话"/>
-				<button type="">查询</button>
+				<input type="text" name="" id="name" value="" placeholder="请输入姓名"/>
+				<span>用户名：</span>
+				<input type="text" name="" id="account" value="" placeholder="请输入用户名"/>
+				<button type="button" onclick="query()">查询</button>
+				<button type="button" onclick="empty()" >重置</button>
+				<button type="button" onclick="refresh()" >刷新</button>
 			</div>
 			<div id="app">
 				<div>

@@ -1,15 +1,14 @@
 package com.fadl.comfig.shiro;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -21,13 +20,12 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fadl.account.dao.RoleAuthMapper;
 import com.fadl.account.entity.Admin;
 import com.fadl.account.entity.AdminRole;
 import com.fadl.account.service.AdminRoleService;
 import com.fadl.account.service.AdminService;
-import com.fadl.common.CacheMap;
+import com.fadl.common.DateUtil;
 import com.fadl.common.IConstants;
 
 
@@ -73,23 +71,28 @@ public class MyShiroRealm extends AuthorizingRealm{
 	 * 获取身份验证信息
 	 */
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token){
 		SimpleAuthenticationInfo simpleAuthenticationInfo=null;
 		//获取用户输入的账号
 		String account = (String) token.getPrincipal();
 		logger.error(">>>>>>>>>>>>>>>>>>用户====="+account+"=====准备登陆<<<<<<<<<<<<<<<<<<");
 		try {
 			Admin admin =adminService.queryAdminInfo(account);
-			if(admin==null){
-				throw new UnknownAccountException();
-			}
+			if(admin == null){//找不到用户 用户如果被逻辑删除
+                throw new UnknownAccountException();
+            }
+			if(DateUtil.sf.parse(admin.getLockDate()).getTime() >= new Date().getTime()&&1==admin.getIsDisable()){//用户被禁用
+	            throw new LockedAccountException();//用户锁定
+	        }
 			simpleAuthenticationInfo = new SimpleAuthenticationInfo(admin,admin.getPassWord(),ByteSource.Util.bytes(admin.getAccount()),getName());
 			Session session = SecurityUtils.getSubject().getSession();
 			session.setAttribute(IConstants.SESSION_ADMIN_USER, admin);
 			session.setAttribute("userSessionId", admin.getId());
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			logger.error("MyShiroRealm>>>>>>>>>>>>>>>doGetAuthenticationInfo>>>>>>>>>>>",e);
-		}
+		}catch (ParseException e){
+            logger.error("MyShiroRealm>>>>>>>>>>>>>>>doGetAuthenticationInfo>>>>>>>>>>>",e);
+        }
 		return simpleAuthenticationInfo;
 	}
 }

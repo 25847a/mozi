@@ -35,6 +35,10 @@ public class Admin extends Model<Admin> {
      */
     private String passWord;
     /**
+     * 登陆次数
+     */
+    private Integer isLoginCount;
+    /**
      * 姓名  (等同于 management 机构负责人)
      */
     private String name;
@@ -71,6 +75,18 @@ public class Admin extends Model<Admin> {
      */
     private String qq;
     /**
+     * 职称ID
+     */
+    private Long positionId;
+    /**
+     * 是否禁用(0、否 1、是)
+     */
+    private Integer isDisable;
+    /**
+     * 登陆错误次数
+     */
+    private Integer loginErrorCount;
+    /**
      * 角色
      */
     private String role;
@@ -94,6 +110,18 @@ public class Admin extends Model<Admin> {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updater;
+    /**
+     * 第一次登陆时间
+     */
+    private String firstDate;
+    /**
+     * 最后次登陆时间
+     */
+    private String lastDate;
+    /**
+     * 锁定时间
+     */
+    private String lockDate;
     /**
      * 备注
      */
@@ -196,7 +224,15 @@ public class Admin extends Model<Admin> {
         this.qq = qq;
     }
 
-    public String getRole() {
+    public Long getPositionId() {
+		return positionId;
+	}
+
+	public void setPositionId(Long positionId) {
+		this.positionId = positionId;
+	}
+
+	public String getRole() {
         return role;
     }
 
@@ -249,7 +285,55 @@ public class Admin extends Model<Admin> {
         return this.id;
     }
 
-    @Override
+    public Integer getIsLoginCount() {
+		return isLoginCount;
+	}
+
+	public void setIsLoginCount(Integer isLoginCount) {
+		this.isLoginCount = isLoginCount;
+	}
+
+	public Integer getIsDisable() {
+		return isDisable;
+	}
+
+	public void setIsDisable(Integer isDisable) {
+		this.isDisable = isDisable;
+	}
+
+	public Integer getLoginErrorCount() {
+		return loginErrorCount;
+	}
+
+	public void setLoginErrorCount(Integer loginErrorCount) {
+		this.loginErrorCount = loginErrorCount;
+	}
+
+	public String getFirstDate() {
+		return firstDate;
+	}
+
+	public void setFirstDate(String firstDate) {
+		this.firstDate = firstDate;
+	}
+
+	public String getLastDate() {
+		return lastDate;
+	}
+
+	public void setLastDate(String lastDate) {
+		this.lastDate = lastDate;
+	}
+
+	public String getLockDate() {
+		return lockDate;
+	}
+
+	public void setLockDate(String lockDate) {
+		this.lockDate = lockDate;
+	}
+
+	@Override
     public String toString() {
         return "Admin{" +
         "id=" + id +
@@ -264,12 +348,20 @@ public class Admin extends Model<Admin> {
         ", avatar=" + avatar +
         ", wechat=" + wechat +
         ", qq=" + qq +
+        ", positionId=" + positionId +
         ", role=" + role +
         ", createDate=" + createDate +
         ", updateDate=" + updateDate +
         ", creater=" + creater +
         ", updater=" + updater +
         ", remarks=" + remarks +
+        ", isLoginCount=" + isLoginCount +
+        ", isDisable=" + isDisable +
+        ", loginErrorCount=" + loginErrorCount +
+        ", firstDate=" + firstDate +
+        ", lastDate=" + lastDate +
+        ", lockDate=" + lockDate +
+        
         "}";
     }
 }

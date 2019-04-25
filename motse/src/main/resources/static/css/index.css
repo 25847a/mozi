@@ -14,6 +14,9 @@
 	display: flex;
     float: left;
 }
+.index-header .left div{
+    float: left;
+}
 .index-header .left .slide{
 	width: 35px;
 	margin-right: 25px;
@@ -104,6 +107,17 @@
 	border: 5px solid #ffffff;
 	border-radius: 50%;
 }
+.row .admin .dropdown{
+	text-align:center;
+	padding-top:10px;
+}
+.row .admin .dropdown .btn{
+	padding:3px 10px;
+	font-size:12px;
+}
+.row .admin .dropdown ul li a{
+	font-size:12px;
+}
 .row .admin .select{
 	text-align: center;
 	padding-top:10px; 
@@ -192,3 +206,11 @@ iframe{
 	text-align: center;
 }
 
+#bcd{
+	border:1px solid #888;
+	overflow:hidden;
+}
+#bcd img{
+	width:100%;
+	height:100%;
+}

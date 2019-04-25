@@ -13,25 +13,50 @@
 		</head>
 
 		<body class="main">
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        修改头像
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="bcd" style="width: 200px;height: 200px;"></div>
+                    <form id="uploadForm" enctype='multipart/form-data'>
+                        
+                        <input type="file" id="files" name="file"/>
+                    </form>
+                     
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="a">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="submit">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    
 		    <div class="index-header">
 		        <div class="left">
-		            <div class="title">养老机构系统</div>
-		            <div class="slide">
+		            <div class="title" id="chen">
+		            	<input id="name" th:value="${name}" type="hidden" />
+		            </div>
+		            <div class="slide" id="btn">
 		                <img th:src="@{/img/05.png}" alt=""/>
 		            </div>
 		            <div class="search">
-		                <input type="text" name="" value="" placeholder="心率变异 |"/>
-		                <img th:src="@{/img/search.png}" alt=""/>
 		            </div>
 		        </div>
 		        <ul>
-		            <li>管理员，欢迎登录系统！</li><li>|</li>
-		            <li>
-		                <div class="time">
-		                    <img th:src="@{/img/time.png}" alt=""/>
-		                </div>
-		                <span id="Date">12:34 2019-3-25 星期一 </span>
-		            </li><li>|</li>
+		            <li>管理员，欢迎登录系统！</li>
+		           <li>|</li>
 		            <li><a href="login.html" title="">退出登录</a></li>
 		        </ul>
 		    </div>
@@ -44,13 +69,27 @@
 		                <div class="head">
 		                    <img th:src="@{/img/head.png}" alt=""/>
 		                </div>
-		                <div class="select">
-		                    <select>
-		                        <option value="volvo">管理员</option>
-		                        <option value="saab">Saab</option>
-		                        <option value="opel">Opel</option>
-		                        <option value="audi">Audi</option>
-		                    </select>
+		                <div class="dropdown">
+		               <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">管理员
+                        <span class="caret"></span>
+                    	</button>
+		               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation" class="" data-toggle="modal" data-target="#myModal">
+                            <a role="menuitem" tabindex="-1" href="#">修改头像</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">修改密码</a>
+                        </li>
+                       <!--  <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">数据通信/网络</a>
+                        </li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">分离的链接</a>
+                        </li> -->
+                    </ul>
+		               
+		               
 		                </div>
 		
 		            </div>
@@ -68,17 +107,21 @@
 		                    <div id="homepageList" class="panel-collapse collapse" role="tabpanel"
 		                        aria-labelledby="homepage">
 		                        <ul class="list-group">
+		                       <!--  <shiro:hasPermission name="head:view">
 		                        <li class="list-group-item" id="headquarters">
 		                               总公司
 		                            </li>
+		                            </shiro:hasPermission> -->
 		                            <shiro:hasPermission name="beadhouse:view">
 		                            <li class="list-group-item" id="beadhouse">
 		                                养老院
 		                            </li>
 		                            </shiro:hasPermission>
+		                           <!--  <shiro:hasPermission name="partner:view">
 		                            <li class="list-group-item" id="cityPartner">
 		                               城市合伙人
 		                            </li>
+		                            </shiro:hasPermission> -->
 		                        </ul>
 		                    </div>
 		                </div>
@@ -96,9 +139,11 @@
 		                    <div id="healthData" class="panel-collapse collapse" role="tabpanel"
 		                        aria-labelledby="dataQuery">
 		                        <ul class="list-group">
+		                        <shiro:hasPermission name="history:view">
 		                            <li class="list-group-item history" id="changeToSet">
 		                                历史健康数据
 		                            </li>
+		                            </shiro:hasPermission>
 		                          <!--     <li class="list-group-item love" id="changelove">
 		                                重点关爱管理
 		                            </li> -->
@@ -118,13 +163,15 @@
 		                    <div id="collapseListGroup2" class="panel-collapse collapse" role="tabpanel"
 		                        aria-labelledby="collapseListGroupHeading2">
 		                        <ul class="list-group">
+		                        <shiro:hasPermission name="addUser:view">
 		                            <li class="list-group-item add" id="addUser">
 		                                添加用户
 		                            </li>
-		                          
+		                         </shiro:hasPermission>
 		                        </ul>
 		                    </div>
 		                </div>
+		                <shiro:hasPermission name="backstage:view">
 		                <div class="panel panel-primary leftMenu">
 		                    <div class="panel-heading home" id="collapseListGroupHeading3" data-toggle="collapse"
 		                        data-target="#collapseListGroup3" role="tab">
@@ -152,6 +199,8 @@
 		                        </ul>
 		                    </div>
 		                </div>
+		                </shiro:hasPermission>
+		                <shiro:hasPermission name="power:view">
 		                <div class="panel panel-primary leftMenu">
 		                    <div class="panel-heading home" id="collapseListGroupHeading4" data-toggle="collapse"
 		                        data-target="#collapseListGroup4" role="tab">
@@ -176,6 +225,7 @@
 		                        </ul>
 		                    </div>
 		                </div>
+		                </shiro:hasPermission>
 		            </div>
 		        </div>
 		        <div class="col-md-10">
@@ -186,229 +236,14 @@
 		    <div class="index-footer" id="foo">
 		        <ul>
 		            <li>广州墨子星智能科技集团有限公司</li>
-		            <li>地址：广州xxxxxxxxx号</li>
+		            <li>地址：广州市番禺区海伦堡创意园一座C区4楼</li>
 		            <li>电话（广州）：020-81369153 | 81216601</li>
 		            <li>传真：020-81219156</li>
 		        </ul>
 		    </div>
 		    <script type="text/javascript" th:src="@{/js/jquery-1.11.3.min.js}"></script>
 		    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
-		    <!-- 导航栏图标旋转 -->
-		    <script>
-		        $(function () {
-		            $(".panel-heading").click(function (e) {
-		                /*切换折叠指示图标*/
-		                $(this).find("span").toggleClass("glyphicon-chevron-right");
-		                $(this).find("span").toggleClass("glyphicon-chevron-down");
-		            });
-		        });
-		    </script>
-		    <!-- 获取时间-->
-		    <script type="text/javascript">
-		        window.onload = windowHeight; //页面载入完毕执行函数
-		        function windowHeight() {
-		            //窗口高度
-		            var iframe = document.getElementById("iframe");
-		            iframe.style.height = window.innerHeight + 'px';
-		            var row = document.getElementById("row-height");
-		            row.style.height = window.innerHeight + 'px';
-		        };
-		    </script>
-		    <!-- 点击导航栏切换 -->
-		    <script>
-		        //养老院
-		        $(function () {
-		            $('#beadhouse').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/admin/beadhousePage')
-		                $(".index-home").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        });
-		     // 历史健康数据
-		        $(function () {
-		            $('#changeToSet').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/health/historyPage')
-		                $(".history").addClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		                
-		            })
-		        });
-		      /*   // 重点关爱管理
-		        $(function () {
-		            $('#changelove').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/health/lovePage')
-		                $(".love").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        }); */
-		        //添加用户
-		        $(function () {
-		            $('#addUser').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/user/addUserPage')
-		                $(".version").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        });
-		      	//代理商管理
-		        $(function () {
-		            $('#agent').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/admin/agentPage')
-		                $(".agent").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        });
-		        //设备管理
-		        $(function () {
-		            $('#equipment').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/equipment/equipmentPage')
-		                $(".equipment").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        });
-		        //版本管理
-		        $(function () {
-		            $('#version').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/versionhistory/versionPage')
-		                $(".version").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        });
-		        //健康数据管理
-		        $(function () {
-		            $('#health').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/health/healthPage')
-		                $(".health").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            
-		            })
-		        });
-		      //角色管理
-		        $(function () {
-		            $('#role').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/role/rolePage')
-		                $(".role").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        });
-		      //用户管理
-		        $(function () {
-		            $('#admin').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/admin/adminPage')
-		                $(".user").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".menu").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        });
-		        //菜单管理
-		        $(function () {
-		            $('#menu').on('click', function () {
-		                $(window.parent.document).find('#iframe').attr('src', '/auth/authPage')
-		                $(".menu").addClass('adds')
-		                $(".history").removeClass('adds')
-		                $(".index-home").removeClass('adds')
-		                $(".love").removeClass('adds')
-		                $(".version").removeClass('adds')
-		                $(".agent").removeClass('adds')
-		                $(".health").removeClass('adds')
-		                $(".user").removeClass('adds')
-		                $(".role").removeClass('adds')
-		                $(".equipment").removeClass('adds')
-		                $(".add").removeClass('adds')
-		            })
-		        })
-		    </script>
-		
-		    
-		
-		</body>
+		    <script type="text/javascript" th:src="@{/js/index/index.js}"></script>
+			</body>
 
 </html>

@@ -27,7 +27,10 @@ public class IConstants {
     public static final String RESULT_PARTNER="8";//城市合伙人
     public static final String RESULT_HEADQUARTERS="9";//总公司
     /* **************************  成功、失败  通用封装返回  end  **************************/
-
+    /**
+     * 登陆错误次数过多
+     */
+    public static  final String USER_LOGIN_ERROR_NIMIETY="登陆次数已超5次,请{0}后重试";
     /* **************************  权限控制提示 start *******************************/
 
     /**

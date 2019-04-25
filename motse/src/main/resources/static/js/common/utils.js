@@ -215,15 +215,6 @@ function daysJian(format,time){
 	   date.setDate(date.getDate()-1);
 	   return dateFtt(format,new Date(date.getTime()));
 }
-// 获取token
-function getToken() {
-	return localStorage.getItem("token");
-}
-// 页面重新刷新
-function reload(){
-	window.location.reload();
-}
-
 //锁住按钮,防止重复提交
 function submission(id,text){
 	$("#"+id).attr('disabled', 'disabled').text(text);

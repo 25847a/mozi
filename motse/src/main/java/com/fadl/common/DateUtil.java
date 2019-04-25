@@ -79,12 +79,16 @@ public class DateUtil {
             return yearTwo.format(d);
         }
     }
-    public static Date getSystemAddHours() {
+    public static Date getSystemAddHours(int num) {
         Date date = new Date();
         date.setHours(date.getHours()+3);
         return date;
     }
-    
+    public static Date getSystemAddMinute(int num) {
+        Date date = new Date();
+        date.setMinutes(date.getMinutes()+num);
+        return date;
+    }
     public static String formatDate(Date date, String formateString) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(formateString);
