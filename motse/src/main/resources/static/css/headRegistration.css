@@ -1,0 +1,50 @@
+html,body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,p,form,fieldset,legend,input,button,textarea,p,blockquote,th,td,iframe{margin:0;padding:0;}
+body,input,button,select,textarea,table{font-size:12px;font-family:Arial,Helvetica,sans-serif;}
+body{
+	background-color: #f1f2f6;
+}
+
+a{
+	text-decoration: none;
+}
+/*========================é¡µå¤´å¼€å§‹===========================*/
+.header{
+	width: 100%;
+	height: 37px;
+	background-color: #f5f5f5;
+	position: fixed;
+	z-index: 3;
+	border-bottom: 1px solid #e84c3d;
+}
+.header>.headerText{
+	width: 1200px;
+	height: 36px;
+	margin: 0px auto;
+	color: #6c6c6c;
+	font: 12px/20px "å®‹ä½“";
+	border-bottom: 1px solid #efeff0;
+}
+.header>.headerText>.headerTextL{
+	float: left;
+}
+.header>.headerText>.headerTextR{
+	float: right;
+}
+.header>.headerText p{
+	height: 36px;
+	line-height: 36px;
+	display: inline-block;
+}
+.header>.headerText>.headerTextL>p:nth-child(1){
+	/*margin-right: 20px;*/
+}
+.header>.headerText>.headerTextR>div{
+	width: 1px;
+	height: 12px;
+	background-color: #6C6C6C;
+	display: inline-block;
+}
+.headerTextR p a{
+	color: #333333;
+}
+/*========================é¡µå¤´ç»“æŸ===========================*/
