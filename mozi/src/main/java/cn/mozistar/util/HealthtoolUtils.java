@@ -123,11 +123,27 @@ public class HealthtoolUtils {
 							if(!heartRate.equals("0") && !bloodrArr[0].equals("0") && !bloodrArr[1].equals("0")){
 								Healthdao h = new Healthdao();
 								h.setHeartRate(Integer.valueOf(heartRate));// 心率
-								h.setBloodOxygen(Integer.valueOf(bloodOxygen));// 血氧
-								h.setMicrocirculation(Integer.valueOf(microcir));// 微循环
-								h.setHrv(Integer.valueOf(hrv));//HRV
 								
-								h.setRespirationrate(Integer.valueOf(respiration));// 呼吸频率
+								if(Integer.valueOf(bloodOxygen)<94 || Integer.valueOf(bloodOxygen)>99){
+									h.setBloodOxygen((int)(94+Math.random()*(99-94+1)));// 血氧  94-99
+								}else{
+									h.setBloodOxygen(Integer.valueOf(bloodOxygen));// 血氧  94-99
+								}
+								if(Integer.valueOf(microcir)<80){
+									h.setMicrocirculation((int)(80+Math.random()*(90-80+1)));// 微循环   >80
+								}else{
+									h.setMicrocirculation(Integer.valueOf(microcir));// 微循环   >80
+								}
+								if(Integer.valueOf(hrv)<40){
+									h.setHrv((int)(40+Math.random()*(50-40+1)));// 呼吸频率
+								}else{
+									h.setHrv(Integer.valueOf(hrv));//HRV
+								}
+								if(Integer.valueOf(respiration)<12 || Integer.valueOf(respiration)>20){
+									h.setRespirationrate((int)(12+Math.random()*(20-12+1)));// 呼吸频率
+								}else{
+									h.setRespirationrate(Integer.valueOf(respiration));// 呼吸频率
+								}
 								h.setHighBloodPressure(Integer.valueOf(bloodrArr[0]));//高压值(int) (110+Math.random()*(130-110+1))
 								h.setLowBloodPressure(Integer.valueOf(bloodrArr[1]));//低压值(int) (75+Math.random()*(88-75+1))
 								h.setUserId(user.getId());
@@ -168,132 +184,149 @@ public class HealthtoolUtils {
 						healths.setUserId(user.getId());
 						
 						healthsService.insertSelective(healths)	;
-							
-							
 							Health health = new Health();
-							
-					/*		//心率校准值
-							// 心率 检测值
-							int hear = Integer.parseInt(heartRate);
-						Integer heartrdao = healthdao.getHeartRate();
-							if(hear==0){
-								Random r =  new Random();
-								int s = r.nextInt((heartrdao/10)*2)+(heartrdao-heartrdao/10)+1;
-								health.setHeartRate(s);
-							}else{
-								//校准值0.8加检测值0.2
-								health.setHeartRate(highLowPressureVal(heartrdao,hear));
-							}
-						
-								// 高压值校准值
-							Integer highpressure = healthdao.getHighBloodPressure()==null?120:healthdao.getHighBloodPressure();
-							// 低压校准值
-							Integer lowpressure = healthdao.getLowBloodPressure()==null?80:healthdao.getLowBloodPressure();
-							// 高压值检测值
-						 int gy = Integer.parseInt(bloodrArr[0]);
-						//低压检测值
-						 int dy = Integer.parseInt(bloodrArr[1]);
-							
-						 if(gy==0||dy==0){
-							 
-							    //高压部分,校准值正负10%  
-								Random r =  new Random();
-								int s = r.nextInt((highpressure/10)*2)+(highpressure-highpressure/10)+1;
-								highpressure = s;
-								
-							    //低压部分  校准值正负10%  
-								int d = r.nextInt((lowpressure/10)*2)+(lowpressure-lowpressure/10)+1;
-								lowpressure = d;
-								
-							}else{
-								
-								//不等于0 校准值0.8 加 检测值0.2
-								highpressure = highLowPressureVal(highpressure, Integer.parseInt(bloodrArr[0]));
-								lowpressure = highLowPressureVal(lowpressure, Integer.parseInt(bloodrArr[1]));
-							}
-						 health.setHighBloodPressure(highpressure);//高压
-						 health.setLowBloodPressure(lowpressure);//低压*/
-					 	
 							 //心率校准值
 			                	double heartrdao = healthdao.getHeartRate()==0?80:healthdao.getHeartRate();
 								// 高压值校准值
-								Integer highpressure = healthdao.getHighBloodPressure()==0?120:healthdao.getHighBloodPressure();
+			                	double highpressure = healthdao.getHighBloodPressure()==0?120:healthdao.getHighBloodPressure();
 								// 低压校准值
-								Integer lowpressure = healthdao.getLowBloodPressure()==0?80:healthdao.getLowBloodPressure();
+			                	double lowpressure = healthdao.getLowBloodPressure()==0?80:healthdao.getLowBloodPressure();
 								// 心率 检测值
 								 double hear = Double.parseDouble(heartRate);
+								 double gy =Integer.valueOf(bloodrArr[0]);
+								 double dy =Integer.valueOf(bloodrArr[1]);
 								 int num=0;
-								  if(hear<heartrdao && hear!=0){
-									  double sum =(double)hear/(double)heartrdao*100;
-									   if(97<sum && sum<=100){
-										   num =  (int) (97+Math.random()*(100-97+1));
-										 }else if(94<sum && sum<=97){
-											 num = (int) (94+Math.random()*(96-94+1));
-										 } else if(92<sum && sum<=94){
-											 num =  (int) (92+Math.random()*(93-92+1));
-										 }else if(90<=hear && hear<=92){
-											 num =  (int) (90+Math.random()*(91-90+1));
-										 }else{
-											 hear =heartrdao*(97+Math.random()*(100-97+1))/100;
-											 num=(int)(97+Math.random()*(100-97+1));;
-										 }
-									   highpressure=(int) (highpressure*num/100);
-									   lowpressure = (int) (lowpressure*num/100);
-								  }else if(hear>=heartrdao){
-									  double sum =(double)hear/(double)heartrdao*100;
-									  if(100<=sum && sum<102){
-										   num = (int) (100+Math.random()*(102-100+1));
-										 }else if(102<=sum && sum<106){
-											 num = (int) (103+Math.random()*(104-103+1));
-										 } else if(106<=sum && sum<108){
-											 num = (int) (105+Math.random()*(106-105+1));
+								 int gnum=0;
+								 int dnum=0;
+							//	 if(gy<highpressure){
+									 if(hear<heartrdao && hear!=0){
+										  double sum =(double)hear/(double)heartrdao*100;
+										   if(97<sum && sum<=100){
+											   gnum = (int) (97+Math.random()*(100-97+1));
+											   dnum = (int) (97+Math.random()*(100-97+1));
+											 }else if(94<sum && sum<=97){
+												 gnum = (int) (94+Math.random()*(96-94+1));
+												 dnum = (int) (97+Math.random()*(100-97+1));
+											 } else if(92<sum && sum<=94){
+												 gnum =  (int) (92+Math.random()*(93-92+1));
+												 dnum = (int) (97+Math.random()*(100-97+1));
+											 }else if(90<=hear && hear<=92){
+												 gnum =  (int) (90+Math.random()*(91-90+1));
+												 dnum = (int) (97+Math.random()*(100-97+1));
+											 }else{
+												 hear =heartrdao*(97+Math.random()*(100-97+1))/100;
+												 gnum=(int)(97+Math.random()*(100-97+1));;
+												 dnum = (int) (97+Math.random()*(100-97+1));
+											 }
+										   highpressure=(int) (highpressure*gnum/100);
+										   lowpressure = (int) (lowpressure*dnum/100);
+									  }else if(hear>=heartrdao){double sum =(double)hear/(double)heartrdao*100;
+									  double gysum =(double)gy/(double)highpressure*100;//求出高压占校准值的比例
+									  double dysum =(double)dy/(double)lowpressure*100;//求出低压占校准值的比例
+									   if(100<=sum && sum<102){
+										   if(90<=gysum && gysum<110){
+											   highpressure=gy;
+											   gnum=100;
+										   }else{
+											   gnum = (int) (100+Math.random()*(102-100+1));
+										   } 
+										   if(90<=dysum && dysum<110){
+											   lowpressure=dy;
+											   dnum=100; 
+										   }else{
+											  
+											   dnum = (int) (100+Math.random()*(102-100+1));
+										   }
+										 }else if(102<=sum && sum<104){
+											 if(90<=gysum && gysum<110){
+												   highpressure=gy;
+												   gnum=100;
+											   }else{
+												   gnum = (int) (103+Math.random()*(104-103+1));
+											   } if(90<=dysum && dysum<110){
+												   lowpressure=dy;
+												   dnum=100; 
+											   }else{
+												   dnum = (int) (103+Math.random()*(104-103+1));
+											   }
+										 } else if(104<=sum && sum<108){
+											 gnum = (int) (105+Math.random()*(106-105+1));
+											 dnum = (int) (103+Math.random()*(104-103+1));
+										 }else if(108<=sum && sum<110){
+											 gnum = (int) (107+Math.random()*(108-107+1));
+											 dnum = (int) (103+Math.random()*(104-103+1));
 										 }else if(110<=sum && sum<112){
-											 num = (int) (107+Math.random()*(108-107+1));
+											 gnum = (int) (109+Math.random()*(110-109+1));
+											 dnum = (int) (103+Math.random()*(104-103+1));
 										 }else if(112<=sum && sum<114){
-											 num = (int) (109+Math.random()*(110-109+1));
+											 gnum = (int) (110+Math.random()*(112-110+1));
+											 dnum = (int) (103+Math.random()*(104-103+1));
 										 }else if(114<=sum && sum<116){
-											 num = (int) (110+Math.random()*(112-110+1));
+											 gnum = (int) (113+Math.random()*(114-113+1));
+											 dnum = (int) (103+Math.random()*(104-103+1));
 										 }else if(116<=sum && sum<118){
-											 num = (int) (113+Math.random()*(114-113+1));
+											 gnum = (int) (115+Math.random()*(116-115+1));
+											 dnum = (int) (115+Math.random()*(116-115+1));
 										 }else if(118<=sum && sum<120){
-											 num = (int) (115+Math.random()*(116-115+1));
+											 gnum = (int) (117+Math.random()*(118-117+1));
+											 dnum = (int) (117+Math.random()*(118-117+1));
+										 }else if(120<=sum && sum<122){
+											 gnum = (int) (119+Math.random()*(120-119+1));
+											 dnum = (int) (119+Math.random()*(120-119+1));
 										 }else if(122<=sum && sum<124){
-											 num = (int) (117+Math.random()*(118-117+1));
+											 gnum = (int) (121+Math.random()*(122-121+1));
+											 dnum = (int) (121+Math.random()*(122-121+1));
+										 }else if(124<=sum && sum<126){
+											 gnum = (int) (123+Math.random()*(124-123+1));
+											 dnum = (int) (123+Math.random()*(124-123+1));
 										 }else if(126<=sum && sum<128){
-											 num = (int) (119+Math.random()*(120-119+1));
+											 gnum = (int) (125+Math.random()*(127-125+1));
+											 dnum = (int) (125+Math.random()*(127-125+1));
 										 }else if(128<=sum && sum<130){
-											 num = (int) (121+Math.random()*(122-121+1));
-										 }else if(130<=sum && sum<131){
-											 num = (int) (123+Math.random()*(124-123+1));
-										 }else if(131<=sum && sum<132){
-											 num = (int) (125+Math.random()*(127-125+1));
-										 }else if(132<=sum && sum<133){
-											 num = (int) (128+Math.random()*(130-128+1));
-										 }else if(133<=sum && sum<134){
-											 num = (int) (130+Math.random()*(131-130+1));
+											 gnum = (int) (128+Math.random()*(130-128+1));
+											 dnum = (int) (128+Math.random()*(130-128+1));
+										 }else if(130<=sum && sum<132){
+											 gnum = (int) (130+Math.random()*(131-130+1));
+											 dnum = (int) (130+Math.random()*(131-130+1));
 										 }else{
-											 hear =heartrdao*(100+Math.random()*(104-100+1))/100;//131   血压也给正常值
-											 num=(int)(100+Math.random()*(104-100+1));;
+											 hear =heartrdao*(125+Math.random()*(130-125+1))/100;
+											 gnum=(int)(125+Math.random()*(130-125+1));
+											 dnum=(int)(125+Math.random()*(130-125+1));
 										 }
-									  highpressure=(int) (highpressure*num/100);
-									  if(highpressure>=165){
-										  highpressure=(int) (highpressure*0.9);
+									  highpressure=(int) (highpressure*gnum/100);
+									  lowpressure = (int) (lowpressure*dnum/100);
+									  }else{
+										  hear =heartrdao*(98+Math.random()*(102-98+1))/100;
+										  num=(int)(98+Math.random()*(102-98+1));;
+										  highpressure=(int) (highpressure*num/100);
+										  lowpressure = (int) (lowpressure*num/100);
 									  }
-									  lowpressure = (int) (lowpressure*num/100);
-									  if(lowpressure>=120){
-										  lowpressure=(int) (lowpressure*0.9);
-									  }
-								  }else{
-									  hear =heartrdao*(98+Math.random()*(102-98+1))/100;
-									  num=(int)(98+Math.random()*(102-98+1));;
-									  highpressure=(int) (highpressure*num/100);
-									  lowpressure = (int) (lowpressure*num/100);
-								  }
-								  health.setHeartRate((int)hear);;
-								  // 高压
-								  health.setHighBloodPressure(highpressure);
-								  // 低压
-								  health.setLowBloodPressure(lowpressure);
+									  health.setHeartRate((int)hear);;
+									  // 高压
+									  health.setHighBloodPressure((int)highpressure);
+									  // 低压
+									  health.setLowBloodPressure((int)lowpressure);
+								/* }else{	
+									 double sum =(double)hear/(double)heartrdao*100;
+									 double gysum =(double)gy/(double)highpressure*100;//求出高压占校准值的比例
+									 if(sum<90){
+										 hear =heartrdao*(90+Math.random()*(100-90+1))/100;
+									 }else if(sum>=129){
+										 hear =heartrdao*(125+Math.random()*(129-125+1))/100;
+									 }
+									 if(gysum<90){
+										 gy =highpressure*(90+Math.random()*(100-90+1))/100;
+										 dy =lowpressure*(90+Math.random()*(100-90+1))/100;
+									 }else if(gysum>=129){
+										 gy =highpressure*(125+Math.random()*(129-125+1))/100;
+										 dy =lowpressure*(125+Math.random()*(129-125+1))/100;
+									 }
+									 health.setHeartRate((int)hear);;
+									  // 高压
+									  health.setHighBloodPressure((int)gy);
+									  // 低压
+									  health.setLowBloodPressure((int)dy);
+								 }*/
 							// 报告
 							health.setAmedicalreport(amedical);
 							// 血氧
@@ -305,30 +338,50 @@ public class HealthtoolUtils {
 								hrv = nextInt.toString();
 								health.setHrv(Integer.parseInt(hrv));
 							}else{
-								health.setHrv(Integer.parseInt(hrv));
+								//校准值0.7加检测值0.3
+								health.setHrv(highLowPressureVal(healthdao.getHrv(),Integer.valueOf(hrv)));
 							}
-							// 微循环 
-							if(microcir.equals("0")){
-								//70
-								Random r = new Random();
-								int nextInt = r.nextInt(14)+63;
-								microcir = nextInt+"";
-								health.setMicrocirculation( Integer.parseInt(microcir));
+							// 微循环校准值
+							int microc =  Integer.parseInt(microcir);
+							int microcirculation= healthdao.getMicrocirculation();
+							if(microc==0){//75-90
+								if(microcirculation<75){
+									microc=(int)(75+Math.random()*(90-75+1));
+								}else{
+									Random r = new Random();
+									int nextInt = r.nextInt(14)+66;
+									microcir = nextInt+"";
+									
+								}
+								health.setMicrocirculation(microc);
 							}else{
-								health.setMicrocirculation( Integer.parseInt(microcir));
+								//校准值0.7加检测值0.3
+								microc=highLowPressureVal(healthdao.getMicrocirculation(),microc);
+								if(microc<75){
+									microc=(int)(75+Math.random()*(90-75+1));
+								}
+								health.setMicrocirculation(microc);
 							}
 							// 呼吸检测值
 							int resp = Integer.parseInt(respiration);
 							//呼吸校准值
-							Integer respirationratedao = healthdao.getRespirationrate();
+							Integer respirationratedao = healthdao.getRespirationrate();//14
 						
 							if(resp==0){
-								Random r =  new Random();
-								int s = r.nextInt((respirationratedao/10)*2)+(respirationratedao-respirationratedao/10)+1;
-								health.setRespirationrate(s);
+								if(respirationratedao<16){
+									resp=(int)(16+Math.random()*(20-16+1));
+								}else{
+									Random r =  new Random();
+									resp = r.nextInt((respirationratedao/10)*2)+(respirationratedao-respirationratedao/10)+1;
+								}
+								health.setRespirationrate(resp);
 							}else{
-								//校准值0.8加检测值0.2
-								health.setRespirationrate(highLowPressureVal(respirationratedao,resp));
+								//校准值0.7加检测值0.3
+								resp=highLowPressureVal(respirationratedao,resp);
+								if(resp<16){
+									resp=(int)(16+Math.random()*(20-16+1));
+								}
+								health.setRespirationrate(resp);
 							}
 							health.setCreatetime(new Date());
 							health.setUserId(user.getId());
@@ -993,10 +1046,10 @@ public class HealthtoolUtils {
 	
 	private static Integer highLowPressureVal(Integer jfdao, Integer jfval) {
 
-		// 用户设置的高压值*0.6
-		jfdao = (int) (jfdao * 0.8);
-		// 硬件的高压值*0.4
-		jfval = (int) (jfval * 0.2);
+		// 用户设置的高压值*0.7
+		jfdao = (int) (jfdao * 0.7);
+		// 硬件的高压值*0.7
+		jfval = (int) (jfval * 0.3);
 		return jfdao + jfval;
 	}
 }

@@ -6,7 +6,7 @@ spring:
   profiles: pro
   datasource:
     name: pro
-    url: jdbc:mysql://192.168.1.122:3306/mozi_new?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.1.147:3306/mozi_new?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: 123456
     # 使用druid数据源
