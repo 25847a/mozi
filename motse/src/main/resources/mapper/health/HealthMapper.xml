@@ -23,7 +23,7 @@
         id, HRV AS hrv, sbp_ave AS sbpAve, dbp_ave AS dbpAve, Heartrate, Bloodoxygen, microcirculation, Amedicalreport, respirationrate, phone, imei, createtime
     </sql>
     <!-- 查询首页健康数据列表 -->
-    <select id="queryHealthList" resultType="com.fadl.common.DataRow" parameterType="java.lang.Integer">
+    <select id="queryHealthList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
     	set @rownum=#{pageNum};
     	SELECT @rownum:=@rownum+1 as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM(
 		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
@@ -34,10 +34,13 @@
 		)tx
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
+		LEFT JOIN equipment tt
+		ON tc.imei=tt.imei
+		WHERE tc.isDelete=0 AND tt.agentid=#{adminId}
 		LIMIT #{pageNum},#{pageSize}
     </select>
     <!-- 查询首页健康数据列表总数 -->
-    <select id="queryHealthListCount" resultType="java.lang.Integer">
+    <select id="queryHealthListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
     	SELECT COUNT(*) FROM (
 		SELECT tc.name,tx.* FROM(
 		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
@@ -48,20 +51,25 @@
 		)tx
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
+		LEFT JOIN equipment tt
+		ON tc.imei=tt.imei
+		WHERE tc.isDelete=0 AND tt.agentid=#{adminId}
 		) tb
     </select>
     <!-- 查询重点关爱的使用者 -->
-    <select id="queryHealthListLove" resultType="com.fadl.common.DataRow">
+    <select id="queryHealthListLove" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT '置顶' as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tc.love FROM(
 		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
 		RIGHT JOIN(
-		SELECT MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
+		SELECT MAX(createtime) as createtime FROM jfhealth GROUP BY phone
 		) tt
 		ON tp.createtime=tt.createtime
 		)tx
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
-		WHERE tc.love=1
+		INNER JOIN equipment tt
+		ON tc.imei=tt.imei
+		WHERE tc.isDelete=0 AND tt.agentid=#{adminId} AND tc.love=1
 		LIMIT #{pageNum},#{pageSize}
     </select>
 	<!-- 首页当天心率统计图 -->
@@ -132,12 +140,12 @@
 		ON tp.imei=td.imei
 		LEFT JOIN user tt
 		ON substring(tp.phone,9)=tt.id
-		WHERE td.agentid=#{agentid}
+		WHERE td.agentid=#{agentid} AND tt.isDelete=0
 		<if test="id!=null and id!=''">
-		AND tp.id=#{id}
+		AND tp.id LIKE CONCAT('%',#{id},'%')
 		</if>
 		<if test="name!=null and name!=''">
-		AND tt.name=#{name}
+		AND tt.name LIKE CONCAT('%',#{name},'%')
 		</if>
 		ORDER BY createtime DESC
 		LIMIT #{pageNum},#{pageSize}
@@ -150,12 +158,12 @@
 		ON tp.imei=td.imei
 		LEFT JOIN user tt
 		ON substring(tp.phone,9)=tt.id
-		WHERE td.agentid=#{agentid}
+		WHERE td.agentid=#{agentid} AND tt.isDelete=0
 		<if test="id!=null and id!=''">
-		AND tp.id=#{id}
+		AND tp.id LIKE CONCAT('%',#{id},'%')
 		</if>
 		<if test="name!=null and name!=''">
-		AND tt.name=#{name}
+		AND tt.name LIKE CONCAT('%',#{name},'%')
 		</if>
 		ORDER BY createtime DESC
 		) tr

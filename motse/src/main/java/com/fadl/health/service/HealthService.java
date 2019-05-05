@@ -25,27 +25,27 @@ public interface HealthService extends IService<Health> {
 	 * @return
 	 * @throws Exception
 	 */
-	public DataRow queryBeadhouseList(DataRow messageMap,String page)throws Exception;
+	public DataRow queryBeadhouseList(DataRow messageMap,Map<String,Object> map)throws Exception;
 	/**
 	 * 查询首页健康数据列表
 	 * @param map
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryHealthList(Integer page)throws SQLException;
+	public List<DataRow> queryHealthList(Map<String,Object> map)throws SQLException;
 	/**
 	 * 查询首页健康数据列表总数
 	 * @param map
 	 * @return
 	 * @throws SQLException
 	 */
-	public int queryHealthListCount()throws SQLException;
+	public int queryHealthListCount(Map<String,Object> map)throws SQLException;
 	/**
 	 * 查询重点关爱的使用者
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryHealthListLove(Integer pageNum,Integer pageSize)throws SQLException;
+	public List<DataRow> queryHealthListLove(Map<String,Object> map)throws SQLException;
 	/**
 	 * 首页当天心率统计图
 	 * @return

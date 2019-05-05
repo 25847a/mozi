@@ -19,6 +19,7 @@
         <result column="highpressure" property="highpressure" />
         <result column="lowpressure" property="lowpressure" />
         <result column="password" property="password" />
+        <result column="isDelete" property="isDelete" />
         <result column="age" property="age" />
         <result column="avatar" property="avatar" />
         <result column="gender" property="gender" />
@@ -31,14 +32,103 @@
         <result column="code" property="code" />
         <result column="walkCount" property="walkCount" />
         <result column="walkPushTime" property="walkPushTime" />
+        <result column="love" property="love" />
+        <result column="bedId" property="bedId" />
+         <result column="liveTime" property="liveTime" />
+        <result column="illness" property="illness" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, highpressure, lowpressure, password, age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime
+        id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, highpressure, lowpressure, password,isDelete,age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime,love,bedId,illness,liveTime
     </sql>
     <!-- 查询使用者男女数量饼状图 -->
 	<select id="queryUserGender" resultType="com.fadl.common.DataRow">
 		SELECT SUM(CASE WHEN gender='男' THEN 1 ELSE 0 END) AS male, SUM(CASE WHEN gender='女' THEN 1 ELSE 0 END) AS female,SUM(CASE WHEN gender='男' THEN 0 WHEN gender='女' THEN 0 ELSE 1 END) as other FROM user 
 	</select>
+	<!-- 查询添加用户的列表 -->
+	<select id="queryAdduserList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,tp.bluetooth_status,tt.love FROM equipment tp
+		INNER JOIN user tt
+		ON tp.imei=tt.imei
+		LEFT JOIN bed_number td
+		ON tt.bedId=td.id
+		LEFT JOIN nurse tc
+		ON tt.nurseId=tc.id
+		WHERE tp.agentid=#{agentid} AND tt.isDelete=0
+		<if test="imeiNum!=null and imeiNum!=''">
+		AND tp.imei LIKE CONCAT('%',#{imeiNum},'%')
+		</if>
+		LIMIT #{pageNum},#{pageSize}
+	</select>
+	<!-- 查询添加用户的列表总数 -->
+	<select id="queryAdduserListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+		SELECT tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,tp.bluetooth_status,tt.love FROM equipment tp
+		INNER JOIN user tt
+		ON tp.imei=tt.imei
+		LEFT JOIN bed_number td
+		ON tt.bedId=td.id
+		LEFT JOIN nurse tc
+		ON tt.nurseId=tc.id
+		WHERE tp.agentid=#{agentid} AND tt.isDelete=0
+		<if test="imeiNum!=null and imeiNum!=''">
+		AND tp.imei LIKE CONCAT('%',#{imeiNum},'%')
+		</if>
+		) tq
+	</select>
+	<!-- 查询添加用户页面的信息 -->
+	<select id="queryaddUserInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT tp.imei,td.name,tp.bluetoothmac,tp.bluetooth_status FROM equipment tp
+		LEFT JOIN user td
+		ON tp.imei=td.imei
+		WHERE tp.id=#{equipmentId} and AND td.isDelete=0
+	</select>
+	<!-- 查询添加用户预警设置信息 -->
+	<select id="queryPushInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT td.id as userId,tt.user_id as alias,tp.imei,td.name,tc.allNotifyOn,tc.heartLowThd,tc.heartHigThd,tc.hbpstart,tc.hbpend,tc.lbpstart,tc.lbpend FROM equipment tp
+		LEFT JOIN user td
+		ON tp.imei=td.imei
+		LEFT JOIN user_eq tt
+		ON tt.eq_id=tp.id AND tt.typeof=0
+		LEFT JOIN push tc
+		ON tc.userId=td.id AND tc.alias=tt.user_id
+		WHERE tp.id=#{equipmentId} and AND td.isDelete=0
+	</select>
+	<!-- 点击查询个人详情的信息 -->
+	<select id="queryUserEquipmentInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT td.name,td.imei,td.avatar,td.gender,td.phone,td.love,tp.bluetoothmac,DATE_FORMAT(td.born,'%Y-%m-%d') as born,DATE_FORMAT(td.liveTime,'%Y-%m-%d') as liveTime,td.height,td.weight,tt.bed,tc.nurseName,tp.phone1,tp.phone2,td.address,td.illness FROM equipment tp
+		LEFT JOIN user td
+		ON tp.imei=td.imei
+		LEFT JOIN bed_number tt
+		ON td.bedId=tt.id
+		LEFT JOIN nurse tc
+		ON td.nurseId=tc.id
+		WHERE tp.id=#{equipmentId} and AND td.isDelete=0
+	</select>
+	<!-- 通过设备ID查询观察者 -->
+	<select id="queryObserver" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT td.name,td.phone FROM user_eq tp
+		LEFT JOIN user td
+		ON tp.user_id=td.id
+		WHERE eq_id=#{equipmentId} AND typeof=1 and AND td.isDelete=0
+	</select>
+	<!-- 通过设备查询用户和设备信息 -->
+	<select id="queryUserEquipment" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT tp.id as userId,td.id as equipmentId FROM user tp
+		LEFT JOIN equipment td
+		ON tp.imei=td.imei
+		WHERE tp.imei=#{imei} and AND tp.isDelete=0
+	</select>
+	<!-- 删除用户的一切信息 -->
+	<delete id="deleteUserCount" parameterType="java.util.HashMap">
+		DELETE FROM chat WHERE imei=#{imei};
+		DELETE FROM jfhealthdao WHERE imei=#{imei} and phone=#{phone};
+		DELETE FROM positionig WHERE imei=#{imei};
+		DELETE FROM push WHERE userId=#{userId};
+		DELETE FROM sensorstatus WHERE imei=#{imei};
+		DELETE FROM usercode WHERE phoen=#{account};
+		DELETE FROM user_eq WHERE eq_id=#{equipmentId} and typeof=0;
+		DELETE FROM user_eq WHERE eq_id=#{equipmentId} and typeof=2;
+	</delete>
 </mapper>

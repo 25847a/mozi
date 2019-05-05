@@ -2,9 +2,6 @@ package com.fadl.health.controller;
 
 
 import java.util.Map;
-
-import javax.websocket.server.PathParam;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,15 +72,16 @@ public class HealthController extends AbstractController{
      */
     @RequestMapping("/queryBeadhouseList")
   //  @RequiresPermissions("admin:query")
-    @ResponseBody
-    public DataRow queryBeadhouseList(@PathParam(value = "page") String page){
+    @ResponseBody//page
+    public DataRow queryBeadhouseList(@RequestParam Map<String,Object> map){
     	try {
-    		if(page.equals("")){
-    			page="1";
+    		if(map.get("page").equals("")){
+    			map.put("page", "1");
     		}
     		Admin admin = SessionUtil.getSessionAdmin();
         	System.out.println(admin.getAccount()+">>>>>>>>>>>>>");
-        	messageMap=healthService.queryBeadhouseList(messageMap,page);
+        	map.put("adminId", admin.getId());
+        	messageMap=healthService.queryBeadhouseList(messageMap,map);
         	WebSocketServer.sendInfo(JsonUtil.getMapper().writeValueAsString(messageMap), String.valueOf(admin.getId()));
 		} catch (Exception e) {
 			logger.error("AdminController<<<<<<<<<<<<<<<<<<readPlasmaProviderNo",e);
@@ -96,7 +94,7 @@ public class HealthController extends AbstractController{
 	 */
 	@RequestMapping("/queryHistoryList")
 	@ResponseBody
-	public DataRow queryBeadhouseList(@RequestParam Map<String,Object> map){
+	public DataRow queryHistoryList(@RequestParam Map<String,Object> map){
 		try {
 		Admin admin = SessionUtil.getSessionAdmin();
 		map.put("agentid", admin.getId());

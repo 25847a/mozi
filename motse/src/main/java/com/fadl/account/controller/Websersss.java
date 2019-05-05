@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fadl.account.entity.Admin;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
+import com.fadl.common.ReadProperties;
 import com.fadl.common.WebSocketServer;
 
 @RequestMapping("/ceshi")
@@ -19,6 +20,12 @@ import com.fadl.common.WebSocketServer;
 public class Websersss  extends AbstractController{
 	
 	private static Logger logger = LoggerFactory.getLogger(Websersss.class); 
+	
+	public static void main(String[] args) {
+		String a = ReadProperties.getValue("imageAddress");
+		System.out.println(a);
+	}
+	
 	
 	@RequestMapping("/loggn")
 	public String loggn(){

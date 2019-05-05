@@ -118,8 +118,10 @@ var tableList=new Vue({
             }
         },
         goback:function(){
+        	var params = new URLSearchParams();
         	var page = $("#page").val();
-           axios.post(GetURLInfo()+"health/queryBeadhouseList?page="+page);
+        	params.append('page',page);
+           axios.post(GetURLInfo()+"health/queryBeadhouseList",params);
         }
     },
     mounted(){

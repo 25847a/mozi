@@ -53,14 +53,14 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws Exception
 	 */
 	@Override
-	public DataRow queryBeadhouseList(DataRow messageMap,String page) throws Exception {
+	public DataRow queryBeadhouseList(DataRow messageMap,Map<String,Object> map) throws Exception {
 		DataRow equipment = equipmentService.queryEquipmentState();//设备
 		messageMap.put("equipment", equipment);
 		DataRow userGender  = userService.queryUserGender();//男女
 		messageMap.put("userGender", userGender);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::"+page);
-		List<DataRow> tableData = healthService.queryHealthList(Integer.valueOf(page));//列表数据
-		int count = healthMapper.queryHealthListCount();
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::"+map.get("page"));
+		List<DataRow> tableData = healthService.queryHealthList(map);//列表数据
+		int count = healthMapper.queryHealthListCount(map);
 		messageMap.put("count", count);
 		List<DataRow> heartrate = healthService.queryHeartrateCount();//首页当天心率统计图      数组
 		for(DataRow dataRow: heartrate){
@@ -83,7 +83,6 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 		DataRow respirationrate = healthMapper.queryRespirationrateCount();//首页当天呼吸统计图
 		messageMap.put("respirationrate", respirationrate);
 		messageMap.customValue(tableData,IConstants.SUCCESS,IConstants.RESULT_BEADHOUSE);
-	//	messageMap.customValue("",IConstants.SUCCESS,IConstants.RESULT_BEADHOUSE);
 		return messageMap;
 	}
 	/**
@@ -93,9 +92,14 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public List<DataRow> queryHealthList(Integer page) throws SQLException {
-		List<DataRow> love = healthService.queryHealthListLove(((Integer.valueOf(page) - 1) * 7),7);
-		List<DataRow> tableData =healthMapper.queryHealthList(((Integer.valueOf(page) - 1) * 14),14);
+	public List<DataRow> queryHealthList(Map<String,Object> map) throws SQLException {
+		int page = Integer.valueOf((String) map.get("page"));
+		map.put("pageNum", ((Integer.valueOf(page) - 1) * 7));
+		map.put("pageSize", 7);
+		List<DataRow> love = healthService.queryHealthListLove(map);//((Integer.valueOf(page) - 1) * 7),7
+		map.put("pageNum", ((Integer.valueOf(page) - 1) * 14));
+		map.put("pageSize", 14);
+		List<DataRow> tableData =healthMapper.queryHealthList(map);//((Integer.valueOf(page) - 1) * 14),14
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::"+tableData);
 		for(int i=0;i<tableData.size();i++){
 			UserEq userEq = userEqService.queryUserEqInfo(tableData.get(i).getInt("phone"));
@@ -165,8 +169,8 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public List<DataRow> queryHealthListLove(Integer pageNum,Integer pageSize) throws SQLException {
-		return healthMapper.queryHealthListLove(pageNum,pageSize);
+	public List<DataRow> queryHealthListLove(Map<String,Object> map) throws SQLException {
+		return healthMapper.queryHealthListLove(map);
 	}
 	/**
 	 * 查询首页健康数据列表总数
@@ -175,8 +179,8 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public int queryHealthListCount() throws SQLException {
-		return healthMapper.queryHealthListCount();
+	public int queryHealthListCount(Map<String,Object> map) throws SQLException {
+		return healthMapper.queryHealthListCount(map);
 	}
 	/**
 	 * 首页当天心率统计图
@@ -214,6 +218,7 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	public Object[] queryBloodoxygenCount() throws SQLException {
 		List<DataRow> bloodoxygen =healthMapper.queryBloodoxygenCount();
 		Object[] result={"",0,0,"",0,0,""};
+		//Object[] result={0,"",0,"",0,0,""};
 		for(DataRow dataRow: bloodoxygen){
 			int gender = dataRow.getInt("gender");
 			if(gender==0){//男

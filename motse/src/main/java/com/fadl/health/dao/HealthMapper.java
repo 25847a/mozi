@@ -2,13 +2,9 @@ package com.fadl.health.dao;
 
 import com.fadl.common.DataRow;
 import com.fadl.health.entity.Health;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -26,20 +22,20 @@ public interface HealthMapper extends BaseMapper<Health> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryHealthList(@Param("pageNum")Integer pageNum,@Param("pageSize")Integer pageSize)throws SQLException;
+	public List<DataRow> queryHealthList(Map<String,Object> map)throws SQLException;
 	/**
 	 * 查询首页健康数据列表总数
 	 * @param map
 	 * @return
 	 * @throws SQLException
 	 */
-	public int queryHealthListCount()throws SQLException;
+	public int queryHealthListCount(Map<String,Object> map)throws SQLException;
 	/**
 	 * 查询重点关爱的使用者
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryHealthListLove(@Param("pageNum")Integer pageNum,@Param("pageSize")Integer pageSize)throws SQLException;
+	public List<DataRow> queryHealthListLove(Map<String,Object> map)throws SQLException;
 	/**
 	 * 首页当天心率统计图
 	 * @return

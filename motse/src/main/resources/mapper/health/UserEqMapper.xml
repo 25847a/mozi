@@ -19,4 +19,12 @@
 	<select id="queryUserEqInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		SELECT * FROM user_eq WHERE eq_id=(SELECT eq_id FROM user_eq WHERE user_id=#{userId}) AND typeof=0
 	</select>
+	<!-- 通过手机号码和设备号查询是否绑定监护者 -->
+	<select id="queryCustodyInfo" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		SELECT * from user_eq WHERE user_id=(SELECT id FROM user WHERE account=#{account}) AND eq_id=(SELECT id FROM equipment WHERE imei=#{imei}) AND typeof=0
+	</select>
+	<!-- 通过手机号码和设备号查询是否绑定观察者 -->
+	<select id="queryFollowInfo" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+		SELECT * from user_eq WHERE user_id=(SELECT id FROM user WHERE account=#{account}) AND eq_id=(SELECT id FROM equipment WHERE imei=#{imei}) AND typeof=1
+	</select>
 </mapper>

@@ -3,6 +3,7 @@ package com.fadl.health.dao;
 import com.fadl.health.entity.UserEq;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -22,4 +23,19 @@ public interface UserEqMapper extends BaseMapper<UserEq> {
 	 * @throws SQLException
 	 */
 	public UserEq queryUserEqInfo(Integer userId)throws SQLException;
+	/**
+	 * 通过手机号码和设备号查询是否绑定观察者
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public UserEq queryFollowInfo(Map<String,String> map)throws SQLException;
+	/**
+	 * 通过手机号码和设备号查询是否绑定监护者
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public UserEq queryCustodyInfo(Map<String,String> map)throws SQLException;
+	
 }

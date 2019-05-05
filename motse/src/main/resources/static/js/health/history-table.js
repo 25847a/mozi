@@ -62,6 +62,7 @@ var tableList=new Vue({
         goback:function(){
         	var params = new URLSearchParams();
         	 params.append('id',id);
+        	 params.append('name',name);
         	 params.append('pageNum',this.pageIndex);
         	 params.append('pageSize',this.pageSize);
             axios.post(GetURLInfo()+"health/queryHistoryList",params).then(this.getnew);
