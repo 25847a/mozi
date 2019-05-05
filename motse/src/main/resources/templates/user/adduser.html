@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>Examples</title>
+    <link rel="stylesheet" th:href="@{/css/adduser.css}"/>
+    <link rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-switch.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
+     <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
+	
+</head>
+
+<body>
+    <!-- 详细弹窗 -->
+    <div class="modal fade" id="detailed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:800px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        <i class="iconfont icon-gerenxinxi"></i>
+                        个人信息详细表
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" height="100%">
+                        <tbody>
+                            <tr>
+                                <td rowspan="2">
+                                    <img id="pic" style="width:100px;height:100px; display: inline-block;"
+                                        th:src="@{/img/upload.png}"/>
+                                    <input id="upload" name="file" accept="image/*" type="file" style="display: none"/>
+                                </td>
+                                <td style="color:#4985cb; font-weight: bold;">姓名</td>
+                                <td id="detailsName"></td>
+                                <td style="color:#4985cb; font-weight: bold;">监测器IMEI号</td>
+                                <td colspan="2" id="detailsImei"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">性别</td>
+                                <td>
+                                    <div class="form-group">
+                                        <select data-am-selected="" id="detailsGender">
+                                            <option value="男">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="color:#4985cb; font-weight: bold;">电话号码</td>
+                                <td colspan="2" id="detailsPhone"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">是否为重点关爱</td>
+                                <td colspan="2" id="detailsLove"></td>
+                                <td style="color:#4985cb; font-weight: bold;">衣服ID编号</td>
+                                <td colspan="2" id="detailsBluetoothmac"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">出生日期</td>
+                                <td colspan="2">
+                                    <input type="text" class="am-form-field" value="" id="detailsBorn" placeholder="选择日期"
+                                        data-am-datepicker="{theme: 'primary'}" readonly="readonly" />
+                                </td>
+                                <td style="color:#4985cb; font-weight: bold;">入住日期</td>
+                                <td colspan="2">
+                                    <input type="text" class="am-form-field" value="" id="detailsLiveTime" placeholder="选择日期"
+                                        data-am-datepicker="{theme: 'primary'}" readonly="readonly" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">身高</td>
+                                <td colspan="2" id="detailsHeight"></td>
+                                <td style="color:#4985cb; font-weight: bold;">体重</td>
+                                <td colspan="2" id="detailsWeight"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">床号</td>
+                                <td colspan="2" id="detailsBed"></td>
+                                <td style="color:#4985cb; font-weight: bold;">护工</td>
+                                <td colspan="2"  id="detailsNurseName">
+                                    <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">紧急联系人1</td>
+                                <td colspan="2" id="detailsPhone1"></td>
+                                <td style="color:#4985cb; font-weight: bold;">紧急联系人2</td>
+                                <td colspan="2" id="detailsPhone2"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">应急地址</td>
+                                <td colspan="5" id="detailsAddress"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">病史描述</td>
+                                <td colspan="5" align="left">
+                                 <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" id="illness" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                <!-- 
+                                    <div>1、高血压（160/110mmHg左右），需要吃减压药</div>
+                                    <div>2、糖尿病</div> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">关注人列表</td>
+                                <td colspan="5" align="left">
+                                    <div class="follow" id="detailsTypeof">
+                                    </div>
+                                    <div class="add">
+                                        <i class="iconfont icon-jia" style="color:#4985cb;font-size: 24px;" data-toggle="modal"
+                                            data-target="#invite"></i>
+                                    </div>
+
+                                    <!-- 邀请弹框（Modal） -->
+                                    <div class="modal fade" id="invite" tabindex="-1" role="dialog"
+                                        aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content invite">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true">×
+                                                    </button>
+                                                    <h4 class="modal-title" id="myModalLabel">
+                                                        邀请他人关注
+                                                    </h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="number">输入已注册健康管家的手机号码,即可实时关注老人的健康数据。</p>
+                                                    <div style="padding: 10px 100px 10px;">
+                                                        <form class="bs-example bs-example-form" role="form">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">手机号码：</span>
+                                                                <input type="text" class="form-control" maxlength='11'
+                                                                    placeholder="请输入手机号码" value="" id="textId"/>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default"
+                                                        data-dismiss="modal">取消
+                                                    </button>
+                                                    <button type="button" onclick="follow()" class="btn btn-primary" id="invite-number">
+                                                        确定
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" onclick="detailsDetermine()" class="btn btn-primary" id="detailed-btn">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 人工智能弹窗 -->
+    <div class="modal fade" id="smart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:900px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        人工智能学习
+                    </h4>
+                </div>
+                <input id="daoId"/>
+                <div class="modal-body" id="daodivd">
+                    <table class="table table-bordered">
+                        <caption style="text-align:right;font-size:12px;">注：确认数据无误后，点击确认即可</caption>
+                        <tbody>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">IMEI</td>
+                                <td id="studyImei"></td>
+                                <td style="color:#4985cb; font-weight: bold;">姓名</td>
+                                <td id="studyName"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">人工智能学习</td>
+                                <td colspan="3">
+                                    <i class="iconfont icon-dui" style="font-size:22px;margin-right: 20%;"
+                                        id="tick"></i>
+                                    <button type="button" class="btn btn-default" id="study">开始学习</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">最新学习时间</td>
+                                <td id="studyTime"></td>
+                                <td style="color:#4985cb; font-weight: bold;">心率</td>
+                                <td>
+                                    <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" id="Heartrate" name="Heartrate" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">血氧</td>
+                                <td>
+                                    <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" id="Bloodoxygen" name="Bloodoxygen" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td style="color:#4985cb; font-weight: bold;">微循环</td>
+                                <td>
+                                    <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" id="microcirculation" name="microcirculation" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">心率变异性HRV</td>
+                                <td>
+                                    <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" id="HRV" name="hrv" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td style="color:#4985cb; font-weight: bold;">呼吸</td>
+                                <td>
+                                    <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" id="respirationrate" name="respirationrate" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">收缩压（高压）</td>
+                                <td>
+                                    <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" id="sbp_ave" name="sbpAve" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td style="color:#4985cb; font-weight: bold;">舒张压（低压）</td>
+                                <td>
+                                    <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" id="dbp_ave" name="dbpAve" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" data-dismiss="modal" onclick="studyQuery()" class="btn btn-primary">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 预警弹窗 -->
+    <div class="modal fade" id="warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        预警设置
+                    </h4>
+                </div>
+                <input id="userId"/>
+                    <input id="alias"/>
+                <div class="modal-body" id="divid">
+                    <table class="table table-bordered">
+                        <caption style="text-align:right;font-size:12px;">注意：超过设置阈值才会报警</caption>
+                        <tbody>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">IMEI</td>
+                                <td id="earlyImei"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">姓名</td>
+                                <td id="earlyName"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">预警开关</td>
+                                <td>
+                                    <div class="switch switch-mini">
+                                        <input type="checkbox" id="allNotifyOn" name='my-checkbox' />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">心率预警值</td>
+                                <td>
+                                	<div class="input">
+                                    	<div>
+                                    		<input type="text" id="heartLowThd" name="heartLowThd" class="form-control" placeholder="无预警值"/>
+                                    		<span>-</span>
+                                    	</div>
+                                    	<div>
+                                    		<input type="text" id="heartHigThd" name="heartHigThd" class="form-control" placeholder="无预警值"/>
+                                    		<span>次/每分</span>
+                                    	</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">收缩压预警值（高压）</td>
+                                <td>
+                                    <div class="input">
+                                    	<div>
+                                    		<input type="text" id="hbpstart" name="hbpstart" class="form-control" placeholder="无预警值"/>
+                                    		<span>-</span>
+                                    	</div>
+                                    	<div>
+                                    		<input type="text" id="hbpend" name="hbpend" class="form-control" placeholder="无预警值"/>
+                                    		<span>mmHg</span>
+                                    	</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">收缩压预警值（低压）</td>
+                                <td>
+                                	<div class="input">
+                                    	<div>
+                                    		<input type="text" id="lbpstart" name="lbpstart" class="form-control" placeholder="无预警值"/>
+                                    		<span>-</span>
+                                    	</div>
+                                    	<div>
+                                    		<input type="text" id="lbpend" name="lbpend" class="form-control" placeholder="无预警值"/>
+                                    		<span>mmHg</span>
+                                    	</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" onclick="earlyQuery()" data-dismiss="modal" class="btn btn-primary">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 添加用户弹窗 -->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        添加用户
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div style="padding: 20px 100px">
+                        <form class="bs-example bs-example-form" role="form">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="input-group">
+                                        <i class="iconfont icon-sousuo"></i>
+                                        <input type="text" class="form-control" id="addImei" style="padding-left:25px;"
+                                            placeholder="请输入用户监测器IMEI号进行添加"/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" onclick="addQuery()">
+                                                查询
+                                            </button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 -->
+                            </div><!-- /.row -->
+                        </form>
+                    </div>
+                    <table class="table table-bordered title" id="addTable">
+                        <thead>
+                            <tr>
+                                <th>IMEI</th>
+                                <th>姓名</th>
+                                <th>性别</th>
+                                <th>出生日期</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="addImeiA"></td>
+                                <td id="addName"></td>
+                                <td id="addGender"></td>
+                                <td id="addBorn"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" onclick="AddUserDetermine()" class="btn btn-primary">
+                        添加
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 移除用户弹窗 -->
+    <div class="modal fade" id="remove" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        移除用户
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div style="padding: 20px 100px">
+                        <form class="bs-example bs-example-form" role="form">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="input-group">
+                                        <i class="iconfont icon-sousuo"></i>
+                                        <input type="text" class="form-control" id="deleteImei" style="padding-left:25px;"
+                                            placeholder="请输入用户监测器IMEI号进行添加"/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" onclick="deleteQuery()" type="button">
+                                                查询
+                                            </button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 -->
+                            </div><!-- /.row -->
+                        </form>
+                    </div>
+                    <table class="table table-bordered title" id="deleteTable">
+                        <thead>
+                            <tr>
+                                <th>IMEI</th>
+                                <th>姓名</th>
+                                <th>性别</th>
+                                <th>出生日期</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="deleteImeiA"></td>
+                                <td id="deleteName"></td>
+                                <td id="deleteGender"></td>
+                                <td id="deleteBorn"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" onclick="deleteUserDetermine()" class="btn btn-primary">
+                        移除
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 创建用户弹窗 -->
+    <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        新增用户信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-3 control-label">用户角色
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control">
+                                    <option>超级管理员</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-3 control-label">请选择片区</label>
+                            <div class="col-sm-9">
+                                <select class="form-control">
+                                    <option>请选择</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="username" class="col-sm-3 control-label">用户名
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="username" placeholder="请输入用户名"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-sm-3 control-label">密码
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="password" placeholder="请输入密码"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-3 control-label">手机号
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="phone" placeholder="请输入手机号"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 在线离线弹窗 -->
+    <div class="modal fade" id="online" tabindex="-1" role="dialog" aria-labelledby="clothesNumbering" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="clothesNumbering">
+                        衣服编号及状态
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">IMEI</td>
+                                <td id="closeImei"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">姓名</td>
+                                <td id="closeName"></td>
+                            </tr>
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">衣服编号</td>
+                                <td id="closeBluetooth"></td>
+                            </tr>	
+                            <tr>
+                                <td style="color:#4985cb; font-weight: bold;">衣服状态</td>
+                                <td>
+                                    <div class="form-group">
+                                        <select name="closeState" id="closeState">
+                                        	<option value="0">离线</option>
+                                            <option value="1">在线</option>
+                                        </select> 
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                    </button>
+                    <button type="button" onclick="closeconfirm()" class="btn btn-primary">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="header">
+        <div class="img">
+            <img th:src="@{/img/home.png}" alt=""/>
+        </div>
+        <div class="home">主页＞添加用户</div>
+    </div>
+    <div class="content" id="app">
+        <div class="history">
+            <div class="icon">
+                <img th:src="@{/img/add.png}" alt=""/>
+            </div>
+            <p>个人信息一览表</p>
+        </div>
+        <div class="table">
+            <div class="check">
+                <div class="btnn">
+	                <button type="button" class="btn btn-primary" data-toggle="modal" 
+	                data-target="#create">创建用户</button>&nbsp;&nbsp;
+                    <button type="button"  onclick="addUser()" class="btn btn-primary" data-toggle="modal"
+                        data-target="#add">添加用户</button>&nbsp;&nbsp;
+                    <button type="button" onclick="deleteUser()" class="btn btn-primary" data-toggle="modal"
+                        data-target="#remove">移除用户</button>
+                </div>
+                <div class="col-lg-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="imei" placeholder="请输入imei号查询用户信息"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" onclick="query()" type="button">查询用户信息</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>IMEI号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>床号</th>
+                        <th>分属护工</th>
+                        <th>衣服编码及状态</th>
+                        <th>其他操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in item">
+                        <td>{{item.equipmentId}}</td>
+                        <td>{{item.imei}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.gender}}</td>
+                        <td>{{item.bed}}</td>
+                        <td>{{item.nurseName}}</td>
+                        <td id="line">
+                            <button type="button" class="btn btn-default" data-toggle="modal"  data-target="#online" v-if="item.bluetooth_status==0">
+                              <i class="iconfont icon-lanya"></i>
+							   离线
+                            </button>
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#online" v-else="item.bluetooth_status==1">
+                              <i class="iconfont icon-lanya blue-color"></i>
+							   在线
+                            </button>
+                        </td>
+                        
+                        
+                        
+                        <td id="love">
+                            <button type="button" class="btn btn-default" id="ai" v-if="item.love==0">
+                                <i class="iconfont icon-aixin" style="color:gray"></i>
+                                重点关爱
+                            </button>
+                             
+                            <button type="button" class="btn btn-default" id="ai" v-else="item.love==1">
+                                <i class="iconfont icon-aixin" style="color:red"></i>
+                                重点关爱
+                            </button>
+                           
+                            
+                            
+                            <button type="button" class="btn btn-default" id="early" data-toggle="modal" data-target="#warning">
+                                <i class="iconfont icon-kaiguan1 blue-color"></i>
+                                预警设置
+                            </button>
+                            <button type="button" class="btn btn-default" id="study" data-toggle="modal" data-target="#smart">
+                                <i class="iconfont icon-gouxuan blue-color"></i>
+                                人工智能学习
+                            </button>
+                            <button type="button" class="btn btn-default" id="details" data-toggle="modal" data-target="#detailed">
+                                <i class="iconfont icon-gerenxinxi blue-color"></i>
+                               个人详情
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div class="block">
+               <el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange"
+                   :page-sizes="[10, 20, 30, 40]" :page-size="10"
+                    layout="total, sizes, prev, pager, next, jumper" :total="total">
+                </el-pagination> 
+            </div>
+        </div>
+
+    </div>
+    <!-- 先引入 Vue -->
+    <script th:src="@{/js/vue.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap-switch.min.js}"></script>
+    <!-- 必须链接这个，修改过源码 -->
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    
+	<script th:src="@{/js/amazeui.min.js}"></script>
+		<script th:src="@{/js/common/utils.js}"></script>
+	<script th:src="@{/js/user/add-table.js}"></script>
+
+</body>
+
+</html>
+
+

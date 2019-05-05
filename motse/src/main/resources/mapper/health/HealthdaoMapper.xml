@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.HealthdaoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.Healthdao">
+        <id column="id" property="id" />
+        <result column="HRV" property="hrv" />
+        <result column="sbp_ave" property="sbpAve" />
+        <result column="dbp_ave" property="dbpAve" />
+        <result column="Heartrate" property="Heartrate" />
+        <result column="Bloodoxygen" property="Bloodoxygen" />
+        <result column="microcirculation" property="microcirculation" />
+        <result column="Amedicalreport" property="Amedicalreport" />
+        <result column="respirationrate" property="respirationrate" />
+        <result column="phone" property="phone" />
+        <result column="imei" property="imei" />
+        <result column="createtime" property="createtime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, HRV AS hrv, sbp_ave AS sbpAve, dbp_ave AS dbpAve, Heartrate, Bloodoxygen, microcirculation, Amedicalreport, respirationrate, phone, imei, createtime
+    </sql>
+
+	<!-- 查询人工智能学习信息 -->
+	<select id="queryHealthDaoInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT td.id,td.imei,td.name,DATE_FORMAT(tp.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tp.HRV,tp.sbp_ave,tp.dbp_ave,tp.Heartrate,tp.Bloodoxygen,tp.microcirculation,tp.respirationrate FROM user td
+		LEFT JOIN jfhealthdao tp
+		ON substring(tp.phone,9)=td.id
+		WHERE td.imei=#{imei}
+	</select>
+</mapper>
