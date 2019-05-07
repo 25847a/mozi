@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.HealthNewMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.HealthNew">
+        <id column="id" property="id" />
+        <result column="HRV" property="hrv" />
+        <result column="sbp_ave" property="sbpAve" />
+        <result column="dbp_ave" property="dbpAve" />
+        <result column="Heartrate" property="Heartrate" />
+        <result column="Bloodoxygen" property="Bloodoxygen" />
+        <result column="microcirculation" property="microcirculation" />
+        <result column="Amedicalreport" property="Amedicalreport" />
+        <result column="respirationrate" property="respirationrate" />
+        <result column="phone" property="phone" />
+        <result column="imei" property="imei" />
+        <result column="createtime" property="createtime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, HRV AS hrv, sbp_ave AS sbpAve, dbp_ave AS dbpAve, Heartrate, Bloodoxygen, microcirculation, Amedicalreport, respirationrate, phone, imei, createtime
+    </sql>
+
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.EquipmentDataMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.EquipmentData">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="heartrate" property="heartrate" />
+        <result column="highpressure" property="highpressure" />
+        <result column="bottompressure" property="bottompressure" />
+        <result column="bloodpressure" property="bloodpressure" />
+        <result column="mocrocirculation" property="mocrocirculation" />
+        <result column="breathe" property="breathe" />
+        <result column="sleeping" property="sleeping" />
+        <result column="step_when" property="stepWhen" />
+        <result column="carrieroad" property="carrieroad" />
+        <result column="sedentary" property="sedentary" />
+        <result column="movementstate" property="movementstate" />
+        <result column="bodytemp" property="bodytemp" />
+        <result column="humidity" property="humidity" />
+        <result column="crash" property="crash" />
+        <result column="createtime" property="createtime" />
+        <result column="qxygen" property="qxygen" />
+        <result column="sleeping_s" property="sleepingS" />
+        <result column="run_s" property="runS" />
+        <result column="step_time" property="stepTime" />
+        <result column="step_each" property="stepEach" />
+        <result column="hrv" property="hrv" />
+        <result column="mood" property="mood" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id AS userId, heartrate, highpressure, bottompressure, bloodpressure, mocrocirculation, breathe, sleeping, step_when AS stepWhen, carrieroad, sedentary, movementstate, bodytemp, humidity, crash, createtime, qxygen, sleeping_s AS sleepingS, run_s AS runS, step_time AS stepTime, step_each AS stepEach, hrv, mood
+    </sql>
+
+</mapper>
