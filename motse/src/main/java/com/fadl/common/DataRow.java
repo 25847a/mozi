@@ -2,6 +2,8 @@ package com.fadl.common;
 
 import java.util.LinkedHashMap;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import com.baomidou.mybatisplus.plugins.Page;
 /**
  * 通用bean 接收参数进行jdbc操作
@@ -63,7 +65,7 @@ public class DataRow  extends LinkedHashMap<String, Object>{
 	/**
 	 * 成功分页
 	 */
-	public  void initPage(String message, Page page){
+	public  void initPage(String message, Page<T> page){
 		put("count",page.getTotal());
 		put(IConstants.RESULT_DATA,page.getRecords());
 		put(IConstants.RESULT_MESSAGE,message);
@@ -84,7 +86,7 @@ public class DataRow  extends LinkedHashMap<String, Object>{
 	/**
 	 * 成功分页
 	 */
-	public  void initPage(Page page){
+	public  void initPage(Page<T> page){
 		 initPage(IConstants.SUCCESS,page);
 	}
 

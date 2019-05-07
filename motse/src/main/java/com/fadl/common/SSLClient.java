@@ -15,6 +15,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;  
 
 
+@SuppressWarnings("deprecation")
 public class SSLClient extends DefaultHttpClient {
 	public SSLClient() throws Exception{  
 	    SSLContext ctx = SSLContext.getInstance("TLS");  
