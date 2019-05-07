@@ -124,36 +124,74 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 		}
 		if(love.size()<=7){
 			if(love.size()==7){
-				for(int i=0;i<7;i++){
-					love.add(tableData.get(i));
+				if(tableData.size()<7){
+					for(int i=0;i<tableData.size();i++){
+						love.add(tableData.get(i));
+					}
+				}else{
+					for(int i=0;i<7;i++){
+						love.add(tableData.get(i));
+					}
 				}
 			}else if(love.size()==6){
-				for(int i=0;i<8;i++){
-					love.add(tableData.get(i));
+				if(tableData.size()<8){
+					for(int i=0;i<tableData.size();i++){
+						love.add(tableData.get(i));
+					}
+				}else{
+					for(int i=0;i<8;i++){
+						love.add(tableData.get(i));
+					}
 				}
 			}else if(love.size()==5){
-				for(int i=0;i<9;i++){
-					love.add(tableData.get(i));
+				if(tableData.size()<9){
+					for(int i=0;i<tableData.size();i++){
+						love.add(tableData.get(i));
+					}
+				}else{
+					for(int i=0;i<9;i++){
+						love.add(tableData.get(i));
+					}
 				}
 			}else if(love.size()==4){
-				for(int i=0;i<10;i++){
-					love.add(tableData.get(i));
+				if(tableData.size()<10){
+					for(int i=0;i<tableData.size();i++){
+						love.add(tableData.get(i));
+					}
+				}else{
+					for(int i=0;i<10;i++){
+						love.add(tableData.get(i));
+					}
 				}
 			}else if(love.size()==3){
-				for(int i=0;i<11;i++){
-					love.add(tableData.get(i));
-				}
-			}else if(love.size()==3){
-				for(int i=0;i<12;i++){
-					love.add(tableData.get(i));
+				if(tableData.size()<11){
+					for(int i=0;i<tableData.size();i++){
+						love.add(tableData.get(i));
+					}
+				}else{
+					for(int i=0;i<11;i++){
+						love.add(tableData.get(i));
+					}
 				}
 			}else if(love.size()==2){
-				for(int i=0;i<13;i++){
-					love.add(tableData.get(i));
+				if(tableData.size()<12){
+					for(int i=0;i<tableData.size();i++){
+						love.add(tableData.get(i));
+					}
+				}else{
+					for(int i=0;i<12;i++){
+						love.add(tableData.get(i));
+					}	
 				}
 			}else if(love.size()==1){
-				for(int i=0;i<14;i++){
-					love.add(tableData.get(i));
+				if(tableData.size()<13){
+					for(int i=0;i<tableData.size();i++){
+						love.add(tableData.get(i));
+					}
+				}else{
+					for(int i=0;i<13;i++){
+						love.add(tableData.get(i));
+					}
 				}
 			}else if(love.size()==0){
 				for(int i=0;i<tableData.size();i++){

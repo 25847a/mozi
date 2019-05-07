@@ -4,7 +4,7 @@ $("#page").val(page);
 	var lockReconnect = false;//避免重复连接
 	var adminId = $("#id").val();
 	console.log("adminId为>>>>>>>"+adminId+"点开了websocket");
-	var url = "ws://192.168.1.147:8443/websocket/"+adminId;
+	var url = GetURLInfo().replace("http","ws")+"websocket/"+adminId;
     if(typeof(WebSocket) != "undefined") {
     	createWebSocket(url);//开始连接
     	function createWebSocket(url){

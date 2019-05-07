@@ -1,20 +1,10 @@
 package com.fadl.health.service.impl;
 
-import com.fadl.health.entity.Equipment;
-import com.fadl.health.entity.Push;
-import com.fadl.health.entity.User;
-import com.fadl.account.entity.Admin;
-import com.fadl.common.DataRow;
-import com.fadl.common.DateUtil;
-import com.fadl.common.SessionUtil;
-import com.fadl.health.dao.UserMapper;
-import com.fadl.health.service.EquipmentService;
-import com.fadl.health.service.PushService;
-import com.fadl.health.service.UserEqService;
-import com.fadl.health.service.UserService;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +13,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.fadl.account.entity.Admin;
+import com.fadl.common.Base64;
+import com.fadl.common.DataRow;
+import com.fadl.common.DateUtil;
+//import com.fadl.common.GB2312Utils;
+import com.fadl.common.HttpClientUtil;
+import com.fadl.common.IConstants;
+import com.fadl.common.ReadProperties;
+import com.fadl.common.SessionUtil;
+import com.fadl.health.dao.UserMapper;
+import com.fadl.health.entity.Equipment;
+import com.fadl.health.entity.EquipmentData;
+import com.fadl.health.entity.Health;
+import com.fadl.health.entity.HealthNew;
+import com.fadl.health.entity.Healthdao;
+import com.fadl.health.entity.Push;
+import com.fadl.health.entity.User;
+import com.fadl.health.entity.UserEq;
+import com.fadl.health.service.EquipmentDataService;
+import com.fadl.health.service.EquipmentService;
+import com.fadl.health.service.HealthNewService;
+import com.fadl.health.service.HealthService;
+import com.fadl.health.service.HealthdaoService;
+import com.fadl.health.service.PushService;
+import com.fadl.health.service.UserEqService;
+import com.fadl.health.service.UserService;
+//import io.netty.channel.socket.SocketChannel;
+//import io.netty.channel.socket.nio.NioSocketChannel;
+
+
 
 /**
  * <p>
@@ -43,6 +65,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	UserEqService userEqService;
 	@Autowired
 	EquipmentService equipmentService;
+	@Autowired
+	EquipmentDataService equipmentDataService;
+	@Autowired
+	HealthService healthService;
+	@Autowired
+	HealthdaoService healthdaoService;
+	@Autowired
+	HealthNewService healthNewService;
 	
 	/**
 	 * 查询使用者男女数量饼状图 
@@ -86,8 +116,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
 	@Override
 	public DataRow queryaddUserInfo(Map<String, String> map, DataRow messageMap) throws SQLException {
-		DataRow list =userMapper.queryaddUserInfo(map);
-		messageMap.initSuccess(list);
+		DataRow row =userMapper.queryaddUserInfo(map);
+		if(row.get("bluetooth_list")!=null){
+			String[] tooth= row.getString("bluetooth_list").replace("[", "").replace("]", "").replace("\"","").split(",");
+			if(tooth.length==1){
+				row.set("closeBluetooth1", tooth[0]);
+				row.set("closeBluetooth2", "");
+			}else{
+				row.set("closeBluetooth1", tooth[0]);
+				row.set("closeBluetooth2", tooth[1]);
+			}
+		}
+		messageMap.initSuccess(row);
 		return messageMap;
 	}
 	/**
@@ -178,21 +218,49 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		return userMapper.queryUserEquipment(map);
 	}
 	/**
+     * 上传使用者头像图片
+     * @param user
+     * @return
+     */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Override
+	public DataRow uploadUserPicture(User user, DataRow messageMap) throws Exception {
+		String filePath = ReadProperties.getValue("imageAddress");
+		String time = System.currentTimeMillis()+".jpg";
+		File file = new File(filePath);
+		if (!file.exists()) {
+			file.mkdirs();
+        }
+		byte[] by= Base64.decode(user.getAvatar());
+		OutputStream out = new FileOutputStream(new File(filePath+time));
+		out.write(by, 0, by.length);
+		out.close();
+		user.setAvatar(ReadProperties.getValue("serverUrl")+time);
+		EntityWrapper<User> ew = new EntityWrapper<User>();
+		ew.eq("imei", user.getImei());
+		int row =userMapper.update(user, ew);
+		if(row>0){
+			messageMap.initSuccess();
+		}else{
+			messageMap.initFial();
+		}
+		return messageMap;
+	}
+	/**
      * 点击确认修改个人详情的信息
      * @param map
      * @return
      */
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@Override
-	public DataRow updateUserInfo(User user, DataRow messageMap) throws SQLException {
+	public DataRow updateUserInfo(User user,Equipment equipment,DataRow messageMap) throws Exception {
 		EntityWrapper<User> ew = new EntityWrapper<User>();
 		ew.eq("imei", user.getImei());
-		Integer row =userMapper.update(user, ew);
-		if(row>0){
-			messageMap.initSuccess();
-		}else{
-			messageMap.initFial();
-		}
+		userMapper.update(user, ew);
+		EntityWrapper<Equipment> eq = new EntityWrapper<Equipment>();
+		eq.eq("imei", equipment.getImei());
+		equipmentService.update(equipment, eq);
+		messageMap.initSuccess();
 		return messageMap;
 	}
 	/**
@@ -270,5 +338,134 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		
 		return messageMap;
 	}
-	
+	/**
+     * 添加用户
+     * @param map
+     * @return
+     */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Override
+	public DataRow addUserInfo(User user,String telephone, DataRow messageMap) throws Exception {
+		user.setRole("使用者");
+	//	SocketChannel  c = new NioSocketChannel();
+		EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
+		ew.eq("imei", user.getImei());
+		Equipment e=equipmentService.selectOne(ew);
+		if(e!=null){
+			EntityWrapper<User> eq = new EntityWrapper<User>();
+			eq.eq("imei", user.getImei());
+			User u =this.selectOne(eq);
+			if(u==null){
+				EntityWrapper<UserEq> ec = new EntityWrapper<UserEq>();
+				ec.eq("eq_id", e.getId());
+				ec.eq("typeof", 0);
+				UserEq uq =userEqService.selectOne(ec);
+				if(uq==null){
+					user.setJfdataUpdateTime("5");
+					user.setHighpressure(0);
+					user.setLowpressure(0);
+					user.setCreatetime(DateUtil.sf.format(new Date()));
+					user.setAtlasttime(DateUtil.sf.format(new Date()));
+					this.insert(user);//使用者
+					boolean jfstatus = HttpClientUtil.registered(IConstants.channel_id + String.valueOf(user.getId()),"12345", "123456");
+					if(jfstatus){
+						//设备与监护人的关联关系
+						UserEq ue = new UserEq();
+						//就是mid
+						EntityWrapper<User> ea = new EntityWrapper<User>();
+						ea.eq("account", telephone);
+						User use =this.selectOne(ea);
+						ue.setUserId(use.getId());
+						ue.setEqId(e.getId());
+						ue.setTypeof(0);
+						//设备与使用者的关联关系
+						UserEq uue = new UserEq();
+						uue.setUserId(user.getId());
+						uue.setEqId(e.getId());
+						uue.setTypeof(2);
+						userEqService.insert(ue);
+						userEqService.insert(uue);
+						//////////////////////////////////////
+						EquipmentData data = new EquipmentData();
+						data.setUserId(user.getId());//使用者ID
+						data.setHeartrate(0);
+						data.setHighpressure(0);
+						data.setBottompressure(0);
+						data.setBloodpressure(0);
+						data.setMocrocirculation(0);
+						data.setBreathe(0);
+						data.setSleeping(0.0);
+						data.setStepWhen(0);
+						data.setCarrieroad(0);
+						data.setSedentary("0");
+						data.setMovementstate(0);
+						data.setBodytemp(0);
+						data.setHumidity(0);
+						data.setCrash(0);
+						data.setCreatetime(DateUtil.sf.format(new Date()));
+						data.setQxygen(0);
+						data.setSleepingS(0);
+						data.setRunS(0);
+						data.setStepEach(0);
+						data.setHrv(0);
+						data.setMood(0);
+						equipmentDataService.insert(data);
+						Health bean = new Health();
+						bean.setHrv(0);
+						bean.setSbpAve(0);
+						bean.setDbpAve(0);
+						bean.setHeartrate(0);
+						bean.setBloodoxygen(0);
+						bean.setMicrocirculation(0);
+						bean.setRespirationrate(0);
+						bean.setPhone("mozistar"+user.getId());
+						bean.setImei(user.getImei());
+						bean.setCreatetime(DateUtil.sf.format(new Date()));
+						bean.setAmedicalreport("0");
+						healthService.insert(bean);
+					    Push push = new Push();
+					    push.setUserId(user.getId());//使用者ID
+					    push.setAlias(use.getId());//监护者ID
+					    push.setAllNotifyOn(1);
+					    push.setHeartHigThd(100);
+					    push.setHeartLowThd(55);
+					    push.setHbpstart(80);
+					    push.setHbpend(140);
+					    push.setLbpstart(60);
+					    push.setLbpend(100);
+					    pushService.insert(push);
+					    Healthdao healthdao = new Healthdao();
+						healthdao.setCreatetime(DateUtil.sf.format(new Date()));
+						healthdao.setPhone("mozistar"+user.getId());
+						healthdao.setImei(user.getImei());
+						healthdao.setHeartrate(80);//心率
+						healthdao.setBloodoxygen(97);//血氧
+						healthdao.setHrv(59);//Hrv
+						healthdao.setMicrocirculation(85);//微循环
+						healthdao.setRespirationrate(16);//呼吸
+						healthdao.setSbpAve(120);//高压
+						healthdao.setDbpAve(80);//低压
+						healthdaoService.insert(healthdao);
+						
+						HealthNew healthnew = new HealthNew();
+						healthnew.setCreatetime(DateUtil.sf.format(new Date()));
+						healthnew.setPhone("mozistar"+user.getId());
+						healthnew.setImei(user.getImei());
+						healthNewService.insert(healthnew);
+					/*	if(c!=null){
+							c.writeAndFlush("$R06|"+GB2312Utils.gb2312eecode(user.getName())+":"+GB2312Utils.gb2312eecode(user.getAddress())+"\r\n");
+						}*/
+						messageMap.initSuccess("添加设备使用者成功！！！");
+					}
+				}else{
+					messageMap.initFial("该设备监护者已经存在！！！");
+				}
+			}else{
+				messageMap.initFial("该设备使用者已经存在！！！");
+			}
+		}else{
+			messageMap.initFial("设备号不存在,请联系经销商！！！");
+		}
+		return messageMap;
+	}
 }

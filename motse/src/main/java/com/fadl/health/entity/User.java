@@ -141,6 +141,10 @@ public class User extends Model<User> {
      */
     private Long bedId;
     /**
+     * 护士ID
+     */
+    private Long nurseId;
+    /**
      * 入住时间(养老院)
      */
     private String liveTime;
@@ -388,6 +392,14 @@ public class User extends Model<User> {
 		this.bedId = bedId;
 	}
 
+	public Long getNurseId() {
+		return nurseId;
+	}
+
+	public void setNurseId(Long nurseId) {
+		this.nurseId = nurseId;
+	}
+
 	public String getLiveTime() {
 		return liveTime;
 	}
@@ -442,6 +454,7 @@ public class User extends Model<User> {
         ", walkPushTime=" + walkPushTime +
         ", love=" + love +
         ", bedId=" + bedId +
+        ", nurseId=" + nurseId +
           ", liveTime=" + liveTime +
         ", illness=" + illness +
         "}";

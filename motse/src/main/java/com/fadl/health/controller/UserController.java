@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.fadl.account.entity.Admin;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
@@ -46,7 +45,8 @@ public class UserController extends AbstractController{
     @RequestMapping("/addUserPage")
     @RequiresPermissions("addUser:view")
     public String addUserPage(){
-    	return "/user/addUser";
+    	System.out.println(">...................................."+">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    	return "/user/adduser";
     }
 	/**
 	 *  代理商列表
@@ -156,17 +156,32 @@ public class UserController extends AbstractController{
 		return messageMap;
     }
     /**
+     * 上传使用者头像图片
+     * @param user
+     * @return
+     */
+    @RequestMapping("/uploadUserPicture")
+    @ResponseBody
+    public DataRow uploadUserPicture(User user){
+    	try {
+    	messageMap=userService.uploadUserPicture(user,messageMap);
+		} catch (Exception e) {
+			logger.error("UserController>>>>>>>>>>>>>uploadUserPicture",e);
+		}
+		return messageMap;
+    }
+    /**
      * 点击确认修改个人详情的信息
      * @param map
      * @return
      */
     @RequestMapping("/updateUserInfo")
     @ResponseBody
-    public DataRow updateUserInfo(User user){
+    public DataRow updateUserInfo(User user,Equipment equipment){
     	try {
-    		messageMap=userService.updateUserInfo(user, messageMap);
+    		messageMap=userService.updateUserInfo(user,equipment,messageMap);
 		} catch (Exception e) {
-			logger.error("UserController>>>>>>>>>>>>>queryUserEquipmentInfo",e);
+			logger.error("UserController>>>>>>>>>>>>>updateUserInfo",e);
 		}
 		return messageMap;
     }
@@ -212,6 +227,21 @@ public class UserController extends AbstractController{
     		messageMap=userService.deleteUserDetermine(user, messageMap);
 		} catch (Exception e) {
 			logger.error("UserController>>>>>>>>>>>>>deleteUserDetermine",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    @RequestMapping("/addUserInfo")
+    @ResponseBody
+    public DataRow addUserInfo(User user,String telephone){
+    	try {
+    		messageMap=userService.addUserInfo(user,telephone,messageMap);
+		} catch (Exception e) {
+			logger.error("UserController>>>>>>>>>>>>>addUserInfo",e);
 		}
 		return messageMap;
     }

@@ -1,4 +1,41 @@
-//请求数据    
+		/**
+		 * 获取床号列表
+		 */
+		$.ajax({
+		    type : "POST",
+		    url :GetURLInfo()+"bedNumber/queryBedNumberInfo",
+		    datatype : "json",
+		    success : function(result) {
+		    	if(null!=result.data){
+		    		for (var o in result.data){
+		                var str = "<option value=" + result.data[o].id + ">" + result.data[o].bed + "</option>";
+		                $("#addBed").append(str);
+		                $("#detailsBed").append(str);
+		            }
+		    	}
+		    },
+		    error : function() {
+		    }
+		});
+		/**
+		 * 获取护士列表
+		 */
+		$.ajax({
+		    type : "POST",
+		    url :GetURLInfo()+"/nurse/queryNurseInfo",
+		    datatype : "json",
+		    success : function(result) {
+		    	if(null!=result.data){
+		    		for (var o in result.data){
+		                var str = "<option value=" + result.data[o].id + ">" + result.data[o].nurseName + "</option>";
+		                $("#addNurse").append(str);
+		                $("#detailsNurseName").append(str);
+		            }
+		    	}
+		    },
+		    error : function() {
+		    }
+		});
 
     var tableDate = new Array();
     var pageIndex=1;
@@ -46,6 +83,7 @@
     });
     //在线离线弹窗
    	$(".table-hover tbody").on("click", "#line button", function () {
+   		$("tr[id=daaaa]").remove();
         var equipmentId = $(this).parent('#line').parent('tr').find('td').eq(0).text();
         $.ajax({
             type : "POST",
@@ -57,23 +95,219 @@
             		var data =result.data;
             		document.getElementById("closeImei").innerHTML=data.imei;
             		document.getElementById("closeName").innerHTML=data.name;
-            		document.getElementById("closeBluetooth").innerHTML=data.bluetoothmac;
-            		$("#closeState").val(data.bluetooth_status);
+            		$("#closeBluetooth1").val(data.closeBluetooth1);
+            		$("#closeBluetooth2").val(data.closeBluetooth2);
+            		$("#bluetoothmac").val(data.bluetoothmac);
+            		if(data.bluetoothmac==data.closeBluetooth1){
+            			$("#clothes1").text("已绑定");
+            			$("#clothes2").text("点击绑定");
+            		}else if(data.bluetoothmac==data.closeBluetooth2){
+            			$("#clothes1").text("点击绑定");
+            			$("#clothes2").text("已绑定");
+            		}else{
+            			$("#clothes1").text("点击绑定");
+            			$("#clothes2").text("点击绑定");
+            		}
+            		$("#disconnect1").text("断开衣服");
+            		$("#disconnect2").text("断开衣服");
+            		$('#closeBluetooth1').attr("disabled",true);
+            		$('#closeBluetooth2').attr("disabled",true);
+            //		document.getElementById("closeBluetooth").innerHTML=data.bluetoothmac;
+            		$("#closeState").text(data.bluetooth_type==0?"离线":"在线");//data.bluetooth_type
+            		$("#equipmentId").val(data.id);
             	}
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
-    }); 
-   	//在线离线帮客户连接衣服。
-   	function closeconfirm(){
-   		console.log("在线离线帮客户连接衣服。");
+    });
+   	//在线离线帮客户连接第一件衣服;
+   	function clothesNumber1(){
+   		$("#clothes1").text("绑定中..");
+		var mac =$("#closeBluetooth1").val();
+		if(mac=='' || mac ==null){
+			tips("无衣服名称,请输入衣服名称连接");
+			return;
+			if($("#closeBluetooth2").val()==$("#bluetoothmac").val()){
+				$("#clothes2").text("已绑定");
+			}else{
+				$("#clothes2").text("点击绑定");
+			}
+		}
+		var id=$("#equipmentId").val();
+		var bluetoothName=mac;
+		var bluetoothmac=mac;
+		$.ajax({
+            type : "POST",
+         //   async: false,
+            url :GetURLInfo()+"equipment/updateBluetooth",
+            data:{"id":id,"bluetoothName":bluetoothName,"bluetoothmac":bluetoothmac},
+            datatype : "json",
+            success : function(result) {
+            	if(result.code==601){
+            		$("#clothes1").text("点击绑定");
+            	}else if(result.code==200){
+            		$("#clothes1").text("已绑定");
+            		$("#closeState").text("在线");
+            	}
+            	tips(result.message);
+            		
+            },
+            error : function() {
+            	tips("操作失败");
+            }
+        });
+   	};
+  //在线离线帮客户断开第一件衣服;
+   	function disconnectClothes1(){
+   		$("#disconnect1").text("断开中..");
+		var id=$("#equipmentId").val();
+		var bluetoothName="000000000000";
+		var bluetoothmac="000000000000";	
+		var mac =$("#closeBluetooth1").val();
+		if(mac=='' || mac ==null){
+			tips("无衣服名称,无需断开衣服");
+			$("#disconnect1").text("断开衣服");
+			return;
+		}
+		$.ajax({
+            type : "POST",
+         //   async: false,
+            url :GetURLInfo()+"equipment/updateBluetooth",
+            data:{"id":id,"bluetoothName":bluetoothName,"bluetoothmac":bluetoothmac},
+            datatype : "json",
+            success : function(result) {
+            	if(result.code==601){
+            		$("#disconnect1").text("断开失败");
+            	}else if(result.code==200){
+            		$("#disconnect1").text("断开成功");
+            		$("#clothes1").text("点击绑定");
+            		$("#closeState").text("离线");
+            	}
+            	tips(result.message);
+            		
+            },
+            error : function() {
+            	tips("操作失败");
+            }
+        });
+   	};
+   	//在线离线帮客户连接第二件衣服。
+   	function clothesNumber2(){
+   		$("#clothes2").text("绑定中..");
+		var mac =$("#closeBluetooth2").val();
+		if(mac=='' || mac ==null){
+			tips("无衣服名称,请输入衣服名称连接");
+			if($("#closeBluetooth2").val()==$("#bluetoothmac").val()){
+				$("#clothes2").text("已绑定");
+			}else{
+				$("#clothes2").text("点击绑定");
+			}
+			return;
+		}
+		var id=$("#equipmentId").val();
+		var bluetoothName=mac;
+		var bluetoothmac=mac;
+		$.ajax({
+            type : "POST",
+         //   async: false,
+            url :GetURLInfo()+"equipment/updateBluetooth",
+            data:{"id":id,"bluetoothName":bluetoothName,"bluetoothmac":bluetoothmac},
+            datatype : "json",
+            success : function(result) {
+            	if(result.code==601){
+            		$("#clothes2").text("点击绑定");
+            	}else if(result.code==200){
+            		$("#clothes2").text("已绑定");
+            		$("#closeState").text("在线");
+            	}
+            	tips(result.message);
+            		
+            },
+            error : function() {
+            	tips("操作失败");
+            }
+        });
+   	};
+  //在线离线帮客户断开第二件衣服;
+   	function disconnectClothes2(){
+   		$("#disconnect2").text("断开中..");
+		var id=$("#equipmentId").val();
+		var bluetoothName="000000000000";
+		var bluetoothmac="000000000000";	
+		var mac =$("#closeBluetooth2").val();
+		if(mac=='' || mac ==null){
+			tips("无衣服名称,无需断开衣服");
+			$("#disconnect2").text("断开衣服");
+			return;
+		}
+		$.ajax({
+            type : "POST",
+         //   async: false,
+            url :GetURLInfo()+"equipment/updateBluetooth",
+            data:{"id":id,"bluetoothName":bluetoothName,"bluetoothmac":bluetoothmac},
+            datatype : "json",
+            success : function(result) {
+            	if(result.code==601){
+            		$("#disconnect2").text("断开失败");
+            	}else if(result.code==200){
+            		$("#disconnect2").text("断开成功");
+            		$("#clothes2").text("点击绑定");
+            		$("#closeState").text("离线");
+            	}
+            	tips(result.message);
+            		
+            },
+            error : function() {
+            	tips("操作失败");
+            }
+        });
+   	};
+   	//在线离线编辑1
+   	function edit1(){
+   		$('#closeBluetooth1').attr("disabled",false);
+   	};
+  //在线离线编辑2
+   	function edit2(){
+   		$('#closeBluetooth2').attr("disabled",false);
+   	};
+   	//在线离线确定键
+   	function closeconfirm(){location.reload();}
+   	//学习按钮
+   	function startLearning(){
+   		$("#learning").text('正在学习中....'); // 只支持修改文本
+   		var imei =document.getElementById("studyImei").innerHTML;
+   		$.ajax({
+            type : "POST",
+          //  async: false,	
+            url :GetURLInfo()+"equipment/startLearning",
+            data:{"imei":imei},
+            datatype : "json",
+            success : function(result) {
+            	if(result.code==-1){
+            		var data = result.data;
+            		$("#Heartrate").val(data.Heartrate);
+            		$("#microcirculation").val(data.microcirculation);
+            		$("#Bloodoxygen").val(data.Bloodoxygen);
+            		$("#HRV").val(data.HRV);
+            		$("#respirationrate").val(data.respirationrate);
+            		$("#sbp_ave").val(data.sbp_ave);
+            		$("#dbp_ave").val(data.dbp_ave);
+            	}else{
+            		tips(result.message);
+            	}
+            	$("#tick").css("color", "#3277c1");
+            	$("#learning").text('开始学习'); // 只支持修改文本
+            },
+            error : function() {
+            	tips("操作失败");
+            }
+        });
    	}
    	//更改重点关爱对象
    	var love;
    	$(".table-hover tbody").on("click", "#love #ai", function () {
-   	//	$(this).find("i").css("color","red");
         var imei = $(this).parent('#love').parent('tr').find('td').eq(1).text();
        $.ajax({
             type : "POST",
@@ -95,7 +329,7 @@
             	}
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
        if(love==1){
@@ -143,7 +377,7 @@
 	            	}
 	            },
 	            error : function() {
-	            	 $.MsgBox.Alert("消息","操作失败");
+	            	tips("操作失败");
 	            }
 	        });
 	    }); 
@@ -166,7 +400,7 @@
             datatype : "json",
             success : function(result) {
             	if(result.code==-1){
-            		$.MsgBox.Alert("消息",result.message);
+            		tips(result.message);
             	}
             },
             error : function() {
@@ -201,7 +435,7 @@
 	            	}
 	            },
 	            error : function() {
-	            	 $.MsgBox.Alert("消息","操作失败");
+	            	tips("操作失败");
 	            }
 	        });
 	    });
@@ -220,11 +454,11 @@
             datatype : "json",
             success : function(result) {
             	if(result.code==-1){
-            		
+            		tips(result.message);
             	}
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
 	};
@@ -245,22 +479,23 @@
 	            		document.getElementById("detailsName").innerHTML=data.name;
 	            		$("#pic").attr("src",data.avatar);//data.data.imagez
 	            		document.getElementById("detailsImei").innerHTML=data.imei;
+	            	//	 $("#detailsGender option[value='"+data.gender+"']").attr('selected',true);
 	            		$("#detailsGender").val(data.gender);
-	            		document.getElementById("detailsPhone").innerHTML=data.phone;
+	            		$("#detailsPhone").val(data.phone);
 	            		document.getElementById("detailsLove").innerHTML=data.love==0?'否':'是';
 	            		document.getElementById("detailsBluetoothmac").innerHTML=data.bluetoothmac;
-	            		
 	            		$("#detailsBorn").datepicker('setValue',data.born);
 	            		$("#detailsLiveTime").datepicker('setValue',data.liveTime);
+	            		$("#detailsHeight").val(data.height);
+	            		$("#detailsWeight").val(data.weight);
 	            		
-	            		document.getElementById("detailsHeight").innerHTML=data.height;
-	            		document.getElementById("detailsWeight").innerHTML=data.weight;
-	            		document.getElementById("detailsBed").innerHTML=data.bed;
-	            	//	$("#detailsNurseName").val(data.nurseName);
-	            		document.getElementById("detailsNurseName").innerHTML=data.nurseName;
-	            		document.getElementById("detailsPhone1").innerHTML=data.phone1;
-	            		document.getElementById("detailsPhone2").innerHTML=data.phone2;
-	            		document.getElementById("detailsAddress").innerHTML=data.address;
+	            		$("#detailsBed").val(data.bedId);
+	            		$("#detailsNurseName").val(data.nurseId);
+	            	//	document.getElementById("detailsBed").innerHTML=data.bed;
+	            	//	document.getElementById("detailsNurseName").innerHTML=data.nurseName;
+	            		$("#detailsPhone1").val(data.phone1);
+	            		$("#detailsPhone2").val(data.phone2);
+	            		$("#detailsAddress").val(data.address);
 	            		$("#illness").val(data.illness);
 	            		console.log(result.list.length);
 	            		if(result.list.length>0){
@@ -271,13 +506,10 @@
 	            				divA.innerHTML = divA.innerText+str;
 	            			}
 	            		}
-	            		
-	            		
-	            		
 	            	}
 	            },
 	            error : function() {
-	            	 $.MsgBox.Alert("消息","操作失败");
+	            	tips("操作失败");
 	            }
 	        });
 	    });
@@ -295,14 +527,10 @@
             data:{"account":account,"imei":imei},
             datatype : "json",
             success : function(result) {
-            	if(result.code==-1){
-            		alert(result.message);
-            	}else{
-            		alert(result.message);
-            	}
+            		tips(result.message);
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
 	};
@@ -311,33 +539,66 @@
 	 * @returns
 	 */
 	function detailsDetermine(){
-		var gender = $("#detailsGender").val();
-		var imei=document.getElementById("detailsImei").innerHTML;
-		var born = $("#detailsBorn").val();
-		var liveTime = $("#detailsLiveTime").val();
-		if(liveTime=="" || born==""){
+        var data={};
+        $("#detailsdivd input").each(function () {
+			data[this.name]=this.value;
+		});
+        $("#detailsdivd select").each(function () {
+			data[this.name]=this.value;
+		});
+        data["imei"]=document.getElementById("detailsImei").innerHTML;
+		if($("#detailsLiveTime").val()=="" || $("#detailsBorn").val()==""){  
 			alert("出生日期或者入住时间不能为空");
 			return;
 		}
-		var illness = $("#illness").val();
 		$.ajax({
             type : "POST",
             async: false,	
             url :GetURLInfo()+"user/updateUserInfo",
-            data:{"imei":imei,"gender":gender,"born":born,"liveTime":liveTime,"illness":illness},
+            data:data,
             datatype : "json",
             success : function(result) {
-            	if(result.code==-1){
-            		alert(result.message);
-            	}else{
-            		alert(result.message);
-            	}
+            	tips(result.message);
+            	location.reload();
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
 	};
+	
+	//<!-- 详细弹窗上传头像 -->    
+        $("#pic").click(function () {
+            $("#upload").click(); //隐藏了input:file样式后，点击头像就可以本地上传
+            $("#upload").off("change").on("change", function () {
+           var objUrl = window.URL.createObjectURL(this.files[0]);
+                    $("#pic").attr("src", objUrl); //将图片路径存入src中，显示出图片
+                    upimg();
+            });
+        });
+  //上传头像到服务器
+    function upimg() {
+    	var reader = new FileReader();
+    	reader.readAsDataURL($('#upload')[0].files[0]);
+    	reader.onload = function (e) { 
+    		var	avatar=reader.result.substring(23,reader.result.length);
+    		var imei=document.getElementById("detailsImei").innerHTML;
+            $.ajax({
+                url: GetURLInfo()+"user/uploadUserPicture",
+                type: "post",
+                data: {"imei":imei,"avatar":avatar},
+                datatype : "json",
+                success: function (data) {
+                	jqueryAlert({
+        				'content' : data.message,
+        				'closeTime' : 2000});
+                },
+                error : function() {
+                	tips("操作失败");
+                }
+            });
+    	}
+    };
 	/**
 	 * 清空添加按钮
 	 * @returns
@@ -366,11 +627,11 @@
             		document.getElementById("addGender").innerHTML=data.gender;
             		document.getElementById("addBorn").innerHTML=data.born;
             	}else{
-            		alert(result.message);
+            		tips(result.message);
             	}
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
 	};
@@ -387,14 +648,10 @@
             data:{"imei":imei},
             datatype : "json",
             success : function(result) {
-            	if(result.code==-1){
-            		alert(result.message);
-            	}else{
-            		alert(result.message);
-            	}
+            	tips(result.message);
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
 	};
@@ -418,11 +675,11 @@
             		document.getElementById("deleteGender").innerHTML=data.gender;
             		document.getElementById("deleteBorn").innerHTML=data.born;
             	}else{
-            		alert(result.message);
+            		tips(result.message);
             	}
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
 	}
@@ -448,44 +705,43 @@
             datatype : "json",
             success : function(result) {
             	if(result.code==-1){
-            		alert(result.message);
+            		tips(result.message);
             		location.reload();
             	}else{
-            		alert(result.message);
+            		tips(result.message);
             	}
             },
             error : function() {
-            	 $.MsgBox.Alert("消息","操作失败");
+            	tips("操作失败");
             }
         });
 	}
-	
-/*
-function status(){
-	 $( ".table-hover tr" ).click( function() {//给每行绑定了一个点击事件
-	        var td = $( this ).find( "td" );//this指向了当前点击的行，通过find我们获得了该行所有的td对象
-	        //题中说到某个td，为了演示所以我们假设是要获得第3个td的数据
-	        console.log(td);
-	    } );
-	$("#aaa").html(1525555555);
-};*/
+	function addDetermine(){
+		var data={};
+		$("#adddivd input").each(function () {
+			data[this.name]=this.value;
+		});
+		$("#adddivd select").each(function () {
+			data[this.name]=this.value;
+		});
+		$.ajax({
+            type : "POST",
+            async: false,	
+            url :GetURLInfo()+"user/addUserInfo",
+            data:data,
+            datatype : "json",
+            success : function(result) {
+            		tips(result.message);
+            		location.reload();
+            },
+            error : function() {
+            	tips("操作失败");
+            }
+        });
+	};
+		
 
-
-
-/*//<!-- 人工智能 --> 
-var one = true;
-    $("#study").click(function () {
-
-        if (one) {
-            $("#tick").css("color", "#3277c1")
-            $("#study").html("重新学习")
-            one = false;
-        } else {
-            $("#tick").css("color", "#c2c2c2")
-            $("#study").html("开始学习")
-            one = true;
-        }
-    });
+/*//
  //   <!-- 详细弹窗验证手机号 -->
     $(this).keydown(function (e) {
         var key = window.event ? e.keyCode : e.which;
@@ -531,58 +787,7 @@ var one = true;
                     }
                 }
             });
-    };
-//<!-- 详细弹窗上传头像 -->    
-    $(function () {
-        $("#pic").click(function () {
-            $("#upload").click(); //隐藏了input:file样式后，点击头像就可以本地上传
-            $("#upload").on("change", function () {
-                var objUrl = getObjectURL(this.files[0]); //获取图片的路径，该路径不是图片在本地的路径
-                if (objUrl) {
-                    $("#pic").attr("src", objUrl); //将图片路径存入src中，显示出图片
-                    upimg();
-                }
-            });
-        });
-    }); 
-    //建立一?可存取到?file的url   
-  //建立一?可存取到?file的url
-    function getObjectURL(file) {
-        var url = null;
-        if (window.createObjectURL != undefined) { // basic
-            url = window.createObjectURL(file);
-        } else if (window.URL != undefined) { // mozilla(firefox)
-            url = window.URL.createObjectURL(file);
-        } else if (window.webkitURL != undefined) { // webkit or chrome
-            url = window.webkitURL.createObjectURL(file);
-        }
-        return url;
-    }
-    //上传头像到服务器
-    function upimg() {
-        console.log(344)
-        var pic = $('#upload')[0].files[0];
-        var file = new FormData();
-        file.append('image', pic);
-        $.ajax({
-            url: "",
-            type: "post",
-            data: file,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                console.log(data);
-                var res = data;
-                //$("").append("<img src='/" + res + "'>")
-            }
-        });
-    }
-
-    $("#detailed-btn").click(function () {
-        $('#detailed').modal('hide');
-
-    });*/
+    };*/
 
 
    

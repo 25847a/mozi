@@ -53,7 +53,7 @@
 		LEFT JOIN position tt
 		ON tp.positionId=tt.id
 		LEFT JOIN role td
-		ON tt.roleId=td.id
+		ON tt.adminId=td.id
 		WHERE tp.id=#{id}
 	</select>
 	<!-- 查询用户管理列表 -->
@@ -63,7 +63,7 @@
 		LEFT JOIN position tt
 		ON tp.positionId=tt.id
 		LEFT JOIN role td
-		ON tt.roleId=td.id
+		ON tt.adminId=td.id
 		where 1=1
 		<if test="account!=null and account!=''">
 		AND tp.account=#{account}

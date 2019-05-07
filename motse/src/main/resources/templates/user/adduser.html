@@ -11,6 +11,8 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap-switch.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
+    <!-- 提示框CSS -->
+    <link rel="stylesheet" th:href="@{/css/alert.css}"/>
      <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
 	
@@ -30,7 +32,7 @@
                         个人信息详细表
                     </h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="detailsdivd">
                     <table class="table table-bordered" height="100%">
                         <tbody>
                             <tr>
@@ -48,14 +50,24 @@
                                 <td style="color:#4985cb; font-weight: bold;">性别</td>
                                 <td>
                                     <div class="form-group">
-                                        <select data-am-selected="" id="detailsGender">
+                                        <select name="gender" id="detailsGender">
                                             <option value="男">男</option>
                                             <option value="女">女</option>
                                         </select>
                                     </div>
                                 </td>
                                 <td style="color:#4985cb; font-weight: bold;">电话号码</td>
-                                <td colspan="2" id="detailsPhone"></td>
+                                <td colspan="2">
+                                <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" name="phone" id="detailsPhone" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">是否为重点关爱</td>
@@ -66,31 +78,35 @@
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">出生日期</td>
                                 <td colspan="2">
-                                    <input type="text" class="am-form-field" value="" id="detailsBorn" placeholder="选择日期"
+                                    <input type="text" class="am-form-field" value="" name="born" id="detailsBorn" placeholder="选择日期"
                                         data-am-datepicker="{theme: 'primary'}" readonly="readonly" />
                                 </td>
                                 <td style="color:#4985cb; font-weight: bold;">入住日期</td>
                                 <td colspan="2">
-                                    <input type="text" class="am-form-field" value="" id="detailsLiveTime" placeholder="选择日期"
+                                    <input type="text" class="am-form-field" value="" name="liveTime" id="detailsLiveTime" placeholder="选择日期"
                                         data-am-datepicker="{theme: 'primary'}" readonly="readonly" />
                                 </td>
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">身高</td>
-                                <td colspan="2" id="detailsHeight"></td>
-                                <td style="color:#4985cb; font-weight: bold;">体重</td>
-                                <td colspan="2" id="detailsWeight"></td>
-                            </tr>
-                            <tr>
-                                <td style="color:#4985cb; font-weight: bold;">床号</td>
-                                <td colspan="2" id="detailsBed"></td>
-                                <td style="color:#4985cb; font-weight: bold;">护工</td>
-                                <td colspan="2"  id="detailsNurseName">
-                                    <div style="padding: 0px 50px;">
+                                <td colspan="2">
+                                <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" class="form-control" placeholder=""/>
+                                                    <input type="text" name="height" id="detailsHeight" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td style="color:#4985cb; font-weight: bold;">体重</td>
+                                <td colspan="2">
+                                <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" name="weight" id="detailsWeight" class="form-control" placeholder=""/>
                                                 </div>
                                             </div>
                                         </form>
@@ -98,14 +114,70 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td style="color:#4985cb; font-weight: bold;">床号</td>
+                                <td colspan="2">
+                                
+                                
+                                <div style="padding: 0px 50px;">
+                                <select class="form-control" name="bedId" id="detailsBed">
+                                	<option value="0">请选择</option>
+                                </select>
+                            	</div>
+
+
+
+                                </td>
+                                <td style="color:#4985cb; font-weight: bold;">护工</td>
+                                <td colspan="2">
+                                   <div style="padding: 0px 50px;">
+                                <select class="form-control" name="nurseId" id="detailsNurseName">
+                                	<option value="0">请选择</option>
+                                </select>
+                            	</div> 
+                                    
+                                </td>
+                            </tr>
+                            <tr>
                                 <td style="color:#4985cb; font-weight: bold;">紧急联系人1</td>
-                                <td colspan="2" id="detailsPhone1"></td>
+                                <td colspan="2">
+                                 <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" name="phone1" id="detailsPhone1" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                
+                                </td>
                                 <td style="color:#4985cb; font-weight: bold;">紧急联系人2</td>
-                                <td colspan="2" id="detailsPhone2"></td>
+                                <td colspan="2">
+                                <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" name="phone2" id="detailsPhone2" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">应急地址</td>
-                                <td colspan="5" id="detailsAddress"></td>
+                                <td colspan="5">
+                                <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" name="address" id="detailsAddress" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                
+                                </td>
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">病史描述</td>
@@ -114,7 +186,7 @@
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" id="illness" class="form-control" placeholder=""/>
+                                                    <input type="text" name="illness" id="illness" class="form-control" placeholder=""/>
                                                 </div>
                                             </div>
                                         </form>
@@ -163,7 +235,7 @@
                                                     <button type="button" class="btn btn-default"
                                                         data-dismiss="modal">取消
                                                     </button>
-                                                    <button type="button" onclick="follow()" class="btn btn-primary" id="invite-number">
+                                                    <button type="button" onclick="follow()" class="btn btn-primary" id="invite-number" >
                                                         确定
                                                     </button>
                                                 </div>
@@ -178,7 +250,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
-                    <button type="button" onclick="detailsDetermine()" class="btn btn-primary" id="detailed-btn">
+                    <button type="button" onclick="detailsDetermine()" data-dismiss="modal" class="btn btn-primary" id="detailed-btn">
                         确定
                     </button>
                 </div>
@@ -197,7 +269,7 @@
                         人工智能学习
                     </h4>
                 </div>
-                <input id="daoId"/>
+                <input id="daoId" type="hidden"/>
                 <div class="modal-body" id="daodivd">
                     <table class="table table-bordered">
                         <caption style="text-align:right;font-size:12px;">注：确认数据无误后，点击确认即可</caption>
@@ -211,9 +283,9 @@
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">人工智能学习</td>
                                 <td colspan="3">
-                                    <i class="iconfont icon-dui" style="font-size:22px;margin-right: 20%;"
+                                    <i class="iconfont icon-dui" style="font-size:22px;margin-right: 20%; color:#c2c2c2"
                                         id="tick"></i>
-                                    <button type="button" class="btn btn-default" id="study">开始学习</button>
+                                    <button type="button" class="btn btn-default" id="learning" onclick="startLearning()">开始学习</button>
                                 </td>
                             </tr>
                             <tr>
@@ -335,8 +407,8 @@
                         预警设置
                     </h4>
                 </div>
-                <input id="userId"/>
-                    <input id="alias"/>
+                <input id="userId" type="hidden"/>
+                    <input id="alias" type="hidden"/>
                 <div class="modal-body" id="divid">
                     <table class="table table-bordered">
                         <caption style="text-align:right;font-size:12px;">注意：超过设置阈值才会报警</caption>
@@ -424,8 +496,8 @@
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
-                        添加用户
-                    </h4>
+                        添加使用者
+                    </h4>	
                 </div>
                 <div class="modal-body">
                     <div style="padding: 20px 100px">
@@ -548,56 +620,122 @@
                         新增用户信息
                     </h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="adddivd">
                     <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">用户角色
+                     <div class="form-group">
+                            <label for="username" class="col-sm-3 control-label">绑定账号
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
-                                <select class="form-control">
-                                    <option>超级管理员</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
+                                <input type="text" class="form-control" name="telephone" id="telephone" placeholder="请输入绑定账号"/>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label for="username" class="col-sm-3 control-label">设备号
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="imei" id="addImeiB" placeholder="请输入设备号"/>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label for="username" class="col-sm-3 control-label">用户昵称
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="name" id="addName" placeholder="请输入用户昵称"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-3 control-label">床号
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="bedId" id="addBed">
+                                	<option value="">请选择</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">请选择片区</label>
+                            <label for="name" class="col-sm-3 control-label">分属护工
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
                             <div class="col-sm-9">
-                                <select class="form-control">
-                                    <option>请选择</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
+                                <select class="form-control" name="nurseId" id="addNurse">
+                                	<option value="">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label for="username" class="col-sm-3 control-label">出生日期
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="am-form-field" value="" name="born" id="addBorn" placeholder="选择日期"
+                                        data-am-datepicker="{theme: 'primary'}"/>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                            <label for="username" class="col-sm-3 control-label">入住日期
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="am-form-field" value="" name="liveTime" id="addLiveTime" placeholder="选择日期"
+                                        data-am-datepicker="{theme: 'primary'}"/>
+                            </div>
+                        </div>
+                    
+                    
+                        <div class="form-group">
+                            <label for="name" class="col-sm-3 control-label">性别
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="gender" id="addGender">
+                                	<option value="">请选择</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="username" class="col-sm-3 control-label">用户名
+                            <label for="username" class="col-sm-3 control-label">身高
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="username" placeholder="请输入用户名"/>
+                                <input type="text" class="form-control" name="height" id="addHeight" placeholder="请输入身高"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="password" class="col-sm-3 control-label">密码
+                            <label for="password" class="col-sm-3 control-label">体重
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="password" placeholder="请输入密码"/>
+                                <input type="text" class="form-control" name="weight" id="addWeight" placeholder="请输入体重"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="phone" class="col-sm-3 control-label">手机号
+                            <label for="phone" class="col-sm-3 control-label">应急地址
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="phone" placeholder="请输入手机号"/>
+                                <input type="text" class="form-control" name="address" id="addAddress" placeholder="请输入应急地址"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-3 control-label">设备电话
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="phone" id="addPhone" placeholder="请输入设备电话"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-3 control-label">病史
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="illness" id="addIllness" placeholder="请输入病史"/>
                             </div>
                         </div>
                     </form>
@@ -605,12 +743,12 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" onclick="addDetermine()" data-dismiss="modal" class="btn btn-primary">
                         确定
                     </button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
+            </div>
+        </div>
     </div>
     <!-- 在线离线弹窗 -->
     <div class="modal fade" id="online" tabindex="-1" role="dialog" aria-labelledby="clothesNumbering" aria-hidden="true">
@@ -624,6 +762,8 @@
                         衣服编号及状态
                     </h4>
                 </div>
+                <input id="equipmentId" type="hidden"/>
+                <input id="bluetoothmac" type="hidden"/>
                 <div class="modal-body">
                     <table class="table table-bordered">
                         <tbody>
@@ -635,19 +775,66 @@
                                 <td style="color:#4985cb; font-weight: bold;">姓名</td>
                                 <td id="closeName"></td>
                             </tr>
-                            <tr>
-                                <td style="color:#4985cb; font-weight: bold;">衣服编号</td>
-                                <td id="closeBluetooth"></td>
+                            
+                            
+                            
+                            <tr id="clothesNumber1">
+                                <td style="color:#4985cb; font-weight: bold;">衣服编号1</td>
+                                <td>
+                              <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <input type="text" id="closeBluetooth1" disabled="disabled" name="closeBluetooth1" class="form-control" placeholder=""/>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                  <button type="button" class="btn btn-default" onclick="clothesNumber1()" id="clothes1">点击绑定</button>
+                                                 </div>
+                                                 <div class="col-lg-2">
+                                                 <button type="button" class="btn btn-default" onclick="edit1()">编辑</button>
+                                                 </div>
+                                                 <div class="col-lg-2">
+                                                 <button type="button" class="btn btn-default" onclick="disconnectClothes1()" id="disconnect1">断开衣服</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>	
+                            
+                            <tr id="clothesNumber2">
+                                <td style="color:#4985cb; font-weight: bold;">衣服编号2</td>
+                                <td>
+                              <div style="padding: 0px 50px;">
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <input type="text" id="closeBluetooth2" disabled="disabled" name="closeBluetooth2" class="form-control" placeholder=""/>
+                                                </div>
+                                                 <div class="col-lg-3">
+                                                  <button type="button" class="btn btn-default" onclick="clothesNumber2()" id="clothes2">点击绑定</button>
+                                                 </div>
+                                                 <div class="col-lg-2">
+                                                 <button type="button" class="btn btn-default" onclick="edit2()">编辑</button>
+                                                 </div>
+                                                 <div class="col-lg-2">
+                                                 <button type="button" class="btn btn-default" onclick="disconnectClothes2()" id="disconnect2">断开衣服</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">衣服状态</td>
                                 <td>
-                                    <div class="form-group">
+                                <button type="button" class="btn btn-default" id="closeState"></button>
+                                    <!-- <div class="form-group">
                                         <select name="closeState" id="closeState">
                                         	<option value="0">离线</option>
                                             <option value="1">在线</option>
                                         </select> 
-                                    </div>
+                                    </div> -->
                                 </td>
                             </tr>
                         </tbody>
@@ -667,7 +854,7 @@
         <div class="img">
             <img th:src="@{/img/home.png}" alt=""/>
         </div>
-        <div class="home">主页＞添加用户</div>
+        <div class="home">主页＞添加使用者</div>
     </div>
     <div class="content" id="app">
         <div class="history">
@@ -682,7 +869,7 @@
 	                <button type="button" class="btn btn-primary" data-toggle="modal" 
 	                data-target="#create">创建用户</button>&nbsp;&nbsp;
                     <button type="button"  onclick="addUser()" class="btn btn-primary" data-toggle="modal"
-                        data-target="#add">添加用户</button>&nbsp;&nbsp;
+                        data-target="#add">添加使用者</button>&nbsp;&nbsp;
                     <button type="button" onclick="deleteUser()" class="btn btn-primary" data-toggle="modal"
                         data-target="#remove">移除用户</button>
                 </div>
@@ -717,11 +904,11 @@
                         <td>{{item.bed}}</td>
                         <td>{{item.nurseName}}</td>
                         <td id="line">
-                            <button type="button" class="btn btn-default" data-toggle="modal"  data-target="#online" v-if="item.bluetooth_status==0">
+                            <button type="button" class="btn btn-default" data-toggle="modal"  data-target="#online" v-if="item.bluetooth_type==0">
                               <i class="iconfont icon-lanya"></i>
 							   离线
                             </button>
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#online" v-else="item.bluetooth_status==1">
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#online" v-else="item.bluetooth_type==1">
                               <i class="iconfont icon-lanya blue-color"></i>
 							   在线
                             </button>
@@ -770,15 +957,20 @@
     </div>
     <!-- 先引入 Vue -->
     <script th:src="@{/js/vue.js}"></script>
+    
     <script th:src="@{/js/jquery.min.js}"></script>
+    
+    
     <script th:src="@{/js/bootstrap-switch.min.js}"></script>
+     <!-- 提示框 -->
+    <script th:src="@{/js/tips/alert.js}"></script>
     <!-- 必须链接这个，修改过源码 -->
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script th:src="@{/js/axios.min.js}"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    
+   
 	<script th:src="@{/js/amazeui.min.js}"></script>
-		<script th:src="@{/js/common/utils.js}"></script>
+	<script th:src="@{/js/common/utils.js}"></script>
 	<script th:src="@{/js/user/add-table.js}"></script>
 
 </body>

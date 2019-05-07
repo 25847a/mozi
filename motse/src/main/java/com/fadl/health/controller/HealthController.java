@@ -84,7 +84,7 @@ public class HealthController extends AbstractController{
         	messageMap=healthService.queryBeadhouseList(messageMap,map);
         	WebSocketServer.sendInfo(JsonUtil.getMapper().writeValueAsString(messageMap), String.valueOf(admin.getId()));
 		} catch (Exception e) {
-			logger.error("AdminController<<<<<<<<<<<<<<<<<<readPlasmaProviderNo",e);
+			logger.error("HealthController<<<<<<<<<<<<<<<<<<queryBeadhouseList",e);
 		}
 		return messageMap;
     }

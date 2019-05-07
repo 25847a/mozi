@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.fadl.system.entity.Position">
         <id column="id" property="id" />
         <result column="position" property="position" />
-        <result column="roleId" property="roleId" />
+        <result column="adminId" property="adminId" />
         <result column="createDate" property="createDate" />
         <result column="updateDate" property="updateDate" />
         <result column="creater" property="creater" />
@@ -15,7 +15,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, position, roleId, createDate, updateDate, creater, updater
+        id, position, adminId, createDate, updateDate, creater, updater
     </sql>
 
 </mapper>

@@ -80,11 +80,17 @@ public interface UserService extends IService<User> {
      */
 	public DataRow queryUserEquipment(Map<String,String> map)throws SQLException;
 	/**
+     * 上传使用者头像图片
+     * @param user
+     * @return
+     */
+	public DataRow uploadUserPicture(User user,DataRow messageMap)throws Exception;
+	/**
      * 点击确认修改个人详情的信息
      * @param map
      * @return
      */
-	public DataRow updateUserInfo(User user,DataRow messageMap)throws SQLException;
+	public DataRow updateUserInfo(User user,Equipment equipment,DataRow messageMap)throws Exception;
 	/**
      * 点击确认修改个人详情的信息
      * @param map
@@ -103,4 +109,10 @@ public interface UserService extends IService<User> {
      * @return
      */
 	public DataRow deleteUserDetermine(User user,DataRow messageMap)throws SQLException;
+	/**
+     * 添加用户
+     * @param map
+     * @return
+     */
+	public DataRow addUserInfo(User user,String telephone,DataRow messageMap)throws Exception;
 }

@@ -59,4 +59,10 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
 	 * @throws SQLException
 	 */
 	public List<DataRow> queryEquipmentList()throws SQLException;
+	/**
+	 * 通过设备id查询使用者学习值
+	 * @return
+	 * @throws SQLException
+	 */
+	public DataRow queryEquipmentIdHealthdao(String imei)throws SQLException;
 }

@@ -1,6 +1,6 @@
 package com.fadl.common;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.baomidou.mybatisplus.plugins.Page;
 /**
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.plugins.Page;
  * @author jian
  * @time 2019年03月27日
  */
-public class DataRow  extends HashMap<String, Object>{
+public class DataRow  extends LinkedHashMap<String, Object>{
 	private static final long serialVersionUID = -5997498541153398009L;
 
 	public DataRow() {

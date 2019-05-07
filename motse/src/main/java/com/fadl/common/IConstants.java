@@ -70,4 +70,11 @@ public class IConstants {
     public static final String SUCCESS="操作成功";
     public static final String Fail="操作失败";
     public static final String ERROR="系统异常";
+    
+    /* **************************  惊凡   ******************************/
+    public static final String  user="USER";
+	
+	public static final String channel_id="mozistar";
+	
+	public static final String channel_secret="aTjaZcJFBnpk";
 }

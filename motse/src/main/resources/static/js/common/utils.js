@@ -61,6 +61,17 @@ function getDateDay(d){
 }
 
 /**
+ * 提示框
+ * @param message
+ * @returns
+ */
+function tips(message){
+	jqueryAlert({
+		'content' : message,
+		'closeTime' : 2000
+	})
+};
+/**
  *  去尾法 进一法 四舍五入法
  */
 /**

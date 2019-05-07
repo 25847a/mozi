@@ -34,12 +34,23 @@
     </sql>
     <!-- 获取设备在线离线数量饼状图 -->
 	<select id="queryEquipmentState" resultType="com.fadl.common.DataRow">
-		SELECT COUNT(*) AS count,SUM(CASE WHEN eq_status='H:0' THEN 1 ELSE 0 END) AS online,SUM(CASE WHEN eq_status='H:1' THEN 1 ELSE 0 END) AS offline FROM equipment
+		SELECT COUNT(*) AS count,SUM(CASE WHEN eq_status='H:0' THEN 1 ELSE 0 END) AS online,SUM(CASE WHEN eq_status='H:1' THEN 1 ELSE 0 END) AS offline FROM equipment tp
+		INNER JOIN user tt
+		ON tp.imei=tt.imei
 	</select>
 	
 	<!-- 查询设备数据列表 -->
 	<select id="queryEquipmentList" resultType="com.fadl.common.DataRow">
 		SELECT id,imei,lordpower,signalxhao,bluetooth_type,eq_status,phone1,phone2,version,DATE_FORMAT(updatetime,'%Y-%m-%d %H:%i:%s') as updatetime from equipment LIMIT 0,50	
+	</select>
+	<!-- 通过设备id查询使用者学习值 -->
+	<select id="queryEquipmentIdHealthdao" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
+		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,tt.createtime FROM user_eq tp
+		LEFT JOIN equipment tc
+		ON tp.eq_id=tc.id
+		LEFT JOIN jfhealthdao tt
+		ON substring(tt.phone,9)=tp.user_id
+		WHERE tc.imei=#{imei} AND tp.typeof=2
 	</select>
 	
 </mapper>

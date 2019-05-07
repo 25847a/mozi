@@ -2,12 +2,12 @@ package com.fadl.health.service.impl;
 
 import com.fadl.health.entity.Equipment;
 import com.fadl.common.DataRow;
+import com.fadl.common.HttpClientUtil;
 import com.fadl.health.dao.EquipmentMapper;
 import com.fadl.health.service.EquipmentService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.sql.SQLException;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +46,43 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 		messageMap.initSuccess(list);
 		return messageMap;
 	}
-	
-
+	/**
+     * 在线离线
+     * @param equipment
+     * @return
+     */
+	@Override
+	public DataRow updateBluetooth(Equipment equipment, DataRow messageMap) throws Exception {
+		messageMap=HttpClientUtil.connectBluetooth(equipment);
+		return messageMap;
+	}
+	/**
+     * 开始学习
+     * @param equipment
+     * @return
+     */
+	@Override
+	public DataRow startLearning(Equipment equipment, DataRow messageMap) throws Exception {
+			DataRow jsonObject=HttpClientUtil.srtificialLearning(equipment.getImei());
+			if(jsonObject.getInt("code")==200){
+				DataRow row =equipmentMapper.queryEquipmentIdHealthdao(equipment.getImei());
+				if(row!=null){
+					messageMap.initSuccess(row);
+				}else{
+					messageMap.initFial("该使用者查询不到学习值!!");
+				}
+			}else{
+				messageMap.initFial(jsonObject.getString("message"));
+			}
+		return messageMap;
+	}
+	/**
+	 * 通过设备id查询使用者学习值
+	 * @return
+	 * @throws SQLException
+	 */
+	@Override
+	public DataRow queryEquipmentIdHealthdao(String imei) throws SQLException {
+		return equipmentMapper.queryEquipmentIdHealthdao(imei);
+	}
 }

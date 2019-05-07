@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
+import com.fadl.health.entity.Equipment;
 import com.fadl.health.service.EquipmentService;
 
 /**
@@ -51,5 +52,35 @@ public class EquipmentController extends AbstractController{
 		}
 		return messageMap;
 	}
+    /**
+     * 在线离线
+     * @param equipment
+     * @return
+     */
+    @RequestMapping("/updateBluetooth")
+    @ResponseBody
+    public DataRow updateBluetooth(Equipment equipment){
+    	try {
+    		messageMap=equipmentService.updateBluetooth(equipment,messageMap);
+		} catch (Exception e) {
+			logger.error("EquipmentController>>>>>>>>>>>>>updateBluetooth",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 开始学习
+     * @param equipment
+     * @return
+     */
+    @RequestMapping("/startLearning")
+    @ResponseBody
+    public DataRow startLearning(Equipment equipment){
+    	try {
+    		messageMap=equipmentService.startLearning(equipment,messageMap);
+		} catch (Exception e) {
+			logger.error("EquipmentController>>>>>>>>>>>>>startLearning",e);
+		}
+		return messageMap;
+    }
 }
 

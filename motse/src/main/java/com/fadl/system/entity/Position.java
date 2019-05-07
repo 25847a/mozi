@@ -33,7 +33,7 @@ public class Position extends Model<Position> {
     /**
      * 角色ID
      */
-    private Long roleId;
+    private Long adminId;
     /**
      * 创建时间
      */
@@ -72,12 +72,12 @@ public class Position extends Model<Position> {
         this.position = position;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public Long getAdminId() {
+        return adminId;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
     }
 
     public String getCreateDate() {
@@ -122,7 +122,7 @@ public class Position extends Model<Position> {
         return "Position{" +
         "id=" + id +
         ", position=" + position +
-        ", roleId=" + roleId +
+        ", adminId=" + adminId +
         ", createDate=" + createDate +
         ", updateDate=" + updateDate +
         ", creater=" + creater +

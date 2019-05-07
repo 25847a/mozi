@@ -34,13 +34,14 @@
         <result column="walkPushTime" property="walkPushTime" />
         <result column="love" property="love" />
         <result column="bedId" property="bedId" />
+        <result column="nurseId" property="nurseId" />
          <result column="liveTime" property="liveTime" />
         <result column="illness" property="illness" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, highpressure, lowpressure, password,isDelete,age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime,love,bedId,illness,liveTime
+        id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, highpressure, lowpressure, password,isDelete,age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime,love,bedId,nurseId,illness,liveTime
     </sql>
     <!-- 查询使用者男女数量饼状图 -->
 	<select id="queryUserGender" resultType="com.fadl.common.DataRow">
@@ -48,7 +49,7 @@
 	</select>
 	<!-- 查询添加用户的列表 -->
 	<select id="queryAdduserList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
-		SELECT tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,tp.bluetooth_status,tt.love FROM equipment tp
+		SELECT tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,bluetooth_type,tp.bluetooth_status,tt.love FROM equipment tp
 		INNER JOIN user tt
 		ON tp.imei=tt.imei
 		LEFT JOIN bed_number td
@@ -79,10 +80,10 @@
 	</select>
 	<!-- 查询添加用户页面的信息 -->
 	<select id="queryaddUserInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
-		SELECT tp.imei,td.name,tp.bluetoothmac,tp.bluetooth_status FROM equipment tp
+		SELECT tp.id,tp.imei,td.name,tp.bluetooth_type,tp.bluetoothmac,bluetooth_list,tp.bluetooth_status FROM equipment tp
 		LEFT JOIN user td
 		ON tp.imei=td.imei
-		WHERE tp.id=#{equipmentId} and AND td.isDelete=0
+		WHERE tp.id=#{equipmentId} AND td.isDelete=0
 	</select>
 	<!-- 查询添加用户预警设置信息 -->
 	<select id="queryPushInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
@@ -93,32 +94,28 @@
 		ON tt.eq_id=tp.id AND tt.typeof=0
 		LEFT JOIN push tc
 		ON tc.userId=td.id AND tc.alias=tt.user_id
-		WHERE tp.id=#{equipmentId} and AND td.isDelete=0
+		WHERE tp.id=#{equipmentId} AND td.isDelete=0
 	</select>
 	<!-- 点击查询个人详情的信息 -->
 	<select id="queryUserEquipmentInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
-		SELECT td.name,td.imei,td.avatar,td.gender,td.phone,td.love,tp.bluetoothmac,DATE_FORMAT(td.born,'%Y-%m-%d') as born,DATE_FORMAT(td.liveTime,'%Y-%m-%d') as liveTime,td.height,td.weight,tt.bed,tc.nurseName,tp.phone1,tp.phone2,td.address,td.illness FROM equipment tp
+		SELECT td.name,td.imei,td.avatar,td.gender,td.phone,td.love,tp.bluetoothmac,DATE_FORMAT(td.born,'%Y-%m-%d') as born,DATE_FORMAT(td.liveTime,'%Y-%m-%d') as liveTime,td.height,td.weight,td.bedId,td.nurseId,tp.phone1,tp.phone2,td.address,td.illness FROM equipment tp
 		LEFT JOIN user td
 		ON tp.imei=td.imei
-		LEFT JOIN bed_number tt
-		ON td.bedId=tt.id
-		LEFT JOIN nurse tc
-		ON td.nurseId=tc.id
-		WHERE tp.id=#{equipmentId} and AND td.isDelete=0
+		WHERE tp.id=#{equipmentId} AND td.isDelete=0
 	</select>
 	<!-- 通过设备ID查询观察者 -->
 	<select id="queryObserver" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT td.name,td.phone FROM user_eq tp
 		LEFT JOIN user td
 		ON tp.user_id=td.id
-		WHERE eq_id=#{equipmentId} AND typeof=1 and AND td.isDelete=0
+		WHERE eq_id=#{equipmentId} AND typeof=1 AND td.isDelete=0
 	</select>
 	<!-- 通过设备查询用户和设备信息 -->
 	<select id="queryUserEquipment" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT tp.id as userId,td.id as equipmentId FROM user tp
 		LEFT JOIN equipment td
 		ON tp.imei=td.imei
-		WHERE tp.imei=#{imei} and AND tp.isDelete=0
+		WHERE tp.imei=#{imei} AND tp.isDelete=0
 	</select>
 	<!-- 删除用户的一切信息 -->
 	<delete id="deleteUserCount" parameterType="java.util.HashMap">

@@ -22,8 +22,7 @@ public class ImageFilter extends WebMvcConfigurerAdapter{
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		String a = ReadProperties.getValue("imageAddress");
-		registry.addResourceHandler("/image/upload/**").addResourceLocations("file:///"+ReadProperties.getValue("imageAddress"));
+		registry.addResourceHandler("/avatars/**").addResourceLocations("file:///"+ReadProperties.getValue("imageAddress"));
 		super.addResourceHandlers(registry);
 	}
 }

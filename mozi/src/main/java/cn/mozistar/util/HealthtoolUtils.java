@@ -332,14 +332,23 @@ public class HealthtoolUtils {
 							// 血氧
 							health.setBloodOxygen(Integer.parseInt(bloodOxygen)<93?(int)(95+Math.random()*(99-95+1)):Integer.parseInt(bloodOxygen));
 							// Hrv
-							if(hrv.equals("0")){
-								Random r = new Random();
-								Integer nextInt = r.nextInt(15)+45;
-								hrv = nextInt.toString();
-								health.setHrv(Integer.parseInt(hrv));
+							int hrvcon =  Integer.parseInt(hrv);//hrv监测值
+							int hrvcorrect= healthdao.getHrv();//hrv校准值
+							if(hrvcon==0){//45-60
+								if(hrvcorrect<45){
+									hrvcon=(int)(45+Math.random()*(70-45+1));
+								}else{
+									Random r = new Random();
+									hrvcon = r.nextInt(15)+45;
+								}
+								health.setHrv(hrvcon);
 							}else{
+								hrvcon=highLowPressureVal(healthdao.getHrv(),hrvcon);
+								if(hrvcon<45){
+									hrvcon=(int)(45+Math.random()*(70-45+1));
+								}
 								//校准值0.7加检测值0.3
-								health.setHrv(highLowPressureVal(healthdao.getHrv(),Integer.valueOf(hrv)));
+								health.setHrv(hrvcon);
 							}
 							// 微循环校准值
 							int microc =  Integer.parseInt(microcir);
@@ -349,9 +358,7 @@ public class HealthtoolUtils {
 									microc=(int)(75+Math.random()*(90-75+1));
 								}else{
 									Random r = new Random();
-									int nextInt = r.nextInt(14)+66;
-									microcir = nextInt+"";
-									
+									 microc = r.nextInt(14)+66;
 								}
 								health.setMicrocirculation(microc);
 							}else{
