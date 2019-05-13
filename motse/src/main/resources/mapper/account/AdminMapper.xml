@@ -10,14 +10,11 @@
         <result column="name" property="name" />
         <result column="age" property="age" />
         <result column="gender" property="gender" />
-        <result column="position" property="position" />
         <result column="phone" property="phone" />
         <result column="address" property="address" />
         <result column="avatar" property="avatar" />
-        <result column="wechat" property="wechat" />
-        <result column="qq" property="qq" />
         <result column="positionId" property="positionId" />
-        <result column="role" property="role" />
+        <result column="agentId" property="agentId" />
         <result column="createDate" property="createDate" />
         <result column="updateDate" property="updateDate" />
         <result column="creater" property="creater" />
@@ -34,27 +31,19 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, account, passWord,isLoginCount, name, age, gender, position, phone, address, avatar, wechat, qq,positionId,isDisable,loginErrorCount, role, createDate, updateDate, creater, updater, remarks,firstDate,lastDate,lockDate
+        id, account, passWord,isLoginCount, name, age, gender, phone, address, avatar,agentId,positionId,isDisable,loginErrorCount, createDate, updateDate, creater, updater, remarks,firstDate,lastDate,lockDate
     </sql>
 	<!-- 根据用户名查询用户信息-->
 	<select id="queryAdminInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
 		SELECT * FROM admin WHERE account=#{account}
 	</select>
 	
-	<!-- 查询代理商列表 -->
-	<select id="queryAdminList" resultType="com.fadl.common.DataRow">
-		SELECT tp.id,tp.name,tp.age,tp.gender,tp.account,tp.address,DATE_FORMAT(tp.createDate,'%Y-%m-%d %H:%i:%s') as createDate,CASE WHEN tt.count is null THEN 0 else tt.count end AS count FROM admin tp
-		LEFT JOIN (SELECT agentid,COUNT(*) AS count FROM equipment GROUP BY agentid) tt
-		ON tp.id=tt.agentid
-	</select>
-	<!-- 查询用户的角色 -->
-	<select id="queryAdminRoleInfo" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
-		SELECT td.name FROM admin tp
-		LEFT JOIN position tt
-		ON tp.positionId=tt.id
-		LEFT JOIN role td
-		ON tt.adminId=td.id
-		WHERE tp.id=#{id}
+	<!-- 查询代理商的部分信息 -->
+	<select id="queryAdminAgentInfo" resultType="com.fadl.common.DataRow" parameterType="java.lang.Long">
+		SELECT tt.id,tt.agentName,tp.name,tp.avatar FROM admin tp
+		LEFT JOIN agent tt
+		ON tp.agentId=tt.id
+		WHERE tp.id=#{id} and tp.isDisable=0
 	</select>
 	<!-- 查询用户管理列表 -->
 	<select id="queryAdminInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">

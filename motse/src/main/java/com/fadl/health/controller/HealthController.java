@@ -111,9 +111,9 @@ public class HealthController extends AbstractController{
 	 */
 	@RequestMapping("/queryHealthInfoList")
 	@ResponseBody
-	public DataRow queryHealthInfoList(@RequestParam Map<String,String> map){
+	public DataRow queryHealthInfoList(@RequestParam Map<String,Object> map){
 		try {
-		messageMap=healthService.queryHealthInfoList(messageMap);
+		messageMap=healthService.queryHealthInfoList(map,messageMap);
 		} catch (Exception e) {
 			logger.error("HealthController>>>>>>>>>>>>>queryHealthInfoList",e);
 		}

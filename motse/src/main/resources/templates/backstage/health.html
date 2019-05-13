@@ -34,11 +34,13 @@
 			<p>健康数据管理</p>
 		</div>
 		<div class="table">
-			<div class="check">
-				<input type="text" name="" value="" placeholder="imie"/>
-				<input type="text" name="" value="" placeholder="时间"/>
-				<input type="text" name="" value="" placeholder="用户ID"/>
-				<button type="">查询</button>
+			<div class="check" id="search_par">
+				<input type="text" name="" value="" id="id" placeholder="用户ID"/>
+				<input type="text" name="" value="" id="imei" placeholder="imei"/>
+				<input type="text" name="" value="" id="createDate" placeholder="时间"/>
+				<button type="button" onclick="query()" >查询</button>
+				<button type="button" onclick="empty()" >重置</button>
+				<button type="button" onclick="refresh()" >刷新</button>
 			</div>
 			<div id="app">
 				<div>

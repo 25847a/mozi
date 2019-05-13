@@ -1,6 +1,11 @@
 body{
 	padding: 10px;
-	overflow: hidden;
+	background: #f2f2f2!important;
+	/* overflow: hidden; */
+	
+}
+.el-popup-parent--hidden,.modal-open{
+	padding-right: 12px!important;
 }
 .header{
 	width: 100%;
@@ -53,22 +58,24 @@ body{
 	font-weight: bold;
 	text-indent: 0.5rem;
 	color: #ecf1f8;
+	margin: 0!important;
 }
 
 .content .table{
 	padding: 0 20px;
 	border-radius: 10px;
 	background: white;
-    padding-bottom: 80px;
+	padding-bottom: 80px;
+	margin-bottom: 0!important;
 }
 .content .table .check{
 	padding: 15px 0;
 	display: flex;
 }
-.content .table .check .btn{
+.content .table .check .button{
 	flex: 1;
 }
-.content .table .check .btn button{
+.content .table .check .button button{
 	width: 100px;
 }
 
@@ -85,7 +92,9 @@ body{
 	background: #337ac7;
 	border: 0;
 }
-
+.content .table .check button+button{
+	margin-left: 10px;
+}
 .v-table-htable {
     color: #337ac7;
     font-weight: bold;
@@ -115,6 +124,110 @@ body{
 .v-table-views{
 	font-size: 13px;
 }
-.v-table-rightview , .v-table-views{
-	width:100%!important;
+/* 修改弹窗样式 */
+.modal-dialog {
+    text-align: center;
 }
+.modal-header {
+    background: #3277c1;
+    color: #ffffff;
+}
+.modal-footer {
+    text-align: center!important;
+}
+
+.input-group{
+	width: 100%;
+}
+td{
+	vertical-align: middle!important;
+}
+
+a:focus,a:hover{
+	color: #ffffff!important;
+	text-decoration: none!important;
+}
+
+/* 更换代理商表格 */
+.table>thead:first-child>tr:first-child>th{
+	color: #3277c1;
+	font-weight: bold;
+	text-align: center;
+}
+.table-bordered>tbody>tr>td{
+	text-align: center;
+}
+/* 分页 */
+.block{
+	text-align: right;
+}
+.el-pagination{
+	padding: 5px 65px!important;
+}
+/* 按钮 */
+td .el-button--primary{
+	background-color: #3277c1;
+	width: 50%;
+}
+td .el-button--primary:hover{
+	background-color: #3277c1;
+}
+
+form .el-form-item{
+	padding: 10px 0px;
+	border: 1px solid #DCDFE6;
+	margin: 0;
+}
+
+form .el-form-item .el-form-item__label{
+	text-align: left;
+	text-indent: 2rem;
+	color: #337ac7;
+}
+
+div .el-input{
+	width: 300px;
+}
+div .el-dialog{
+	width: 35%;
+}
+
+div .el-dialog .el-dialog__header{
+	text-align: center;
+	background: #337ac7;
+	
+}
+div .el-dialog .el-dialog__header .el-dialog__title{
+	color: #ffffff;
+}
+div .el-dialog .el-dialog__header .el-dialog__headerbtn i{
+	color: #ffffff;
+}
+div .el-dialog .el-dialog__footer{
+	text-align: center;
+}
+div .el-dialog .el-dialog__footer .el-button+.el-button{
+	background: #337ac7;
+	color: #ffffff;
+}
+.modify{
+	display: none!important;
+}
+/* 滚动条凹槽的颜色，还可以设置边框属性 */
+	body::-webkit-scrollbar-track-piece ,.v-table-body::-webkit-scrollbar-track-piece{ 
+	background-color:#f8f8f8;
+	}
+	/* 滚动条的宽度 */
+	body::-webkit-scrollbar ,.v-table-body::-webkit-scrollbar {
+	width:2px;
+	height:9px;
+	}
+	/* 滚动条的设置 */
+	body::-webkit-scrollbar-thumb,.v-table-body::-webkit-scrollbar-thumb {
+	background-color:#dddddd;
+	background-clip:padding-box;
+	min-height:28px;
+	}
+	body::-webkit-scrollbar-thumb:hover,.v-table-body::-webkit-scrollbar-thumb:hover {
+	background-color:#bbb;
+	}

@@ -72,6 +72,18 @@ function tips(message){
 	})
 };
 /**
+ * 提示框提示用语
+ * @param message
+ * @returns
+
+function tipsMessage(data,message){
+	if(data==""){
+		tips(message);
+		return;
+	}
+}; */
+
+/**
  *  去尾法 进一法 四舍五入法
  */
 /**

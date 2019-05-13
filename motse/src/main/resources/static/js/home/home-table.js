@@ -62,16 +62,32 @@ var tableList=new Vue({
         }
     },
     methods: {
-        columnCellClass(rowIndex,columnName,rowData){
+    	columnCellClass(rowIndex,columnName,rowData){
+    		var row = true;
+        	var audio = document.getElementById('music');
         	if(rowData.Heartrate.toString().search("A")!=-1 && columnName=='Heartrate'){
+        		 if(row){
+        			 audio.play();
+        			 row=false;
+        		 }
         		return 'column-cell-class-name-test';
         	}
         	if(rowData.sbp_ave.toString().search("A")!=-1 && columnName=='sbp_ave'){
+        		if(row){
+        			audio.play();
+       			 	row=false;
+        		}
         		return 'column-cell-class-name-test';
         	}
         	if(rowData.dbp_ave.toString().search("A")!=-1 && columnName=='dbp_ave'){
+        		if(row){
+        			audio.play();
+       			 	row=false;
+        		}
         		return 'column-cell-class-name-test';
         	}
+        	 
+        	
         },
         rowClick(rowIndex,rowData){
         	console.log(rowIndex);

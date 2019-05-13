@@ -22,6 +22,7 @@ import com.fadl.account.service.AdminService;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
 import com.fadl.common.IConstants;
+import com.fadl.common.SessionUtil;
 import com.fadl.health.entity.User;
 import com.fadl.health.service.UserService;
 
@@ -59,8 +60,10 @@ public class AdminController extends AbstractController{
 		Session session = SecurityUtils.getSubject().getSession();
 		Admin admin = (Admin) session.getAttribute(IConstants.SESSION_ADMIN_USER);
 		try {
-			DataRow row=adminService.queryAdminRoleInfo(admin.getId());
-			model.addAttribute("name", row.getString("name"));
+			DataRow row=adminService.queryAdminAgentInfo(admin.getId());
+			model.addAttribute("agentName", row.getString("agentName"));
+			model.addAttribute("adminName", row.getString("name"));
+			model.addAttribute("avatar", row.getString("avatar"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -78,15 +81,15 @@ public class AdminController extends AbstractController{
     /**
      * 养老院页面
      * @return
+     * @throws Exception 
      */
     @RequestMapping("/beadhousePage")
     @RequiresPermissions("beadhouse:view")
-    public String beadhousePage(Model model){
-    	Session session = SecurityUtils.getSubject().getSession();
-    	Admin admin = (Admin) session.getAttribute(IConstants.SESSION_ADMIN_USER);
+    public String beadhousePage(Model model) throws Exception{
+    	Admin admin = SessionUtil.getSessionAdmin();
     	EntityWrapper<User> ew = new EntityWrapper<User>();
     	ew.eq("role", "使用者");
-    	int count =userService.selectCount(ew);
+    	int count =userService.queryUserCount(admin.getId());
     	model.addAttribute("adminId", admin.getId());
     	model.addAttribute("count", count);
     	return "/home/beadhouse";
@@ -104,25 +107,17 @@ public class AdminController extends AbstractController{
 	 * @return
 	 */
 	@RequestMapping("/adminPage")
-	public String health(){
+	public String adminPage(){
 		return "/admin/admin";
 	}
-    
-    
-    /**
-     * 查询代理商列表
-     * @return
-     */
-    @RequestMapping("/queryAdminList")
-    @ResponseBody
-    public DataRow verifyRegister(){
-    	try {
-    		messageMap = adminService.queryAdminList(messageMap);
-		} catch (Exception e) {
-			logger.error("AdminController<<<<<<<<<<<<<<<<<<queryAdminList",e);
-		}
-		return messageMap;
-    }
+	/**
+	 * 跳转机构信息页面
+	 * @return
+	 */
+	@RequestMapping("/adminInfoPage")
+	public String adminInfoPage(){
+		return "/department/department";
+	}
     /**
      * 查询用户管理列表
      * @return
@@ -134,6 +129,39 @@ public class AdminController extends AbstractController{
     		messageMap = adminService.queryAdminInfoList(map,messageMap);
 		} catch (Exception e) {
 			logger.error("AdminController<<<<<<<<<<<<<<<<<<queryAdminInfoList",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 修改供应商的头像
+     * avatar
+     * @return
+     */
+    @RequestMapping("/updateAgentImage")
+    @ResponseBody
+    public DataRow updateAgentImage(String avatar){
+    	try {
+    		Admin admin = SessionUtil.getSessionAdmin();
+    		admin.setAvatar(avatar);
+    		messageMap =  adminService.updateAgentImage(admin,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<updateAgentImage",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 修改供应商的密码
+     * map
+     * @return
+     */
+    @RequestMapping("/updateAgentPassword")
+    @ResponseBody
+    public DataRow updateAgentPassword(@RequestParam Map<String,String> map){
+    	try {
+    		Admin admin = SessionUtil.getSessionAdmin();
+    		messageMap =  adminService.updateAgentPassword(admin,map,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<updateAgentPassword",e);
 		}
 		return messageMap;
     }

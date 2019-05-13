@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.hr.dao.HrMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.hr.entity.Hr">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="gender" property="gender" />
+        <result column="post" property="post" />
+        <result column="birth" property="birth" />
+        <result column="education" property="education" />
+        <result column="register" property="register" />
+        <result column="isMarry" property="isMarry" />
+        <result column="entryDate" property="entryDate" />
+        <result column="phone" property="phone" />
+        <result column="agentId" property="agentId" />
+        <result column="isDelete" property="isDelete" />
+        <result column="createDate" property="createDate" />
+        <result column="updateDate" property="updateDate" />
+        <result column="creater" property="creater" />
+        <result column="updater" property="updater" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, gender, post, birth, education, register, isMarry, entryDate, phone, agentId, isDelete, createDate, updateDate, creater, updater
+    </sql>
+
+	<!-- 查询机构管理页面下工作人员的信息列表 -->
+	<select id="queryHrList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT tp.id,tp.name,CASE WHEN tp.gender=1 THEN '男' ELSE '女' END AS gender,DATE_FORMAT(tp.birth,'%Y-%m-%d') as birth,CASE WHEN tp.isMarry=1 THEN '是' ELSE '否' END AS isMarry,
+		CASE WHEN education=0 THEN '初高中' WHEN education=1 THEN '大专' WHEN education=2 THEN '本科' WHEN education=3 THEN '硕士' WHEN education=4 THEN '博士' ELSE '其他' END as education,
+		((YEAR (now()) - YEAR (birth) - 1) + (DATE_FORMAT(NOW(), '%m%d') > DATE_FORMAT(birth, '%m%d')))age,register,DATE_FORMAT(entryDate,'%Y-%m-%d') as entryDate,tp.phone,tp.post FROM hr tp
+		LEFT JOIN agent tt
+		ON tp.agentId=tt.id
+		WHERE tp.agentId=#{id} AND tp.isDelete=0
+		LIMIT #{pageNum},#{pageSize}
+	</select>
+	<!-- 查询机构管理页面下工作人员的信息列表总数 -->
+	<select id="queryHrListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		SELECT COUNT(*) FROM(
+		SELECT tp.id,tp.name,CASE WHEN tp.gender=1 THEN '男' ELSE '女' END AS gender,DATE_FORMAT(tp.birth,'%Y-%m-%d') as birth,CASE WHEN tp.isMarry=1 THEN '是' ELSE '否' END AS isMarry,
+		CASE WHEN education=0 THEN '初高中' WHEN education=1 THEN '大专' WHEN education=2 THEN '本科' WHEN education=3 THEN '硕士' WHEN education=4 THEN '博士' ELSE '其他' END as education,
+		((YEAR (now()) - YEAR (birth) - 1) + (DATE_FORMAT(NOW(), '%m%d') > DATE_FORMAT(birth, '%m%d')))age,register,DATE_FORMAT(entryDate,'%Y-%m-%d') as entryDate,tp.phone,tp.post FROM hr tp
+		LEFT JOIN agent tt
+		ON tp.agentId=tt.id
+		WHERE tp.agentId=#{id} AND tp.isDelete=0
+		)tt
+	</select>
+</mapper>

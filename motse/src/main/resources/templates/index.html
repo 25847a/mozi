@@ -4,16 +4,61 @@
 		<head>
 		    <meta charset="utf-8"/>
 		    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-		    <title>index</title>
+		    <title>墨子星智慧健康数字化管理系统</title>
 		    <meta name="description" content=""/>
 		    <meta name="keywords" content=""/>
 		    <link th:href="@{/css/global.css}" rel="stylesheet"/>
 		    <link th:href="@{/css/index.css}" rel="stylesheet"/>
 		    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+		    <link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
 		</head>
 
 		<body class="main">
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<!-- 修改密码 -->
+    <div class="modal fade" id="passwprd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                            <label for="password" class="col-sm-3 control-label">原密码
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="oldPassword" placeholder="请输入原密码"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-sm-3 control-label">新密码
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="newPass" placeholder="请输入新密码"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwords" class="col-sm-3 control-label">确认新密码
+                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="newWord" placeholder="请再次输入新密码"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmPassword()">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+		<!-- 修改头像 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -25,18 +70,20 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <div id="bcd" style="width: 200px;height: 200px;"></div>
+                    <div id="bcd" style="width: 200px;height: 200px;">
+                    
+                    </div>
                     <form id="uploadForm" enctype='multipart/form-data'>
-                        
-                        <input type="file" id="files" name="file"/>
+                        <button type="button" class="btn btn-primary upload">选择头像</button>
+                        <input type="file" id="files" name="file" />
                     </form>
-                     
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="a">关闭
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="a">取消
                     </button>
-                    <button type="button" class="btn btn-primary" id="submit">
-                        提交更改
+                    <button type="button" class="btn btn-primary" onclick="agentImage()">
+                        确定
                     </button>
                 </div>
             </div><!-- /.modal-content -->
@@ -45,8 +92,10 @@
     
 		    <div class="index-header">
 		        <div class="left">
+		        		<input id="avatar" th:value="${avatar}" type="hidden" />
+		            	<input id="adminName" th:value="${adminName}" type="hidden" />
 		            <div class="title" id="chen">
-		            	<input id="name" th:value="${name}" type="hidden" />
+		            	<input id="agentName" th:value="${agentName}" type="hidden" />
 		            </div>
 		            <div class="slide" id="btn">
 		                <img th:src="@{/img/05.png}" alt=""/>
@@ -57,7 +106,7 @@
 		        <ul>
 		            <li>管理员，欢迎登录系统！</li>
 		           <li>|</li>
-		            <li><a href="login.html" title="">退出登录</a></li>
+		            <li><a href="login.html" title=""><i class="iconfont icon-guanji"><span>退出登录</span></i></a></li>
 		        </ul>
 		    </div>
 		    <div class="row">
@@ -66,18 +115,18 @@
 		                <div class="button">
 		                    <img th:src="@{/img/07.png}" alt=""/>
 		                </div>
-		                <div class="head">
+		                <div class="head" id="avatarImage">
 		                    <img th:src="@{/img/head.png}" alt=""/>
 		                </div>
 		                <div class="dropdown">
-		               <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">管理员
+		               <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
                         <span class="caret"></span>
                     	</button>
 		               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                         <li role="presentation" class="" data-toggle="modal" data-target="#myModal">
                             <a role="menuitem" tabindex="-1" href="#">修改头像</a>
                         </li>
-                        <li role="presentation">
+                        <li role="presentation" class="" data-toggle="modal" data-target="#passwprd">
                             <a role="menuitem" tabindex="-1" href="#">修改密码</a>
                         </li>
                        <!--  <li role="presentation">
@@ -156,7 +205,7 @@
 		                        data-target="#collapseListGroup2" role="tab">
 		                        <div class="glyphicon glyphicon-user"></div>
 		                        <h4 class="panel-title">
-		                            用户管理
+		                            信息管理
 		                            <span class="glyphicon glyphicon-chevron-right right"></span>
 		                        </h4>
 		                    </div>
@@ -165,9 +214,14 @@
 		                        <ul class="list-group">
 		                        <shiro:hasPermission name="addUser:view">
 		                            <li class="list-group-item add" id="addUser">
-		                                添加用户
+		                                用户管理
 		                            </li>
 		                         </shiro:hasPermission>
+		                        </ul>
+		                         <ul class="list-group">
+		                            <li class="list-group-item add" id="adminInfo">
+		                                机构管理
+		                            </li>
 		                        </ul>
 		                    </div>
 		                </div>
@@ -243,6 +297,7 @@
 		    </div>
 		    <script type="text/javascript" th:src="@{/js/jquery-1.11.3.min.js}"></script>
 		    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+		    <script type="text/javascript" th:src="@{/js/common/utils.js}"></script>
 		    <script type="text/javascript" th:src="@{/js/index/index.js}"></script>
 			</body>
 

@@ -14,22 +14,5 @@
 			<div>
 				<img th:src="@{/img/welcome.jpg}" alt="" style="width: 100%;" id="welcome"/>
 			</div>
-		    <script type="text/javascript">
-		    	img();
-		    	window.onload = windowHeight; //页面载入完毕执行函数
-		        function windowHeight() {
-		            //窗口高度
-		            var welcome = document.getElementById("welcome");
-		            welcome.style.height = window.innerHeight + 'px';
-		            
-		            setInterval(windowHeight, 500)//每半秒执行一次windowHeight函数
-		
-		        }    
-		        
-		        function img(){
-		        	$("img").fadeOut(1); 
-					$("img").fadeIn(3000);  
-		        }
-		    </script>
 		</body>
 </html>

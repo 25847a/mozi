@@ -44,19 +44,33 @@
         id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, highpressure, lowpressure, password,isDelete,age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime,love,bedId,nurseId,illness,liveTime
     </sql>
     <!-- 查询使用者男女数量饼状图 -->
-	<select id="queryUserGender" resultType="com.fadl.common.DataRow">
-		SELECT SUM(CASE WHEN gender='男' THEN 1 ELSE 0 END) AS male, SUM(CASE WHEN gender='女' THEN 1 ELSE 0 END) AS female,SUM(CASE WHEN gender='男' THEN 0 WHEN gender='女' THEN 0 ELSE 1 END) as other FROM user 
+	<select id="queryUserGender" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT SUM(CASE WHEN tp.gender='男' THEN 1 ELSE 0 END) AS male, SUM(CASE WHEN tp.gender='女' THEN 1 ELSE 0 END) AS female,SUM(CASE WHEN tp.gender='男' THEN 0 WHEN tp.gender='女' THEN 0 ELSE 1 END) as other FROM user tp
+		INNER JOIN equipment tt
+		ON tp.imei=tt.imei
+		INNER JOIN agent tk
+		ON tt.agentid=tk.id
+		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tx
+		ON tx.agentid=tk.id
+		WHERE tp.role='使用者' AND tp.isDelete=0 
 	</select>
 	<!-- 查询添加用户的列表 -->
 	<select id="queryAdduserList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
-		SELECT tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,bluetooth_type,tp.bluetooth_status,tt.love FROM equipment tp
+		set @rownum=#{pageNum};
+		SELECT @rownum:=@rownum+1 as id,tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,bluetooth_type,tp.bluetooth_status,tt.love,tt.calibration,tk.allNotifyOn  FROM equipment tp
 		INNER JOIN user tt
 		ON tp.imei=tt.imei
+		LEFT JOIN user_eq tn
+		ON tp.id=tn.eq_id AND tn.typeof=0
+		LEFT JOIN push tk
+		ON tt.id=tk.userId AND tn.user_id=tk.alias
 		LEFT JOIN bed_number td
 		ON tt.bedId=td.id
 		LEFT JOIN nurse tc
 		ON tt.nurseId=tc.id
-		WHERE tp.agentid=#{agentid} AND tt.isDelete=0
+		LEFT JOIN admin tz
+		ON tz.agentId=tp.agentid
+		WHERE tz.id=#{agentid} AND tt.isDelete=0
 		<if test="imeiNum!=null and imeiNum!=''">
 		AND tp.imei LIKE CONCAT('%',#{imeiNum},'%')
 		</if>
@@ -65,14 +79,20 @@
 	<!-- 查询添加用户的列表总数 -->
 	<select id="queryAdduserListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
 		SELECT COUNT(*) FROM(
-		SELECT tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,tp.bluetooth_status,tt.love FROM equipment tp
+		SELECT tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,tp.bluetooth_status,tt.love,tt.calibration,tk.allNotifyOn  FROM equipment tp
 		INNER JOIN user tt
 		ON tp.imei=tt.imei
+		LEFT JOIN user_eq tn
+		ON tp.id=tn.eq_id AND tn.typeof=0
+		LEFT JOIN push tk
+		ON tt.id=tk.userId AND tn.user_id=tk.alias
 		LEFT JOIN bed_number td
 		ON tt.bedId=td.id
 		LEFT JOIN nurse tc
 		ON tt.nurseId=tc.id
-		WHERE tp.agentid=#{agentid} AND tt.isDelete=0
+		LEFT JOIN admin tz
+		ON tz.agentId=tp.agentid
+		WHERE tz.id=#{agentid} AND tt.isDelete=0
 		<if test="imeiNum!=null and imeiNum!=''">
 		AND tp.imei LIKE CONCAT('%',#{imeiNum},'%')
 		</if>
@@ -128,4 +148,15 @@
 		DELETE FROM user_eq WHERE eq_id=#{equipmentId} and typeof=0;
 		DELETE FROM user_eq WHERE eq_id=#{equipmentId} and typeof=2;
 	</delete>
+	<!-- 根据代理商ID查询使用者总数 -->
+	<select id="queryUserCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		SELECT COUNT(*) FROM user tp
+		INNER JOIN equipment tt
+		ON tp.imei=tt.imei
+		INNER JOIN agent tk
+		ON tt.agentid=tk.id
+		LEFT JOIN (SELECT * FROM admin WHERE id=#{id}) tx
+		ON tx.agentid=tk.id
+		WHERE tp.role='使用者' AND tp.isDelete=0
+	</select>
 </mapper>

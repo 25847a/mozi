@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,15 @@ public class UploaddownloadServiceImpl extends ServiceImpl<UploaddownloadMapper,
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryUploaddownloadList(DataRow messageMap) throws SQLException {
-		List<DataRow> list = uploaddownloadMapper.queryUploaddownloadList();
-		messageMap.initSuccess(list);
+	public DataRow queryUploaddownloadList(Map<String,Object> map,DataRow messageMap) throws SQLException {
+		int pageNum = Integer.valueOf((String) map.get("pageNum"));
+		int pageSize = Integer.valueOf((String) map.get("pageSize"));
+		map.put("pageNum", (pageNum-1)*pageSize);
+		map.put("pageSize", pageSize);
+		List<DataRow> result = uploaddownloadMapper.queryUploaddownloadList(map);
+		int total = uploaddownloadMapper.queryUploaddownloadListCount(map);
+		messageMap.initSuccess(result);
+		messageMap.put("total", total);
 		return messageMap;
 	}
 

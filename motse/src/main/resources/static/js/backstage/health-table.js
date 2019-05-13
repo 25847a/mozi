@@ -1,5 +1,8 @@
 var tableDate = new Array();
-new Vue({
+var id ="";
+var imei ="";
+var createDate ="";
+var tableList =	new Vue({
     el: '#app',
     data() {
         return {
@@ -7,7 +10,6 @@ new Vue({
             pageSize: 10,
             total:'',
             tableConfig: {
-                multipleSort: false,
                 tableData: [
                     
                 ],
@@ -46,39 +48,59 @@ new Vue({
     methods: {
         getTableData() {
 
-            this.tableConfig.tableData = tableDate.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
-            this.total = tableDate.length;
+            this.tableConfig.tableData = tableDate;//.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize);
             
         },
         pageChange(pageIndex) {
-
             this.pageIndex = pageIndex;
-            this.getTableData();
-            console.log(pageIndex)
+            this.goback();
         },
         pageSizeChange(pageSize) {
-
             this.pageIndex = 1;
             this.pageSize = pageSize;
             this.getTableData();
         },
         goback:function(){
-            axios.post(GetURLInfo()+"health/queryHealthInfoList").then(this.getnew);
+        	 var params = new URLSearchParams();
+	       	 params.append('id',id);
+	       	 params.append('imei',imei);
+	       	 params.append('createDate',createDate);
+	       	 params.append('pageNum',this.pageIndex);
+	       	 params.append('pageSize',this.pageSize);
+             axios.post(GetURLInfo()+"health/queryHealthInfoList",params).then(this.getnew);
 
         },
         getnew(res){
         	if(res.data.code==-1){
+        		tableDate=[];
         		for(var i=0;i<res.data.data.length;i++){
         			tableDate.push(res.data.data[i]);
-        			this.getTableData();
                         }
+        		this.total= res.data.total;
+        		this.getTableData();
         	}
         }
     },
      created() {
+    	console.log("健康数据管理");
      },
     mounted(){
         this.goback();
         this.getTableData();
     }
-})
+});
+
+function query(){
+	id = $("#id").val();
+	imei = $("#imei").val();
+	createDate =$("#createDate").val();
+	tableList.goback();
+}
+//刷新按钮
+function refresh(){
+	location.reload();
+}
+//重置按钮
+function empty(){
+	$("#search_par input").val("");
+}

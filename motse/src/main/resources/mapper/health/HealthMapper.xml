@@ -34,9 +34,11 @@
 		)tx
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
-		LEFT JOIN equipment tt
-		ON tc.imei=tt.imei
-		WHERE tc.isDelete=0 AND tc.love=0 AND tt.agentid=#{adminId}
+		LEFT JOIN equipment ta
+		ON tc.imei=ta.imei
+		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		ON tf.agentId=ta.agentid
+		WHERE tc.isDelete=0 AND tc.love=0
 		LIMIT #{pageNum},#{pageSize}
     </select>
     <!-- 查询首页健康数据列表总数 -->
@@ -51,9 +53,11 @@
 		)tx
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
-		LEFT JOIN equipment tt
-		ON tc.imei=tt.imei
-		WHERE tc.isDelete=0 AND tc.love=0 AND tt.agentid=#{adminId}
+		LEFT JOIN equipment ta
+		ON tc.imei=ta.imei
+		LEFT JOIN admin tf
+		ON tf.agentId=ta.agentid
+		WHERE tc.isDelete=0 AND tc.love=0 AND tf.id=#{adminId}
 		) tb
     </select>
     <!-- 查询重点关爱的使用者 -->
@@ -67,9 +71,11 @@
 		)tx
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
-		INNER JOIN equipment tt
-		ON tc.imei=tt.imei
-		WHERE tc.isDelete=0 AND tt.agentid=#{adminId} AND tc.love=1
+		INNER JOIN equipment ta
+		ON tc.imei=ta.imei
+		LEFT JOIN admin tf
+		ON tf.agentId=ta.agentid
+		WHERE tc.isDelete=0 AND tf.id=#{adminId} AND tc.love=1
 		LIMIT #{pageNum},#{pageSize}
     </select>
 	<!-- 首页当天心率统计图 -->
@@ -158,7 +164,9 @@
 		ON tp.imei=td.imei
 		LEFT JOIN user tt
 		ON substring(tp.phone,9)=tt.id
-		WHERE td.agentid=#{agentid} AND tt.isDelete=0
+		LEFT JOIN admin tz
+		ON tz.agentId=td.agentid
+		WHERE tz.id=#{agentid} AND tt.isDelete=0
 		<if test="id!=null and id!=''">
 		AND tp.id LIKE CONCAT('%',#{id},'%')
 		</if>
@@ -176,7 +184,9 @@
 		ON tp.imei=td.imei
 		LEFT JOIN user tt
 		ON substring(tp.phone,9)=tt.id
-		WHERE td.agentid=#{agentid} AND tt.isDelete=0
+		LEFT JOIN admin tz
+		ON tz.agentId=td.agentid
+		WHERE tz.id=#{agentid} AND tt.isDelete=0
 		<if test="id!=null and id!=''">
 		AND tp.id LIKE CONCAT('%',#{id},'%')
 		</if>
@@ -187,8 +197,34 @@
 		) tr
 	</select>
 	<!-- 查询健康数据管理列表 -->
-	<select id="queryHealthInfoList" resultType="com.fadl.common.DataRow">
-		SELECT imei,substring(phone,9) as phone,Heartrate,sbp_ave,dbp_ave,microcirculation,respirationrate,Bloodoxygen,HRV,Amedicalreport,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM jfhealth 
-LIMIT 0,100
+	<select id="queryHealthInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT imei,substring(phone,9) as phone,Heartrate,sbp_ave,dbp_ave,microcirculation,respirationrate,Bloodoxygen,HRV,Amedicalreport,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM jfhealth
+		WHERE 1=1
+		<if test="id!=null and id!=''">
+		AND phone LIKE CONCAT('%',#{id},'%')
+		</if>
+		<if test="imei!=null and imei!=''">
+		AND imei LIKE CONCAT('%',#{imei},'%')
+		</if>
+		<if test="createtime!=null and createtime!=''">
+		AND createtime LIKE CONCAT('%',#{createtime},'%')
+		</if>
+		LIMIT #{pageNum},#{pageSize}
+	</select>
+	<!-- 查询健康数据管理列表总数-->
+	<select id="queryHealthInfoListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		select count(*) from(
+		SELECT imei,substring(phone,9) as phone,Heartrate,sbp_ave,dbp_ave,microcirculation,respirationrate,Bloodoxygen,HRV,Amedicalreport,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM jfhealth
+		WHERE 1=1
+		<if test="id!=null and id!=''">
+		AND phone LIKE CONCAT('%',#{id},'%')
+		</if>
+		<if test="imei!=null and imei!=''">
+		AND imei LIKE CONCAT('%',#{imei},'%')
+		</if>
+		<if test="createtime!=null and createtime!=''">
+		AND createtime LIKE CONCAT('%',#{createtime},'%')
+		</if>
+		) tf
 	</select>
 </mapper>

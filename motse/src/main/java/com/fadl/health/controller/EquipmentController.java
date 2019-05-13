@@ -82,5 +82,20 @@ public class EquipmentController extends AbstractController{
 		}
 		return messageMap;
     }
+    /**
+     * 代理商管理页面根据代理商ID查询设备信息
+     * @param map
+     * @return
+     */
+    @RequestMapping("/queryEquipmentImeiInfo")
+    @ResponseBody
+    public DataRow queryEquipmentImeiInfo(@RequestParam Map<String,Object> map){
+    	try {
+    		messageMap=equipmentService.queryEquipmentImeiInfo(map,messageMap);
+		} catch (Exception e) {
+			logger.error("EquipmentController>>>>>>>>>>>>>queryEquipmentImeiInfo",e);
+		}
+		return messageMap;
+    }
 }
 

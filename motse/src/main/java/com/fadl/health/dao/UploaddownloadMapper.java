@@ -5,6 +5,7 @@ import com.fadl.health.entity.Uploaddownload;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -23,5 +24,11 @@ public interface UploaddownloadMapper extends BaseMapper<Uploaddownload> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryUploaddownloadList()throws SQLException;
+	public List<DataRow> queryUploaddownloadList(Map<String,Object> map)throws SQLException;
+	/**
+	 * 查询版本更新列表总数
+	 * @return
+	 * @throws SQLException
+	 */
+	public int queryUploaddownloadListCount(Map<String,Object> map)throws SQLException;
 }

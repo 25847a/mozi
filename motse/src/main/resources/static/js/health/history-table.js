@@ -9,9 +9,7 @@ var tableList=new Vue({
             pageSize: 10,
             total:'',
             tableConfig: {
-                tableData: [
-                    
-                ],
+                tableData: [],
                 columns: [
                     { field: 'imei', width: 150, columnAlign: 'center', isResize: true },
                     { field: 'id', width: 100, columnAlign: 'center', isResize: true },
@@ -33,8 +31,8 @@ var tableList=new Vue({
                         { fields: ['id'], title: 'ID', titleAlign: 'center' },
                         { fields: ['name'], title: '姓名', titleAlign: 'center' },
                         { fields: ['Heartrate'], title: '心率', titleAlign: 'center', },//orderBy: ''
-                        { fields: ['sbp_ave'], title: '高压', titleAlign: 'center' },
-                        { fields: ['dbp_ave'], title: '低压', titleAlign: 'center' },
+                        { fields: ['sbp_ave'], title: '收缩压(高压)', titleAlign: 'center' },
+                        { fields: ['dbp_ave'], title: '舒张压(低压)', titleAlign: 'center' },
                         { fields: ['microcirculation'], title: '微循环', titleAlign: 'center' },
                         { fields: ['respirationrate'], title: '呼吸', titleAlign: 'center' },
                         { fields: ['Bloodoxygen'], title: '血氧', titleAlign: 'center' },
@@ -76,7 +74,6 @@ var tableList=new Vue({
                         }
         		this.total= res.data.total;
         		this.getTableData();
-        		 
         	}
         }
     }

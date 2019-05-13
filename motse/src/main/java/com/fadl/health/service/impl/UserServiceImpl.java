@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.fadl.account.dao.AgentMapper;
 import com.fadl.account.entity.Admin;
+import com.fadl.account.entity.Agent;
 import com.fadl.common.Base64;
 import com.fadl.common.DataRow;
 import com.fadl.common.DateUtil;
@@ -72,6 +74,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	HealthdaoService healthdaoService;
 	@Autowired
 	HealthNewService healthNewService;
+	@Autowired
+	AgentMapper agentMapper;
 	
 	/**
 	 * 查询使用者男女数量饼状图 
@@ -79,8 +83,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryUserGender() throws SQLException {
-		return userMapper.queryUserGender();
+	public DataRow queryUserGender(Map<String,Object> map) throws SQLException {
+		return userMapper.queryUserGender(map);
 	}
 	/**
 	 * 查询添加用户的列表
@@ -233,7 +237,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		byte[] by= Base64.decode(user.getAvatar());
 		OutputStream out = new FileOutputStream(new File(filePath+time));
 		out.write(by, 0, by.length);
-		out.close();
+		out.close();//http://192.168.1.147:8443/avatars/
 		user.setAvatar(ReadProperties.getValue("serverUrl")+time);
 		EntityWrapper<User> ew = new EntityWrapper<User>();
 		ew.eq("imei", user.getImei());
@@ -268,11 +272,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
 	@Override
-	public DataRow queryImeiUserInfo(String imei, DataRow messageMap) throws SQLException {
+	public DataRow queryImeiUserInfo(String imei, DataRow messageMap) throws Exception {
 		EntityWrapper<User> ew= new EntityWrapper<User>();
 		ew.eq("imei", imei);
 		User user=this.selectOne(ew);
 		if(user!=null){
+			user.setBorn(DateUtil.sfDay.format(DateUtil.sfDay.parse(user.getBorn())));
 			messageMap.initSuccess(user);
 		}else{
 			messageMap.initFial("该设备未绑定用户");
@@ -288,12 +293,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	@Override
 	public DataRow AddUserDetermine(Equipment equipment, DataRow messageMap) throws SQLException {
 		Admin admin = SessionUtil.getSessionAdmin();
-		EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
-		ew.eq("agentid", admin.getId());
-		ew.eq("imei", equipment.getImei());
-		Equipment e =equipmentService.selectOne(ew);
-		if(e==null){
-			equipment.setAgentid(admin.getId().intValue());
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("adminId", admin.getId());
+		map.put("imei", equipment.getImei());
+		DataRow data =equipmentService.queryEquipmentAgent(map);
+		if(data==null){
+			Agent agent =agentMapper.queryAgentInfo(admin.getId());
+			equipment.setAgentid(agent.getId().intValue());
 			EntityWrapper<Equipment> eq = new EntityWrapper<Equipment>();
 			eq.eq("imei", equipment.getImei());
 			boolean row =equipmentService.update(equipment, eq);
@@ -303,7 +309,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 				messageMap.initFial("请先通过设备IMEI查询");
 			}
 		}else{
-			messageMap.initFial("该用户已绑定此账号,无需重复绑定");
+			messageMap.initFial("该供应商已绑定此账号,无需重复绑定");
 		}
 		return messageMap;
 	}
@@ -466,5 +472,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			messageMap.initFial("设备号不存在,请联系经销商！！！");
 		}
 		return messageMap;
+	}
+	/**
+	 * 根据代理商ID查询使用者总数
+	 */
+	@Override
+	public int queryUserCount(long id) throws Exception {
+		return userMapper.queryUserCount(id);
 	}
 }

@@ -1,3 +1,11 @@
+var _topWin = window;    
+while (_topWin != _topWin.parent.window) {         
+    _topWin = _topWin.parent.window;   
+ }   
+  if (window != _topWin){  
+	  alert(GetURLInfo());
+    _topWin.document.location.href =GetURLInfo()+'admin/login';  
+   }  
 /***********canvas*************/
 var DEFAULT_VERSION = 8.0;
 var ua = navigator.userAgent.toLowerCase();
@@ -194,4 +202,4 @@ $("#passWord").on("blur",function(){
         $("#passWordCheck").text("").removeClass("errorIcon");
 	}
 })
-
+ 

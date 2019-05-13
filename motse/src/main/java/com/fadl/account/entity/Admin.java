@@ -51,10 +51,6 @@ public class Admin extends Model<Admin> {
      */
     private Integer gender;
     /**
-     * 职位
-     */
-    private String position;
-    /**
      * 手机号码
      */
     private String phone;
@@ -66,14 +62,6 @@ public class Admin extends Model<Admin> {
      * 头像
      */
     private String avatar;
-    /**
-     * 微信
-     */
-    private String wechat;
-    /**
-     * QQ号码
-     */
-    private String qq;
     /**
      * 职称ID
      */
@@ -87,9 +75,9 @@ public class Admin extends Model<Admin> {
      */
     private Integer loginErrorCount;
     /**
-     * 角色
+     * 代理商ID
      */
-    private String role;
+    private Long agentId;
     /**
      * 创建时间
      */
@@ -175,15 +163,6 @@ public class Admin extends Model<Admin> {
     public void setGender(Integer gender) {
         this.gender = gender;
     }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -207,23 +186,6 @@ public class Admin extends Model<Admin> {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
     public Long getPositionId() {
 		return positionId;
 	}
@@ -232,15 +194,15 @@ public class Admin extends Model<Admin> {
 		this.positionId = positionId;
 	}
 
-	public String getRole() {
-        return role;
-    }
+    public Long getAgentId() {
+		return agentId;
+	}
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
+	}
 
-    public String getCreateDate() {
+	public String getCreateDate() {
         return createDate;
     }
 
@@ -342,14 +304,11 @@ public class Admin extends Model<Admin> {
         ", name=" + name +
         ", age=" + age +
         ", gender=" + gender +
-        ", position=" + position +
         ", phone=" + phone +
         ", address=" + address +
         ", avatar=" + avatar +
-        ", wechat=" + wechat +
-        ", qq=" + qq +
         ", positionId=" + positionId +
-        ", role=" + role +
+        ", agentId=" + agentId +
         ", createDate=" + createDate +
         ", updateDate=" + updateDate +
         ", creater=" + creater +

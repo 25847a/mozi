@@ -8,17 +8,17 @@
 	width: 100%;
 	background: #0e3258;
 	overflow: hidden;
-	padding: 10px 0;
+	padding: 8px 0;
 }
 .index-header .left{
-	display: flex;
+	overflow: hidden;
     float: left;
 }
 .index-header .left div{
-    float: left;
+	float: left;
 }
 .index-header .left .slide{
-	width: 35px;
+	width: 30px;
 	margin-right: 25px;
 	margin-top: 6px; 
 }
@@ -27,11 +27,12 @@
 }
 .index-header .left input{
 	width: 300px;
-	height: 30px;
+	height: 25px;
 	border:0;
 	border-radius: 20px;
 	padding: 0 18px;
 	box-sizing: border-box;
+	margin-top: 2px;
 }
 .index-header .left .search{
 	position: relative;
@@ -46,7 +47,7 @@
 .index-header .left .title{
 	width: 240px;
 	text-align: center;
-	font-size: 24px;
+	font-size: 22px;
 	color: #ffffff;
 	flex: 1;
 }
@@ -63,6 +64,7 @@
 	text-align: center;
     padding: 0 25px;
 }
+
 .index-header ul li .time{
 	width: 14px;
 	display: inline-block;
@@ -79,12 +81,21 @@
 	font-size: 14px;
 	color: #ffffff;
 }
+.icon-guanji{
+	padding-top: 5px;
+	font-size: 22px!important;
+}
+.icon-guanji span{
+	vertical-align: top!important;
+	font-size: 14px;
+}
 .row{
 	flex: 1;
 	overflow: hidden;
 }
 #row-height{
 	background: #337ac7;
+	overflow-y: scroll;
 }
 .row .admin{
 	background: url(../img/06.png)no-repeat center;	
@@ -101,33 +112,30 @@
 	margin: 0 auto;
 	border: 4px solid #3b3b43;
 	border-radius: 50%;
+	height: 100px;
+	background: url(../img/head.png)center center;
 }
 .row .admin .head img{
 	width: 100%;
 	border: 5px solid #ffffff;
 	border-radius: 50%;
+	height: 100%;
 }
+
 .row .admin .dropdown{
-	text-align:center;
-	padding-top:10px;
-}
-.row .admin .dropdown .btn{
-	padding:3px 10px;
-	font-size:12px;
-}
-.row .admin .dropdown ul li a{
-	font-size:12px;
-}
-.row .admin .select{
 	text-align: center;
 	padding-top:10px; 
 }
-.row .admin .select select{
-	background: #337ac7;
-	border:0;
-	color: #ffffff;
-	font-size: 14px;
+.row .admin .dropdown .btn{
+	padding: 3px 10px;
+	font-size: 12px;
+	color: white;
+    background: #16508d;
 }
+.row .admin .dropdown ul li a{
+	font-size: 12px;
+}
+
 
 
 .row li,.home{cursor: pointer}
@@ -173,12 +181,10 @@
     padding-right: 0px!important; 
 }
 
-
-
 iframe{
 	width: 100%;
 	background: #f2f2f2;
-	padding-bottom:100px; 
+	padding-bottom:90px; 
 }
 
 .col-md-10 {
@@ -189,7 +195,7 @@ iframe{
 
 .index-footer{
 	width: 100%;
-	padding: 10px 0;
+	padding: 8px 0;
 	background: #0e3258;
 	position: fixed;
 	bottom: 0;
@@ -208,9 +214,75 @@ iframe{
 
 #bcd{
 	border:1px solid #888;
-	overflow:hidden;
+	overflow: hidden;
 }
+
 #bcd img{
-	width:100%;
-	height:100%;
+	width: 100%;
+	height: 100%;
+}
+
+/* 滚动条凹槽的颜色，还可以设置边框属性 */
+	#row-height::-webkit-scrollbar-track-piece { 
+	background-color:#f8f8f8;
+	}
+	/* 滚动条的宽度 */
+	#row-height::-webkit-scrollbar {
+	width:2px;
+	height:9px;
+	}
+	/* 滚动条的设置 */
+	#row-height::-webkit-scrollbar-thumb {
+	background-color:#dddddd;
+	background-clip:padding-box;
+	min-height:28px;
+	}
+	#row-height::-webkit-scrollbar-thumb:hover {
+	background-color:#bbb;
+	}
+
+/* 修改头像 */
+
+.modal-header{
+	text-align: center;
+	background: #16508d;
+	color: #ffffff;
+}
+.modal-content{
+	border: 0!important;
+}
+.modal-header .close{
+	color: #ffffff;
+}
+#bcd{
+	border: 1px solid #f2f2f2;
+	border-radius: 5px;
+}
+#bcd,#files{
+	margin: 0 auto;
+}
+.modal-dialog{
+	width: 500px!	;
+}
+#uploadForm{
+	text-align: right;
+}
+#uploadForm #files{		
+	display: none;
+}
+.modal-footer{
+	text-align: center!important;
+}
+.admin .open>.dropdown-menu{
+	left:90px!important;
+	    text-align: center;
+	    min-width: 90px;
+}
+.form-horizontal{
+	margin: 0 auto;
+    display: inline-block;
+    width: 85%;
+}
+label {
+    color: #6e9ad3;
 }

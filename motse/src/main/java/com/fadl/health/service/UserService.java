@@ -24,7 +24,7 @@ public interface UserService extends IService<User> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryUserGender()throws SQLException;
+	public DataRow queryUserGender(Map<String,Object> map)throws SQLException;
 	/**
 	 * 查询添加用户的列表
 	 * @return
@@ -96,7 +96,7 @@ public interface UserService extends IService<User> {
      * @param map
      * @return
      */
-	public DataRow queryImeiUserInfo(String imei,DataRow messageMap)throws SQLException;
+	public DataRow queryImeiUserInfo(String imei,DataRow messageMap)throws Exception;
 	/**
      * 点击添加用户确定键添加用户
      * @param map
@@ -115,4 +115,8 @@ public interface UserService extends IService<User> {
      * @return
      */
 	public DataRow addUserInfo(User user,String telephone,DataRow messageMap)throws Exception;
+	/**
+	 * 根据代理商ID查询使用者总数
+	 */
+	public int queryUserCount(long id)throws Exception;
 }

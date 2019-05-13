@@ -26,18 +26,12 @@ public interface AdminMapper extends BaseMapper<Admin> {
 	 */
 	public Admin queryAdminInfo(String account)throws SQLException;
 	/**
-	 * 查询代理商列表
-	 * @return
-	 * @throws SQLException
-	 */
-	public List<DataRow> queryAdminList()throws SQLException;
-	/**
-	 * 查询用户的角色
+	 * 查询代理商的名字
 	 * @param id
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryAdminRoleInfo(Long id)throws SQLException;
+	public DataRow queryAdminAgentInfo(Long id)throws SQLException;
 	/**
 	 * 查询用户管理列表
 	 * @return

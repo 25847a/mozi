@@ -5,6 +5,7 @@ import com.fadl.health.entity.Equipment;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -22,7 +23,7 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryEquipmentState()throws SQLException;
+	public DataRow queryEquipmentState(Map<String,Object> map)throws SQLException;
 	/**
 	 * 首页当天心率统计图
 	 * @return
@@ -65,4 +66,26 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
 	 * @throws SQLException
 	 */
 	public DataRow queryEquipmentIdHealthdao(String imei)throws SQLException;
+	/**
+	 * 查询改该设备是否属于该供应商
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public DataRow queryEquipmentAgent(Map<String,Object> map)throws SQLException;
+	/**
+	 * 代理商管理页面根据代理商ID查询设备信息
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<DataRow> queryEquipmentImeiInfo(Map<String,Object> map)throws SQLException;
+	/**
+	 * 代理商管理页面根据代理商ID查询设备信息总数
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public int queryEquipmentImeiInfoCount(Map<String,Object> map)throws SQLException;
+	
 }

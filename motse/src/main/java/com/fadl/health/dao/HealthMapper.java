@@ -85,6 +85,12 @@ public interface HealthMapper extends BaseMapper<Health> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryHealthInfoList()throws SQLException;
+	public List<DataRow> queryHealthInfoList(Map<String,Object> map)throws SQLException;
+	/**
+	 * 查询健康数据管理列表总数
+	 * @return
+	 * @throws SQLException
+	 */
+	public int queryHealthInfoListCount(Map<String,Object> map)throws SQLException;
 	
 }

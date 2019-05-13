@@ -4,6 +4,8 @@ import com.fadl.common.DataRow;
 import com.fadl.health.entity.Equipment;
 
 import java.sql.SQLException;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -21,9 +23,9 @@ public interface EquipmentService extends IService<Equipment> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryEquipmentState()throws SQLException;
+	public DataRow queryEquipmentState(Map<String,Object> map)throws SQLException;
 	/**
-	 * 查询代理商列表
+	 * 查询设备数据列表
 	 * @return
 	 * @throws SQLException
 	 */
@@ -46,5 +48,18 @@ public interface EquipmentService extends IService<Equipment> {
 	 * @throws SQLException
 	 */
 	public DataRow queryEquipmentIdHealthdao(String imei)throws SQLException;
+	/**
+	 * 查询改该设备是否属于该供应商
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public DataRow queryEquipmentAgent(Map<String,Object> map)throws SQLException;
+	/**
+     * 代理商管理页面根据代理商ID查询设备信息
+     * @param map
+     * @return
+     */
+	public DataRow queryEquipmentImeiInfo(Map<String,Object> map,DataRow messageMap)throws SQLException;
 	
 }

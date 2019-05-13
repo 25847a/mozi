@@ -54,9 +54,9 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 */
 	@Override
 	public DataRow queryBeadhouseList(DataRow messageMap,Map<String,Object> map) throws Exception {
-		DataRow equipment = equipmentService.queryEquipmentState();//设备
+		DataRow equipment = equipmentService.queryEquipmentState(map);//设备
 		messageMap.put("equipment", equipment);
-		DataRow userGender  = userService.queryUserGender();//男女
+		DataRow userGender  = userService.queryUserGender(map);//男女
 		messageMap.put("userGender", userGender);
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::"+map.get("page"));
 		List<DataRow> tableData = healthService.queryHealthList(map);//列表数据
@@ -305,9 +305,15 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryHealthInfoList(DataRow messageMap) throws SQLException {
-		List<DataRow> result = healthMapper.queryHealthInfoList();
+	public DataRow queryHealthInfoList(Map<String,Object> map,DataRow messageMap) throws SQLException {
+		int pageNum = Integer.valueOf((String) map.get("pageNum"));
+		int pageSize = Integer.valueOf((String) map.get("pageSize"));
+		map.put("pageNum", (pageNum-1)*pageSize);
+		map.put("pageSize", pageSize);
+		List<DataRow> result = healthMapper.queryHealthInfoList(map);
+		int total = healthMapper.queryHealthInfoListCount(map);
 		messageMap.initSuccess(result);
+		messageMap.put("total", total);
 		return messageMap;
 	}
 }

@@ -11,54 +11,183 @@
 	<link th:href="@{/css/global.css}" rel="stylesheet"/>
 	<link th:href="@{/css/version.css}" rel="stylesheet"/>
 	<link rel="stylesheet" th:href="@{/css/vue-easytable.css}"/>
+	
 	<link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css"/>
-	<script th:src="@{/js/vue.js}"></script>
-	<script th:src="@{/js/axios.min.js}"></script>
-	<script th:src="@{/js/echarts/echarts.js}"></script>
-	<script th:src="@{/js/jquery-1.11.3.min.js}"></script>
-	<script th:src="@{/js/vue-easytable.js}"></script>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
 </head>
 
 <body>
-	<div class="header">
-		<div class="img">
-			<img th:src="@{/img/home.png}" alt=""/>
-		</div>
-		<div class="home">主页＞版本管理</div>
-	</div>
-	<div class="content">
-		<div class="history">
-			<div class="icon">
-				<img th:src="@{/img/version.png}" alt=""/>
-			</div>
-			<p>版本升级管理</p>
-		</div>
-		<div class="table">
-			<div class="check">
-				<div class="btn">
-					<button type="">上传到版本库</button>
-					<button type="">单个升级</button>
-					<button type="">批量升级</button>
-				</div>
-				<input type="text" name="" value="" placeholder="关键字"/>
-				<button type="">查询</button>
-			</div>
-			<div id="app">
-				<div>
-					<v-table
-						:multiple-sort="false" :min-height="350" even-bg-color="#f2f2f2"
-						:title-rows="tableConfig.titleRows" :columns="tableConfig.columns"
-						:table-data="tableConfig.tableData" row-hover-color="#eee" row-click-color="#edf7ff"
-						:paging-index="(pageIndex-1)*pageSize" v-on:on-custom-comp="customCompFunc"></v-table>
+	<div id="app">
 
-					<div class="mt20 mb20 bold"></div>
-					<v-pagination v-on:page-change="pageChange" v-on:page-size-change="pageSizeChange" :total="total"
-						:page-size="pageSize" :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"
-						style="padding: 20px 100px 20px 0;float: right;"></v-pagination>
+		<div class="header">
+			<div class="img">
+				<img th:src="@{/img/home.png}" alt=""/>
+			</div>
+			<div class="home">主页＞版本管理</div>
+		</div>
+		<div class="content">
+			<div class="history">
+				<div class="icon">
+					<img th:src="@{/img/version.png}" alt=""/>
+				</div>
+				<p>版本升级管理</p>
+			</div>
+			<div class="table">
+				<div class="check">
+					<div class="btnn">
+						<button type="button" v-on:click="dialogFormVisible = true">上传到版本库</button>
+						<button type="button" v-on:click="single = true">单个升级</button>
+						<button type="button" v-on:click="batch = true">批量升级</button>
+					</div>
+					<input type="text" name="" value="" placeholder="关键字" v-model="keyword"/>
+ 					<button type="button" v-on:click="polling">查询</button>
+				</div>
+				<div>
+					<div>
+						<v-table is-vertical-resize="vertical-resize-offset='60'" is-horizontal-resize="style=width:100%"
+							:multiple-sort="false" :min-height="350" even-bg-color="#f2f2f2"
+							:title-rows="tableConfig.titleRows" :columns="tableConfig.columns"
+							:table-data="tableConfig.tableData" row-hover-color="#eee" row-click-color="#edf7ff"
+							v-on:sort-change="sortChange" :paging-index="(pageIndex-1)*pageSize"
+							v-on:on-custom-comp="customCompFunc"></v-table>
+
+						<div class="mt20 mb20 bold"></div>
+						<v-pagination v-on:page-change="pageChange" v-on:page-size-change="pageSizeChange" :total="total"
+							:page-size="pageSize" :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"
+							style="padding: 20px 100px 20px 0;float: right;"></v-pagination>
+					</div>
 				</div>
 			</div>
 		</div>
+		<!-- 上传版本弹窗 -->
+		<el-dialog title="上传版本" :visible.sync="dialogFormVisible">
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<td class="blue">版本说明</td>
+						<td>
+							<el-input v-model="upload.edition" auto-complete="off" placeholder="版本说明"></el-input>
+						</td>
+					</tr>
+					<tr>
+						<td class="blue">主版本号</td>
+						<td>
+							<el-input v-model="upload.host" auto-complete="off" placeholder="主版本号"></el-input>
+						</td>
+					</tr>
+					<tr>
+						<td class="blue">子设备号</td>
+						<td>
+							<el-input v-model="upload.son" auto-complete="off" placeholder="子设备号"></el-input>
+						</td>
+					</tr>
+					<tr>
+						<td class="blue">编译号</td>
+						<td>
+							<el-input v-model="upload.compile" auto-complete="off" placeholder="编译号"></el-input>
+						</td>
+					</tr>
+					<tr>
+						<td class="blue">版本描述</td>
+						<td>
+							<el-input v-model="upload.describe" auto-complete="off" placeholder="描述"></el-input>
+						</td>
+					</tr>
+					<tr>
+						<td class="blue">版本类型</td>
+						<td>
+							<el-select v-model="upload.type" placeholder="请选择">
+								<el-option label="beta" value="shanghai"></el-option>
+								<el-option label="区域二" value="beijing"></el-option>
+							</el-select>
+						</td>
+					</tr>
+					<tr>
+						<td class="blue">机型</td>
+						<td>
+							<el-select v-model="upload.model" placeholder="请选择">
+								<el-option label="beta" value="beta"></el-option>
+								<el-option label="区域二" value="guangzhou"></el-option>
+							</el-select>
+						</td>
+					</tr>
+					<tr>
+						<td class="blue">sbk</td>
+						<td>
+							<el-upload class="upload-demo" ref="upload"
+								action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview"
+								:on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
+								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+							</el-upload>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div slot="footer" class="dialog-footer">
+				<el-button v-on:click="dialogFormVisible = false">取 消</el-button>
+				<!-- <el-button type="primary" v-on:click="dialogFormVisible = false" v-on:click="fix">确 定</el-button> -->
+				<el-button type="primary" v-on:click="fix">确 定</el-button>
+			</div>
+		</el-dialog>
+		<!-- 单个升级弹窗 -->
+		<el-dialog title="升级版本" :visible.sync="single">
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<td class="blue">iemi</td>
+						<td>
+							<el-input v-model="versiontype.imei" auto-complete="off"></el-input>
+						</td>
+					</tr>
+					<tr>
+						<td class="blue">版本类型</td>
+						<td>
+							<el-select v-model="versiontype.region" placeholder="请选择活动区域">
+								<el-option label="空版本" value="0101"></el-option>
+								<el-option label="区域二" value="0202"></el-option>
+							</el-select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div slot="footer" class="dialog-footer">
+				<el-button v-on:click="single = false">取 消</el-button>
+				<!-- <el-button type="primary" v-on:click="single = false" v-on:click="define">确 定</el-button> -->
+				<el-button type="primary" v-on:click="define">确 定</el-button>
+			</div>
+		</el-dialog>
+		<!-- 批量升级弹窗 -->
+		<el-dialog title="升级版本" :visible.sync="batch">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<td class="blue">版本类型</td>
+							<td>
+								<el-select v-model="editiontype.types" placeholder="请选择活动区域">
+									<el-option label="空版本" value="0101"></el-option>
+									<el-option label="区域二" value="0202"></el-option>
+								</el-select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div slot="footer" class="dialog-footer">
+					<el-button v-on:click="batch = false">取 消</el-button>
+					<!-- <el-button type="primary" v-on:click="batch = false" v-on:click="ascertain">确 定</el-button> -->
+					<el-button type="primary" v-on:click="ascertain">确 定</el-button>
+				</div>
+			</el-dialog>
 	</div>
+	<script th:src="@{/js/vue.js}"></script>
+	<script th:src="@{/js/vue-easytable.js}"></script>
+	<script th:src="@{/js/axios.min.js}"></script>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- 引入组件库 -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 	<!-- 公共JS -->
 	<script th:src="@{/js/common/utils.js}"></script>
 	<script th:src="@{/js/backstage/version-table.js}"></script>

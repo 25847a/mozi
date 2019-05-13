@@ -10,12 +10,16 @@
     <link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/bootstrap-switch.min.css}"/>
+    <!-- 时间选择器插件 -->
     <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
     <!-- 提示框CSS -->
     <link rel="stylesheet" th:href="@{/css/alert.css}"/>
-     <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
+     <!-- 引入确认提示框、***、***样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
+	<style type="text/css">
+		.layui-layer-title{display: none;}	
 	
+	</style>
 </head>
 
 <body>
@@ -94,7 +98,8 @@
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" name="height" id="detailsHeight" class="form-control" placeholder=""/>
+                                                    <input type="text" name="height" id="detailsHeight" class="form-control unitdetails" placeholder=""/>
+                                                    <span>cm</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -106,7 +111,8 @@
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" name="weight" id="detailsWeight" class="form-control" placeholder=""/>
+                                                    <input type="text" name="weight" id="detailsWeight" class="form-control unitdetails" placeholder=""/>
+                                                    <span>kg</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -293,93 +299,86 @@
                                 <td id="studyTime"></td>
                                 <td style="color:#4985cb; font-weight: bold;">心率</td>
                                 <td>
-                                    <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" id="Heartrate" name="Heartrate" class="form-control" placeholder=""/>
+                                                    <input type="text" id="Heartrate" name="Heartrate" class="form-control unit" placeholder=""/>
+                                                     <span>次/分</span>
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">血氧</td>
                                 <td>
-                                    <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" id="Bloodoxygen" name="Bloodoxygen" class="form-control" placeholder=""/>
+                                                    <input type="text" id="Bloodoxygen" name="Bloodoxygen" class="form-control unit" placeholder=""/>
+                                                    <span>%</span>
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
                                 </td>
                                 <td style="color:#4985cb; font-weight: bold;">微循环</td>
                                 <td>
-                                    <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" id="microcirculation" name="microcirculation" class="form-control" placeholder=""/>
+                                                    <input type="text" id="microcirculation" name="microcirculation" class="form-control unit" placeholder=""/>
+                                                     <span>%</span>
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">心率变异性HRV</td>
                                 <td>
-                                    <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" id="HRV" name="hrv" class="form-control" placeholder=""/>
+                                                    <input type="text" id="HRV" name="hrv" class="form-control unit" placeholder=""/>
+                                                    <span>ms</span>
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
                                 </td>
                                 <td style="color:#4985cb; font-weight: bold;">呼吸</td>
                                 <td>
-                                    <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" id="respirationrate" name="respirationrate" class="form-control" placeholder=""/>
+                                                    <input type="text" id="respirationrate" name="respirationrate" class="form-control unit" placeholder=""/>
+                                                     <span>次/分</span>
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">收缩压（高压）</td>
                                 <td>
-                                    <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" id="sbp_ave" name="sbpAve" class="form-control" placeholder=""/>
+                                                    <input type="text" id="sbp_ave" name="sbpAve" class="form-control unit" placeholder=""/>
+                                                    <span>mmHg</span>
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
                                 </td>
                                 <td style="color:#4985cb; font-weight: bold;">舒张压（低压）</td>
                                 <td>
-                                    <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <input type="text" id="dbp_ave" name="dbpAve" class="form-control" placeholder=""/>
+                                                    <input type="text" id="dbp_ave" name="dbpAve" class="form-control unit" placeholder=""/>
+                                                    <span>mmHg</span>
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -411,7 +410,7 @@
                     <input id="alias" type="hidden"/>
                 <div class="modal-body" id="divid">
                     <table class="table table-bordered">
-                        <caption style="text-align:right;font-size:12px;">注意：超过设置阈值才会报警</caption>
+                        <caption style="text-align:right;font-size:12px;">注意：超过设置阈值才会预警</caption>
                         <tbody>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">IMEI</td>
@@ -439,7 +438,7 @@
                                     	</div>
                                     	<div>
                                     		<input type="text" id="heartHigThd" name="heartHigThd" class="form-control" placeholder="无预警值"/>
-                                    		<span>次/每分</span>
+                                    		<span>次/分</span>
                                     	</div>
                                     </div>
                                 </td>
@@ -496,14 +495,14 @@
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
-                        添加使用者
+                        添加用户
                     </h4>	
                 </div>
                 <div class="modal-body">
                     <div style="padding: 20px 100px">
                         <form class="bs-example bs-example-form" role="form">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-10">
                                     <div class="input-group">
                                         <i class="iconfont icon-sousuo"></i>
                                         <input type="text" class="form-control" id="addImei" style="padding-left:25px;"
@@ -564,7 +563,7 @@
                     <div style="padding: 20px 100px">
                         <form class="bs-example bs-example-form" role="form">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-10">
                                     <div class="input-group">
                                         <i class="iconfont icon-sousuo"></i>
                                         <input type="text" class="form-control" id="deleteImei" style="padding-left:25px;"
@@ -631,7 +630,7 @@
                             </div>
                         </div>
                     <div class="form-group">
-                            <label for="username" class="col-sm-3 control-label">设备号
+                            <label for="username" class="col-sm-3 control-label">检测器IMEI号
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
@@ -639,8 +638,7 @@
                             </div>
                         </div>
                     <div class="form-group">
-                            <label for="username" class="col-sm-3 control-label">用户昵称
-                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+                            <label for="username" class="col-sm-3 control-label">姓名
                             </label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="name" id="addName" placeholder="请输入用户昵称"/>
@@ -648,7 +646,6 @@
                         </div>
                         <div class="form-group">
                             <label for="name" class="col-sm-3 control-label">床号
-                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
                                 <select class="form-control" name="bedId" id="addBed">
@@ -732,7 +729,6 @@
                         </div>
                         <div class="form-group">
                             <label for="phone" class="col-sm-3 control-label">病史
-                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="illness" id="addIllness" placeholder="请输入病史"/>
@@ -768,18 +764,18 @@
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <td style="color:#4985cb; font-weight: bold;">IMEI</td>
+                                <td class="tabletd">IMEI</td>
                                 <td id="closeImei"></td>
                             </tr>
                             <tr>
-                                <td style="color:#4985cb; font-weight: bold;">姓名</td>
+                                <td class="tabletd">姓名</td>
                                 <td id="closeName"></td>
                             </tr>
                             
                             
                             
                             <tr id="clothesNumber1">
-                                <td style="color:#4985cb; font-weight: bold;">衣服编号1</td>
+                                <td class="tabletd">衣服编号</td>
                                 <td>
                               <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
@@ -803,7 +799,7 @@
                             </tr>	
                             
                             <tr id="clothesNumber2">
-                                <td style="color:#4985cb; font-weight: bold;">衣服编号2</td>
+                                <td class="tabletd">衣服编号2</td>
                                 <td>
                               <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
@@ -826,7 +822,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="color:#4985cb; font-weight: bold;">衣服状态</td>
+                                <td class="tabletd">衣服状态</td>
                                 <td>
                                 <button type="button" class="btn btn-default" id="closeState"></button>
                                     <!-- <div class="form-group">
@@ -854,7 +850,7 @@
         <div class="img">
             <img th:src="@{/img/home.png}" alt=""/>
         </div>
-        <div class="home">主页＞添加使用者</div>
+        <div class="home">主页＞添加用户</div>
     </div>
     <div class="content" id="app">
         <div class="history">
@@ -869,7 +865,7 @@
 	                <button type="button" class="btn btn-primary" data-toggle="modal" 
 	                data-target="#create">创建用户</button>&nbsp;&nbsp;
                     <button type="button"  onclick="addUser()" class="btn btn-primary" data-toggle="modal"
-                        data-target="#add">添加使用者</button>&nbsp;&nbsp;
+                        data-target="#add">添加用户</button>&nbsp;&nbsp;
                     <button type="button" onclick="deleteUser()" class="btn btn-primary" data-toggle="modal"
                         data-target="#remove">移除用户</button>
                 </div>
@@ -886,6 +882,7 @@
                 <thead>
                     <tr>
                         <th>序号</th>
+                        <th class="layui-layer-title">id</th>
                         <th>IMEI号</th>
                         <th>姓名</th>
                         <th>性别</th>
@@ -897,7 +894,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in item">
-                        <td>{{item.equipmentId}}</td>
+                    	<td>{{item.id}}</td>
+                        <td class="layui-layer-title">{{item.equipmentId}}</td>
                         <td>{{item.imei}}</td>
                         <td>{{item.name}}</td>
                         <td>{{item.gender}}</td>
@@ -929,14 +927,29 @@
                            
                             
                             
-                            <button type="button" class="btn btn-default" id="early" data-toggle="modal" data-target="#warning">
+                            <button type="button" class="btn btn-default" id="early" data-toggle="modal" data-target="#warning" v-if="item.allNotifyOn==0">
+                                <i class="iconfont icon-kaiguan1"></i>
+                                预警设置
+                            </button>
+                            
+                        <button type="button" class="btn btn-default" id="early" data-toggle="modal" data-target="#warning" v-if="item.allNotifyOn==1">
                                 <i class="iconfont icon-kaiguan1 blue-color"></i>
                                 预警设置
                             </button>
-                            <button type="button" class="btn btn-default" id="study" data-toggle="modal" data-target="#smart">
+                                
+                            
+                            
+                            <button type="button" class="btn btn-default" id="study" data-toggle="modal" data-target="#smart" v-if="item.calibration==0">
+                                <i class="iconfont icon-gouxuan"></i>
+                                人工智能学习
+                            </button>
+                            <button type="button" class="btn btn-default" id="study" data-toggle="modal" data-target="#smart" v-if="item.calibration==1">
                                 <i class="iconfont icon-gouxuan blue-color"></i>
                                 人工智能学习
                             </button>
+                            
+                            
+                            
                             <button type="button" class="btn btn-default" id="details" data-toggle="modal" data-target="#detailed">
                                 <i class="iconfont icon-gerenxinxi blue-color"></i>
                                个人详情
@@ -948,6 +961,7 @@
             </table>
             <div class="block">
                <el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange"
+               		background="background"
                    :page-sizes="[10, 20, 30, 40]" :page-size="10"
                     layout="total, sizes, prev, pager, next, jumper" :total="total">
                 </el-pagination> 
@@ -957,17 +971,18 @@
     </div>
     <!-- 先引入 Vue -->
     <script th:src="@{/js/vue.js}"></script>
-    
+  
     <script th:src="@{/js/jquery.min.js}"></script>
-    
-    
+    <script th:src="@{/js/axios.min.js}"></script>
     <script th:src="@{/js/bootstrap-switch.min.js}"></script>
+    <!-- 确认提示框、***、**** -->
+   	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
      <!-- 提示框 -->
     <script th:src="@{/js/tips/alert.js}"></script>
     <!-- 必须链接这个，修改过源码 -->
     <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/axios.min.js}"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    
+    
    
 	<script th:src="@{/js/amazeui.min.js}"></script>
 	<script th:src="@{/js/common/utils.js}"></script>

@@ -9,7 +9,7 @@
 		    	if(null!=result.data){
 		    		for (var o in result.data){
 		                var str = "<option value=" + result.data[o].id + ">" + result.data[o].bed + "</option>";
-		                $("#addBed").append(str);
+		          	      $("#addBed").append(str);
 		                $("#detailsBed").append(str);
 		            }
 		    	}
@@ -36,7 +36,6 @@
 		    error : function() {
 		    }
 		});
-
     var tableDate = new Array();
     var pageIndex=1;
     var pageSize=10;
@@ -45,7 +44,7 @@
         el: "#app",
         data() {
             return {
-                item: [],
+            	item: [],
                 total:''
             }
         },
@@ -75,16 +74,45 @@
             	pageIndex=val;
             	this.goback();
                 console.log(`当前页: ${val}`);
-            }
+            },
+            	promptBox(){
+            		this.$confirm('此操作删除后无法恢复, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                    }).then(() => {
+                    	var imei = document.getElementById("deleteImeiA").innerHTML;
+            	    	$.ajax({
+            	            type : "POST",
+            	            url :GetURLInfo()+"user/deleteUserDetermine1",
+            	            data:{"imei":imei},
+            	            datatype : "json",
+            	            success : function(result) {
+            	            	if(result.code==-1){
+            	            		tips(result.message);
+            	            		location.reload();
+            	            	}else{
+            	            		tips(result.message);
+            	            	}
+            	            },
+            	            error : function() {
+            	            	tips("操作失败");
+            	            }
+            	        });
+             //           this.slist.splice(index, 1);
+                    }).catch(() => {
+                    	tips("已取消删除")
+                    });
+            	}
         },
         mounted() {
             this.goback();
         }
+        
     });
     //在线离线弹窗
    	$(".table-hover tbody").on("click", "#line button", function () {
-   		$("tr[id=daaaa]").remove();
-        var equipmentId = $(this).parent('#line').parent('tr').find('td').eq(0).text();
+   	// 临时的	$("tr[id=clothesNumber2]").remove();
+        var equipmentId = $(this).parent('#line').parent('tr').find('td').eq(1).text();
         $.ajax({
             type : "POST",
             url :GetURLInfo()+"user/queryaddUserInfo",
@@ -294,11 +322,12 @@
             		$("#respirationrate").val(data.respirationrate);
             		$("#sbp_ave").val(data.sbp_ave);
             		$("#dbp_ave").val(data.dbp_ave);
+            		$("#tick").css("color", "#3277c1");
+                	
             	}else{
             		tips(result.message);
             	}
-            	$("#tick").css("color", "#3277c1");
-            	$("#learning").text('开始学习'); // 只支持修改文本
+            	$("#learning").text('重新学习'); // 只支持修改文本
             },
             error : function() {
             	tips("操作失败");
@@ -308,7 +337,7 @@
    	//更改重点关爱对象
    	var love;
    	$(".table-hover tbody").on("click", "#love #ai", function () {
-        var imei = $(this).parent('#love').parent('tr').find('td').eq(1).text();
+        var imei = $(this).parent('#love').parent('tr').find('td').eq(2).text();
        $.ajax({
             type : "POST",
             async: false,	
@@ -344,7 +373,7 @@
    	}
    	//点击预警设置
 	$(".table-hover tbody").on("click", "#love #early", function () {
-		var equipmentId = $(this).parent('#love').parent('tr').find('td').eq(0).text();
+		var equipmentId = $(this).parent('#love').parent('tr').find('td').eq(1).text();
 	       $.ajax({
 	            type : "POST",
 	            async: false,	
@@ -412,7 +441,7 @@
 	 * 点击人工智能学习
 	 */
 	$(".table-hover tbody").on("click", "#love #study", function () {
-		var imei = $(this).parent('#love').parent('tr').find('td').eq(1).text();
+		var imei = $(this).parent('#love').parent('tr').find('td').eq(2).text();
 	       $.ajax({
 	            type : "POST",
 	            async: false,	
@@ -432,6 +461,7 @@
 	            		$("#sbp_ave").val(result.sbp_ave);
 	            		$("#dbp_ave").val(result.dbp_ave);
 	            		$("#daoId").val(result.id);
+	            		$("#learning").text('开始学习'); // 只支持修改文本
 	            	}
 	            },
 	            error : function() {
@@ -466,10 +496,9 @@
 	 * 点击详情
 	 */
 	$(".table-hover tbody").on("click", "#love #details", function () {
-		var equipmentId = $(this).parent('#love').parent('tr').find('td').eq(0).text();
+		var equipmentId = $(this).parent('#love').parent('tr').find('td').eq(1).text();
 	       $.ajax({
 	            type : "POST",
-	            async: false,	
 	            url :GetURLInfo()+"user/queryUserEquipmentInfo",
 	            data:{"equipmentId":equipmentId},
 	            datatype : "json",
@@ -613,6 +642,9 @@
 	 */
 	function addQuery(){
 		var imei = $("#addImei").val();
+		if(imei==""){
+			tips("请输入IMEI号进行查询");return;
+		}
 		$.ajax({
             type : "POST",
             async: false,	
@@ -648,7 +680,13 @@
             data:{"imei":imei},
             datatype : "json",
             success : function(result) {
-            	tips(result.message);
+            	if(result.code==-1){
+            		tips(result.message);
+            		location.reload();
+            	}else{
+            		tips(result.message);
+            	}
+            	
             },
             error : function() {
             	tips("操作失败");
@@ -661,6 +699,9 @@
 	 */
 	function deleteQuery(){
 		var imei = $("#deleteImei").val();
+		if(imei==""){
+			tips("请输入IMEI号进行查询");return;
+		};
 		$.ajax({
             type : "POST",
             async: false,	
@@ -696,25 +737,7 @@
 	 * @returns
 	 */
 	function deleteUserDetermine(){
-		var imei = document.getElementById("deleteImeiA").innerHTML;
-		$.ajax({
-            type : "POST",
-            async: false,	
-            url :GetURLInfo()+"user/deleteUserDetermine",
-            data:{"imei":imei},
-            datatype : "json",
-            success : function(result) {
-            	if(result.code==-1){
-            		tips(result.message);
-            		location.reload();
-            	}else{
-            		tips(result.message);
-            	}
-            },
-            error : function() {
-            	tips("操作失败");
-            }
-        });
+		tableList.promptBox();
 	}
 	function addDetermine(){
 		var data={};

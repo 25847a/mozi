@@ -33,10 +33,12 @@
         id, imei, lordpower, signalxhao, bluetooth_type AS bluetoothType, eq_status AS eqStatus, createtime, updatetime, eqtype, bluetooth_name AS bluetoothName, bluetooth_status AS bluetoothStatus, bluetooth_list AS bluetoothList, bluetooth_electricity AS bluetoothElectricity, clock, phone1, phone2, name, version, uploadtime, bluetoothmac, agentid, model
     </sql>
     <!-- 获取设备在线离线数量饼状图 -->
-	<select id="queryEquipmentState" resultType="com.fadl.common.DataRow">
+	<select id="queryEquipmentState" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT COUNT(*) AS count,SUM(CASE WHEN eq_status='H:0' THEN 1 ELSE 0 END) AS online,SUM(CASE WHEN eq_status='H:1' THEN 1 ELSE 0 END) AS offline FROM equipment tp
-		INNER JOIN user tt
-		ON tp.imei=tt.imei
+		INNER JOIN agent tt
+		ON tp.agentid=tt.id
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tk
+		ON tt.id=tk.agentId
 	</select>
 	
 	<!-- 查询设备数据列表 -->
@@ -52,5 +54,38 @@
 		ON substring(tt.phone,9)=tp.user_id
 		WHERE tc.imei=#{imei} AND tp.typeof=2
 	</select>
-	
+	<!-- 查询改该设备是否属于该供应商 -->
+	<select id="queryEquipmentAgent" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT tt.id as agentId,tc.* FROM admin tp
+		LEFT JOIN agent tt
+		ON tp.agentId=tt.id
+		LEFT JOIN equipment tc
+		ON tt.id=tc.agentid
+		WHERE tp.id=#{adminId} AND tc.imei=#{imei}
+	</select>
+	<!-- 代理商管理页面根据代理商ID查询设备信息 -->
+	<select id="queryEquipmentImeiInfo" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT id,imei,model,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM equipment
+		WHERE 1=1
+		 <if test="id!=null and id!='' and id!='undefined'">
+		AND agentid=#{id}
+		</if>
+		<if test="imei!=null and imei!=''">
+		AND imei LIKE CONCAT('%',#{imei},'%')
+		</if>
+		LIMIT #{pageNum},#{pageSize}
+	</select>
+	<!-- 代理商管理页面根据代理商ID查询设备信息总数 -->
+	<select id="queryEquipmentImeiInfoCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		select count(*) from(
+		SELECT id,imei,model,DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM equipment
+		 WHERE 1=1
+		 <if test="id!=null and id!='' and id!='undefined'">
+		AND agentid=#{id}
+		</if>
+		<if test="imei!=null and imei!=''">
+		AND imei LIKE CONCAT('%',#{imei},'%')
+		</if>
+		) tt
+	</select>
 </mapper>

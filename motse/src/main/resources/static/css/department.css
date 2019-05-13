@@ -1,0 +1,100 @@
+body{
+	padding: 10px;
+	/* overflow: hidden; */
+}
+.header{
+	width: 100%;
+	display: flex;
+	padding: 15px 0;
+	background: #dfdfdf;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+.header .img{
+	width: 15px;
+	margin-left: 20px;
+}
+.header .img img{
+	width: 100%;
+}
+
+.header .home{
+	font-size: 13px;
+	font-weight: bold;
+	text-indent: 0.5rem;
+	color: #aaaaaa;
+}
+
+.content{
+	width: 100%;
+	margin-top: 10px;
+	background: #ffffff;
+}
+.content .history{
+	display: flex;
+	padding: 15px 0;
+	background: #337ac7;	
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+.content .history .icon{
+	width: 25px;
+	margin-left: 20px;
+}
+
+.content .history .icon img{
+	width: 100%;
+}
+
+
+.content .history p{
+	font-size: 16px;
+	font-weight: bold;
+	text-indent: 0.5rem;
+    color: #ecf1f8;
+    margin: 0!important;
+}
+
+.content .table{
+	padding: 20px 100px;
+	border-radius: 10px;
+	background: white;
+    padding-bottom: 80px;
+}
+
+#delUser,#dupUser{
+    background: #1caf9a;
+    color: #FFFFFF;
+    border: none;
+    margin-left: 12px;
+}
+
+.pull-left{
+    background:#337ac7;
+    width: 120px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #ffffff;
+}
+.table-hover{
+    border: 1px solid #ddd;
+}
+.table{
+    text-align: center;
+}
+.table th{
+    text-align: center;
+    color: #337ac7;
+}
+.table tbody tr td{
+	vertical-align: middle!important;
+}
+.btn-warning{
+    background: #ff5722!important;
+    width: 90px;
+}
+.block{
+	    text-align: right;
+}

@@ -88,5 +88,5 @@ public interface HealthService extends IService<Health> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryHealthInfoList(DataRow messageMap)throws SQLException;
+	public DataRow queryHealthInfoList(Map<String,Object> map,DataRow messageMap)throws SQLException;
 }

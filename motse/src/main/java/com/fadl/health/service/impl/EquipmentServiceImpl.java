@@ -8,6 +8,8 @@ import com.fadl.health.service.EquipmentService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +34,8 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryEquipmentState() throws SQLException {
-		return equipmentMapper.queryEquipmentState();
+	public DataRow queryEquipmentState(Map<String,Object> map) throws SQLException {
+		return equipmentMapper.queryEquipmentState(map);
 	}
 	/**
 	 * 查询代理商列表
@@ -84,5 +86,32 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 	@Override
 	public DataRow queryEquipmentIdHealthdao(String imei) throws SQLException {
 		return equipmentMapper.queryEquipmentIdHealthdao(imei);
+	}
+	/**
+	 * 查询改该设备是否属于该供应商
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	@Override
+	public DataRow queryEquipmentAgent(Map<String, Object> map) throws SQLException {
+		return equipmentMapper.queryEquipmentAgent(map);
+	}
+	/**
+     * 代理商管理页面根据代理商ID查询设备信息
+     * @param map
+     * @return
+     */
+	@Override
+	public DataRow queryEquipmentImeiInfo(Map<String, Object> map, DataRow messageMap) throws SQLException {
+		int pageNum = Integer.valueOf((String) map.get("pageNum"));
+		int pageSize = Integer.valueOf((String) map.get("pageSize"));
+		map.put("pageNum", (pageNum-1)*pageSize);
+		map.put("pageSize", pageSize);
+		List<DataRow> result = equipmentMapper.queryEquipmentImeiInfo(map);
+		int total = equipmentMapper.queryEquipmentImeiInfoCount(map);
+		messageMap.initSuccess(result);
+		messageMap.put("total", total);
+		return messageMap;
 	}
 }

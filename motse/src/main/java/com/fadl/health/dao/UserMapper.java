@@ -23,7 +23,7 @@ public interface UserMapper extends BaseMapper<User> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryUserGender()throws SQLException;
+	public DataRow queryUserGender(Map<String,Object> map)throws SQLException;
 	/**
 	 * 查询添加用户的列表
 	 * @return
@@ -72,5 +72,9 @@ public interface UserMapper extends BaseMapper<User> {
      * @return
      */
 	public int deleteUserCount(Map<String,Object> map)throws SQLException;
+	/**
+	 * 根据代理商ID查询使用者总数
+	 */
+	public int queryUserCount(long id)throws SQLException;
 	
 }

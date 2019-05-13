@@ -4,6 +4,7 @@ import com.fadl.common.DataRow;
 import com.fadl.health.entity.Uploaddownload;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
 
@@ -23,5 +24,5 @@ public interface UploaddownloadService extends IService<Uploaddownload> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryUploaddownloadList(DataRow messageMap)throws SQLException;
+	public DataRow queryUploaddownloadList(Map<String,Object> map,DataRow messageMap)throws SQLException;
 }
