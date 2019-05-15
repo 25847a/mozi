@@ -218,9 +218,9 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content invite">
                                                 <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal"
+                                                    <!-- <button type="button" class="close" data-dismiss="modal"
                                                         aria-hidden="true">×
-                                                    </button>
+                                                    </button> -->
                                                     <h4 class="modal-title" id="myModalLabel">
                                                         邀请他人关注
                                                     </h4>
@@ -241,7 +241,7 @@
                                                     <button type="button" class="btn btn-default"
                                                         data-dismiss="modal">取消
                                                     </button>
-                                                    <button type="button" onclick="follow()" class="btn btn-primary" id="invite-number" >
+                                                    <button type="button" onclick="follow()" class="btn btn-primary" id="invite-number">
                                                         确定
                                                     </button>
                                                 </div>
@@ -256,7 +256,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
-                    <button type="button" onclick="detailsDetermine()" data-dismiss="modal" class="btn btn-primary" id="detailed-btn">
+                    <button type="button" onclick="detailsDetermine()" class="btn btn-primary" id="detailed-btn">
                         确定
                     </button>
                 </div>
@@ -529,9 +529,9 @@
                         <tbody>
                             <tr>
                                 <td id="addImeiA"></td>
-                                <td id="addName"></td>
+                                <td id="addNames"></td>
                                 <td id="addGender"></td>
-                                <td id="addBorn"></td>
+                                <td id="addBorns"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -616,7 +616,7 @@
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
-                        新增用户信息
+                        创建用户
                     </h4>
                 </div>
                 <div class="modal-body" id="adddivd">
@@ -626,22 +626,22 @@
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="telephone" id="telephone" placeholder="请输入绑定账号"/>
+                                <input type="text" class="form-control" name="telephone" id="telephone" placeholder="请输入已注册墨子星健康管家APP的账号"/>
                             </div>
                         </div>
                     <div class="form-group">
-                            <label for="username" class="col-sm-3 control-label">检测器IMEI号
+                            <label for="username" class="col-sm-3 control-label">监测器IMEI号
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="imei" id="addImeiB" placeholder="请输入设备号"/>
+                                <input type="text" class="form-control" name="imei" id="addImeiB" placeholder="请输入监测器IMEI号"/>
                             </div>
                         </div>
                     <div class="form-group">
                             <label for="username" class="col-sm-3 control-label">姓名
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="name" id="addName" placeholder="请输入用户昵称"/>
+                                <input type="text" class="form-control" name="name" id="addName" placeholder="请输入用户姓名"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -696,7 +696,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="username" class="col-sm-3 control-label">身高
+                            <label for="username" class="col-sm-3 control-label">身高(cm)
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
@@ -704,7 +704,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="password" class="col-sm-3 control-label">体重
+                            <label for="password" class="col-sm-3 control-label">体重(kg)
                                 <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
@@ -739,7 +739,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
-                    <button type="button" onclick="addDetermine()" data-dismiss="modal" class="btn btn-primary">
+                    <button type="button" onclick="addDetermine()" class="btn btn-primary">
                         确定
                     </button>
                 </div>
@@ -798,7 +798,7 @@
                                 </td>
                             </tr>	
                             
-                            <tr id="clothesNumber2">
+                            <tr id="clothesNumber2"  style="display:none">
                                 <td class="tabletd">衣服编号2</td>
                                 <td>
                               <div style="padding: 0px 50px;">
@@ -850,7 +850,7 @@
         <div class="img">
             <img th:src="@{/img/home.png}" alt=""/>
         </div>
-        <div class="home">主页＞添加用户</div>
+        <div class="home">主页＞用户管理</div>
     </div>
     <div class="content" id="app">
         <div class="history">
@@ -928,12 +928,12 @@
                             
                             
                             <button type="button" class="btn btn-default" id="early" data-toggle="modal" data-target="#warning" v-if="item.allNotifyOn==0">
-                                <i class="iconfont icon-kaiguan1"></i>
+                                <i class="iconfont icon-kaiguan2"></i>
                                 预警设置
                             </button>
                             
                         <button type="button" class="btn btn-default" id="early" data-toggle="modal" data-target="#warning" v-if="item.allNotifyOn==1">
-                                <i class="iconfont icon-kaiguan1 blue-color"></i>
+                                <i class="iconfont icon-kai blue-color"></i>
                                 预警设置
                             </button>
                                 
@@ -980,10 +980,8 @@
      <!-- 提示框 -->
     <script th:src="@{/js/tips/alert.js}"></script>
     <!-- 必须链接这个，修改过源码 -->
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    
-    
-   
+    <script th:src="@{/js/updateBootstrap/bootstrap.min.js}"></script>
+   	<!-- 时间选择器-->
 	<script th:src="@{/js/amazeui.min.js}"></script>
 	<script th:src="@{/js/common/utils.js}"></script>
 	<script th:src="@{/js/user/add-table.js}"></script>

@@ -460,7 +460,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 					/*	if(c!=null){
 							c.writeAndFlush("$R06|"+GB2312Utils.gb2312eecode(user.getName())+":"+GB2312Utils.gb2312eecode(user.getAddress())+"\r\n");
 						}*/
-						messageMap.initSuccess("添加设备使用者成功！！！");
+		messageMap.initSuccess("添加设备使用者成功！！！");
 					}
 				}else{
 					messageMap.initFial("该设备监护者已经存在！！！");

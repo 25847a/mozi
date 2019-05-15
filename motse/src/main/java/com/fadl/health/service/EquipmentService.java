@@ -29,7 +29,7 @@ public interface EquipmentService extends IService<Equipment> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryEquipmentList(DataRow messageMap)throws SQLException;
+	public DataRow queryEquipmentList(Map<String,Object> map,DataRow messageMap)throws SQLException;
 	/**
      * 在线离线
      * @param equipment

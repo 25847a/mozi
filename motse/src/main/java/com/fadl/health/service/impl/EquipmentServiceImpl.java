@@ -43,9 +43,15 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryEquipmentList(DataRow messageMap) throws SQLException {
-		List<DataRow> list = equipmentMapper.queryEquipmentList();
-		messageMap.initSuccess(list);
+	public DataRow queryEquipmentList(Map<String,Object> map,DataRow messageMap) throws SQLException {
+		int pageNum = Integer.valueOf((String) map.get("pageNum"));
+		int pageSize = Integer.valueOf((String) map.get("pageSize"));
+		map.put("pageNum", (pageNum-1)*pageSize);
+		map.put("pageSize", pageSize);
+		List<DataRow> result = equipmentMapper.queryEquipmentList(map);
+		int total = equipmentMapper.queryEquipmentListCount(map);
+		messageMap.initSuccess(result);
+		messageMap.put("total", total);
 		return messageMap;
 	}
 	/**

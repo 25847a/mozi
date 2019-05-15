@@ -1,6 +1,7 @@
 body{
 	padding: 10px;
-	overflow: hidden;
+	/* overflow: hidden; */
+	z-index: 9999;
 }
 .header{
 	width: 100%;
@@ -93,15 +94,18 @@ body{
     color: #337ac7;
     font-weight: bold;
 }
-
-.v-table-body-cell a{
+.v-table-body-cell button{
 	background: #337ac7;
 	font-size: 12px;
 	padding: 0 5px;
     display: inline-block;
     line-height: 27px;
-    color: #ffffff;
+	color: #ffffff;
+	border-radius: 5px;
+	border: 0;
+	
 }
+
 
 
 
@@ -115,6 +119,59 @@ body{
 .v-table-views{
 	font-size: 13px;
 }
-.v-table-rightview , .v-table-views{
-	width:100%!important;
+
+
+.v-modal{
+	z-index: -1!important;
+	background: red;
+}
+.el-message-box__wrapper{
+	background-color: rgba(255,255,255,0.8)!important;
+}
+
+.btn-lgg,.btn-lggg{
+	background: #888888;
+	display: none;
+}
+
+.modal-header{
+	background: #3277c1;
+	color: #ffffff;
+}
+.modal-dialog{
+	text-align: center;
+}
+
+.table-bordered th{
+	text-align:center;
+	color:#337ac7;
+}
+.table tbody tr td{
+	vertical-align: middle!important;
+}
+
+.lock{
+	width: 180px;
+	height: 68px;
+	margin: 0 auto;
+	padding: 17px 20px;
+	background: #ffffff;
+}
+.lock div{
+	display: inline-block;
+	vertical-align: middle;
+	
+}
+.lock div+div{
+	font-size: 12px;
+	width: 90px;
+}
+.lock .lock-img{
+	width: 36px;
+}
+.lock .lock-img img{
+	width:100%;
+}
+#clean .modal-dialog{
+	margin: 300px auto;
 }

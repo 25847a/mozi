@@ -22,6 +22,7 @@ import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
 import com.fadl.common.DateUtil;
 import com.fadl.common.IConstants;
+import com.fadl.health.entity.Usercode;
 
 @RequestMapping("log")
 @Controller
@@ -30,6 +31,14 @@ public class AdminLoginController extends AbstractController{
 	
 	@Autowired
 	AdminService adminService;
+	/**
+	 * 跳转忘记密码页面
+	 * @return
+	 */
+	@RequestMapping("/getpassword")
+	public String getpassword(){
+		return "/getpassword";
+	}
 	/**
 	 * 用户登陆
 	 * @param admin
@@ -86,4 +95,64 @@ public class AdminLoginController extends AbstractController{
         }
 		return messageMap;
 	}
+	  /**
+     * 修改密码验证手机号码
+     * phone
+     * @return
+     */
+    @RequestMapping("/checkingPhone")
+    @ResponseBody
+    public DataRow checkingPhone(String phone){
+    	try {
+    		messageMap =  adminService.checkingPhone(phone,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<checkingPhone",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 通过手机号码获取验证码
+     * phone
+     * @return
+     */
+    @RequestMapping("/checkingCode")
+    @ResponseBody
+    public DataRow checkingCode(String phone){
+    	try {
+    		messageMap =  adminService.checkingCode(phone,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<checkingCode",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 判断验证码是否正确
+     * phone
+     * @return
+     */
+    @RequestMapping("/queryCheckingCode")
+    @ResponseBody
+    public DataRow queryCheckingCode(Usercode usercode){
+    	try {
+    		messageMap =  adminService.queryCheckingCode(usercode,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<queryCheckingCode",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 忘记密码更改密码
+     * admin
+     * @return
+     */
+    @RequestMapping("/updatePassWord")
+    @ResponseBody
+    public DataRow updatePassWord(Admin admin){
+    	try {
+    		messageMap =  adminService.updatePassWord(admin,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<updatePassWord",e);
+		}
+		return messageMap;
+    }
 }

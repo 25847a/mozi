@@ -59,7 +59,13 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryEquipmentList()throws SQLException;
+	public List<DataRow> queryEquipmentList(Map<String,Object> map)throws SQLException;
+	/**
+	 * 查询代理商列表总数
+	 * @return
+	 * @throws SQLException
+	 */
+	public int queryEquipmentListCount(Map<String,Object> map)throws SQLException;
 	/**
 	 * 通过设备id查询使用者学习值
 	 * @return

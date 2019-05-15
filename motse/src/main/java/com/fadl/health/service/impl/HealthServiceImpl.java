@@ -5,6 +5,7 @@ import com.fadl.health.entity.Push;
 import com.fadl.health.entity.UserEq;
 import com.fadl.common.ArrayUtil;
 import com.fadl.common.DataRow;
+import com.fadl.common.DateUtil;
 import com.fadl.common.IConstants;
 import com.fadl.health.dao.HealthMapper;
 import com.fadl.health.service.EquipmentService;
@@ -102,6 +103,7 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 		List<DataRow> tableData =healthMapper.queryHealthList(map);//((Integer.valueOf(page) - 1) * 14),14
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::"+tableData);
 		for(int i=0;i<tableData.size();i++){
+			tableData.get(i).set("count", DateUtil.getConversionDate(tableData.get(i).getInt("count")));
 			UserEq userEq = userEqService.queryUserEqInfo(tableData.get(i).getInt("phone"));
 			if(userEq!=null){
 				EntityWrapper<Push> ew = new EntityWrapper<Push>();
@@ -117,6 +119,28 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 					}
 					if(tableData.get(i).getInt("dbp_ave")<push.getLbpend()|| tableData.get(i).getInt("dbp_ave")<push.getLbpstart()){
 						tableData.get(i).set("dbp_ave", tableData.get(i).getString("dbp_ave")+"A");
+					}
+				}
+				
+			}
+		}
+		for(int i=0;i<love.size();i++){
+			love.get(i).set("count", DateUtil.getConversionDate(love.get(i).getInt("count")));
+			UserEq userEq = userEqService.queryUserEqInfo(love.get(i).getInt("phone"));
+			if(userEq!=null){
+				EntityWrapper<Push> ew = new EntityWrapper<Push>();
+				ew.eq("userId", love.get(i).getInt("phone"));//使用者的ID
+				ew.eq("alias", userEq.getUserId());
+				Push push =pushService.selectOne(ew);
+				if(push!=null){
+					if(love.get(i).getInt("Heartrate")>push.getHeartHigThd() || love.get(i).getInt("Heartrate")<push.getHeartLowThd()){
+						love.get(i).set("Heartrate", love.get(i).getString("Heartrate")+"A");
+					}
+					if(love.get(i).getInt("sbp_ave")>push.getHbpend()|| love.get(i).getInt("sbp_ave")<push.getHbpstart()){
+						love.get(i).set("sbp_ave", love.get(i).getString("sbp_ave")+"A");
+					}
+					if(love.get(i).getInt("dbp_ave")<push.getLbpend()|| love.get(i).getInt("dbp_ave")<push.getLbpstart()){
+						love.get(i).set("dbp_ave", love.get(i).getString("dbp_ave")+"A");
 					}
 				}
 				
@@ -255,16 +279,16 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	@Override
 	public Object[] queryBloodoxygenCount() throws SQLException {
 		List<DataRow> bloodoxygen =healthMapper.queryBloodoxygenCount();
-		Object[] result={"",0,0,"",0,0,""};
+		Object[] result={0,0,0,0,0};
 		//Object[] result={0,"",0,"",0,0,""};
 		for(DataRow dataRow: bloodoxygen){
 			int gender = dataRow.getInt("gender");
 			if(gender==0){//男
-				result[1]=dataRow.getInt("bloodoxygen1");//'<94男性'
-				result[5]=dataRow.getInt("bloodoxygen2");//'94-99男性
+				result[0]=dataRow.getInt("bloodoxygen1");//'<94男性'
+				result[1]=dataRow.getInt("bloodoxygen2");//'94-99男性
 			}else if(gender==1){//女
 				result[2]=dataRow.getInt("bloodoxygen1");//'<94女性'
-				result[4]=dataRow.getInt("bloodoxygen2");//'94-99女性'
+				result[3]=dataRow.getInt("bloodoxygen2");//'94-99女性'
 			}else if(gender==2){
 			//	messageMap.put("bloodoxygenOther", result);
 			}

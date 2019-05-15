@@ -17,7 +17,7 @@ var move = new Vue({
 		initzst(heartrateBoy,heartrateGirl) {
 			let option = {
 				title: {
-					text: '心率统计图',
+					text: '心率统计图表',
 				},
 				tooltip: {
 					trigger: 'axis'
@@ -30,7 +30,7 @@ var move = new Vue({
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: ['<49次分', '50-59次分', '60-69次分', '70-79次分', '80-89次分', '90-100次分', '>100次分']
+					data: ['<49', '50-59', '60-69', '70-79', '80-89', '90-100', '>100(次分)']
 				},
 				yAxis: {
 					name: '(人)',

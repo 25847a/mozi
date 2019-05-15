@@ -24,7 +24,7 @@ var ring = new Vue({
 				    color:["#2ec7c9","#ffb980","#5ab1ef"],
 				    legend: {
 				        x: 'center',
-				        data: ['50-70','70-80','>80'] 
+				        data: ['50-70(%):'+microcirculation.microcirculation3+'人','70-80(%):'+microcirculation.microcirculation2+'人','>80(%):'+microcirculation.microcirculation1+'人'		] 
 				    },
 				    series: [
 
@@ -41,7 +41,7 @@ var ring = new Vue({
 				                    }
 				                }
 				            },
-				          /*  label: {
+				      /*   label: {
 				                normal: {
 				                    formatter: '{b|{b}}{a|{d}%}\n\n',
 				                    borderWidth: 20,
@@ -61,15 +61,25 @@ var ring = new Vue({
 				                    }
 				                }
 				            },*/
+				          /*  data: [{
+				                value: 10,
+				                name: '50-70'
+				            }, {
+				                value: 30,
+				                name: '70-80'
+				            }, {
+				                value: 70,
+				                name: '>80'
+				            }]*/
 				            data: [{
 				                value: microcirculation.microcirculation3,
-				                name: '50-70:'+microcirculation.microcirculation3+'人'
+				                name: '50-70(%):'+microcirculation.microcirculation3+'人'
 				            }, {
 				                value: microcirculation.microcirculation2,
-				                name: '70-80:'+microcirculation.microcirculation2+'人'
+				                name: '70-80(%):'+microcirculation.microcirculation2+'人'
 				            }, {
 				                value: microcirculation.microcirculation1,
-				                name: '>80:'+microcirculation.microcirculation1+'人'
+				                name: '>80(%):'+microcirculation.microcirculation1+'人'
 				            }]
 				        }
 				    ]

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fadl.health.dao.UsercodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.fadl.health.entity.Usercode">
+        <id column="id" property="id" />
+        <result column="phoen" property="phoen" />
+        <result column="code" property="code" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, phoen, code
+    </sql>
+	
+	<!-- 查询验证码表 -->
+	<select id="queryUsercodeInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from usercode where phoen=#{phone}
+	</select>
+	<!--插入语句 -->
+	<insert id="insertUsercode" parameterType="com.fadl.health.entity.Usercode">
+		INSERT INTO usercode (phoen,code)VALUES (#{phoen},{code});
+	</insert>
+	<!-- 更新语句 -->
+	<update id="updateUsercode" parameterType="com.fadl.health.entity.Usercode">
+		UPDATE usercode SET code=#{code} WHERE id=#{id}
+	</update>
+</mapper>

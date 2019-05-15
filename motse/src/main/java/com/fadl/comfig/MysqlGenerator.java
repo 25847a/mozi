@@ -29,10 +29,10 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 public class MysqlGenerator {
 	private static String packageName="";    //文件路径
     private static String authorName="jian";     //作者
-    private static String table="hr";                  //table名字
+    private static String table="usercode";                  //table名字
     private static String prefix="";                     //table前缀
-    private static String modulePack=".hr";//需要命名模块则需要加. 如：.user
-    private static String moduleMapper="hr/";//需要命名模块则需要加  / 如：  user/
+    private static String modulePack=".health";//需要命名模块则需要加. 如：.user
+    private static String moduleMapper="health/";//需要命名模块则需要加  / 如：  user/
     private static File file = new File(packageName);
     private static String path = file.getAbsolutePath();
 

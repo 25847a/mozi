@@ -44,9 +44,9 @@ public class EquipmentController extends AbstractController{
 	 */
 	@RequestMapping("/queryEquipmentList")
 	@ResponseBody
-	public DataRow queryEquipmentList(@RequestParam Map<String,String> map){
+	public DataRow queryEquipmentList(@RequestParam Map<String,Object> map){
 		try {
-		messageMap=equipmentService.queryEquipmentList(messageMap);
+		messageMap=equipmentService.queryEquipmentList(map,messageMap);
 		} catch (Exception e) {
 			logger.error("EquipmentController>>>>>>>>>>>>>queryEquipmentList",e);
 		}

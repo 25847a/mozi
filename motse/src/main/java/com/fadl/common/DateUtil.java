@@ -272,4 +272,15 @@ public class DateUtil {
     	date = getFourteenWithDate(date);
     	return getSystemTime(date);
     }
+    /**
+     * 时间换算
+     * @param num
+     * @return
+     */
+    public static String getConversionDate(int num){
+    	 	int time = num*5;
+	        int hours = (int) Math.floor(time / 60);
+	        int minute = time % 60;
+	        return hours + "小时" + minute + "分钟";
+    }
 }

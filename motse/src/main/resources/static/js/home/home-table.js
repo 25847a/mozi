@@ -24,23 +24,28 @@ var tableList=new Vue({
                         field: 'id', width: 50, titleAlign: 'center', columnAlign: 'center',isFrozen: true,
                     },
                     { field: 'name', width: 133, columnAlign: 'center', isResize: true  },
-                    { field: 'Heartrate', width: 110, columnAlign: 'center', isResize: true,
+                    { field: 'Heartrate', width: 80, columnAlign: 'center', isResize: true,
                         formatter: function (rowData) {
                         		 return rowData.Heartrate.toString().replace("A","");
                      } },
-                    { field: 'sbp_ave', width: 130, columnAlign: 'center',  isResize: true,
+                    { field: 'sbp_ave', width: 100, columnAlign: 'center',  isResize: true,
                          formatter: function (rowData) {
                     		 return rowData.sbp_ave.toString().replace("A","");
                  }  },
-                    { field: 'dbp_ave', width: 130, columnAlign: 'center',  isResize: true,
+                    { field: 'dbp_ave', width: 100, columnAlign: 'center',  isResize: true,
                      formatter: function (rowData) {
                 		 return rowData.dbp_ave.toString().replace("A","");
              }  },
-                    { field: 'HRV', width: 120, columnAlign: 'center', isResize: true },
-                    { field: 'microcirculation', width: 120, columnAlign: 'center', isResize: true },
-                    { field: 'Bloodoxygen', width: 120, columnAlign: 'center', isResize: true },
-                    { field: 'respirationrate', width: 120, columnAlign: 'center', isResize: true },
-                    { field: 'createtime', width: 200, columnAlign: 'center', isResize: true }
+                    { field: 'HRV', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'microcirculation', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'Bloodoxygen', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'respirationrate', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'step_when', width: 100, columnAlign: 'center', isResize: true,
+                    	formatter: function (rowData) {
+                   		 return rowData.step_when==undefined?0:rowData.step_when;
+                } },
+                    { field: 'count', width: 120, columnAlign: 'center', isResize: true },
+                    { field: 'createtime', width: 160, columnAlign: 'center', isResize: true }
                 ],
                 titleRows: [
 
@@ -55,6 +60,8 @@ var tableList=new Vue({
                         { fields: ['microcirculation'], title: '微循环', titleAlign: 'center' },
                         { fields: ['Bloodoxygen'], title: '血氧', titleAlign: 'center' },
                         { fields: ['respirationrate'], title: '呼吸', titleAlign: 'center' },
+                        { fields: ['step_when'], title: '当天步数', titleAlign: 'center' },
+                        { fields: ['count'], title: '累计时长', titleAlign: 'center' },
                         { fields: ['createtime'], title: '更新时间', titleAlign: 'center' }
                     ],
                 ],

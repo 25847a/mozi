@@ -1,3 +1,7 @@
+//限制选择未来时间
+futureDate("addBorn");
+futureDate("addLiveTime");
+//firstSecondDate("detailsBorn","detailsLiveTime");
 		/**
 		 * 获取床号列表
 		 */
@@ -51,7 +55,7 @@
         methods: {
             goback: function () {
             	var params = new URLSearchParams();
-            	console.log("pageNum:"+pageIndex+"<<<<<pageSize"+pageSize);
+            ///	console.log("pageNum:"+pageIndex+"<<<<<pageSize"+pageSize);
            	 params.append('pageNum',pageIndex);
            	 params.append('pageSize',pageSize);
            	 params.append('imeiNum',imeiNum);
@@ -68,12 +72,12 @@
             	}
             },
             handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
+            //    console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
             	pageIndex=val;
             	this.goback();
-                console.log(`当前页: ${val}`);
+          //      console.log(`当前页: ${val}`);
             },
             	promptBox(){
             		this.$confirm('此操作删除后无法恢复, 是否继续?', '提示', {
@@ -111,7 +115,7 @@
     });
     //在线离线弹窗
    	$(".table-hover tbody").on("click", "#line button", function () {
-   	// 临时的	$("tr[id=clothesNumber2]").remove();
+   	//	$("tr[id=clothesNumber2]").remove();
         var equipmentId = $(this).parent('#line').parent('tr').find('td').eq(1).text();
         $.ajax({
             type : "POST",
@@ -178,6 +182,8 @@
             	}else if(result.code==200){
             		$("#clothes1").text("已绑定");
             		$("#closeState").text("在线");
+            	}else if(result.code==350){
+            		$("#clothes1").text("点击绑定");
             	}
             	tips(result.message);
             		
@@ -212,6 +218,8 @@
             		$("#disconnect1").text("断开成功");
             		$("#clothes1").text("点击绑定");
             		$("#closeState").text("离线");
+            	}else if(result.code==350){
+            		$("#disconnect1").text("断开失败");
             	}
             	tips(result.message);
             		
@@ -526,7 +534,6 @@
 	            		$("#detailsPhone2").val(data.phone2);
 	            		$("#detailsAddress").val(data.address);
 	            		$("#illness").val(data.illness);
-	            		console.log(result.list.length);
 	            		if(result.list.length>0){
 	            			document.getElementById("detailsTypeof").innerHTML = "";
 	            			var divA = document.getElementById("detailsTypeof");
@@ -534,6 +541,8 @@
 	            				var str = "<div>" + (parseInt(o)+1) +"."+result.list[o].name+"&emsp;"+result.list[o].phone+ "</div>";
 	            				divA.innerHTML = divA.innerText+str;
 	            			}
+	            		}else{
+	            			document.getElementById("detailsTypeof").innerHTML = "";
 	            		}
 	            	}
 	            },
@@ -548,6 +557,11 @@
 	 */
 	function follow(){
 		var account=$("#textId").val();
+		if(account==""){
+			tips("请输入已注册健康管家的手机号码");
+			return;
+			
+		}
 		var imei=document.getElementById("detailsImei").innerHTML;
 		$.ajax({
             type : "POST",
@@ -556,7 +570,23 @@
             data:{"account":account,"imei":imei},
             datatype : "json",
             success : function(result) {
+            	if(result.code==-1){
+            		if(result.data.length>0){
+            			document.getElementById("detailsTypeof").innerHTML = "";
+            			var divA = document.getElementById("detailsTypeof");
+            			for(var o in result.data){
+            				var str = "<div>" + (parseInt(o)+1) +"."+result.data[o].name+"&emsp;"+result.data[o].phone+ "</div>";
+            				divA.innerHTML = divA.innerText+str;
+            			}
+            		}else{
+            			document.getElementById("detailsTypeof").innerHTML = "";
+            		}
+            		$("#invite-number").attr("data-dismiss","modal");
+            	}else{
+            		$("#invite-number").removeAttr("data-dismiss","modal");
             		tips(result.message);
+            	}
+            		
             },
             error : function() {
             	tips("操作失败");
@@ -655,9 +685,9 @@
             	if(result.code==-1){
             		var data = result.data;
             		document.getElementById("addImeiA").innerHTML=data.imei;
-            		document.getElementById("addName").innerHTML=data.name;
+            		document.getElementById("addNames").innerHTML=data.name;
             		document.getElementById("addGender").innerHTML=data.gender;
-            		document.getElementById("addBorn").innerHTML=data.born;
+            		document.getElementById("addBorns").innerHTML=data.born;
             	}else{
             		tips(result.message);
             	}
@@ -741,12 +771,37 @@
 	}
 	function addDetermine(){
 		var data={};
+		var result = true;
 		$("#adddivd input").each(function () {
+			if(this.id!="addIllness" & this.id!="addName" & this.id!="addBed"){
+				if(this.value==""){
+					tips($("#"+this.id).attr('placeholder'));
+					result = false;
+	                return false;
+				}
+			}
 			data[this.name]=this.value;
+			if (!result){
+				return;
+			}
 		});
+		if (!result){
+			return;
+		}
 		$("#adddivd select").each(function () {
+			if(this.value==""){	
+				$("#addNurse").val()==""?tips("请选择分属护工"):tips("请选择性别");
+				result = false;
+                return false;
+			}
 			data[this.name]=this.value;
+			if (!result){
+				return;
+			}
 		});
+		if (!result){
+			return;
+		}
 		$.ajax({
             type : "POST",
             async: false,	
@@ -762,17 +817,19 @@
             }
         });
 	};
-		
+	
 
-/*//
- //   <!-- 详细弹窗验证手机号 -->
+        
+
+
+ /*//   <!-- 详细弹窗验证手机号 -->
     $(this).keydown(function (e) {
         var key = window.event ? e.keyCode : e.which;
         if (key.toString() == "13") {
             return false;
         }
-    });
-
+    });*/
+    /*//
     $("#textId").keyup(function () {
         $(this).val($(this).val().replace(/[^0-9]/g, ''));
     }).bind("paste", function () {

@@ -82,6 +82,67 @@ function tipsMessage(data,message){
 		return;
 	}
 }; */
+/**
+ * 限制未来时间的选择
+ */
+function futureDate(dateId){
+    var nowTemp = new Date();
+    var nowDay = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0).valueOf();
+    var nowMoth = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), 1, 0, 0, 0, 0).valueOf();
+    var nowYear = new Date(nowTemp.getFullYear(), 0, 1, 0, 0, 0, 0).valueOf();
+    var $myStart2 = $('#'+dateId);
+
+    var checkin = $myStart2.datepicker({
+        onRender: function (date, viewMode) {
+            // 默认 days 视图，与当前日期比较
+            var viewDate = nowDay;
+
+            switch (viewMode) {
+                // moths 视图，与当前月份比较
+                case 1:
+                    viewDate = nowMoth;
+                    break;
+                // years 视图，与当前年份比较
+                case 2:
+                    viewDate = nowYear;
+                    break;
+            }
+            return date.valueOf() > viewDate ? 'am-disabled' : '';
+        }
+    })
+};
+/**
+ * 开始日期和结束日期对比
+ */
+function firstSecondDate(firstId,secondId){
+	var startDate = new Date($("#"+firstId).val());
+    var endDate = new Date($("#"+secondId).val());
+    var $alert = $('#'+firstId);
+    $('#'+firstId).datepicker().
+      on('changeDate.datepicker.amui', function(event) {
+        if (event.date.valueOf() > endDate.valueOf()) {
+          $alert.find('p').text('开始日期应小于结束日期！').end().show();
+        } else {
+          $alert.hide();
+          startDate = new Date(event.date);
+     //     $('#my-startDate').text($('#my-start').data('date'));
+        }
+        $(this).datepicker('close');
+      });
+
+    $('#'+secondId).datepicker().
+      on('changeDate.datepicker.amui', function(event) {
+        if (event.date.valueOf() < startDate.valueOf()) {
+          $alert.find('p').text('结束日期应大于开始日期！').end().show();
+        } else {
+          $alert.hide();
+          endDate = new Date(event.date);
+       //   $('#my-endDate').text($('#my-end').data('date'));
+        }
+        $(this).datepicker('close');
+      });
+};
+
 
 /**
  *  去尾法 进一法 四舍五入法

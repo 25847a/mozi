@@ -173,7 +173,7 @@ function loginSubmit() {
                         complete: function () {
                             $("#login").removeAttr("disabled");
                         }
-                    })
+                    });
         
         }
     }
@@ -201,5 +201,7 @@ $("#passWord").on("blur",function(){
 	}else if(!($("#passWord").val() == "")){
         $("#passWordCheck").text("").removeClass("errorIcon");
 	}
-})
- 
+});
+function forgePassword(){
+	 window.location.href='/log/getpassword';
+}

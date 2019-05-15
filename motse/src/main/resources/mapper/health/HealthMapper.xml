@@ -25,15 +25,17 @@
     <!-- 查询首页健康数据列表 -->
     <select id="queryHealthList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
     	set @rownum=#{pageNum};
-    	SELECT @rownum:=@rownum+1 as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM(
-		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
+    	SELECT @rownum:=@rownum+1 as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tl.step_when,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tx.count FROM(
+		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime,tt.count FROM jfhealth tp
 		RIGHT JOIN(
-		SELECT MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
+		SELECT MAX(createtime) as createtime,COUNT(*) as count FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
 		) tt
 		ON tp.createtime=tt.createtime
 		)tx
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
+		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data  WHERE createtime=DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY user_id) tl
+		ON tx.phone=tl.user_id
 		LEFT JOIN equipment ta
 		ON tc.imei=ta.imei
 		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
@@ -55,27 +57,29 @@
 		ON tx.phone=tc.id
 		LEFT JOIN equipment ta
 		ON tc.imei=ta.imei
-		LEFT JOIN admin tf
+		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
 		ON tf.agentId=ta.agentid
-		WHERE tc.isDelete=0 AND tc.love=0 AND tf.id=#{adminId}
+		WHERE tc.isDelete=0 AND tc.love=0
 		) tb
     </select>
     <!-- 查询重点关爱的使用者 -->
     <select id="queryHealthListLove" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
-		SELECT '置顶' as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tc.love FROM(
-		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
+		SELECT '置顶' as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tl.step_when,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tc.love,tx.count FROM(
+		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime,tt.count FROM jfhealth tp
 		RIGHT JOIN(
-		SELECT MAX(createtime) as createtime FROM jfhealth GROUP BY phone
+		SELECT MAX(createtime) as createtime,COUNT(*) as count FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
 		) tt
 		ON tp.createtime=tt.createtime
 		)tx
 		LEFT JOIN user tc
 		ON tx.phone=tc.id
+		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data  WHERE createtime=DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY user_id) tl
+		ON tx.phone=tl.user_id
 		INNER JOIN equipment ta
 		ON tc.imei=ta.imei
-		LEFT JOIN admin tf
+		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
 		ON tf.agentId=ta.agentid
-		WHERE tc.isDelete=0 AND tf.id=#{adminId} AND tc.love=1
+		WHERE tc.isDelete=0 AND tc.love=1
 		LIMIT #{pageNum},#{pageSize}
     </select>
 	<!-- 首页当天心率统计图 -->

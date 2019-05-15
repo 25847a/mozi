@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,9 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				    push.setLbpend(80);
 				    push.setCreateTime(DateUtil.sf.format(new Date()));
 				    pushService.insert(push);
-				    messageMap.initSuccess();
+				    map.put("equipmentId", row.getString("equipmentId"));
+				    List<DataRow> list =userService.queryObserver(map);
+				    messageMap.initSuccess(list);
 				}else{
 					messageMap.initFial("设备未绑定,请先绑定设备");
 				}

@@ -129,32 +129,44 @@ if (safariVersion <= DEFAULT_VERSION) {
 /**********************/
 //	===================左侧导航==============s
 var checked = false;
-var checkcode = false;
 var checkpassword= false;
 var i = 0;
+/**
+ * 输入验证码点击下一步
+ */
 $(".next").click(function () {
-    if ($("#Phone").val() == "" | $("#valid").val() == "") {
-
-    } else {
-        if (checked) {
-            CheckVcode()
-            if (checkcode) {
-                $(".list-huakuai").removeClass("list-huakuai").next().addClass("list-huakuai");
-                $('.information').hide().eq(++i).show();
-                $("#companyphone").val($("#Phone").val());
-                $("#pwdcode").val($("#valid").val());
-                console.log("qwe");
-            }
-        }
+    if ($("#Phone").val() != "" || $("#valid").val() != "") {
+    	$("#oldphone").val($("#Phone").val());
+    	 if (checked) {
+    		 $.ajax({
+    		        type: "post",
+    		        url: "/log/queryCheckingCode",
+    		        data: {"phoen": $("#Phone").val(),"code": $("#valid").val()},
+    		        success: function (data) {
+    		            if (data.code == -1) {
+    		            	  $(".list-huakuai").removeClass("list-huakuai").next().addClass("list-huakuai");
+    		                  $('.information').hide().eq(++i).show();
+    		                  $("#companyphone").val($("#Phone").val());
+    		                  $("#pwdcode").val($("#valid").val());
+    		            } else{
+    		            	tips("验证码错误!");
+    		            }
+    		        },
+    		        error: function () {
+    		        	tips("发生错误,请刷新页面重试");
+    		        }
+    		    });
+         }
+    	} else {
+    		tips("输入框不能为空!!");
     }
-})
+});
+
 $("#pwd1").on("blur", function () {
     if ($("#pwd1").val() == "") {
-        $("#passWord").text("请输入新密码");
-    } else {
-        $("#passWord").text("");
+    	tips("请输入新密码");
     }
-})
+});
 
 $("#pwd2").on("blur", function () {
     checkpwd();
@@ -162,37 +174,32 @@ $("#pwd2").on("blur", function () {
 
 function checkpwd() {
     if ($("#pwd2").val() == "") {
-        $("#passWord2").text("请再次输入密码");
+    	tips("请再次输入密码!");
     } else {
-        $("#passWord2").text("");
+    	if ($("#pwd1").val()!== $("#pwd2").val()) {
+        	tips("两次输入的密码不一致!");
+            checkpassword = false;
+        } else{
+        	checkpassword= true;
+        }
     }
-    if ($("#pwd1").val() !== $("#pwd2").val()) {
-        $("#passWord2").text("两次输入的密码不一致!");
-        checkpassword = false;
-    } else {
-        checkpassword= true;
-        $("#passWord2").text("")
-    }
-}
-
+};
+/**
+ * 输入新密码点击下一步
+ */
 $("#yemian2").click(function () {
     checkpwd();
     if (checkpassword) {
-       // $("#newpassword").submit();
         $.ajax({
-            url: "/Company/RetrievePassword",
+            url: "/log/updatePassWord",
             type: "post",
-            data: $("#newpassword").serialize(),
+            data:{"account": $("#oldphone").val(),"passWord": $("#pwd2").val()},
             success: function (data) {
-                if (data.code == 10001) {
-                    alert("验证码错误")
-                } else if (data.code == 10002) {
-                    alert("验证码已过期")
-                } else if (data.code == 10000) {
-                    $(".list-huakuai").removeClass("list-huakuai").next().addClass("list-huakuai");
-                    $('.information').hide().eq(++i).show();
-                } else {
-                    alert("发生错误！")
+                if (data.code == -1) {
+                	 $(".list-huakuai").removeClass("list-huakuai").next().addClass("list-huakuai");
+                     $('.information').hide().eq(++i).show();
+                }else{
+                	tips("两次输入的密码不一致!");
                 }
             }
 
@@ -203,14 +210,14 @@ $("#yemian2").click(function () {
 $("#Phone").on("blur", function () {
     $.ajax({
         type: "post",
-        url: "/Company/CheckPhoneIsRegisteredForForget",
+        url: GetURLInfo()+"log/checkingPhone",
         data: { "phone": $("#Phone").val() },
         success: function (data) {
-            if (data) {
+            if (data.code==-1) {
                 checked = true;
             } else {
                 checked = false;
-                $("#Phonecheck").text("该手机号不存在!");
+                tips("该手机号不存在!!");
             }
         }
     })
@@ -220,20 +227,17 @@ $("#Phone").on("blur", function () {
 $("#valid").on("blur", function () {
     if ($("#valid").val() == "") {
         console.log("sd")
-        $("#validcheck").text("--请输入您的验证码")
+        $("#validcheck").text("--请输入您的验证码");
     } else if (!($("#valid").val() == "")) {
         $("#validcheck").text("")
     }
-})
-
+});
 var checkphone = false;
 function phone() {
     if ($("#Phone").val() == "") {
-        console.log("sd")
-        $("#Phonecheck").text("--请输入您的手机号码")
+        tips("请输入您的手机号码!!");
         checkphone = false;
     } else if (!($("#Phone").val() == "")) {
-        $("#Phonecheck").text("")
         checkphone = true;
     }
 }
@@ -243,28 +247,29 @@ var timer;
 $("#vcode").on("click", function () {
     phone();
     if (checkphone) {
-        $("#vcode").attr("disabled", "disabled")
+        $("#vcode").attr("disabled", "disabled");
         if ($("#Phone").val() != "") {
             $.ajax({
                 type: "post",
-                url: "/Vcode/YanzhenmaForRePwd",
+                url: GetURLInfo()+"log/checkingCode",
                 data: { "phone": $("#Phone").val() },
                 success: function (data) {
-                    if (data.result == 1) {
+                    if (data.code == -1) {
+                    	 tips("验证码已发送,请查收");
                         timer = setInterval(loop, 1000);
                     } else {
                         $("#vcode").removeAttr("disabled");
-                        alert("验证码发送失败，请检查手机号码和网络后重新发送！")
+                        tips("验证码发送失败，请检查手机号码和网络后重新发送!");
                     }
                 },
                 error: function () {
                     $("#vcode").removeAttr("disabled");
-                    alert("验证码发送失败，请检查手机号码和网络后重新发送！")
+                    tips("验证码发送失败，请检查手机号码和网络后重新发送!")
                 }
-            })
+            });
         } else {
             $("#vcode").removeAttr("disabled");
-            alert("请先填写手机号码！")
+            tips("请先填写手机号码!");
         }
     }
 })
@@ -280,26 +285,3 @@ function loop() {
         $("#vcode").removeAttr("disabled");
     }
 }	
-
-function CheckVcode() {
-
-    $.ajax({
-        type: "post",
-        url: "/Company/Verfication",
-        data: { "phonenum": $("#Phone").val(), "vcodenum": $("#valid").val() },
-        success: function (data) {
-            if (data.result == 0) {
-                //$("#checkcode").text("验证码错误")
-                alert("验证码错误")
-            } else if (data.result == 1) {
-                // $("#checkcode").text("验证码已过期，请重新获取")
-                alert("验证码已过期，请重新获取")
-            } else {
-                checkcode= true;
-            }
-        },
-        error: function () {
-            alert("发生错误");
-        }
-    })
-}

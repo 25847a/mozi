@@ -2,6 +2,8 @@ package com.fadl.account.service;
 
 import com.fadl.account.entity.Admin;
 import com.fadl.common.DataRow;
+import com.fadl.health.entity.Usercode;
+
 import java.sql.SQLException;
 import java.util.Map;
 import com.baomidou.mybatisplus.service.IService;
@@ -47,4 +49,34 @@ public interface AdminService extends IService<Admin> {
      * @return
      */
 	public DataRow updateAgentPassword(Admin admin,Map<String,String> map,DataRow messageMap)throws Exception;
+	/**
+     * 修改密码验证手机号码
+     * phone
+     * @return
+     */
+	public DataRow checkingPhone(String phone,DataRow messageMap)throws Exception;
+	/**
+     * 通过手机号码获取验证码
+     * phone
+     * @return
+     */
+	public DataRow checkingCode(String phone,DataRow messageMap)throws Exception;
+	/**
+     * 判断验证码是否正确
+     * usercode
+     * @return
+     */
+	public DataRow queryCheckingCode(Usercode usercode,DataRow messageMap)throws Exception;
+	/**
+     * 忘记密码更改密码
+     * admin
+     * @return
+     */
+	public DataRow updatePassWord(Admin admin,DataRow messageMap)throws Exception;
+	
+	
+	
+	
+	
+	
 }

@@ -42,8 +42,31 @@
 	</select>
 	
 	<!-- 查询设备数据列表 -->
-	<select id="queryEquipmentList" resultType="com.fadl.common.DataRow">
-		SELECT id,imei,lordpower,signalxhao,bluetooth_type,eq_status,phone1,phone2,version,DATE_FORMAT(updatetime,'%Y-%m-%d %H:%i:%s') as updatetime from equipment LIMIT 0,50	
+	<select id="queryEquipmentList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT id,imei,lordpower,signalxhao,CASE WHEN bluetooth_type=0 THEN '未绑定' ELSE '绑定' END AS bluetooth_type,
+		CASE WHEN eq_status='H:0' THEN '离线' ELSE '在线' END AS eq_status,phone1,phone2,version,DATE_FORMAT(updatetime,'%Y-%m-%d %H:%i:%s') as updatetime from equipment
+		WHERE 1=1
+		<if test="imei!=null and imei!=''">
+		AND imei LIKE CONCAT('%',#{imei},'%')
+		</if>
+		<if test="eq_status!=null and eq_status!=''">
+		AND eq_status=#{eq_status}
+		</if>
+		LIMIT #{pageNum},#{pageSize}
+	</select>
+	<!-- 查询设备数据列表总数 -->
+	<select id="queryEquipmentListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		select count(*) from(
+			SELECT id,imei,lordpower,signalxhao,CASE WHEN bluetooth_type=0 THEN '未绑定' ELSE '绑定' END AS bluetooth_type,
+			CASE WHEN eq_status='H:0' THEN '离线' ELSE '在线' END AS eq_status,phone1,phone2,version,DATE_FORMAT(updatetime,'%Y-%m-%d %H:%i:%s') as updatetime from equipment
+			WHERE 1=1
+			<if test="imei!=null and imei!=''">
+			AND imei LIKE CONCAT('%',#{imei},'%')
+			</if>
+			<if test="eq_status!=null and eq_status!=''">
+			AND eq_status=#{eq_status}
+			</if>
+		) tt
 	</select>
 	<!-- 通过设备id查询使用者学习值 -->
 	<select id="queryEquipmentIdHealthdao" resultType="com.fadl.common.DataRow" parameterType="java.lang.String">
