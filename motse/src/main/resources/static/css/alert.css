@@ -249,5 +249,5 @@ body{
   animation-name: bounceOut;
 }
 .alert-content{
-	z-index:-1!important;
+	z-index:9999!important;
 }

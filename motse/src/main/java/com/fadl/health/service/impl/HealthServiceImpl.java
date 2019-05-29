@@ -98,32 +98,6 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 		map.put("pageNum", ((Integer.valueOf(page) - 1) * 7));
 		map.put("pageSize", 7);
 		List<DataRow> love = healthService.queryHealthListLove(map);//((Integer.valueOf(page) - 1) * 7),7
-		map.put("pageNum", ((Integer.valueOf(page) - 1) * 14));
-		map.put("pageSize", 14);
-		List<DataRow> tableData =healthMapper.queryHealthList(map);//((Integer.valueOf(page) - 1) * 14),14
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::"+tableData);
-		for(int i=0;i<tableData.size();i++){
-			tableData.get(i).set("count", DateUtil.getConversionDate(tableData.get(i).getInt("count")));
-			UserEq userEq = userEqService.queryUserEqInfo(tableData.get(i).getInt("phone"));
-			if(userEq!=null){
-				EntityWrapper<Push> ew = new EntityWrapper<Push>();
-				ew.eq("userId", tableData.get(i).getInt("phone"));//使用者的ID
-				ew.eq("alias", userEq.getUserId());
-				Push push =pushService.selectOne(ew);
-				if(push!=null){
-					if(tableData.get(i).getInt("Heartrate")>push.getHeartHigThd() || tableData.get(i).getInt("Heartrate")<push.getHeartLowThd()){
-						tableData.get(i).set("Heartrate", tableData.get(i).getString("Heartrate")+"A");
-					}
-					if(tableData.get(i).getInt("sbp_ave")>push.getHbpend()|| tableData.get(i).getInt("sbp_ave")<push.getHbpstart()){
-						tableData.get(i).set("sbp_ave", tableData.get(i).getString("sbp_ave")+"A");
-					}
-					if(tableData.get(i).getInt("dbp_ave")<push.getLbpend()|| tableData.get(i).getInt("dbp_ave")<push.getLbpstart()){
-						tableData.get(i).set("dbp_ave", tableData.get(i).getString("dbp_ave")+"A");
-					}
-				}
-				
-			}
-		}
 		for(int i=0;i<love.size();i++){
 			love.get(i).set("count", DateUtil.getConversionDate(love.get(i).getInt("count")));
 			UserEq userEq = userEqService.queryUserEqInfo(love.get(i).getInt("phone"));
@@ -133,19 +107,53 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 				ew.eq("alias", userEq.getUserId());
 				Push push =pushService.selectOne(ew);
 				if(push!=null){
-					if(love.get(i).getInt("Heartrate")>push.getHeartHigThd() || love.get(i).getInt("Heartrate")<push.getHeartLowThd()){
-						love.get(i).set("Heartrate", love.get(i).getString("Heartrate")+"A");
+					if(push.getAllNotifyOn()==1){
+						if(love.get(i).getInt("Heartrate")>push.getHeartHigThd() || love.get(i).getInt("Heartrate")<push.getHeartLowThd()){
+							love.get(i).set("Heartrate", love.get(i).getString("Heartrate")+"A");
+						}
+						if(love.get(i).getInt("sbp_ave")>push.getHbpend()|| love.get(i).getInt("sbp_ave")<push.getHbpstart()){
+							love.get(i).set("sbp_ave", love.get(i).getString("sbp_ave")+"A");
+						}
+						if(love.get(i).getInt("dbp_ave")>push.getLbpend()|| love.get(i).getInt("dbp_ave")<push.getLbpstart()){
+							love.get(i).set("dbp_ave", love.get(i).getString("dbp_ave")+"A");
+						}
 					}
-					if(love.get(i).getInt("sbp_ave")>push.getHbpend()|| love.get(i).getInt("sbp_ave")<push.getHbpstart()){
-						love.get(i).set("sbp_ave", love.get(i).getString("sbp_ave")+"A");
-					}
-					if(love.get(i).getInt("dbp_ave")<push.getLbpend()|| love.get(i).getInt("dbp_ave")<push.getLbpstart()){
-						love.get(i).set("dbp_ave", love.get(i).getString("dbp_ave")+"A");
+				}
+				
+			}
+		};
+	//	if(love.size()<=7){}
+		
+		
+		
+		map.put("pageNum", ((Integer.valueOf(page) - 1) * 14));
+		map.put("pageSize", 14);
+		List<DataRow> tableData =healthMapper.queryHealthList(map);//((Integer.valueOf(page) - 1) * 14),14
+		for(int i=0;i<tableData.size();i++){
+			tableData.get(i).set("count", DateUtil.getConversionDate(tableData.get(i).getInt("count")));
+			UserEq userEq = userEqService.queryUserEqInfo(tableData.get(i).getInt("phone"));
+			if(userEq!=null){
+				EntityWrapper<Push> ew = new EntityWrapper<Push>();
+				ew.eq("userId", tableData.get(i).getInt("phone"));//使用者的ID
+				ew.eq("alias", userEq.getUserId());
+				Push push =pushService.selectOne(ew);
+				if(push!=null){
+					if(push.getAllNotifyOn()==1){
+						if(tableData.get(i).getInt("Heartrate")>push.getHeartHigThd() || tableData.get(i).getInt("Heartrate")<push.getHeartLowThd()){
+							tableData.get(i).set("Heartrate", tableData.get(i).getString("Heartrate")+"A");
+						}
+						if(tableData.get(i).getInt("sbp_ave")>push.getHbpend()|| tableData.get(i).getInt("sbp_ave")<push.getHbpstart()){
+							tableData.get(i).set("sbp_ave", tableData.get(i).getString("sbp_ave")+"A");
+						}
+						if(tableData.get(i).getInt("dbp_ave")>push.getLbpend()|| tableData.get(i).getInt("dbp_ave")<push.getLbpstart()){
+							tableData.get(i).set("dbp_ave", tableData.get(i).getString("dbp_ave")+"A");
+						}
 					}
 				}
 				
 			}
 		}
+		
 		if(love.size()<=7){
 			if(love.size()==7){
 				if(tableData.size()<7){

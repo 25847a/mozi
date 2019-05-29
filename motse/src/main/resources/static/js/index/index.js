@@ -1,7 +1,12 @@
 var avatar;
 document.getElementById('chen').innerHTML=$("#agentName").val();
 $("#dropdownMenu1").text($("#adminName").val());
-document.getElementById('avatarImage').innerHTML="<img src="+$("#avatar").val()+" alt=''/>";
+
+//判断一个url是否可以访问
+console.log(imageGudge($("#avatar").val()));
+if(imageGudge($("#avatar").val())){
+	document.getElementById('avatarImage').innerHTML="<img src="+$("#avatar").val()+" alt=''/>"
+}
 
 window.onload = windowHeight; //页面载入完毕执行函数
 		        function windowHeight() {
@@ -85,14 +90,14 @@ function agentImage(){
         dataType: "json",
         success: function (data) {
         	if(data.code==-1){
-       		 alert(data.message);
-                location.reload();
+        		tips(data.message);
+               location.reload();
        	}else{
-       		 alert(data.message);
+       		tips(data.message);
        	}
         },
         error: function (data) {
-        	alert('error');
+        	tips('error');
         }
     });
 };
@@ -105,11 +110,11 @@ function confirmPassword(){
 	var newPass = $("#newPass").val();
 	var newWord = $("#newWord").val();
 	if(newPass!=newWord){
-		alert("两次新密码不相同,请核实后输入");
+		tips("两次新密码不相同,请核实后输入");
 		return;
 	}
 	if(oldPassword=="" || newPass=="" || newWord==""){
-		alert("密码不能为空");
+		tips("密码不能为空");
 		return;
 	}
 	$.ajax({
@@ -119,31 +124,40 @@ function confirmPassword(){
         dataType: "json",
         success: function (data) {
         	if(data.code==-1){
-        		 alert(data.message);
+        		tips(data.message);
                  location.reload();
         	}else{
-        		 alert(data.message);
+        		tips(data.message);
         	}
         },
         error: function (data) {
-        	alert('error');
+        	tips('error');
         }
     });
 };
-
-
-
-
-
-
-
-
 
 
 //养老院
 $(function () {
     $('#beadhouse').on('click', function () {
         $(window.parent.document).find('#iframe').attr('src', '/admin/beadhousePage')
+        $(".index-home").addClass('adds')
+        $(".history").removeClass('adds')
+        $(".love").removeClass('adds')
+        $(".version").removeClass('adds')
+        $(".menu").removeClass('adds')
+        $(".agent").removeClass('adds')
+        $(".health").removeClass('adds')
+        $(".user").removeClass('adds')
+        $(".role").removeClass('adds')
+        $(".equipment").removeClass('adds')
+        $(".add").removeClass('adds')
+    })
+});
+//用户分布图页面
+$(function () {
+    $('#distribution').on('click', function () {
+        $(window.parent.document).find('#iframe').attr('src', '/admin/distributionPage')
         $(".index-home").addClass('adds')
         $(".history").removeClass('adds')
         $(".love").removeClass('adds')

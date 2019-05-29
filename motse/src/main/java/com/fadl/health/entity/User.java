@@ -69,14 +69,6 @@ public class User extends Model<User> {
      */
     private String atlasttime;
     /**
-     * 高压
-     */
-    private Integer highpressure;
-    /**
-     * 低压
-     */
-    private Integer lowpressure;
-    /**
      * 密码
      */
     private String password;
@@ -247,23 +239,6 @@ public class User extends Model<User> {
     public void setAtlasttime(String atlasttime) {
         this.atlasttime = atlasttime;
     }
-
-    public Integer getHighpressure() {
-        return highpressure;
-    }
-
-    public void setHighpressure(Integer highpressure) {
-        this.highpressure = highpressure;
-    }
-
-    public Integer getLowpressure() {
-        return lowpressure;
-    }
-
-    public void setLowpressure(Integer lowpressure) {
-        this.lowpressure = lowpressure;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -436,8 +411,6 @@ public class User extends Model<User> {
         ", jfdataUpdateTime=" + jfdataUpdateTime +
         ", createtime=" + createtime +
         ", atlasttime=" + atlasttime +
-        ", highpressure=" + highpressure +
-        ", lowpressure=" + lowpressure +
         ", password=" + password +
         ", isDelete=" + isDelete +
         ", age=" + age +

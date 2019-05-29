@@ -49,13 +49,16 @@ var tableList=new Vue({
         },
        
         pageChange(pageIndex) {
+        	console.log("pageIndex:"+pageIndex);
             this.pageIndex = pageIndex;
         	this.goback();
         },
         pageSizeChange(pageSize) {
+        	console.log("pageSize:"+pageSize);
             this.pageIndex = 1;
             this.pageSize = pageSize;
-            this.getTableData();
+            this.goback();
+        //    this.getTableData();
         },
         goback:function(){
         	var params = new URLSearchParams();

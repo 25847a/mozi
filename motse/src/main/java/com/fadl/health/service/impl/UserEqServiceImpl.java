@@ -88,7 +88,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				    List<DataRow> list =userService.queryObserver(map);
 				    messageMap.initSuccess(list);
 				}else{
-					messageMap.initFial("设备未绑定,请先绑定设备");
+					messageMap.initFial("查询不到该用户,请确认是否注册");
 				}
 			}else{
 				messageMap.initFial("已经关注,不可重复关注");

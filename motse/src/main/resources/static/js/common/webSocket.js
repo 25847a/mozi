@@ -34,7 +34,8 @@ $("#page").val(page);
             	 for(var i=0;i<data.data.length;i++){
             		 tableList.tableConfig.tableData.push(data.data[i]);
                          }
-            	  var limit =parseInt(data.count/10)-2;
+            	//  var limit =parseInt(data.count/10)-2;
+            	  var limit =parseInt(Math.ceil(data.count/10));
             	  if(parseInt(page)<parseInt(limit)){
             		  page++;
             	  }else{

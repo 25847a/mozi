@@ -126,7 +126,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 		EntityWrapper<Admin> ew = new EntityWrapper<Admin>();
 		ew.eq("account", phone);
 		Admin admin =this.selectOne(ew);
-		messageMap.initSuccess(admin);
+		if(admin!=null){
+			messageMap.initSuccess();
+		}else{
+			messageMap.initFial();
+		}
 		return messageMap;
 	}
 	/**
@@ -137,25 +141,31 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@Override
 	public DataRow checkingCode(String phone, DataRow messageMap) throws Exception {
-		Integer smsMsg = 445405;//checkingCodeUtil.sendSMS(phone);
-		if(smsMsg!=0){
-			Usercode usercode = usercodeService.queryUsercodeInfo(phone);
-			Integer row=0;
-			if(usercode!=null){
-				usercode.setCode(String.valueOf(smsMsg));
-				row=usercodeService.updateUsercode(usercode);
-			}else{
-				usercode = new Usercode();
-				usercode.setPhoen(phone);
-				usercode.setCode(String.valueOf(smsMsg));
-				row=usercodeService.insertUsercode(usercode);
+		Admin admin = this.queryAdminInfo(phone);
+		if(admin!=null){
+			Integer smsMsg = checkingCodeUtil.sendSMS(phone);
+			if(smsMsg!=0){
+				Usercode usercode = usercodeService.queryUsercodeInfo(phone);
+				Integer row=0;
+				if(usercode!=null){
+					usercode.setCode(String.valueOf(smsMsg));
+					row=usercodeService.updateUsercode(usercode);
+				}else{
+					usercode = new Usercode();
+					usercode.setPhoen(phone);
+					usercode.setCode(String.valueOf(smsMsg));
+					row=usercodeService.insertUsercode(usercode);
+				}
+				if(row>0){
+					messageMap.initSuccess();
+				}else{
+					messageMap.initFial();
+				}
 			}
-			if(row>0){
-				messageMap.initSuccess();
-			}else{
-				messageMap.initFial();
-			}
+		}else{
+			messageMap.initFial("该手机号不存在!!");
 		}
+		
 		return messageMap;
 	}
 	/**

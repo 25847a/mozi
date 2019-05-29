@@ -26,25 +26,26 @@ var last =new Vue({
 				},	
 				legend: {
 					  x: 'center',
-					   data:['＜12次/分钟:'+respirationrate.respirationrate3+'人','12-24次/分钟:'+respirationrate.respirationrate2+'人','＞24次/分钟:'+respirationrate.respirationrate1+'人']
+					   data:['＜12次/分钟','12-24次/分钟','＞24次/分钟']
 					                },
-				tooltip:{
-					trigger:'item',
-					formatter:"{a} <br/>{b} : {c} ({d}%)"
-				},
 				series: [
 					{
 						name: '墨子星',
 						type: 'pie',
 						radius: '55%',
 						center: ['50%', '50%'],
+						label:{
+							normal:{
+								formatter:"{b}:{c}人\n\n",
+							}
+						},
 						data: [
-							/*	{ value: respirationrate.respirationrate3, name: '＜12次/分钟', itemStyle: { color: '#ffb980' } },
-							{ value: respirationrate.respirationrate2, name: '12-24次/分钟', itemStyle: { color: '#2ec7c9' } },
-							{ value: respirationrate.respirationrate1, name: '＞24次/分钟', itemStyle: { color: '#d87a80' } }*/
-							{ value: respirationrate.respirationrate3, name: '＜12次/分钟:'+respirationrate.respirationrate3+'人', itemStyle: { color: '#ffb980' } },
+					/*		{ value: respirationrate.respirationrate3, name: '＜12次/分钟:'+respirationrate.respirationrate3+'人', itemStyle: { color: '#ffb980' } },
 							{ value: respirationrate.respirationrate2, name: '12-24次/分钟:'+respirationrate.respirationrate2+'人', itemStyle: { color: '#2ec7c9' } },
-							{ value: respirationrate.respirationrate1, name: '＞24次/分钟:'+respirationrate.respirationrate1+'人', itemStyle: { color: '#d87a80' } }
+							{ value: respirationrate.respirationrate1, name: '＞24次/分钟:'+respirationrate.respirationrate1+'人', itemStyle: { color: '#d87a80' } }*/
+							{ value: respirationrate.respirationrate3, name: '＜12次/分钟', itemStyle: { color: '#ffb980' } },
+							{ value: respirationrate.respirationrate2, name: '12-24次/分钟', itemStyle: { color: '#2ec7c9' } },
+							{ value: respirationrate.respirationrate1, name: '＞24次/分钟', itemStyle: { color: '#d87a80' } }
 						].sort(function (a, b) { return a.value - b.value; }),
 						roseType: 'radius',
 						animationType: 'scale',

@@ -1,7 +1,13 @@
 //限制选择未来时间
 futureDate("addBorn");
 futureDate("addLiveTime");
-//firstSecondDate("detailsBorn","detailsLiveTime");
+futureDate("detailsBorn");
+//回车键查询
+$(document).keydown(function(e) {  
+  if (e.keyCode == 13) { 
+	  query();
+      }  
+ });  
 		/**
 		 * 获取床号列表
 		 */
@@ -44,10 +50,19 @@ futureDate("addLiveTime");
     var pageIndex=1;
     var pageSize=10;
     var imeiNum='';
+    var userName='';
   var tableList= new Vue({
         el: "#app",
         data() {
             return {
+            	 options: [{
+                     value: '男',
+                     label: '男'
+                     }, {
+                     value: '女',
+                     label: '女'
+                     }],
+                     value: '',
             	item: [],
                 total:''
             }
@@ -59,6 +74,7 @@ futureDate("addLiveTime");
            	 params.append('pageNum',pageIndex);
            	 params.append('pageSize',pageSize);
            	 params.append('imeiNum',imeiNum);
+           	params.append('userName',userName);
                 axios.post(GetURLInfo()+"user/queryAdduserList",params).then(this.getnew);
             },
             getnew(res) {
@@ -72,12 +88,14 @@ futureDate("addLiveTime");
             	}
             },
             handleSizeChange(val) {
-            //    console.log(`每页 ${val} 条`);
+            	pageSize=val;
+            	this.goback();
+               console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
             	pageIndex=val;
             	this.goback();
-          //      console.log(`当前页: ${val}`);
+               console.log(`当前页: ${val}`);
             },
             	promptBox(){
             		this.$confirm('此操作删除后无法恢复, 是否继续?', '提示', {
@@ -87,7 +105,7 @@ futureDate("addLiveTime");
                     	var imei = document.getElementById("deleteImeiA").innerHTML;
             	    	$.ajax({
             	            type : "POST",
-            	            url :GetURLInfo()+"user/deleteUserDetermine1",
+            	            url :GetURLInfo()+"user/deleteUserDetermine",
             	            data:{"imei":imei},
             	            datatype : "json",
             	            success : function(result) {
@@ -377,6 +395,7 @@ futureDate("addLiveTime");
     });
    	function query(){
    		imeiNum = $("#imei").val();
+   		userName = $("#userName").val();
    		tableList.goback();
    	}
    	//点击预警设置
@@ -437,6 +456,9 @@ futureDate("addLiveTime");
             datatype : "json",
             success : function(result) {
             	if(result.code==-1){
+            		tips(result.message);
+            		location.reload();
+            	}else{
             		tips(result.message);
             	}
             },
@@ -513,8 +535,10 @@ futureDate("addLiveTime");
 	            success : function(result) {
 	            	if(result.code==-1){
 	            		var data = result.data;
-	            		document.getElementById("detailsName").innerHTML=data.name;
-	            		$("#pic").attr("src",data.avatar);//data.data.imagez
+	            		$("#detailsName").val(data.name);
+	            		if(imageGudge(data.avatar)){
+	            			$("#pic").attr("src",data.avatar);
+	            		}
 	            		document.getElementById("detailsImei").innerHTML=data.imei;
 	            	//	 $("#detailsGender option[value='"+data.gender+"']").attr('selected',true);
 	            		$("#detailsGender").val(data.gender);
@@ -525,13 +549,14 @@ futureDate("addLiveTime");
 	            		$("#detailsLiveTime").datepicker('setValue',data.liveTime);
 	            		$("#detailsHeight").val(data.height);
 	            		$("#detailsWeight").val(data.weight);
-	            		
 	            		$("#detailsBed").val(data.bedId);
 	            		$("#detailsNurseName").val(data.nurseId);
-	            	//	document.getElementById("detailsBed").innerHTML=data.bed;
-	            	//	document.getElementById("detailsNurseName").innerHTML=data.nurseName;
-	            		$("#detailsPhone1").val(data.phone1);
-	            		$("#detailsPhone2").val(data.phone2);
+	            		var phone1= data.phone1.split(",");
+	            		var phone2= data.phone2.split(",");
+	            		$("#phoneName1").val(phone1[0]);
+	            		$("#detailsPhone1").val(phone1[1]);
+	            		$("#phoneName2").val(phone2[0]);
+	            		$("#detailsPhone2").val(phone2[1]);
 	            		$("#detailsAddress").val(data.address);
 	            		$("#illness").val(data.illness);
 	            		if(result.list.length>0){
@@ -607,7 +632,35 @@ futureDate("addLiveTime");
 		});
         data["imei"]=document.getElementById("detailsImei").innerHTML;
 		if($("#detailsLiveTime").val()=="" || $("#detailsBorn").val()==""){  
-			alert("出生日期或者入住时间不能为空");
+			tips("出生日期或者入住时间不能为空");
+			return;
+		}
+		if(new Date($("#detailsLiveTime").val().replace("-","/"))<new Date($("#detailsBorn").val().replace("-","/"))){  
+			tips("入住日期不能早于出生日期");
+			return;
+		}
+		if(!isPoneAvailable($("#detailsPhone").val())){
+			tips("请输入正确的手机号码");
+			return;
+		}
+		if(isPoneAvailable(data.phone1)){
+			if(data.phoneName1=="" || data.phone1==""){
+				data["phone1"]="";
+			}else{
+				data["phone1"]=data.phoneName1+","+data.phone1
+			}
+		}else{
+			tips("请输入紧急联系人1正确的手机号码");
+			return;
+		}
+		if(isPoneAvailable(data.phone2)){
+			if(data.phoneName2=="" || data.phone2==""){
+				data["phone1"]="";
+			}else{
+				data["phone2"]=data.phoneName2+","+data.phone2
+			}
+		}else{
+			tips("请输入紧急联系人2正确的手机号码");
 			return;
 		}
 		$.ajax({
@@ -630,9 +683,16 @@ futureDate("addLiveTime");
         $("#pic").click(function () {
             $("#upload").click(); //隐藏了input:file样式后，点击头像就可以本地上传
             $("#upload").off("change").on("change", function () {
-           var objUrl = window.URL.createObjectURL(this.files[0]);
-                    $("#pic").attr("src", objUrl); //将图片路径存入src中，显示出图片
-                    upimg();
+            	if(this.files[0].name.substring(this.files[0].name.lastIndexOf(".")+1,this.files[0].name.length)=="jpg"){
+            		  var objUrl = window.URL.createObjectURL(this.files[0]);
+            	         console.log(this.files[0].name);
+            	         console.log(this.files[0].name.substring(this.files[0].name.lastIndexOf(".")+1,this.files[0].name.length));
+            	                    $("#pic").attr("src", objUrl); //将图片路径存入src中，显示出图片
+            	                    upimg();
+            	}else{
+            		tips("请上传jsp格式的图片");
+            	}
+         
             });
         });
   //上传头像到服务器
@@ -686,7 +746,7 @@ futureDate("addLiveTime");
             		var data = result.data;
             		document.getElementById("addImeiA").innerHTML=data.imei;
             		document.getElementById("addNames").innerHTML=data.name;
-            		document.getElementById("addGender").innerHTML=data.gender;
+            		document.getElementById("addGenderB").innerHTML=data.gender;
             		document.getElementById("addBorns").innerHTML=data.born;
             	}else{
             		tips(result.message);
@@ -703,6 +763,7 @@ futureDate("addLiveTime");
 	 */
 	function AddUserDetermine(){
 		var imei = document.getElementById("addImeiA").innerHTML;
+		
 		$.ajax({
             type : "POST",
             async: false,	
@@ -769,11 +830,15 @@ futureDate("addLiveTime");
 	function deleteUserDetermine(){
 		tableList.promptBox();
 	}
+	/**
+	 * 创建用户弹窗确定键
+	 * @returns
+	 */
 	function addDetermine(){
 		var data={};
 		var result = true;
 		$("#adddivd input").each(function () {
-			if(this.id!="addIllness" & this.id!="addName" & this.id!="addBed"){
+			if(this.id!="addIllness" & this.id!="addNurse" & this.id!="addBed"){
 				if(this.value==""){
 					tips($("#"+this.id).attr('placeholder'));
 					result = false;
@@ -790,8 +855,11 @@ futureDate("addLiveTime");
 		}
 		$("#adddivd select").each(function () {
 			if(this.value==""){	
-				$("#addNurse").val()==""?tips("请选择分属护工"):tips("请选择性别");
-				result = false;
+				if($("#addGender").val()==""){
+					tips("请选择性别");
+					result = false;
+				}
+			
                 return false;
 			}
 			data[this.name]=this.value;
@@ -802,6 +870,10 @@ futureDate("addLiveTime");
 		if (!result){
 			return;
 		}
+		if(!isPoneAvailable($("#addPhone").val())){
+			tips("请输入正确的手机号码");
+			return;
+		}
 		$.ajax({
             type : "POST",
             async: false,	
@@ -809,8 +881,13 @@ futureDate("addLiveTime");
             data:data,
             datatype : "json",
             success : function(result) {
-            		tips(result.message);
+            	if(result.code==-1){
             		location.reload();
+            		$("#invite-determine").attr("data-dismiss","modal");
+            	}else{
+            		$("#invite-determine").removeAttr("data-dismiss","modal");
+            		tips(result.message);
+            	}
             },
             error : function() {
             	tips("操作失败");

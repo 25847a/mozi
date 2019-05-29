@@ -18,7 +18,7 @@ if (safariVersion <= DEFAULT_VERSION) {
 
 } else {
     particlesJS("particles-js", {
-        particles: {
+    	particles: {
             number: {
                 value: 120,
                 density: {
@@ -175,7 +175,11 @@ function loginSubmit() {
                         }
                     });
         
+        }else{
+        	$("#passWordCheck").text("请输入您的密码").addClass("errorIcon");
         }
+    }else{
+    	 $("#namePhoneCheck").text("请输入登录账号").addClass("errorIcon");
     }
 }
 $("#login").on("click", function () {

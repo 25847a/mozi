@@ -16,8 +16,6 @@
         <result column="jfdataUpdateTime" property="jfdataUpdateTime" />
         <result column="createtime" property="createtime" />
         <result column="atlasttime" property="atlasttime" />
-        <result column="highpressure" property="highpressure" />
-        <result column="lowpressure" property="lowpressure" />
         <result column="password" property="password" />
         <result column="isDelete" property="isDelete" />
         <result column="age" property="age" />
@@ -41,7 +39,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, highpressure, lowpressure, password,isDelete,age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime,love,bedId,nurseId,illness,liveTime
+        id, imei, role, account, name, phone, calibration, radius, midpoint, jfdataUpdateTime, createtime, atlasttime, password,isDelete,age, avatar, gender, address, wechat, qq, weight, born, height, code, walkCount, walkPushTime,love,bedId,nurseId,illness,liveTime
     </sql>
     <!-- 查询使用者男女数量饼状图 -->
 	<select id="queryUserGender" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
@@ -58,7 +56,7 @@
 	<select id="queryAdduserList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		set @rownum=#{pageNum};
 		SELECT @rownum:=@rownum+1 as id,tp.id as equipmentId,tt.id AS userId,tp.imei,tt.name,tt.gender,td.bed,tc.nurseName,bluetooth_type,tp.bluetooth_status,tt.love,tt.calibration,tk.allNotifyOn  FROM equipment tp
-		INNER JOIN user tt
+		INNER JOIN (select * from user where isDelete=0 and role='使用者') tt
 		ON tp.imei=tt.imei
 		LEFT JOIN user_eq tn
 		ON tp.id=tn.eq_id AND tn.typeof=0
@@ -70,9 +68,12 @@
 		ON tt.nurseId=tc.id
 		LEFT JOIN admin tz
 		ON tz.agentId=tp.agentid
-		WHERE tz.id=#{agentid} AND tt.isDelete=0
+		WHERE tz.id=#{agentid}
 		<if test="imeiNum!=null and imeiNum!=''">
 		AND tp.imei LIKE CONCAT('%',#{imeiNum},'%')
+		</if>
+		<if test="userName!=null and userName!=''">
+		AND tt.name LIKE CONCAT('%',#{userName},'%')
 		</if>
 		LIMIT #{pageNum},#{pageSize}
 	</select>
@@ -135,7 +136,7 @@
 		SELECT tp.id as userId,td.id as equipmentId FROM user tp
 		LEFT JOIN equipment td
 		ON tp.imei=td.imei
-		WHERE tp.imei=#{imei} AND tp.isDelete=0
+		WHERE tp.imei=#{imei} AND tp.account=#{account} AND tp.isDelete=0
 	</select>
 	<!-- 删除用户的一切信息 -->
 	<delete id="deleteUserCount" parameterType="java.util.HashMap">

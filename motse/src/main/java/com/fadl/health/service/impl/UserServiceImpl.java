@@ -275,6 +275,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	public DataRow queryImeiUserInfo(String imei, DataRow messageMap) throws Exception {
 		EntityWrapper<User> ew= new EntityWrapper<User>();
 		ew.eq("imei", imei);
+		ew.eq("isDelete", 0);
 		User user=this.selectOne(ew);
 		if(user!=null){
 			user.setBorn(DateUtil.sfDay.format(DateUtil.sfDay.parse(user.getBorn())));
@@ -359,6 +360,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		if(e!=null){
 			EntityWrapper<User> eq = new EntityWrapper<User>();
 			eq.eq("imei", user.getImei());
+			eq.eq("isDelete", 0);
 			User u =this.selectOne(eq);
 			if(u==null){
 				EntityWrapper<UserEq> ec = new EntityWrapper<UserEq>();
@@ -367,8 +369,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 				UserEq uq =userEqService.selectOne(ec);
 				if(uq==null){
 					user.setJfdataUpdateTime("5");
-					user.setHighpressure(0);
-					user.setLowpressure(0);
 					user.setCreatetime(DateUtil.sf.format(new Date()));
 					user.setAtlasttime(DateUtil.sf.format(new Date()));
 					this.insert(user);//使用者

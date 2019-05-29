@@ -272,6 +272,11 @@ public class DateUtil {
     	date = getFourteenWithDate(date);
     	return getSystemTime(date);
     }
+   public static void main(String[] args) {
+	   int d =Integer.valueOf("");
+	   System.out.println(d);
+	//   DateUtil.getConversionDate(num)
+}
     /**
      * 时间换算
      * @param num

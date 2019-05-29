@@ -14,6 +14,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -55,6 +57,7 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
      * map
      * @return
      */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@Override
 	public DataRow deleteHrInfo(Hr hr, DataRow messageMap) throws Exception {
 		hr.setIsDelete(1);
@@ -66,4 +69,52 @@ public class HrServiceImpl extends ServiceImpl<HrMapper, Hr> implements HrServic
 		}
 		return messageMap;
 	}
+	/**
+	 * 新增供应商的个人信息
+	 * hr
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Override
+	public DataRow addHrInfo(Hr hr, DataRow messageMap) throws Exception {
+		int row =hrMapper.insert(hr);
+		if(row>0){
+			messageMap.initSuccess();
+		}else{
+			messageMap.initFial();
+		}
+		return messageMap;
+	}
+	/**
+     * 通过ID查询供应商的个人信息
+     * hr
+     * @return
+     */
+	@Override
+	public DataRow queryHrInfo(Hr hr, DataRow messageMap) throws Exception {
+		hr=this.selectById(hr.getId());
+		if(hr!=null){
+			messageMap.initSuccess(hr);
+		}else{
+			messageMap.initFial();
+		}
+		return messageMap;
+	}
+	 /**
+     * 通过ID修改供应商的个人信息
+     * map
+     * @return
+     */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Override
+	public DataRow updateHrInfo(Hr hr, DataRow messageMap) throws Exception {
+		boolean row=this.updateById(hr);
+		if(row){
+			messageMap.initSuccess();
+		}else{
+			messageMap.initFial();
+		}
+		return messageMap;
+	}
+	
 }

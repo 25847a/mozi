@@ -59,6 +59,7 @@ public class AdminLoginController extends AbstractController{
             if(DateUtil.sf.parse(admin.getLockDate()).getTime() <= new Date().getTime() && admin.getLoginErrorCount()>=5){//用户被禁用
             	updateAdmin.setLoginErrorCount(0);
             }
+            updateAdmin.setIsDisable(0);
             updateAdmin.setLastDate(DateUtil.sf.format(new Date()));
 			messageMap.initSuccess();
 		}catch (UnknownAccountException un) {//用户不存在

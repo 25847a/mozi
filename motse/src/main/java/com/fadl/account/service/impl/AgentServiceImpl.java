@@ -96,5 +96,20 @@ public class AgentServiceImpl extends ServiceImpl<AgentMapper, Agent> implements
 		}
 		return messageMap;
 	}
+	/**
+   	 * 修改代理商信息
+   	 * @return
+   	 * @throws SQLException
+   	 */
+	@Override
+	public DataRow updateAgentInfo(Agent agent, DataRow messageMap) throws Exception {
+		int row =agentMapper.updateById(agent);
+		if(row>0){
+			messageMap.initSuccess();
+		}else{
+			messageMap.initFial();
+		}
+		return messageMap;
+	}
 
 }

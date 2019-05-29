@@ -191,11 +191,10 @@ var tableList = new Vue({
     // },
 	    mounted() {
 	        this.goback();
-	        // this.item = setInterval(this.goback,3000)
-	    },
+	    }/*,
     beforeDestroy() {
         clearInterval(this.item);
-    }
+    }*/
 });
 
 // 自定义列组件<a href="" @click.stop.prevent="update(rowData,index)">编辑</a>&nbsp;

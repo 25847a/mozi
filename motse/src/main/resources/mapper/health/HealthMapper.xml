@@ -25,61 +25,63 @@
     <!-- 查询首页健康数据列表 -->
     <select id="queryHealthList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
     	set @rownum=#{pageNum};
-    	SELECT @rownum:=@rownum+1 as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tl.step_when,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tx.count FROM(
-		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime,tt.count FROM jfhealth tp
-		RIGHT JOIN(
-		SELECT MAX(createtime) as createtime,COUNT(*) as count FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
+		SELECT @rownum:=@rownum+1 as id,tc.name,CASE WHEN HRV IS NULL THEN 0 ELSE HRV END as HRV,
+		CASE WHEN sbp_ave IS NULL THEN 0 ELSE sbp_ave END as sbp_ave,
+		CASE WHEN dbp_ave IS NULL THEN 0 ELSE dbp_ave END as dbp_ave,
+		CASE WHEN Heartrate IS NULL THEN 0 ELSE Heartrate END as Heartrate,
+		CASE WHEN Bloodoxygen IS NULL THEN 0 ELSE Bloodoxygen END as Bloodoxygen,
+		CASE WHEN microcirculation IS NULL THEN 0 ELSE microcirculation END as microcirculation,
+		CASE WHEN respirationrate IS NULL THEN 0 ELSE respirationrate END as respirationrate,
+		substring(tp.phone,9) as phone,DATE_FORMAT(tp.createtime,'%Y-%m-%d %H:%i:%s') AS createtime,tt.count,tl.step_when FROM jfhealth_new tp
+		INNER JOIN (SELECT name,id,imei FROM user WHERE isDelete=0 AND love=0 AND role='使用者') tc
+		ON substring(tp.phone,9)=tc.id
+		LEFT JOIN (
+		SELECT phone,COUNT(*) as count FROM jfhealth GROUP BY phone
 		) tt
-		ON tp.createtime=tt.createtime
-		)tx
-		LEFT JOIN user tc
-		ON tx.phone=tc.id
-		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data  WHERE createtime=DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY user_id) tl
-		ON tx.phone=tl.user_id
+		ON tp.phone=tt.phone
+		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data  WHERE DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY user_id) tl
+		ON substring(tp.phone,9)=tl.user_id
 		LEFT JOIN equipment ta
 		ON tc.imei=ta.imei
 		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
 		ON tf.agentId=ta.agentid
-		WHERE tc.isDelete=0 AND tc.love=0
+		WHERE DATE_FORMAT(tp.createtime,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')
 		LIMIT #{pageNum},#{pageSize}
     </select>
     <!-- 查询首页健康数据列表总数 -->
     <select id="queryHealthListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
-    	SELECT COUNT(*) FROM (
-		SELECT tc.name,tx.* FROM(
-		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime FROM jfhealth tp
-		RIGHT JOIN(
-		SELECT MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
-		) tt
-		ON tp.createtime=tt.createtime
-		)tx
-		LEFT JOIN user tc
-		ON tx.phone=tc.id
+    	SELECT COUNT(*) FROM jfhealth_new tp
+		INNER JOIN (SELECT name,id,imei FROM user WHERE isDelete=0 AND role='使用者') tc
+		ON substring(tp.phone,9)=tc.id
 		LEFT JOIN equipment ta
 		ON tc.imei=ta.imei
 		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
 		ON tf.agentId=ta.agentid
-		WHERE tc.isDelete=0 AND tc.love=0
-		) tb
+ 		WHERE DATE_FORMAT(tp.createtime,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')
     </select>
     <!-- 查询重点关爱的使用者 -->
     <select id="queryHealthListLove" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
-		SELECT '置顶' as id,tc.name,tx.HRV,tx.sbp_ave,tx.dbp_ave,tx.Heartrate,tx.Bloodoxygen,tx.microcirculation,tx.respirationrate,tl.step_when,tx.phone,DATE_FORMAT(tx.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tc.love,tx.count FROM(
-		SELECT HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,substring(tp.phone,9) as phone,tt.createtime,tt.count FROM jfhealth tp
-		RIGHT JOIN(
-		SELECT MAX(createtime) as createtime,COUNT(*) as count FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
+		SELECT '置顶' as id,tc.name,
+		CASE WHEN HRV IS NULL THEN 0 ELSE HRV END as HRV,
+		CASE WHEN sbp_ave IS NULL THEN 0 ELSE sbp_ave END as sbp_ave,
+		CASE WHEN dbp_ave IS NULL THEN 0 ELSE dbp_ave END as dbp_ave,
+		CASE WHEN Heartrate IS NULL THEN 0 ELSE Heartrate END as Heartrate,
+		CASE WHEN Bloodoxygen IS NULL THEN 0 ELSE Bloodoxygen END as Bloodoxygen,
+		CASE WHEN microcirculation IS NULL THEN 0 ELSE microcirculation END as microcirculation,
+		CASE WHEN respirationrate IS NULL THEN 0 ELSE respirationrate END as respirationrate,
+		substring(tp.phone,9) as phone,DATE_FORMAT(tp.createtime,'%Y-%m-%d %H:%i:%s') AS createtime,tt.count,tl.step_when,tc.love FROM jfhealth_new tp
+		INNER JOIN (SELECT name,id,imei,love FROM user WHERE isDelete=0 AND love=1 AND role='使用者') tc
+		ON substring(tp.phone,9)=tc.id
+		LEFT JOIN (
+		SELECT phone,COUNT(*) as count FROM jfhealth GROUP BY phone
 		) tt
-		ON tp.createtime=tt.createtime
-		)tx
-		LEFT JOIN user tc
-		ON tx.phone=tc.id
-		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data  WHERE createtime=DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY user_id) tl
-		ON tx.phone=tl.user_id
-		INNER JOIN equipment ta
+		ON tp.phone=tt.phone
+		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data  WHERE DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY user_id) tl
+		ON substring(tp.phone,9)=tl.user_id
+		LEFT JOIN equipment ta
 		ON tc.imei=ta.imei
 		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
 		ON tf.agentId=ta.agentid
-		WHERE tc.isDelete=0 AND tc.love=1
 		LIMIT #{pageNum},#{pageSize}
     </select>
 	<!-- 首页当天心率统计图 -->
@@ -91,15 +93,14 @@
 		SUM(IF((tg.Heartrate &gt;= 70 AND tg.Heartrate &lt;= 79),1,0)) as heartrate4,
 		SUM(IF((tg.Heartrate &gt;= 80 AND tg.Heartrate &lt;= 89),1,0)) as heartrate5,
 		SUM(IF((tg.Heartrate &gt;= 90 AND tg.Heartrate &lt;= 100),1,0)) as heartrate6,
-		SUM(IF((tg.Heartrate &gt; 100),1,0)) as heartrate7
-		 FROM (
-		SELECT tb.*,CASE WHEN tc.gender='男' THEN 0 WHEN tc.gender='女' THEN 1 ELSE 2 END AS gender FROM
-		(
-		SELECT substring(phone,9) as phone,MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
-		) tp 
-		JOIN (SELECT Heartrate,substring(phone,9) as phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')) tb ON tb.phone=tp.phone AND tb.createtime=tp.createtime
-		LEFT JOIN user tc
-		ON tb.phone=tc.id
+		SUM(IF((tg.Heartrate &gt; 100),1,0)) as heartrate7 FROM (
+		SELECT
+			tp.*,CASE WHEN tc.gender='男' THEN 0 WHEN tc.gender='女' THEN 1 ELSE 2 END AS gender
+		FROM (
+		SELECT substring(phone,9) as phone,CASE WHEN Heartrate IS NULL THEN 0 ELSE Heartrate END as Heartrate FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+		) tp
+		INNER JOIN (SELECT id,gender from user WHERE isDelete=0 AND  role='使用者') tc
+		ON tp.phone=tc.id
 		) tg
 		GROUP BY tg.gender
 	</select>
@@ -113,52 +114,45 @@
 		SUM(IF((sbp_ave&gt;=160 AND sbp_ave&lt;179 AND dbp_ave&gt;=100 AND dbp_ave&lt;109),1,0)) as blood5,
 		SUM(IF((sbp_ave&gt;=180 AND dbp_ave&gt;110),1,0)) as blood6
 		FROM (
-		SELECT phone,MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
-		) tp 
-		JOIN (SELECT sbp_ave,dbp_ave,phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')) tb ON tb.phone=tp.phone AND tb.createtime=tp.createtime
-
+		SELECT substring(phone,9) as phone,CASE WHEN sbp_ave IS NULL THEN 0 ELSE sbp_ave END as sbp_ave,CASE WHEN dbp_ave IS NULL THEN 0 ELSE dbp_ave END as dbp_ave FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+		) tp
+		INNER JOIN (SELECT id,name from user WHERE isDelete=0 AND  role='使用者') tc
+		ON tp.phone=tc.id
 	</select>
 	<!-- 首页当天微循环统计图 -->
 	<select id="queryMicrocirculationCount" resultType="com.fadl.common.DataRow">
-		SELECT 
+		SELECT
 		SUM(IF((microcirculation&gt;=80),1,0)) as microcirculation1,
 		SUM(IF((microcirculation&gt;=70 AND microcirculation&lt;80),1,0)) as microcirculation2,
 		SUM(IF((microcirculation&gt;=50 AND microcirculation&lt;70),1,0)) as microcirculation3
 		FROM (
-		SELECT phone,MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
-		) tp 
-		JOIN (SELECT microcirculation,phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')) tb ON tb.phone=tp.phone AND tb.createtime=tp.createtime
+		SELECT substring(phone,9) as phone,CASE WHEN microcirculation IS NULL THEN 0 ELSE microcirculation END as microcirculation FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+		) tp
+		INNER JOIN (SELECT id,name from user WHERE isDelete=0 AND  role='使用者') tc
+		ON tp.phone=tc.id
 		
 	</select>
 	
 	<!-- 首页当天血氧统计图 -->
 	<select id="queryBloodoxygenCount" resultType="com.fadl.common.DataRow">
-		SELECT tg.gender,
-		SUM(IF(tg.Bloodoxygen&lt;94,1,0)) as bloodoxygen1,
-		SUM(IF((tg.Bloodoxygen&gt;=94 AND tg.Bloodoxygen&lt;=99),1,0)) as bloodoxygen2
-		 FROM (
-		SELECT tb.*
-		,CASE WHEN tc.gender='男' THEN 0 WHEN tc.gender='女' THEN 1 ELSE 2 END AS gender FROM
-		(
-		SELECT substring(phone,9) as phone,MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
-		) tp 
-		JOIN (SELECT Bloodoxygen,substring(phone,9) as phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')) tb ON tb.phone=tp.phone AND tb.createtime=tp.createtime
-		LEFT JOIN user tc
+		SELECT
+		SUM(IF(tp.Bloodoxygen&lt;94,1,0)) as bloodoxygen1,
+		SUM(IF((tp.Bloodoxygen&gt;=94 AND tp.Bloodoxygen&lt;=99),1,0)) as bloodoxygen2
+		FROM (
+		SELECT substring(phone,9) as phone,CASE WHEN Bloodoxygen IS NULL THEN 0 ELSE Bloodoxygen END as Bloodoxygen FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+		) tp
+		INNER JOIN (SELECT id from user WHERE  isDelete=0 AND role='使用者') tc
 		ON tp.phone=tc.id
-		) tg
-		GROUP BY tg.gender
 	</select>
 	<!-- 首页当天呼吸统计图 -->
 	<select id="queryRespirationrateCount" resultType="com.fadl.common.DataRow">
-		SELECT 
+		SELECT
 		SUM(IF((respirationrate&gt;=24),1,0)) as respirationrate1,
 		SUM(IF((respirationrate&gt;=12 AND respirationrate&lt;24),1,0)) as respirationrate2,
-		SUM(IF((respirationrate&lt;12),1,0)) as respirationrate3
-		FROM(
-		SELECT phone,MAX(createtime) as createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y') GROUP BY phone
-		) tp 
-		JOIN (SELECT respirationrate,phone,createtime FROM jfhealth WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')) tb ON tb.phone=tp.phone AND tb.createtime=tp.createtime
-		LEFT JOIN user tc
+		SUM(IF((respirationrate&lt;12),1,0)) as respirationrate3 FROM (
+		SELECT substring(phone,9) as phone,CASE WHEN respirationrate IS NULL THEN 0 ELSE respirationrate END as respirationrate FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
+		) tp
+		INNER JOIN (SELECT id from user WHERE  isDelete=0 AND role='使用者') tc
 		ON tp.phone=tc.id
 	</select>
 	<!-- 查询历史健康数据 -->

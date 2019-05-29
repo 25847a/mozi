@@ -51,6 +51,8 @@ body{
 	font-size: 16px;
 	color: #3f3f3f;
 	font-weight: bold;
+	margin: 0px!important;
+	line-height: 30px;
 }
 .header .table .head ul{
 	display: flex;
@@ -87,12 +89,18 @@ body{
 .content .rate{
 	width: 50%;
 	margin-right: 10px;
-	background: #ffffff;
-	padding-top:15px; 
+	background: #ffffff; 
 	border-radius: 5px;
 	box-shadow: 0px 0px 30px #ebebeb;
 }
-
+.content .rate h3{
+	padding: 10px 0; 
+	font-size: 16px;
+	text-indent: 1rem;
+	font-weight: bold;
+	background: #fafafa;
+	margin: 0px!important;
+}
 .content .blood{
 	width: 50%;
 	background: #ffffff;
@@ -105,6 +113,7 @@ body{
 	text-indent: 1rem;
 	font-weight: bold;
 	background: #fafafa;
+	margin: 0px!important;
 }
 #echartfunnel{
 	padding-top:25px; 
@@ -130,6 +139,7 @@ body{
 	text-indent: 1rem;
 	font-weight: bold;
 	background: #fafafa;
+	margin: 0px!important;
 }
 
 .footer .tree{
@@ -146,6 +156,7 @@ body{
 	text-indent: 1rem;
 	font-weight: bold;
 	background: #fafafa;
+	margin: 0px!important;
 }
 
 #treechart{
@@ -165,6 +176,7 @@ body{
 	text-indent: 1rem;
 	font-weight: bold;
 	background: #fafafa;
+	margin: 0px!important;
 }
 td .vertical-border {
      border-right-width: 0px!important; 
@@ -193,4 +205,7 @@ td .vertical-border {
 }
 .v-table-body-cell img{
 	display: inline-block;
+}
+.btn-primary{
+	height:30px;
 }

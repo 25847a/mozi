@@ -16,7 +16,7 @@ public class PasswordUtil {
     }
     
     public static void main(String[] args) {
-    System.out.println(new SimpleHash(hashAlgorithmName,"123",ByteSource.Util.bytes("123"),hashIterations).toHex());
+    System.out.println(new SimpleHash(hashAlgorithmName,"123456",ByteSource.Util.bytes("18826264070"),hashIterations).toHex());
 
 	}
 }

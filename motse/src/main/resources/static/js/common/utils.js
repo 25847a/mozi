@@ -38,7 +38,26 @@ function GetURLInfo() {
 	}
 	return currentURLInfo;
 }
-
+/**
+ * 判断图片是否存在
+ */
+function imageGudge(imageUrl){
+	var result= true;
+	 $.ajax({
+	        url: ""+imageUrl,
+	    //    async:false,
+	        type: 'GET',
+	        success: function(response) {
+	        	console.log("图片地址获取正常:"+imageUrl);
+	        	result=true;
+	        },
+	        error:function () {
+	        	console.log("获取图片地址404:默认使用项目自带图片");
+	        	result=false;
+	        }
+	    });
+	 return result;
+}
 /* 获取时间 */
 function getDateDay(d){
 	window.onload = function () {
@@ -112,36 +131,18 @@ function futureDate(dateId){
     })
 };
 /**
- * 开始日期和结束日期对比
+ * 手机号码正则表达
+ * @param $poneInput
+ * @returns
  */
-function firstSecondDate(firstId,secondId){
-	var startDate = new Date($("#"+firstId).val());
-    var endDate = new Date($("#"+secondId).val());
-    var $alert = $('#'+firstId);
-    $('#'+firstId).datepicker().
-      on('changeDate.datepicker.amui', function(event) {
-        if (event.date.valueOf() > endDate.valueOf()) {
-          $alert.find('p').text('开始日期应小于结束日期！').end().show();
-        } else {
-          $alert.hide();
-          startDate = new Date(event.date);
-     //     $('#my-startDate').text($('#my-start').data('date'));
-        }
-        $(this).datepicker('close');
-      });
-
-    $('#'+secondId).datepicker().
-      on('changeDate.datepicker.amui', function(event) {
-        if (event.date.valueOf() < startDate.valueOf()) {
-          $alert.find('p').text('结束日期应大于开始日期！').end().show();
-        } else {
-          $alert.hide();
-          endDate = new Date(event.date);
-       //   $('#my-endDate').text($('#my-end').data('date'));
-        }
-        $(this).datepicker('close');
-      });
-};
+function isPoneAvailable(poneInput) {
+    var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+    if (!myreg.test(poneInput)) {
+        return false;
+    } else {
+        return true;
+    }
+}
 
 
 /**

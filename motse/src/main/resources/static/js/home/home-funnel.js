@@ -35,8 +35,8 @@ var funnel = new Vue({
 					left: 10,
 					top: 20,
 					bottom: 20,
-//'＞180/＞110:'+blood.blood6+'人','160-179/100-109:'+blood.blood5+'人','140-159/90-99:'+blood.blood4+'人','120-139/80-89:'+blood.blood3+'人','90-120/60-80:'+blood.blood2+'人','＜90/＜60:'+blood.blood1+'人']
-					data: ['＜90/＜60(mmHg):'+blood.blood1+'人','90-120/60-80(mmHg):'+blood.blood2+'人','120-139/80-89(mmHg):'+blood.blood3+'人','140-159/90-99(mmHg):'+blood.blood4+'人','160-179/100-109(mmHg):'+blood.blood5+'人','＞180/＞110(mmHg):'+blood.blood6+'人']
+					//data: ['＜90/＜60(mmHg):'+blood.blood1+'人','90-120/60-80(mmHg):'+blood.blood2+'人','120-139/80-89(mmHg):'+blood.blood3+'人','140-159/90-99(mmHg):'+blood.blood4+'人','160-179/100-109(mmHg):'+blood.blood5+'人','＞180/＞110(mmHg):'+blood.blood6+'人']
+					data: ['＜90/＜60(mmHg)','90-120/60-80(mmHg)','120-139/80-89(mmHg)','140-159/90-99(mmHg)','160-179/100-109(mmHg)','＞180/＞110(mmHg)']
 				},
 				calculable: true,
 				series: [
@@ -57,7 +57,8 @@ var funnel = new Vue({
 						gap: 2,
 						label: {
 							show: true,
-							position: 'inside'
+							position: 'inside',
+							formatter:"{b} : {c}人\n\n"
 						},
 						labelLine: {
 							length: 10,
@@ -76,12 +77,18 @@ var funnel = new Vue({
 							}
 						},
 						data: [
-							{ value: blood.blood1, name: '＜90/＜60(mmHg):'+blood.blood1+'人'},
+							/*{ value: blood.blood1, name: '＜90/＜60(mmHg):'+blood.blood1+'人'},
 							{ value: blood.blood2, name: '90-120/60-80(mmHg):'+blood.blood2+'人'},
 							{ value: blood.blood3, name: '120-139/80-89(mmHg):'+blood.blood3+'人'},
 							{ value: blood.blood4, name: '140-159/90-99(mmHg):'+blood.blood4+'人'},
 							{ value: blood.blood5, name: '160-179/100-109(mmHg):'+blood.blood5+'人' },
-							{ value: blood.blood6, name: '＞180/＞110(mmHg):'+blood.blood6+'人' }
+							{ value: blood.blood6, name: '＞180/＞110(mmHg):'+blood.blood6+'人' }*/
+							{ value: blood.blood1, name: '＜90/＜60(mmHg)'},
+							{ value: blood.blood2, name: '90-120/60-80(mmHg)'},
+							{ value: blood.blood3, name: '120-139/80-89(mmHg)'},
+							{ value: blood.blood4, name: '140-159/90-99(mmHg)'},
+							{ value: blood.blood5, name: '160-179/100-109(mmHg)' },
+							{ value: blood.blood6, name: '＞180/＞110(mmHg)' }
 						]
 					}
 				]

@@ -1,6 +1,6 @@
 body{
 	padding: 10px;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 .header{
 	width: 100%;
@@ -61,24 +61,22 @@ body{
 	background: white;
     padding-bottom: 80px;
 }
-.content .table .check{
-	padding: 15px 0;
-	display: flex;
+.content .table .clearfix{
+	padding: 10px;
 }
-.content .table .check .btn{
-	flex: 1;
-}
-.content .table .check .btn button{
+
+.content .table .clearfix button{
 	width: 100px;
 }
 
-.content .table .check input{
+.content .table .clearfix input{
 	width: 250px;
 	height: 30px;
 	padding:0 5px;
 	margin-right: 5px; 
+	vertical-align: middle;
 }
-.content .table .check button{
+.content .table .clearfix button{
 	width: 80px;
 	height: 30px;
 	color: #ffffff;
@@ -92,17 +90,23 @@ body{
     color: #337ac7;
     font-weight: bold;
 }
-
-.v-table-body-cell a{
+.v-table-body-cell button{
 	background: #337ac7;
 	font-size: 12px;
-	width: 44px;
+	padding: 0 10px;
     display: inline-block;
     line-height: 27px;
-    color: #ffffff;
+	color: #ffffff;
+	border-radius: 5px;
+	border: 0;
+	
+}
+.btn-dele{
+	background: #888888;
+	display: none;
 }
 
-.v-table-body-cell a+a{
+.v-table-body-cell button+button{
 	background: #ff5722;
 }
 
@@ -117,6 +121,96 @@ body{
 .v-table-views{
 	font-size: 13px;
 }
-.v-table-rightview , .v-table-views{
-	width:100%!important;
+
+/* ÐÞ¸Äµ¯´°ÑùÊ½ */
+.modal-dialog {
+    text-align: center;
+}
+.form-horizontal .form-group {
+    margin-bottom: 15px!important;
+}
+.form-group {
+    margin: 0!important;
+}
+.modal-header {
+    background: #3277c1;
+    color: #ffffff;
+}
+.modal-footer {
+    text-align: center!important;
+}
+
+.icon-xinghao:before {
+    font-size: 1px;
+    vertical-align: top;
+}
+label {
+    color: #6e9ad3;
+}
+
+.sweet-alert h2{
+	font-size: 16px!important;
+}
+.sweet-alert .cancel{
+	font-size: 16px!important;
+}
+
+
+.delete{
+	width: 230px;
+	height: 68px;
+	margin: 0 auto;
+	padding: 17px 0;
+	background: #ffffff;
+}
+.delete div{
+	display: inline-block;
+	vertical-align: middle;
+	
+}
+.delete div+div{
+	font-size: 12px;
+	width: 155px;
+	text-align: right;
+}
+.delete .lock-img{
+	width: 36px;
+}
+.delete .lock-img img{
+	width:100%;
+}
+#dele-btn .modal-dialog{
+	margin: 150px auto;
+}
+
+#dele-btn .modal-content{
+	width: 320px;
+	margin: 0 auto;
+}
+#dele-btn .modal-dialog {
+    text-align: left;
+}
+#dele-btn .modal-footer {
+    text-align: right!important;
+}
+.v-modal {
+	z-index: -1 !important;
+}
+.el-message-box__wrapper {
+	background: rgba(52, 52, 52, .5);
+}
+
+.el-button--text:hover,.el-button--text:focus{
+	background: #ff5722!important;
+	color: #ecf1f8!important;
+}
+.el-message-box{
+	border: 0!important;
+}
+.el-message-box__header{
+	background: #3277c1;
+	
+}
+.el-message-box__title{
+	color: #ecf1f8!important;
 }

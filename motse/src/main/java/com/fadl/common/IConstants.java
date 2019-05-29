@@ -30,7 +30,7 @@ public class IConstants {
     /**
      * 登陆错误次数过多
      */
-    public static  final String USER_LOGIN_ERROR_NIMIETY="登陆次数已超5次,请{0}后重试";
+    public static  final String USER_LOGIN_ERROR_NIMIETY="已错误输入5次,请{0}后重试";
     /* **************************  权限控制提示 start *******************************/
 
     /**

@@ -60,5 +60,50 @@ public class HrController extends AbstractController{
 		}
 		return messageMap;
     }
+    /**
+     * 新增供应商的个人信息
+     * map
+     * @return
+     */
+    @RequestMapping("/addHrInfo")
+    @ResponseBody
+    public DataRow addHrInfo(Hr hr){
+    	try {
+    		messageMap =  hrService.addHrInfo(hr,messageMap);
+		} catch (Exception e) {
+			logger.error("HrController<<<<<<<<<<<<<<<<<<queryHrListCount",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 通过ID查询供应商的个人信息
+     * map
+     * @return
+     */
+    @RequestMapping("/queryHrInfo")
+    @ResponseBody
+    public DataRow queryHrInfo(Hr hr){
+    	try {
+    		messageMap =  hrService.queryHrInfo(hr,messageMap);
+		} catch (Exception e) {
+			logger.error("HrController<<<<<<<<<<<<<<<<<<queryHrInfo",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 通过ID修改供应商的个人信息
+     * map
+     * @return
+     */
+    @RequestMapping("/updateHrInfo")
+    @ResponseBody
+    public DataRow updateHrInfo(Hr hr){
+    	try {
+    		messageMap =  hrService.updateHrInfo(hr,messageMap);
+		} catch (Exception e) {
+			logger.error("HrController<<<<<<<<<<<<<<<<<<updateHrInfo",e);
+		}
+		return messageMap;
+    }
 }
 

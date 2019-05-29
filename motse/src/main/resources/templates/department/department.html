@@ -10,19 +10,145 @@
     <meta name="keywords" content=""/>
     <link th:href="@{/css/global.css}" rel="stylesheet"/>
     <link th:href="@{/css/department.css}" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <!-- 引入确认提示框、***、***样式 -->
+     <!-- 引入确认提示框、***、***样式 -->
 	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
 	 <!-- 提示框CSS -->
     <link rel="stylesheet" th:href="@{/css/alert.css}"/>
 	
 <body>
     <div id="app">
+    <!-- 新增工作人员 -->
+    <el-dialog title="新增工作人员" :visible.sync="dialogFormVisible">
+            <el-form :model="form">
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" auto-complete="off"></el-input>
+                </el-form-item>
+                 <el-form-item label="性别" :label-width="formLabelWidth">
+                    <el-select v-model="form.gender" placeholder="请选择性别">
+                    	<el-option label="女" value="0"></el-option>
+                        <el-option label="男" value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="岗位" :label-width="formLabelWidth">
+                    <el-input v-model="form.post" auto-complete="off"></el-input>
+                </el-form-item>
+               
+                <el-form-item label="出生日期" :label-width="formLabelWidth">
+                	 <el-date-picker v-model="form.birth" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"  :picker-options="pickerOptions"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="学历" :label-width="formLabelWidth">
+                <el-select v-model="form.education" placeholder="请选择学历">
+                  		<el-option label="初高中" value="0"></el-option>
+                        <el-option label="大专" value="1"></el-option>
+                        <el-option label="本科" value="2"></el-option>
+                        <el-option label="硕士" value="3"></el-option>
+                        <el-option label="博士" value="4"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="户籍" :label-width="formLabelWidth">
+                    <el-input v-model="form.register" auto-complete="off"></el-input>
+                </el-form-item>
+                 <el-form-item label="婚否" :label-width="formLabelWidth">
+                 <el-select v-model="form.isMarry" placeholder="请选择婚否">
+                  		<el-option label="未婚" value="0"></el-option>
+                        <el-option label="已婚" value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                 <el-form-item label="入职日期" :label-width="formLabelWidth">
+                 	<el-date-picker v-model="form.entryDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"></el-date-picker>
+                </el-form-item>
+                 <el-form-item label="手机" :label-width="formLabelWidth">
+                    <el-input v-model="form.phone" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button v-on:click="dialogFormVisible = false">取 消</el-button>
+                <!-- <el-button type="primary" v-on:click="dialogFormVisible = false" v-on:click="determine">确 定</el-button> -->
+                <el-button type="primary"  v-on:click="determine">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 修改弹框 -->
+        <el-dialog title="修改工作人员" :visible.sync="dialogFormModify">
+            <el-form :model="modify">
+				<input id="hrId" type="hidden"/>
+                <el-form-item label="姓名" :label-width="formLabelWidth">
+                    <el-input v-model="modify.name" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="性别" :label-width="formLabelWidth">
+                    <el-select v-model="gender" placeholder="请选择性别">
+                    <el-option  v-for="item in optionsex" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="岗位" :label-width="formLabelWidth">
+                    <el-input v-model="modify.post" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="出生日期" :label-width="formLabelWidth">
+                    <el-date-picker v-model="modify.birth" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
+                        :picker-options="pickerOptions">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="学历" :label-width="formLabelWidth"><!-- modify.education -->
+                    <el-select v-model="education"  placeholder="请选择学历">
+                    <el-option  v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="户籍" :label-width="formLabelWidth">
+                    <el-input v-model="modify.register" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="婚否" :label-width="formLabelWidth">
+                    <el-select v-model="isMarry" placeholder="请选择婚否">
+                     <el-option  v-for="item in optionisMarry" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="入职日期" :label-width="formLabelWidth">
+                    <el-date-picker v-model="modify.entryDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"
+                        :picker-options="pickerOptions">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="联系电话" :label-width="formLabelWidth">
+                    <el-input v-model="modify.phone" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button v-on:click="dialogFormModify = false">取 消</el-button>
+                <el-button type="primary" v-on:click="updateHrInfo" class="alert-btn1">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 修改基础信息-->
+        <el-dialog title="修改基础信息" :visible.sync="updateFormVisible">
+            <el-form :model="update">
+                <el-form-item label="机构名称" :label-width="formLabelWidth">
+                    <el-input  v-model="update.agentName" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="机构地址" :label-width="formLabelWidth">
+                    <el-input  v-model="update.address" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="机构负责人" :label-width="formLabelWidth">
+                    <el-input  v-model="update.master" auto-complete="off"></el-input>
+                </el-form-item>
+                 <el-form-item label="机构座机电话" :label-width="formLabelWidth">
+                    <el-input  v-model="update.landline" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="负责人手机号码" :label-width="formLabelWidth">
+                    <el-input v-model="update.phone" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="负责人联系邮箱" :label-width="formLabelWidth">
+                    <el-input  v-model="update.mailbox" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button v-on:click="updateFormVisible = false">取 消</el-button>
+                <!-- <el-button type="primary" v-on:click="dialogFormVisible = false" v-on:click="determine">确 定</el-button> -->
+                <el-button type="primary"  v-on:click="updateAgen">确 定</el-button>
+            </div>
+        </el-dialog>
         <div class="header">
             <div class="img">
                 <img th:src="@{/img/home.png}" alt=""/>
             </div>
-            <div class="home">主页＞机构管理</div>
+            <div class="home">信息管理＞机构管理</div>
         </div>
         <div class="content">
             <div class="history">
@@ -32,12 +158,17 @@
                 <p>机构信息</p>
             </div>
             <div class="table">
+            <input id="agentId" type="hidden"/>
                 <table class="table table-bordered">
                     <div class="clearfix" style="padding: 10px 0;">
                         <div class="pull-left">
                             基础信息
                         </div>
-                        <div class="pull-right"></div>
+                        <div class="pull-right">
+                        	<button type="button" class="btn btn-primary" v-on:click="updateFormVisible = true" onclick="updateAgentInfo()">修改基础信息
+                                <span class="glyphicon glyphicon-plus-sign"></span>
+                            </button>
+                        </div>
                     </div>
                     <tbody>
                         <tr>
@@ -72,9 +203,10 @@
                             工作人员信息
                         </div>
                         <div class="pull-right">
-                            <button type="button" class="btn btn-primary">新增
+                            <button type="button" class="btn btn-primary" v-on:click="dialogFormVisible = true">新增工作人员信息
                                 <span class="glyphicon glyphicon-plus-sign"></span>
                             </button>
+                            
                         </div>
                     </div>
                     <thead>
@@ -107,7 +239,9 @@
                             <td>{{item.entryDate}}</td>	
                             <td>{{item.phone}}</td>
                             <td>
-                                <button type="button" class="btn btn-warning" v-on:click="deleteRow(item.id)">删除</button>
+                            
+                             <button type="button" class="btn btn-primary btn-mod" v-on:click="dialogFormModify=true"><span class="mod" v-on:click="change(item.id)">修改</span></button>
+                             <button type="button" class="btn btn-warning" v-on:click="deleteRow(item.id)">删除</button>
                             </td>
                         </tr>
                     </tbody>
@@ -129,8 +263,8 @@
         </div>
     </div>
    		<script th:src="@{/js/vue.js}"></script>
+   		<script th:src="@{/js/jquery.min.js}"></script>
    		<script th:src="@{/js/bootstrap.min.js}"></script>
-	    <script th:src="@{/js/jquery.min.js}"></script>
 	    <script th:src="@{/js/axios.min.js}"></script>
 	    <!-- 确认提示框、***、**** -->
 	    <script src="https://unpkg.com/element-ui/lib/index.js"></script>

@@ -1,4 +1,18 @@
 $("#chen").html("用户总人数 : "+$("#count").val());
+var row = true;
+function musicSwitch(){
+	var audio = document.getElementById('music');
+	if($("#musicSwitch").text()=="点击开启音乐"){
+	//	audio.play();
+		 row=true;
+		 $("#musicSwitch").text("点击关机音乐");
+	}else{
+		 audio.pause();
+		 row=false;
+		 $("#musicSwitch").text("点击开启音乐");
+	}
+}
+
 var tableList=new Vue({
     el: '#app',
     data() {
@@ -70,26 +84,26 @@ var tableList=new Vue({
     },
     methods: {
     	columnCellClass(rowIndex,columnName,rowData){
-    		var row = true;
+    	
         	var audio = document.getElementById('music');
         	if(rowData.Heartrate.toString().search("A")!=-1 && columnName=='Heartrate'){
         		 if(row){
         			 audio.play();
-        			 row=false;
+        		//	 row=false;
         		 }
         		return 'column-cell-class-name-test';
         	}
         	if(rowData.sbp_ave.toString().search("A")!=-1 && columnName=='sbp_ave'){
         		if(row){
         			audio.play();
-       			 	row=false;
+       		//	 	row=false;
         		}
         		return 'column-cell-class-name-test';
         	}
         	if(rowData.dbp_ave.toString().search("A")!=-1 && columnName=='dbp_ave'){
         		if(row){
         			audio.play();
-       			 	row=false;
+       		//	 	row=false;
         		}
         		return 'column-cell-class-name-test';
         	}

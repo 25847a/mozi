@@ -40,8 +40,8 @@ var pie = new Vue({
 						center: ['50%', '60%'],
 						data:/*this.pieDatArray, */
 							[
-								{ value: offline, name: '在线:'+offline+'人', itemStyle: { color: '#2ec7c9' } },
-								{ value: online, name: '离线:'+online+'人', itemStyle: { color: '#8d98b3' } }
+								{ value: offline, name: '在线:'+offline+'台', itemStyle: { color: '#2ec7c9' } },
+								{ value: online, name: '离线:'+online+'台', itemStyle: { color: '#8d98b3' } }
 							],
 						itemStyle: {
 							emphasis: {

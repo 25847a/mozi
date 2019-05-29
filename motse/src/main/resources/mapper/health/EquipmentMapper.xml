@@ -35,6 +35,8 @@
     <!-- 获取设备在线离线数量饼状图 -->
 	<select id="queryEquipmentState" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT COUNT(*) AS count,SUM(CASE WHEN eq_status='H:0' THEN 1 ELSE 0 END) AS online,SUM(CASE WHEN eq_status='H:1' THEN 1 ELSE 0 END) AS offline FROM equipment tp
+		INNER JOIN (SELECT * from user WHERE isDelete=0 AND role='使用者') tv
+		ON tp.imei=tv.imei
 		INNER JOIN agent tt
 		ON tp.agentid=tt.id
 		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tk

@@ -23,6 +23,7 @@
 </head>
 
 <body>
+<div  id="app">
     <!-- 详细弹窗 -->
     <div class="modal fade" id="detailed" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width:800px!important;">
@@ -45,8 +46,16 @@
                                         th:src="@{/img/upload.png}"/>
                                     <input id="upload" name="file" accept="image/*" type="file" style="display: none"/>
                                 </td>
-                                <td style="color:#4985cb; font-weight: bold;">姓名</td>
-                                <td id="detailsName"></td>
+                                <td style="color:#4985cb; font-weight: bold;width: 13%;">姓名</td>
+                                <td>
+                                        <form class="bs-example bs-example-form" role="form">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <input type="text" name="name" id="detailsName" class="form-control" placeholder=""/>
+                                                </div>
+                                            </div>
+                                        </form>
+                                </td>
                                 <td style="color:#4985cb; font-weight: bold;">监测器IMEI号</td>
                                 <td colspan="2" id="detailsImei"></td>
                             </tr>
@@ -54,10 +63,18 @@
                                 <td style="color:#4985cb; font-weight: bold;">性别</td>
                                 <td>
                                     <div class="form-group">
-                                        <select name="gender" id="detailsGender">
+                                    <el-select v-model="value" placeholder="性别" size="small" style="width:70px;" name="gender" id="detailsGender">
+                                            <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                        <!-- <select name="gender" id="detailsGender">
                                             <option value="男">男</option>
                                             <option value="女">女</option>
-                                        </select>
+                                        </select> -->
                                     </div>
                                 </td>
                                 <td style="color:#4985cb; font-weight: bold;">电话号码</td>
@@ -75,9 +92,9 @@
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">是否为重点关爱</td>
-                                <td colspan="2" id="detailsLove"></td>
+                                <td colspan="2" id="detailsLove" style="width:30%;"></td>
                                 <td style="color:#4985cb; font-weight: bold;">衣服ID编号</td>
-                                <td colspan="2" id="detailsBluetoothmac"></td>
+                                <td colspan="2" id="detailsBluetoothmac" style="width:30%;"></td>
                             </tr>
                             <tr>
                                 <td style="color:#4985cb; font-weight: bold;">出生日期</td>
@@ -144,26 +161,34 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="color:#4985cb; font-weight: bold;">紧急联系人1</td>
+                                <td style="color:#4985cb; font-weight: bold;width:18%;">紧急联系人1</td>
                                 <td colspan="2">
-                                 <div style="padding: 0px 50px;">
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
-                                                <div class="col-lg-12">
-                                                    <input type="text" name="phone1" id="detailsPhone1" class="form-control" placeholder=""/>
+                                                <div style="width:30%;display: inline-block;">
+                                                    <input type="text" name="phoneName1" id="phoneName1" class="form-control" placeholder="名字"/>
+                                                    
+                                                </div>
+                                                <div style="width:60%;display: inline-block;">
+                                                    <input type="text" name="phone1" id="detailsPhone1" class="form-control" placeholder="电话号码"/>
+                                                    
                                                 </div>
                                             </div>
                                         </form>
-                                    </div>
                                 
                                 </td>
                                 <td style="color:#4985cb; font-weight: bold;">紧急联系人2</td>
                                 <td colspan="2">
-                                <div style="padding: 0px 50px;">
+                                <div>
                                         <form class="bs-example bs-example-form" role="form">
                                             <div class="row">
-                                                <div class="col-lg-12">
-                                                    <input type="text" name="phone2" id="detailsPhone2" class="form-control" placeholder=""/>
+                                                <div style="width:30%;display: inline-block;">
+                                                    <input type="text" name="phoneName2" id="phoneName2" class="form-control" placeholder="名字"/>
+                                                    
+                                                </div>
+                                                <div style="width:60%;display: inline-block;">
+                                                    <input type="text" name="phone2" id="detailsPhone2" class="form-control" placeholder="电话号码"/>
+                                                    
                                                 </div>
                                             </div>
                                         </form>
@@ -303,7 +328,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <input type="text" id="Heartrate" name="Heartrate" class="form-control unit" placeholder=""/>
-                                                     <span>次/分</span>
+                                                     <span class='study'>次/分</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -316,7 +341,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <input type="text" id="Bloodoxygen" name="Bloodoxygen" class="form-control unit" placeholder=""/>
-                                                    <span>%</span>
+                                                    <span class='study'>%</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -327,7 +352,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <input type="text" id="microcirculation" name="microcirculation" class="form-control unit" placeholder=""/>
-                                                     <span>%</span>
+                                                     <span class='study'>%</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -340,7 +365,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <input type="text" id="HRV" name="hrv" class="form-control unit" placeholder=""/>
-                                                    <span>ms</span>
+                                                    <span class='study'>ms</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -351,7 +376,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <input type="text" id="respirationrate" name="respirationrate" class="form-control unit" placeholder=""/>
-                                                     <span>次/分</span>
+                                                     <span class='study'>次/分</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -364,7 +389,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <input type="text" id="sbp_ave" name="sbpAve" class="form-control unit" placeholder=""/>
-                                                    <span>mmHg</span>
+                                                    <span class='study'>mmHg</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -375,7 +400,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <input type="text" id="dbp_ave" name="dbpAve" class="form-control unit" placeholder=""/>
-                                                    <span>mmHg</span>
+                                                    <span class='study'>mmHg</span>
                                                 </div>
                                             </div>
                                         </form>
@@ -459,7 +484,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="color:#4985cb; font-weight: bold;">收缩压预警值（低压）</td>
+                                <td style="color:#4985cb; font-weight: bold;">舒张压预警值（低压）</td>
                                 <td>
                                 	<div class="input">
                                     	<div>
@@ -530,7 +555,7 @@
                             <tr>
                                 <td id="addImeiA"></td>
                                 <td id="addNames"></td>
-                                <td id="addGender"></td>
+                                <td id="addGenderB"></td>
                                 <td id="addBorns"></td>
                             </tr>
                         </tbody>
@@ -567,7 +592,7 @@
                                     <div class="input-group">
                                         <i class="iconfont icon-sousuo"></i>
                                         <input type="text" class="form-control" id="deleteImei" style="padding-left:25px;"
-                                            placeholder="请输入用户监测器IMEI号进行添加"/>
+                                            placeholder="请输入用户监测器IMEI号进行移除"/>
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" onclick="deleteQuery()" type="button">
                                                 查询
@@ -639,6 +664,7 @@
                         </div>
                     <div class="form-group">
                             <label for="username" class="col-sm-3 control-label">姓名
+                            <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="name" id="addName" placeholder="请输入用户姓名"/>
@@ -655,7 +681,6 @@
                         </div>
                         <div class="form-group">
                             <label for="name" class="col-sm-3 control-label">分属护工
-                                <i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
                             </label>
                             <div class="col-sm-9">
                                 <select class="form-control" name="nurseId" id="addNurse">
@@ -669,7 +694,7 @@
                             </label>
                             <div class="col-sm-9">
                                 <input type="text" class="am-form-field" value="" name="born" id="addBorn" placeholder="选择日期"
-                                        data-am-datepicker="{theme: 'primary'}"/>
+                                        data-am-datepicker="{theme: 'primary'}" readonly="readonly"/>
                             </div>
                         </div>
                     <div class="form-group">
@@ -678,7 +703,7 @@
                             </label>
                             <div class="col-sm-9">
                                 <input type="text" class="am-form-field" value="" name="liveTime" id="addLiveTime" placeholder="选择日期"
-                                        data-am-datepicker="{theme: 'primary'}"/>
+                                        data-am-datepicker="{theme: 'primary'}" readonly="readonly"/>
                             </div>
                         </div>
                     
@@ -739,7 +764,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
-                    <button type="button" onclick="addDetermine()" class="btn btn-primary">
+                    <button type="button" onclick="addDetermine()" id="invite-determine" class="btn btn-primary">
                         确定
                     </button>
                 </div>
@@ -850,9 +875,9 @@
         <div class="img">
             <img th:src="@{/img/home.png}" alt=""/>
         </div>
-        <div class="home">主页＞用户管理</div>
+        <div class="home">信息管理＞用户管理</div>
     </div>
-    <div class="content" id="app">
+    <div class="content">
         <div class="history">
             <div class="icon">
                 <img th:src="@{/img/add.png}" alt=""/>
@@ -869,13 +894,18 @@
                     <button type="button" onclick="deleteUser()" class="btn btn-primary" data-toggle="modal"
                         data-target="#remove">移除用户</button>
                 </div>
-                <div class="col-lg-4">
-                    <div class="input-group">
+                <div class="col-lg-5">
+                	<div class="input-group">
                         <input type="text" class="form-control" id="imei" placeholder="请输入imei号查询用户信息"/>
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" onclick="query()" type="button">查询用户信息</button>
-                        </span>
                     </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="userName" placeholder="请输入姓名查询用户信息"/>	
+                        
+                    </div>
+                    <div class="input-group">
+                            <button class="btn btn-primary" onclick="query()" type="button">查询用户信息</button>
+                    </div>
+                    
                 </div>
             </div>
             <table class="table table-bordered table-hover">
@@ -888,7 +918,7 @@
                         <th>性别</th>
                         <th>床号</th>
                         <th>分属护工</th>
-                        <th>衣服编码及状态</th>
+                        <th>衣服状态</th>
                         <th>其他操作</th>
                     </tr>
                 </thead>
@@ -933,7 +963,8 @@
                             </button>
                             
                         <button type="button" class="btn btn-default" id="early" data-toggle="modal" data-target="#warning" v-if="item.allNotifyOn==1">
-                                <i class="iconfont icon-kai blue-color"></i>
+                        		<img style="width: 21px;display: inline-block;" alt="" th:src="@{/img/icon-kai.png}"/>
+                            <!--     <i class="iconfont icon-kai blue-color"></i> -->
                                 预警设置
                             </button>
                                 
@@ -968,6 +999,7 @@
             </div>
         </div>
 
+    </div>
     </div>
     <!-- 先引入 Vue -->
     <script th:src="@{/js/vue.js}"></script>

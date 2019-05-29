@@ -259,7 +259,7 @@ $("#vcode").on("click", function () {
                         timer = setInterval(loop, 1000);
                     } else {
                         $("#vcode").removeAttr("disabled");
-                        tips("验证码发送失败，请检查手机号码和网络后重新发送!");
+                        tips(data.message);
                     }
                 },
                 error: function () {

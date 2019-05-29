@@ -98,5 +98,20 @@ public class AgentController extends AbstractController{
 		}
 		return messageMap;
     }
+    /**
+   	 * 修改代理商信息
+   	 * @return
+   	 * @throws SQLException
+   	 */
+       @RequestMapping("/updateAgentInfo")
+       @ResponseBody
+       public DataRow updateAgentInfo(Agent agent){
+       	try {
+       		messageMap =  agentService.updateAgentInfo(agent,messageMap);
+   		} catch (Exception e) {
+   			logger.error("AgentController<<<<<<<<<<<<<<<<<<updateAgentInfo",e);
+   		}
+   		return messageMap;
+       }
 }
 

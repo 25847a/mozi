@@ -1,6 +1,5 @@
 package com.fadl.hr.service;
 
-import com.fadl.account.entity.Admin;
 import com.fadl.common.DataRow;
 import com.fadl.hr.entity.Hr;
 
@@ -29,4 +28,23 @@ public interface HrService extends IService<Hr> {
 	 * @throws Exception
 	 */
 	public DataRow deleteHrInfo(Hr hr,DataRow messageMap)throws Exception;
+	/**
+	 * 新增供应商的个人信息
+	 * hr
+	 * @throws Exception
+	 */
+	public DataRow addHrInfo(Hr hr,DataRow messageMap)throws Exception;
+	/**
+     * 通过ID查询供应商的个人信息
+     * hr
+     * @return
+     */
+	public DataRow queryHrInfo(Hr hr,DataRow messageMap)throws Exception;
+	 /**
+     * 通过ID修改供应商的个人信息
+     * map
+     * @return
+     */
+	public DataRow updateHrInfo(Hr hr,DataRow messageMap)throws Exception;
+	
 }

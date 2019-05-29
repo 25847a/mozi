@@ -44,4 +44,10 @@ public interface AgentService extends IService<Agent> {
 	 * @throws SQLException
 	 */
 	public DataRow addAgentInfo(Agent agent,DataRow messageMap)throws Exception;
+	/**
+   	 * 修改代理商信息
+   	 * @return
+   	 * @throws SQLException
+   	 */
+	public DataRow updateAgentInfo(Agent agent,DataRow messageMap)throws Exception;
 }

@@ -68,6 +68,13 @@ body{
 .content .table .check .btnn{
 	flex: 1;
 }
+.content .table .col-lg-5{
+	display: flex!important;
+}
+.form-control{
+	border-radius: 4px!important;
+}
+
 p{
     margin: 0;
 }
@@ -252,3 +259,9 @@ label{
 .icon-kaiguan2{
 	font-size: 19px!important;
 }
+.study{
+	width: 20%;
+    display: inline-block;
+    text-align: left;
+}
+

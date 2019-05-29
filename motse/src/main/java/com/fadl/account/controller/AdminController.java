@@ -95,6 +95,16 @@ public class AdminController extends AbstractController{
     	return "/home/beadhouse";
     }
     /**
+     * 用户分布图页面
+     * @return
+     * @throws Exception 
+     */
+    @RequestMapping("/distributionPage")
+    @RequiresPermissions("map:view")
+    public String distributionPage(){
+    	return "/home/distribution";
+    }
+    /**
 	 * 跳转代理商页面
 	 * @return
 	 */
