@@ -41,31 +41,31 @@ public interface HealthMapper extends BaseMapper<Health> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryHeartrateCount()throws SQLException;
+	public List<DataRow> queryHeartrateCount(Map<String,Object> map)throws SQLException;
 	/**
 	 * 首页当天血压统计图
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryBloodCount()throws SQLException;
+	public DataRow queryBloodCount(Map<String,Object> map)throws SQLException;
 	/**
 	 * 首页当天微循环统计图
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryMicrocirculationCount()throws SQLException;
+	public DataRow queryMicrocirculationCount(Map<String,Object> map)throws SQLException;
 	/**
 	 * 首页当天血氧统计图
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryBloodoxygenCount()throws SQLException;
+	public List<DataRow> queryBloodoxygenCount(Map<String,Object> map)throws SQLException;
 	/**
 	 * 首页当天呼吸统计图
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryRespirationrateCount()throws SQLException;
+	public DataRow queryRespirationrateCount(Map<String,Object> map)throws SQLException;
 	/**
 	 * 查询历史健康数据
 	 * @param adminId

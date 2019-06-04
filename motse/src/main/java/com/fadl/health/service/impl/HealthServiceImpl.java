@@ -56,34 +56,39 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	@Override
 	public DataRow queryBeadhouseList(DataRow messageMap,Map<String,Object> map) throws Exception {
 		DataRow equipment = equipmentService.queryEquipmentState(map);//设备
-		messageMap.put("equipment", equipment);
-		DataRow userGender  = userService.queryUserGender(map);//男女
-		messageMap.put("userGender", userGender);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::"+map.get("page"));
-		List<DataRow> tableData = healthService.queryHealthList(map);//列表数据
-		int count = healthMapper.queryHealthListCount(map);
-		messageMap.put("count", count);
-		List<DataRow> heartrate = healthService.queryHeartrateCount();//首页当天心率统计图      数组
-		for(DataRow dataRow: heartrate){
-			int gender = dataRow.getInt("gender");
-			Object[] result=ArrayUtil.listArray(dataRow,"gender");
-			if(gender==0){
-				messageMap.put("heartrateBoy", result);
-			}else if(gender==1){
-				messageMap.put("heartrateGirl", result);
-			}else if(gender==2){
-				messageMap.put("heartrateOther", result);
+		if(equipment.getInt("count")!=0){
+			messageMap.put("equipment", equipment);
+			DataRow userGender  = userService.queryUserGender(map);//男女
+			messageMap.put("userGender", userGender);
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>:::::"+map.get("page"));
+			List<DataRow> tableData = healthService.queryHealthList(map);//列表数据
+			int count = healthMapper.queryHealthListCount(map);
+			messageMap.put("count", count);
+			List<DataRow> heartrate = healthService.queryHeartrateCount(map);//首页当天心率统计图      数组
+			for(DataRow dataRow: heartrate){
+				int gender = dataRow.getInt("gender");
+				Object[] result=ArrayUtil.listArray(dataRow,"gender");
+				if(gender==0){
+					messageMap.put("heartrateBoy", result);
+				}else if(gender==1){
+					messageMap.put("heartrateGirl", result);
+				}else if(gender==2){
+					messageMap.put("heartrateOther", result);
+				}
 			}
+			DataRow blood = healthMapper.queryBloodCount(map);//首页当天血压统计图
+			messageMap.put("blood", blood);
+			DataRow microcirculation = healthMapper.queryMicrocirculationCount(map);//首页当天微循环统计图
+			messageMap.put("microcirculation", microcirculation);
+			Object[] result = healthService.queryBloodoxygenCount(map);//首页当天血氧统计图     数组
+			messageMap.put("bloodoxygen", result);
+			DataRow respirationrate = healthMapper.queryRespirationrateCount(map);//首页当天呼吸统计图
+			messageMap.put("respirationrate", respirationrate);
+			messageMap.customValue(tableData,IConstants.SUCCESS,IConstants.RESULT_BEADHOUSE);
+		}else{
+			messageMap.initFial("无使用者数据");
 		}
-		DataRow blood = healthMapper.queryBloodCount();//首页当天血压统计图
-		messageMap.put("blood", blood);
-		DataRow microcirculation = healthMapper.queryMicrocirculationCount();//首页当天微循环统计图
-		messageMap.put("microcirculation", microcirculation);
-		Object[] result = healthService.queryBloodoxygenCount();//首页当天血氧统计图     数组
-		messageMap.put("bloodoxygen", result);
-		DataRow respirationrate = healthMapper.queryRespirationrateCount();//首页当天呼吸统计图
-		messageMap.put("respirationrate", respirationrate);
-		messageMap.customValue(tableData,IConstants.SUCCESS,IConstants.RESULT_BEADHOUSE);
+		
 		return messageMap;
 	}
 	/**
@@ -258,8 +263,8 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public List<DataRow> queryHeartrateCount() throws SQLException {
-		return healthMapper.queryHeartrateCount();
+	public List<DataRow> queryHeartrateCount(Map<String,Object> map) throws SQLException {
+		return healthMapper.queryHeartrateCount(map);
 	}
 	/**
 	 * 首页当天血压统计图
@@ -267,8 +272,8 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryBloodCount() throws SQLException {
-		return healthMapper.queryBloodCount();
+	public DataRow queryBloodCount(Map<String,Object> map) throws SQLException {
+		return healthMapper.queryBloodCount(map);
 	}
 	/**
 	 * 首页当天微循环统计图
@@ -276,8 +281,8 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryMicrocirculationCount() throws SQLException {
-		return healthMapper.queryMicrocirculationCount();
+	public DataRow queryMicrocirculationCount(Map<String,Object> map) throws SQLException {
+		return healthMapper.queryMicrocirculationCount(map);
 	}
 	/**
 	 * 首页当天血氧统计图
@@ -285,8 +290,8 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public Object[] queryBloodoxygenCount() throws SQLException {
-		List<DataRow> bloodoxygen =healthMapper.queryBloodoxygenCount();
+	public Object[] queryBloodoxygenCount(Map<String,Object> map) throws SQLException {
+		List<DataRow> bloodoxygen =healthMapper.queryBloodoxygenCount(map);
 		Object[] result={0,0,0,0,0};
 		//Object[] result={0,"",0,"",0,0,""};
 		for(DataRow dataRow: bloodoxygen){
@@ -310,8 +315,8 @@ public class HealthServiceImpl extends ServiceImpl<HealthMapper, Health> impleme
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryRespirationrateCount() throws SQLException {
-		return healthMapper.queryRespirationrateCount();
+	public DataRow queryRespirationrateCount(Map<String,Object> map) throws SQLException {
+		return healthMapper.queryRespirationrateCount(map);
 	}
 	/**
 	 * 查询历史健康数据

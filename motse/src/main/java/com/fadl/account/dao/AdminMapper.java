@@ -37,5 +37,11 @@ public interface AdminMapper extends BaseMapper<Admin> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<DataRow> queryAdminInfoList(Map<String,String> map)throws SQLException;
+	public List<DataRow> queryAdminInfoList(Map<String,Object> map)throws SQLException;
+	/**
+	 * 查询用户管理列表总数
+	 * @return
+	 * @throws SQLException
+	 */
+	public int queryAdminInfoListCount(Map<String,Object> map)throws SQLException;
 }

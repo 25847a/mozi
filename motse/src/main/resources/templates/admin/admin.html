@@ -9,65 +9,279 @@
 	<meta name="description" content=""/>
 	<meta name="keywords" content=""/>
 	<link th:href="@{/css/global.css}" rel="stylesheet"/>
-	<link th:href="@{/css/user.css}" rel="stylesheet"/>
+	<link th:href="@{/css/role.css}" rel="stylesheet"/>
 	<link rel="stylesheet" th:href="@{/css/vue-easytable.css}"/>
+	<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
 	<link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css"/>
-	<script th:src="@{/js/vue.js}"></script>
-	<script th:src="@{/js/axios.min.js}"></script>
-	<script th:src="@{/js/echarts/echarts.js}"></script>
-	<script th:src="@{/js/jquery-1.11.3.min.js}"></script>
-	<script th:src="@{/js/vue-easytable.js}"></script>
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
+	<!-- elememt引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
+	<!-- 提示框CSS -->
+    <link rel="stylesheet" th:href="@{/css/alert.css}"/>
 </head>
 
 <body>
-	<div class="header">
-		<div class="img">
-			<img th:src="@{/img/home.png}" alt=""/>
-		</div>
-		<div class="home">信息管理＞用户管理</div>
-	</div>
-	<div class="content">
-		<div class="history">
-			<div class="icon">
-				<img th:src="@{/img/user.png}" alt=""/>
-			</div>
-			<p>系统用户列表</p>
-		</div>
-		<div class="table">
-			<div class="check" id="search_par">
-				<div class="btn">
-					<button type="button">新增</button>
-					<button type="button">批量删除</button>
+	<div id="app">
+		<!-- 新增 -->
+		<div class="modal fade" id="added-btn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">新增用户信息</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" role="form">
+							
+							<div class="form-group">
+								<label for="addRole" class="col-sm-3 control-label">用户角色
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<select class="form-control" v-model="addRole" >
+										<option v-for="item in optionsRole" :value="item.id">{{item.name}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAgent" class="col-sm-3 control-label">隶属代理商
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<select class="form-control" v-model="addAgent">
+										<option v-for="item in optionsAgent" :value="item.id">{{item.agentName}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAccount" class="col-sm-3 control-label">账号
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入账号" v-model="addAccount"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addPassword" class="col-sm-3 control-label">密码
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入密码" v-model="addPassword"/> 
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addName" class="col-sm-3 control-label">用户名
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入用户名" v-model="addName"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAge" class="col-sm-3 control-label">年龄
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入年龄" v-model="addAge"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAge" class="col-sm-3 control-label">性别
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<select class="form-control" v-model="addAender">
+										<option v-for="item in optionsAender" :value="item.value">{{item.name}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addPhone" class="col-sm-3 control-label">手机号码
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入手机号码" v-model="addPhone"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAddress" class="col-sm-3 control-label">居住地址
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入居住地址" v-model="addAddress"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addRemarks" class="col-sm-3 control-label">备注
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入备注描述" v-model="addRemarks"/> 
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" v-on:click="fix">确定</button>
+					</div>
 				</div>
-				<span>角色：</span>
-				<select id="role">
-				  <option value ="">请选择</option>
-				</select>
-				<span>姓名：</span>
-				<input type="text" name="" id="name" value="" placeholder="请输入姓名"/>
-				<span>用户名：</span>
-				<input type="text" name="" id="account" value="" placeholder="请输入用户名"/>
-				<button type="button" onclick="query()">查询</button>
-				<button type="button" onclick="empty()" >重置</button>
-				<button type="button" onclick="refresh()" >刷新</button>
 			</div>
-			<div id="app">
-				<div>
-					<v-table
-						:multiple-sort="false" :min-height="350" even-bg-color="#f2f2f2"
-						:title-rows="tableConfig.titleRows" :columns="tableConfig.columns"
-						:table-data="tableConfig.tableData" row-hover-color="#eee" row-click-color="#edf7ff"
-						:paging-index="(pageIndex-1)*pageSize" v-on:on-custom-comp="customCompFunc" :select-all="selectALL" :select-change="selectChange"
-                		:select-group-change="selectGroupChange"></v-table>
+		</div>
 
-					<div class="mt20 mb20 bold"></div>
-					<v-pagination v-on:page-change="pageChange" v-on:page-size-change="pageSizeChange" :total="total"
-						:page-size="pageSize" :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"
-						style="padding: 20px 100px 20px 0;float: right;"></v-pagination>
+		<!-- 修改 -->
+		<div class="modal fade" id="modify-btn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<button class="btn-modify" data-toggle="modal" data-target="#modify-btn"></button>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">修改角色信息</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" role="form">
+							
+							<div class="form-group">
+								<label for="addRole" class="col-sm-3 control-label">用户角色
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<select class="form-control" v-model="role" >
+										<option v-for="item in updateRole" :value="item.id">{{item.name}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAgent" class="col-sm-3 control-label">隶属代理商
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<select class="form-control" v-model="agent">
+										<option v-for="item in updateAgent" :value="item.id">{{item.agentName}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAccount" class="col-sm-3 control-label">账号
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入账号" v-model="account"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addName" class="col-sm-3 control-label">用户名
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入用户名" v-model="name"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAge" class="col-sm-3 control-label">年龄
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入年龄" v-model="age"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAge" class="col-sm-3 control-label">性别
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<select class="form-control" v-model="aender">
+										<option v-for="item in updateAender" :value="item.value">{{item.name}}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addPhone" class="col-sm-3 control-label">手机号码
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入手机号码" v-model="phone"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addAddress" class="col-sm-3 control-label">居住地址
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入居住地址" v-model="address"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="addRemarks" class="col-sm-3 control-label">备注
+									<i class="iconfont icon-xinghao" style="color: red;font-size: 12px;"></i>
+								</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" placeholder="请输入备注描述" v-model="remarks"/> 
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" v-on:click="modify">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="header">
+			<div class="img">
+				<img th:src="@{/img/home.png}" alt=""/>
+			</div>
+			<div class="home"> 权限管理＞角色管理</div>
+		</div>
+		<div class="content">
+			<div class="history">
+				<div class="icon">
+					<img th:src="@{/img/role.png}" alt=""/>
+				</div>
+				<p>用户列表</p>
+			</div>
+			<div class="table">
+				<div class="clearfix">
+					<div class="pull-left" style="background:#58D3F7;">
+						<button type="button" class="btn btn-primary" data-toggle="modal"
+							data-target="#added-btn">新增</button>
+					</div>
+					<div class="pull-right">
+						<input type="text" name="" value="" placeholder="请输入名称" v-model="queryInput"/>
+						<button type="button" class="btn btn-primary" v-on:click="query">查询</button>
+					</div>
+				</div>
+				<div>
+					<div>
+						<v-table is-vertical-resize="vertical-resize-offset=60" is-horizontal-resize="style=width:100%"
+							:multiple-sort="false" :min-height="350" even-bg-color="#f2f2f2"
+							:title-rows="tableConfig.titleRows" :columns="tableConfig.columns"
+							:table-data="tableConfig.tableData" row-hover-color="#eee" row-click-color="#edf7ff"
+							v-on:sort-change="sortChange" :paging-index="(pageIndex-1)*pageSize"
+							v-on:on-custom-comp="customCompFunc"></v-table>
+
+						<div class="mt20 mb20 bold"></div>
+						<v-pagination th:page-change="pageChange" th:page-size-change="pageSizeChange" :total="total"
+							:page-size="pageSize" :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"
+							style="padding: 20px 100px 20px 0;float: right;"></v-pagination>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<script th:src="@{/js/vue.js}"></script>
+	<script th:src="@{/js/vue-easytable.js}"></script>
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/js/axios.min.js}"></script>
+	<!-- 引入组件库 -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<!-- 提示框 -->
+    <script th:src="@{/js/tips/alert.js}"></script>
 	<!-- 公共JS -->
 	<script th:src="@{/js/common/utils.js}"></script>
 	<script th:src="@{/js/admin/admin-table.js}"></script>

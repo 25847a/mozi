@@ -26,7 +26,7 @@ var tableList=new Vue({
                 	[
                 ]	,
                 columns: [
-                    { field: 'love', width: 50, columnAlign: 'center',isFrozen: true,
+                    { field: 'love', width: 50, columnAlign: 'center',
                         formatter: function (rowData) {
                         	if(rowData.love==1){
                         		return '<img src="'+'../img/love.png'+'"/>';
@@ -35,7 +35,7 @@ var tableList=new Vue({
                     
                     
                     {
-                        field: 'id', width: 50, titleAlign: 'center', columnAlign: 'center',isFrozen: true,
+                        field: 'id', width: 50, columnAlign: 'center', isResize: true 
                     },
                     { field: 'name', width: 133, columnAlign: 'center', isResize: true  },
                     { field: 'Heartrate', width: 80, columnAlign: 'center', isResize: true,

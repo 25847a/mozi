@@ -1,8 +1,8 @@
 package com.fadl.account.controller;
 
 
+import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.fadl.account.entity.Auth;
 import com.fadl.account.service.AuthService;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
@@ -40,19 +40,77 @@ public class AuthController extends AbstractController{
 	}
 	
 	/**
-	 * 查询设备数据列表
+     * 查询菜单管理列表
+     * @return
+     */
+    @RequestMapping("/queryAuthInfoList")
+    @ResponseBody
+    public DataRow queryAuthInfoList(@RequestParam Map<String,Object> map){
+    	try {
+    		messageMap = authService.queryAuthInfoList(map,messageMap);
+		} catch (Exception e) {
+			logger.error("AuthController<<<<<<<<<<<<<<<<<<queryAuthInfoList",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 新增菜单信息
+     * @return
+     */
+    @RequestMapping("/addAuthInfo")
+    @ResponseBody
+    public DataRow addAuthInfo(Auth auth){
+    	try {
+    		messageMap = authService.addAuthInfo(auth,messageMap);
+		} catch (Exception e) {
+			logger.error("AuthController<<<<<<<<<<<<<<<<<<addAuthInfo",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 修改菜单信息
+     * @return
+     */
+    @RequestMapping("/updateAuthInfo")
+    @ResponseBody
+    public DataRow updateAuthInfo(Auth auth){
+    	try {
+    		messageMap = authService.updateAuthInfo(auth,messageMap);
+		} catch (Exception e) {
+			logger.error("AuthController<<<<<<<<<<<<<<<<<<updateAuthInfo",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 删除菜单信息
+     * @return
+     */
+    @RequestMapping("/deleteAuthInfo")
+    @ResponseBody
+    public DataRow deleteAuthInfo(Auth auth){
+    	try {
+    		messageMap = authService.deleteAuthInfo(auth,messageMap);
+		} catch (Exception e) {
+			logger.error("AuthController<<<<<<<<<<<<<<<<<<deleteAuthInfo",e);
+		}
+		return messageMap;
+    };
+    /**
+	 * 查询角色全部信息
 	 * @param map
 	 * @return
 	 */
-	@RequestMapping("/queryAuthList")
+	@RequestMapping("/queryAuthInfo")
 	@ResponseBody
-	public DataRow queryAuthList(@RequestParam Map<String,String> map){
+	public DataRow queryAuthInfo(){
 		try {
-		messageMap=authService.queryAuthList(messageMap);
+			List<Auth> list = authService.queryAuthInfo();
+			messageMap.initSuccess(list);
 		} catch (Exception e) {
-			logger.error("AuthController>>>>>>>>>>>>>queryAuthList",e);
+			logger.error("RoleController>>>>>>>>>>>>>queryAuthInfo",e);
 		}
 		return messageMap;
 	}
+	
 }
 

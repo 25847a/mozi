@@ -39,13 +39,12 @@
 		SELECT phone,COUNT(*) as count FROM jfhealth GROUP BY phone
 		) tt
 		ON tp.phone=tt.phone
-		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data  WHERE DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY user_id) tl
+		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data WHERE createtime BETWEEN DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59') GROUP BY user_id) tl
 		ON substring(tp.phone,9)=tl.user_id
-		LEFT JOIN equipment ta
+		INNER JOIN equipment ta
 		ON tc.imei=ta.imei
-		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
 		ON tf.agentId=ta.agentid
-		WHERE DATE_FORMAT(tp.createtime,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')
 		LIMIT #{pageNum},#{pageSize}
     </select>
     <!-- 查询首页健康数据列表总数 -->
@@ -53,11 +52,10 @@
     	SELECT COUNT(*) FROM jfhealth_new tp
 		INNER JOIN (SELECT name,id,imei FROM user WHERE isDelete=0 AND role='使用者') tc
 		ON substring(tp.phone,9)=tc.id
-		LEFT JOIN equipment ta
+		INNER JOIN equipment ta
 		ON tc.imei=ta.imei
-		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
 		ON tf.agentId=ta.agentid
- 		WHERE DATE_FORMAT(tp.createtime,'%Y-%m-%d')=DATE_FORMAT(CURDATE(),'%Y-%m-%d')
     </select>
     <!-- 查询重点关爱的使用者 -->
     <select id="queryHealthListLove" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
@@ -76,16 +74,16 @@
 		SELECT phone,COUNT(*) as count FROM jfhealth GROUP BY phone
 		) tt
 		ON tp.phone=tt.phone
-		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data  WHERE DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY user_id) tl
+		LEFT JOIN (SELECT user_id,SUM(step_when) AS step_when from equipment_data WHERE createtime BETWEEN DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59') GROUP BY user_id) tl
 		ON substring(tp.phone,9)=tl.user_id
-		LEFT JOIN equipment ta
+		INNER JOIN equipment ta
 		ON tc.imei=ta.imei
-		LEFT JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
 		ON tf.agentId=ta.agentid
 		LIMIT #{pageNum},#{pageSize}
     </select>
 	<!-- 首页当天心率统计图 -->
-	<select id="queryHeartrateCount" resultType="com.fadl.common.DataRow">
+	<select id="queryHeartrateCount" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT tg.gender,
 		SUM(IF(tg.Heartrate &lt;= 49,1,0)) as heartrate1,
 		SUM(IF((tg.Heartrate &gt;= 50 AND tg.Heartrate &lt;= 59),1,0)) as heartrate2,
@@ -99,13 +97,17 @@
 		FROM (
 		SELECT substring(phone,9) as phone,CASE WHEN Heartrate IS NULL THEN 0 ELSE Heartrate END as Heartrate FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 		) tp
-		INNER JOIN (SELECT id,gender from user WHERE isDelete=0 AND  role='使用者') tc
+		INNER JOIN (SELECT id,gender,imei from user WHERE isDelete=0 AND  role='使用者') tc
 		ON tp.phone=tc.id
+		INNER JOIN equipment ta
+		ON tc.imei=ta.imei
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		ON tf.agentId=ta.agentid
 		) tg
 		GROUP BY tg.gender
 	</select>
 	<!-- 首页当天血压统计图 -->
-	<select id="queryBloodCount" resultType="com.fadl.common.DataRow">
+	<select id="queryBloodCount" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT
 		SUM(IF((sbp_ave&lt;90 AND dbp_ave&lt;60),1,0)) as blood1,
 		SUM(IF((sbp_ave&gt;=90  AND sbp_ave&lt;120 AND dbp_ave&gt;=60 AND dbp_ave&lt;80),1,0)) as blood2,
@@ -116,11 +118,15 @@
 		FROM (
 		SELECT substring(phone,9) as phone,CASE WHEN sbp_ave IS NULL THEN 0 ELSE sbp_ave END as sbp_ave,CASE WHEN dbp_ave IS NULL THEN 0 ELSE dbp_ave END as dbp_ave FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 		) tp
-		INNER JOIN (SELECT id,name from user WHERE isDelete=0 AND  role='使用者') tc
+		INNER JOIN (SELECT id,name,imei from user WHERE isDelete=0 AND  role='使用者') tc
 		ON tp.phone=tc.id
+		INNER JOIN equipment ta
+		ON tc.imei=ta.imei
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		ON tf.agentId=ta.agentid
 	</select>
 	<!-- 首页当天微循环统计图 -->
-	<select id="queryMicrocirculationCount" resultType="com.fadl.common.DataRow">
+	<select id="queryMicrocirculationCount" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT
 		SUM(IF((microcirculation&gt;=80),1,0)) as microcirculation1,
 		SUM(IF((microcirculation&gt;=70 AND microcirculation&lt;80),1,0)) as microcirculation2,
@@ -128,41 +134,52 @@
 		FROM (
 		SELECT substring(phone,9) as phone,CASE WHEN microcirculation IS NULL THEN 0 ELSE microcirculation END as microcirculation FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 		) tp
-		INNER JOIN (SELECT id,name from user WHERE isDelete=0 AND  role='使用者') tc
+		INNER JOIN (SELECT id,name,imei from user WHERE isDelete=0 AND  role='使用者') tc
 		ON tp.phone=tc.id
-		
+		INNER JOIN equipment ta
+		ON tc.imei=ta.imei
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		ON tf.agentId=ta.agentid
 	</select>
 	
 	<!-- 首页当天血氧统计图 -->
-	<select id="queryBloodoxygenCount" resultType="com.fadl.common.DataRow">
+	<select id="queryBloodoxygenCount" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT
 		SUM(IF(tp.Bloodoxygen&lt;94,1,0)) as bloodoxygen1,
 		SUM(IF((tp.Bloodoxygen&gt;=94 AND tp.Bloodoxygen&lt;=99),1,0)) as bloodoxygen2
 		FROM (
 		SELECT substring(phone,9) as phone,CASE WHEN Bloodoxygen IS NULL THEN 0 ELSE Bloodoxygen END as Bloodoxygen FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 		) tp
-		INNER JOIN (SELECT id from user WHERE  isDelete=0 AND role='使用者') tc
+		INNER JOIN (SELECT id,imei from user WHERE  isDelete=0 AND role='使用者') tc
 		ON tp.phone=tc.id
+		INNER JOIN equipment ta
+		ON tc.imei=ta.imei
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		ON tf.agentId=ta.agentid
 	</select>
 	<!-- 首页当天呼吸统计图 -->
-	<select id="queryRespirationrateCount" resultType="com.fadl.common.DataRow">
+	<select id="queryRespirationrateCount" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT
 		SUM(IF((respirationrate&gt;=24),1,0)) as respirationrate1,
 		SUM(IF((respirationrate&gt;=12 AND respirationrate&lt;24),1,0)) as respirationrate2,
 		SUM(IF((respirationrate&lt;12),1,0)) as respirationrate3 FROM (
 		SELECT substring(phone,9) as phone,CASE WHEN respirationrate IS NULL THEN 0 ELSE respirationrate END as respirationrate FROM jfhealth_new WHERE DATE_FORMAT(createtime,'%Y')=DATE_FORMAT(CURDATE(),'%Y')
 		) tp
-		INNER JOIN (SELECT id from user WHERE  isDelete=0 AND role='使用者') tc
+		INNER JOIN (SELECT id,imei from user WHERE  isDelete=0 AND role='使用者') tc
 		ON tp.phone=tc.id
+		INNER JOIN equipment ta
+		ON tc.imei=ta.imei
+		INNER JOIN (SELECT * FROM admin WHERE id=#{adminId}) tf
+		ON tf.agentId=ta.agentid
 	</select>
 	<!-- 查询历史健康数据 -->
 	<select id="queryHistoryList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
 		SELECT tp.imei,tp.id,tt.name,Heartrate,sbp_ave,dbp_ave,microcirculation,respirationrate,Bloodoxygen,HRV,DATE_FORMAT(tp.createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM jfhealth tp
 		LEFT JOIN equipment td
 		ON tp.imei=td.imei
-		LEFT JOIN user tt
+		INNER JOIN user tt
 		ON substring(tp.phone,9)=tt.id
-		LEFT JOIN admin tz
+		INNER JOIN admin tz
 		ON tz.agentId=td.agentid
 		WHERE tz.id=#{agentid} AND tt.isDelete=0
 		<if test="id!=null and id!=''">
@@ -171,18 +188,17 @@
 		<if test="name!=null and name!=''">
 		AND tt.name LIKE CONCAT('%',#{name},'%')
 		</if>
-		ORDER BY createtime DESC
+		ORDER BY tp.createtime DESC
 		LIMIT #{pageNum},#{pageSize}
 	</select>
 	<!-- 查询历史健康数据总数 -->
 	<select id="queryHistoryListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
-		SELECT COUNT(*) FROM(
-		SELECT tp.imei,tp.id,tt.name,Heartrate,sbp_ave,dbp_ave,microcirculation,respirationrate,Bloodoxygen,HRV,DATE_FORMAT(tp.createtime,'%Y-%m-%d %H:%i:%s') as createtime FROM jfhealth tp
-		LEFT JOIN equipment td
+		SELECT COUNT(*) FROM jfhealth tp
+		INNER JOIN equipment td
 		ON tp.imei=td.imei
-		LEFT JOIN user tt
-		ON substring(tp.phone,9)=tt.id
-		LEFT JOIN admin tz
+		INNER JOIN user tt
+		ON tp.imei=tt.imei
+		INNER JOIN admin tz
 		ON tz.agentId=td.agentid
 		WHERE tz.id=#{agentid} AND tt.isDelete=0
 		<if test="id!=null and id!=''">
@@ -191,8 +207,6 @@
 		<if test="name!=null and name!=''">
 		AND tt.name LIKE CONCAT('%',#{name},'%')
 		</if>
-		ORDER BY createtime DESC
-		) tr
 	</select>
 	<!-- 查询健康数据管理列表 -->
 	<select id="queryHealthInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">

@@ -1,6 +1,7 @@
 package com.fadl.account.service;
 
 import com.fadl.account.entity.Admin;
+import com.fadl.account.entity.AdminRole;
 import com.fadl.common.DataRow;
 import com.fadl.health.entity.Usercode;
 
@@ -36,7 +37,36 @@ public interface AdminService extends IService<Admin> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public DataRow queryAdminInfoList(Map<String,String> map,DataRow messageMap)throws SQLException;
+	public DataRow queryAdminInfoList(Map<String,Object> map,DataRow messageMap)throws SQLException;
+	/**
+     * 新增用户信息
+     * @return
+     */
+	public DataRow addAdminInfo(Admin admin,Long roleId,DataRow messageMap)throws SQLException;
+	/**
+     * 修改用户信息
+     * @return
+     */
+	public DataRow updateAdminInfo(Admin admin,AdminRole adminRole,DataRow messageMap)throws SQLException;
+	/**
+     * 删除用户信息
+     * @return
+     */
+	public DataRow deleteAdminInfo(Admin admin,DataRow messageMap)throws SQLException;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
      * 修改供应商的头像
      * avatar
@@ -73,7 +103,12 @@ public interface AdminService extends IService<Admin> {
      * @return
      */
 	public DataRow updatePassWord(Admin admin,DataRow messageMap)throws Exception;
-	
+	/**
+     *  查询用户要修改的信息
+     * id
+     * @return
+     */
+	public DataRow queryupdateAdminInfo(Long id,DataRow messageMap)throws Exception;
 	
 	
 	

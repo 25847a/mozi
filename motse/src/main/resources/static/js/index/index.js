@@ -360,3 +360,37 @@ $(function () {
         $(".add").removeClass('adds')
     })
 });
+//护士页面
+$(function () {
+    $('#nurse').on('click', function () {
+        $(window.parent.document).find('#iframe').attr('src', '/nurse/nursePage')
+        $(".menu").addClass('adds')
+        $(".history").removeClass('adds')
+        $(".index-home").removeClass('adds')
+        $(".love").removeClass('adds')
+        $(".version").removeClass('adds')
+        $(".agent").removeClass('adds')
+        $(".health").removeClass('adds')
+        $(".user").removeClass('adds')
+        $(".role").removeClass('adds')
+        $(".equipment").removeClass('adds')
+        $(".add").removeClass('adds')
+    })
+});
+//床位页面
+$(function () {
+    $('#bed').on('click', function () {
+        $(window.parent.document).find('#iframe').attr('src', '/bedNumber/bedPage')
+        $(".menu").addClass('adds')
+        $(".history").removeClass('adds')
+        $(".index-home").removeClass('adds')
+        $(".love").removeClass('adds')
+        $(".version").removeClass('adds')
+        $(".agent").removeClass('adds')
+        $(".health").removeClass('adds')
+        $(".user").removeClass('adds')
+        $(".role").removeClass('adds')
+        $(".equipment").removeClass('adds')
+        $(".add").removeClass('adds')
+    })
+});

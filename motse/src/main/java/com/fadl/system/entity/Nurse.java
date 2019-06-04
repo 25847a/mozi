@@ -33,7 +33,7 @@ public class Nurse extends Model<Nurse> {
     /**
      * 角色ID
      */
-    private Long adminId;
+    private Long agenId;
     /**
      * 创建时间
      */
@@ -72,12 +72,12 @@ public class Nurse extends Model<Nurse> {
         this.nurseName = nurseName;
     }
 
-    public Long getAdminId() {
-        return adminId;
+    public Long getAgenId() {
+        return agenId;
     }
 
-    public void setAdminId(Long adminId) {
-        this.adminId = adminId;
+    public void setAgenId(Long agenId) {
+        this.agenId = agenId;
     }
 
     public String getCreateDate() {
@@ -122,7 +122,7 @@ public class Nurse extends Model<Nurse> {
         return "Nurse{" +
         "id=" + id +
         ", nurseName=" + nurseName +
-        ", adminId=" + adminId +
+        ", agenId=" + agenId +
         ", createDate=" + createDate +
         ", updateDate=" + updateDate +
         ", creater=" + creater +

@@ -214,3 +214,9 @@ label {
 .el-message-box__title{
 	color: #ecf1f8!important;
 }
+.v-table-views{
+	width:100%!important;
+}
+.v-table-rightview{
+	width:100%!important;
+}

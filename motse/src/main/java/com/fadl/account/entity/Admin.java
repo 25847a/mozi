@@ -63,10 +63,6 @@ public class Admin extends Model<Admin> {
      */
     private String avatar;
     /**
-     * 职称ID
-     */
-    private Long positionId;
-    /**
      * 是否禁用(0、否 1、是)
      */
     private Integer isDisable;
@@ -186,13 +182,6 @@ public class Admin extends Model<Admin> {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-    public Long getPositionId() {
-		return positionId;
-	}
-
-	public void setPositionId(Long positionId) {
-		this.positionId = positionId;
-	}
 
     public Long getAgentId() {
 		return agentId;
@@ -307,7 +296,6 @@ public class Admin extends Model<Admin> {
         ", phone=" + phone +
         ", address=" + address +
         ", avatar=" + avatar +
-        ", positionId=" + positionId +
         ", agentId=" + agentId +
         ", createDate=" + createDate +
         ", updateDate=" + updateDate +

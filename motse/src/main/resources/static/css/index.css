@@ -45,11 +45,11 @@
     top: 9px;
 }
 .index-header .left .title{
-	width: 240px;
 	text-align: center;
 	font-size: 22px;
 	color: #ffffff;
 	flex: 1;
+	padding:0 10px;
 }
 
 .index-header ul{
@@ -291,4 +291,7 @@ label {
 }
 .bounceIn{
 	z-index:99999!important;
+}
+.panel-group{
+	margin-bottom:50px!important;
 }

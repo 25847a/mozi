@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.fadl.system.entity.Nurse">
         <id column="id" property="id" />
         <result column="nurseName" property="nurseName" />
-        <result column="adminId" property="adminId" />
+        <result column="agenId" property="agenId" />
         <result column="createDate" property="createDate" />
         <result column="updateDate" property="updateDate" />
         <result column="creater" property="creater" />
@@ -15,7 +15,35 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, nurseName, adminId, createDate, updateDate, creater, updater
+        id, nurseName, agenId, createDate, updateDate, creater, updater
     </sql>
 
+
+	<!-- 查询护士列表 -->
+	<select id="queryNurseList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT tp.id,tp.nurseName,DATE_FORMAT(tp.createDate,'%Y-%m-%d') as createDate,tt.agentName FROM nurse tp
+		LEFT JOIN agent tt
+		ON tp.agenId=tt.id
+		LEFT JOIN admin td
+		ON td.agentId=tt.id
+		WHERE td.id=#{id}
+		<if test="nurseName!=null and nurseName!=''">
+		AND tp.nurseName LIKE CONCAT('%',#{nurseName},'%')
+		</if>
+		LIMIT #{pageNum},#{pageSize}
+	</select>
+	<!-- 查询护士列表总数 -->
+	<select id="queryNurseListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		SELECT COUNT(*) FROM (
+		SELECT tp.*,tt.agentName FROM nurse tp
+		LEFT JOIN agent tt
+		ON tp.agenId=tt.id
+		LEFT JOIN admin td
+		ON td.agentId=tt.id
+		WHERE td.id=#{id}
+		<if test="nurseName!=null and nurseName!=''">
+		AND tp.nurseName LIKE CONCAT('%',#{nurseName},'%')
+		</if>
+		) tc
+	</select>
 </mapper>

@@ -209,3 +209,6 @@ td .vertical-border {
 .btn-primary{
 	height:30px;
 }
+.v-table-rightview{
+	    width: 100%!important;
+}

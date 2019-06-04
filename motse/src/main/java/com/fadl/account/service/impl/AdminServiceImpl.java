@@ -1,10 +1,13 @@
 package com.fadl.account.service.impl;
 
 import com.fadl.account.entity.Admin;
+import com.fadl.account.entity.AdminRole;
 import com.fadl.account.dao.AdminMapper;
+import com.fadl.account.service.AdminRoleService;
 import com.fadl.account.service.AdminService;
 import com.fadl.common.Base64;
 import com.fadl.common.DataRow;
+import com.fadl.common.DateUtil;
 import com.fadl.common.PasswordUtil;
 import com.fadl.common.ReadProperties;
 import com.fadl.common.checkingCodeUtil;
@@ -17,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +45,8 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 	UsercodeMapper usercodeMapper;
 	@Autowired
 	UsercodeService usercodeService;
-	
+	@Autowired
+	AdminRoleService adminRoleService;
 	/**
 	 * 根据用户名查询用户信息
 	 * @param account
@@ -68,9 +73,81 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 	 * @throws SQLException
 	 */
 	@Override
-	public DataRow queryAdminInfoList(Map<String,String> map,DataRow messageMap) throws SQLException {
-		List<DataRow> list =adminMapper.queryAdminInfoList(map);
-		messageMap.initSuccess(list);
+	public DataRow queryAdminInfoList(Map<String,Object> map,DataRow messageMap) throws SQLException {
+		int pageNum = Integer.valueOf((String) map.get("pageNum"));
+		int pageSize = Integer.valueOf((String) map.get("pageSize"));
+		map.put("pageNum", (pageNum-1)*pageSize);
+		map.put("pageSize", pageSize);
+		List<DataRow> result = adminMapper.queryAdminInfoList(map);
+		int total = adminMapper.queryAdminInfoListCount(map);
+		messageMap.initSuccess(result);
+		messageMap.put("total", total);
+		return messageMap;
+	}
+	/**
+     * 新增用户信息
+     * @return
+     */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Override
+	public DataRow addAdminInfo(Admin admin,Long roleId, DataRow messageMap) throws SQLException {
+		Admin adm = adminMapper.queryAdminInfo(admin.getAccount());
+		if(adm==null){
+			admin.setPassWord(PasswordUtil.encryptPassWord(admin.getPassWord(), admin.getAccount()));
+			admin.setLastDate(DateUtil.sf.format(new Date()));
+			admin.setFirstDate(DateUtil.sf.format(new Date()));
+			admin.setLockDate(DateUtil.sf.format(new Date()));
+			int row =adminMapper.insert(admin);
+			if(row>0){
+				AdminRole adminRole = new AdminRole();
+				adminRole.setManId(admin.getId());
+				adminRole.setRoleId(roleId);
+				adminRoleService.insert(adminRole);
+				messageMap.initSuccess();
+			}else{
+				messageMap.initFial();
+			}
+		}else{
+			messageMap.initFial("用户已经存在,不可创建");
+		}
+		return messageMap;
+	}
+	/**
+     * 修改用户信息
+     * @return
+     */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Override
+	public DataRow updateAdminInfo(Admin admin,AdminRole adminRole, DataRow messageMap) throws SQLException {
+		int row =adminMapper.updateById(admin);
+		if(row>0){
+			EntityWrapper<AdminRole> ew = new EntityWrapper<AdminRole>();
+			ew.eq("man_id", adminRole.getManId());
+			adminRole.setId(null);
+			boolean result =adminRoleService.update(adminRole, ew);
+			if(result){
+				messageMap.initSuccess();
+			}else{
+				messageMap.initFial();
+			}
+		}else{
+			messageMap.initFial();
+		}
+		return messageMap;
+	}
+	/**
+     * 删除用户信息
+     * @return
+     */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Override
+	public DataRow deleteAdminInfo(Admin admin, DataRow messageMap) throws SQLException {
+		int row = adminMapper.updateById(admin);
+		if(row>0){
+			messageMap.initSuccess();
+		}else{
+			messageMap.initFial();
+		}
 		return messageMap;
 	}
 	/**
@@ -200,6 +277,25 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 			messageMap.initSuccess();
 		}else{
 			messageMap.initFial("密码修改失败");
+		}
+		return messageMap;
+	}
+	/**
+     *  查询用户要修改的信息
+     * id
+     * @return
+     */
+	@Override
+	public DataRow queryupdateAdminInfo(Long id, DataRow messageMap) throws Exception {
+		Admin admin =adminMapper.selectById(id);
+		if(admin!=null){
+			EntityWrapper<AdminRole> ew = new EntityWrapper<AdminRole>();
+			ew.eq("man_id", admin.getId());
+			AdminRole adminRole =adminRoleService.selectOne(ew);
+			messageMap.put("role", adminRole.getRoleId());
+			messageMap.initSuccess(admin);
+		}else{
+			messageMap.initFial();
 		}
 		return messageMap;
 	}

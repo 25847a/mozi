@@ -13,7 +13,6 @@
         <result column="phone" property="phone" />
         <result column="address" property="address" />
         <result column="avatar" property="avatar" />
-        <result column="positionId" property="positionId" />
         <result column="agentId" property="agentId" />
         <result column="createDate" property="createDate" />
         <result column="updateDate" property="updateDate" />
@@ -31,7 +30,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, account, passWord,isLoginCount, name, age, gender, phone, address, avatar,agentId,positionId,isDisable,loginErrorCount, createDate, updateDate, creater, updater, remarks,firstDate,lastDate,lockDate
+        id, account, passWord,isLoginCount, name, age, gender, phone, address, avatar,agentId,isDisable,loginErrorCount, createDate, updateDate, creater, updater, remarks,firstDate,lastDate,lockDate
     </sql>
 	<!-- 根据用户名查询用户信息-->
 	<select id="queryAdminInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -47,18 +46,32 @@
 	</select>
 	<!-- 查询用户管理列表 -->
 	<select id="queryAdminInfoList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
-		SELECT tp.id,td.name AS role,tt.position,tp.name,tp.account,tp.isDisable,tp.isLoginCount,tp.loginErrorCount,DATE_FORMAT(tp.lockDate,'%Y-%m-%d %H:%i:%s') as lockDate
-		,DATE_FORMAT(tp.lastDate,'%Y-%m-%d %H:%i:%s') as lastDate from admin tp
-		LEFT JOIN position tt
-		ON tp.positionId=tt.id
+		SELECT tp.id,td.name as role,tp.name,tc.agentName,tp.account,tp.isDisable,tp.isLoginCount,tp.loginErrorCount,DATE_FORMAT(tp.lockDate,'%Y-%m-%d %H:%i:%s') AS lockDate,DATE_FORMAT(tp.lastDate,'%Y-%m-%d %H:%i:%s') AS lastDate FROM admin tp
+		LEFT JOIN admin_role tt
+		ON tp.id=tt.man_id
 		LEFT JOIN role td
-		ON tt.adminId=td.id
+		ON tt.role_id=td.id
+		LEFT JOIN agent tc
+		ON tp.agentId=tc.id
 		where 1=1
-		<if test="account!=null and account!=''">
-		AND tp.account=#{account}
-		</if>
 		<if test="name!=null and name!=''">
-		AND tp.name=#{name}
+		AND tp.name LIKE CONCAT('%',#{name},'%')
 		</if>
+	</select>
+	<!-- 查询用户管理列表总数 -->
+	<select id="queryAdminInfoListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		select count(*) from(
+		SELECT tp.id,td.name as role,tp.name,tc.agentName,tp.account,tp.isDisable,tp.isLoginCount,tp.loginErrorCount,DATE_FORMAT(tp.lockDate,'%Y-%m-%d %H:%i:%s') AS lockDate,DATE_FORMAT(tp.lastDate,'%Y-%m-%d %H:%i:%s') AS lastDate FROM admin tp
+		LEFT JOIN admin_role tt
+		ON tp.id=tt.man_id
+		LEFT JOIN role td
+		ON tt.role_id=td.id
+		LEFT JOIN agent tc
+		ON tp.agentId=tc.id
+		where 1=1
+		<if test="name!=null and name!=''">
+		AND tp.name LIKE CONCAT('%',#{name},'%')
+		</if>
+		) tt
 	</select>
 </mapper>

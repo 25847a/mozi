@@ -22,9 +22,32 @@
     <sql id="Base_Column_List">
         id, name, masterType, url, permission, parentId, isDisable, parentIds, createDate, updateDate, creater, updater
     </sql>
+	<!-- 查询菜单列表 -->
+	<select id="queryAuthList" resultType="com.fadl.common.DataRow" parameterType="java.util.HashMap">
+		SELECT id,name,masterType,url,permission,parentId,DATE_FORMAT(createDate,'%Y-%m-%d') as createDate from auth
+		where 1=1
+		<if test="name!=null and name!=''">
+		AND name LIKE CONCAT('%',#{name},'%')
+		</if>
+		LIMIT #{pageNum},#{pageSize}
+	</select>
+	<!-- 查询菜单列表总数 -->
+	<select id="queryAuthListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+		SELECT COUNT(*) FROM (
+		SELECT * from auth
+		where 1=1
+		<if test="name!=null and name!=''">
+		AND name LIKE CONCAT('%',#{name},'%')
+		</if>
+		) tc
+	</select>
+	<!-- 查询角色全部信息 -->
+	<select id="queryAuthInfo" resultMap="BaseResultMap">
+		SELECT * FROM auth WHERE parentId =0
+	</select>
 
 	<!-- 查询权限菜单集合 -->
 	<select id="queryAuthList" resultMap="BaseResultMap">
-			SELECT * FROM auth
+		SELECT * FROM auth
 	</select>
 </mapper>

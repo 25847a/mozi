@@ -19,6 +19,8 @@
 		<script th:inline="javascript" th:src="@{/js/vue-easytable.js}"></script>
 		<!-- 必须链接这个，修改过源码 -->
     <script th:src="@{/js/updateBootstrap/bootstrap.min.js}"></script>
+    <!-- 提示框CSS -->
+    <link rel="stylesheet" th:href="@{/css/alert.css}"/>
 		
 		<style type="text/css">	
 		body::-webkit-scrollbar-track-piece ,.v-table-body::-webkit-scrollbar-track-piece{ 
@@ -61,19 +63,6 @@
 						<input id="id" th:value="${adminId}" type="hidden"/>
 						<input id="page" value="" type="hidden"/>
 						<audio th:src="@{/img/9733.mp3}" controls="controls" id="music" hidden="hidden"></audio>
-					<!-- 	<ul>@{adminId}
-							<li v-on:click="tabClick(1)" class="on">
-								<img th:src="@{/img/warning.png}" alt=""/><span>预警</span>
-							</li>
-							<li v-on:click="tabClick(2)">
-								<img th:src="@{/img/love.png}" alt=""/>
-								<span>重点关爱</span>
-							</li>
-							<li v-on:click="tabClick(3)">
-								<img th:src="@{/img/all.png}" alt=""/>
-								<span>全部</span>
-							</li>
-						</ul> -->
 					</div>
 					<div v-show="tab==1">
 						<v-table ref="table1"
@@ -118,6 +107,8 @@
 	</body>
 			<!-- 公共JS -->
     		<script th:inline="javascript" th:src="@{/js/common/utils.js}"></script>
+    		<!-- 提示框 -->
+    		<script th:src="@{/js/tips/alert.js}"></script>
 			<!-- 饼状图 -->
 			<script th:inline="javascript" th:src="@{/js/home/home-pie.js}"></script>
 			<!-- table图表 -->
@@ -134,6 +125,7 @@
 			<script th:inline="javascript" th:src="@{/js/home/home-last.js}"></script>
 			<!-- websocket公共类 -->
 			<script th:inline="javascript" th:src="@{/js/common/webSocket.js}"></script>
+			 
 			<!-- 高亮显示 -->
 			<script>
 				$('.head ul li').click(function(){

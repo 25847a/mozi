@@ -2,6 +2,7 @@ package com.fadl.account.controller;
 
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.fadl.account.entity.Admin;
 import com.fadl.account.entity.Agent;
 import com.fadl.account.service.AgentService;
@@ -113,5 +113,21 @@ public class AgentController extends AbstractController{
    		}
    		return messageMap;
        }
+       /**
+   	 * 查询代理商信息
+   	 * @param map
+   	 * @return
+   	 */
+   	@RequestMapping("/queryAgent")
+   	@ResponseBody
+   	public DataRow queryRoleInfo(){
+   		try {
+   			List<Agent> list = agentService.selectList(null);
+   			messageMap.initSuccess(list);
+   		} catch (Exception e) {
+   			logger.error("AgentController>>>>>>>>>>>>>queryAgent",e);
+   		}
+   		return messageMap;
+   	}
 }
 

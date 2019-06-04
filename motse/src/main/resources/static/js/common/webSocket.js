@@ -27,30 +27,31 @@ $("#page").val(page);
         };  
         //获得消息事件  
         socket.onmessage = function(msg) {
-        	console.log(msg);
-        
-        		var data = JSON.parse(msg.data);//console.log("接收到后台返回的数据："+data.data); 
-            	tableList.tableConfig.tableData=[];
-            	 for(var i=0;i<data.data.length;i++){
-            		 tableList.tableConfig.tableData.push(data.data[i]);
-                         }
-            	//  var limit =parseInt(data.count/10)-2;
-            	  var limit =parseInt(Math.ceil(data.count/10));
-            	  if(parseInt(page)<parseInt(limit)){
-            		  page++;
-            	  }else{
-            		  page=1;
-            	  }
-            	  $("#page").val(page);
-            	  pie.initPieEchart(data.equipment.offline,data.equipment.online);//设备使用状态饼状图
-                  pie.initPie(data.userGender.male,data.userGender.female);//用户男女比例
-                  move.initzst(data.heartrateBoy,data.heartrateGirl);//心率折线图
-                  funnel.initfunnel(data.blood);//血压漏斗图
-                  ring.initPineEchart(data.microcirculation);//微循环统计图
-                  tree.inittree(data.bloodoxygen);//血氧柱状图
-                  last.initlast(data.respirationrate);//户呼吸扇形图
-        	
-        	
+        		
+        			var data = JSON.parse(msg.data);//console.log("接收到后台返回的数据："+data.data); 
+        			if(data.code!=1){
+                	tableList.tableConfig.tableData=[];
+                	 for(var i=0;i<data.data.length;i++){
+                		 tableList.tableConfig.tableData.push(data.data[i]);
+                             }
+                	//  var limit =parseInt(data.count/10)-2;
+                	  var limit =parseInt(Math.ceil(data.count/10));
+                	  if(parseInt(page)<parseInt(limit)){
+                		  page++;
+                	  }else{
+                		  page=1;
+                	  }
+                	  $("#page").val(page);
+                	  pie.initPieEchart(data.equipment.offline,data.equipment.online);//设备使用状态饼状图
+                      pie.initPie(data.userGender.male,data.userGender.female);//用户男女比例
+                      move.initzst(data.heartrateBoy,data.heartrateGirl);//心率折线图
+                      funnel.initfunnel(data.blood);//血压漏斗图
+                      ring.initPineEchart(data.microcirculation);//微循环统计图
+                      tree.inittree(data.bloodoxygen);//血氧柱状图
+                      last.initlast(data.respirationrate);//户呼吸扇形图
+        		}else{
+        			tips(data.message);
+        		}
               heartCheck.reset().start();//如果获取到消息,心跳检测重置
               
         };  

@@ -15,9 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.fadl.account.entity.Admin;
+import com.fadl.account.entity.AdminRole;
 import com.fadl.account.service.AdminService;
 import com.fadl.common.AbstractController;
 import com.fadl.common.DataRow;
@@ -134,7 +134,7 @@ public class AdminController extends AbstractController{
      */
     @RequestMapping("/queryAdminInfoList")
     @ResponseBody
-    public DataRow queryAdminInfoList(@RequestParam Map<String,String> map){
+    public DataRow queryAdminInfoList(@RequestParam Map<String,Object> map){
     	try {
     		messageMap = adminService.queryAdminInfoList(map,messageMap);
 		} catch (Exception e) {
@@ -142,6 +142,49 @@ public class AdminController extends AbstractController{
 		}
 		return messageMap;
     }
+    /**
+     * 新增用户信息
+     * @return
+     */
+    @RequestMapping("/addAdminInfo")
+    @ResponseBody
+    public DataRow addRoleInfo(Admin admin,Long roleId){
+    	try {
+    		messageMap = adminService.addAdminInfo(admin,roleId,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<addRoleInfo",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 修改用户信息
+     * @return
+     */
+    @RequestMapping("/updateAdminInfo")
+    @ResponseBody
+    public DataRow updateRoleInfo(Admin admin,AdminRole adminRole){
+    	try {
+    		messageMap = adminService.updateAdminInfo(admin,adminRole,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<updateAdminInfo",e);
+		}
+		return messageMap;
+    }
+    /**
+     * 删除用户信息
+     * @return
+     */
+    @RequestMapping("/deleteAdminInfo")
+    @ResponseBody
+    public DataRow deleteRoleInfo(Admin admin){
+    	try {
+    		messageMap = adminService.deleteAdminInfo(admin,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<deleteAdminInfo",e);
+		}
+		return messageMap;
+    };
+    
     /**
      * 修改供应商的头像
      * avatar
@@ -175,5 +218,18 @@ public class AdminController extends AbstractController{
 		}
 		return messageMap;
     }
+	/**
+	 * 查询用户要修改的信息
+	 * @return
+	 */
+	@RequestMapping("/queryupdateAdminInfo")
+	@ResponseBody
+	public DataRow queryupdateAdminInfo(Long id){
+		try {
+			messageMap = adminService.queryupdateAdminInfo(id,messageMap);
+		} catch (Exception e) {
+			logger.error("AdminController<<<<<<<<<<<<<<<<<<queryupdateAdminInfo",e);
+		}
+		return messageMap;
+	}
 }
-

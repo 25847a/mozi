@@ -84,6 +84,7 @@ p{
 }
 #love{
 	width: 35%;
+	min-width:500px;
 }
 #love button+button{
 	margin-left: 2%;
