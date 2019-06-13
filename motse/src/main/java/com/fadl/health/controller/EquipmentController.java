@@ -2,7 +2,6 @@ package com.fadl.health.controller;
 
 
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +96,21 @@ public class EquipmentController extends AbstractController{
 		}
 		return messageMap;
     }
+    /**
+     * 录入设备到代理商名下
+     * @param map
+     * @return
+     */
+    @RequestMapping("/inuptEquipmentImeiInfo")
+    @ResponseBody
+    public DataRow inuptEquipmentImeiInfo(Integer id,String[] imeis){
+    	try {
+    		messageMap=equipmentService.inuptEquipmentImeiInfo(id,imeis,messageMap);
+		} catch (Exception e) {
+			logger.error("EquipmentController>>>>>>>>>>>>>inuptEquipmentImeiInfo",e);
+		}
+		return messageMap;
+    }
+    
 }
 

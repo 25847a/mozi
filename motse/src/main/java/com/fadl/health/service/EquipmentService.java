@@ -61,5 +61,11 @@ public interface EquipmentService extends IService<Equipment> {
      * @return
      */
 	public DataRow queryEquipmentImeiInfo(Map<String,Object> map,DataRow messageMap)throws SQLException;
+	/**
+     * 录入设备到代理商名下
+     * @param map
+     * @return
+     */
+	public DataRow inuptEquipmentImeiInfo(Integer id,String[] imeis,DataRow messageMap)throws SQLException;
 	
 }

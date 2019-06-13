@@ -128,8 +128,7 @@ var tableList = new Vue({
         },
         customCompFunc(params) {
             console.log(params);
-            if (params.type === 'delete') { // do delete operation
-                //alert("你确定删除吗？")
+            if (params.type === 'delete') {
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

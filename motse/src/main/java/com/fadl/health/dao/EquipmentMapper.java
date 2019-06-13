@@ -6,6 +6,7 @@ import com.fadl.health.entity.Equipment;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -93,5 +94,12 @@ public interface EquipmentMapper extends BaseMapper<Equipment> {
 	 * @throws SQLException
 	 */
 	public int queryEquipmentImeiInfoCount(Map<String,Object> map)throws SQLException;
+	/**
+	 * 遍历查询设备表存在的设备
+	 * @param imeiList
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<String> queryImeiList(Set<String> imeiList)throws SQLException;
 	
 }

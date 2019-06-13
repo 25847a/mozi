@@ -113,4 +113,11 @@
 		</if>
 		) tt
 	</select>
+	<!-- 遍历查询设备表存在的设备 -->
+	<select id="queryImeiList" parameterType="java.util.Set" resultType="java.lang.Object">
+	    select imei from equipment where imei in
+        <foreach item="item" index="index" collection="collection" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+	</select>
 </mapper>

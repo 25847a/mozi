@@ -11,21 +11,95 @@
 	<link th:href="@{/css/global.css}" rel="stylesheet"/>
 	<link th:href="@{/css/agent.css}" rel="stylesheet"/>
 	<link rel="stylesheet" th:href="@{/css/vue-easytable.css}"/>
-	<!-- 时间选择器插件 -->
-    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/>
-	<!-- 提示框CSS -->
-    <link rel="stylesheet" th:href="@{/css/alert.css}"/>
+		<!-- 时间选择器插件
+    <link rel="stylesheet" th:href="@{/css/amazeui.min.css}"/> -->
 	<link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css"/>
+
 	<!-- 引入bootstrap -->
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
+	
 	<!-- 引入样式 -->
 	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
 	
-	
+	<!-- 提示框CSS -->
+    <link rel="stylesheet" th:href="@{/css/alert.css}"/>
 </head>
 
 <body>
 	<div id="app">
+		<!-- 录入 -->
+		<div class="modal fade" id="record" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<button class="btn btn-primary btn-lg enter modify" data-toggle="modal" data-target="#record"></button>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">
+							录入设备机型LN073OV1
+						</h4>
+					</div>
+					<div class="modal-body">
+					<input id="agentId" type="hidden"/>
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<td rowspan="5" style="width: 40%;">
+										<el-tabs v-model="editableTabsValue" type="card" closable="closable"
+											v-on:tab-remove="removeTab">
+											<el-tab-pane v-for="(item, index) in editableTabs" :key="item.name"
+												:label="index+1+'.'+item.title" :name="item.name">
+												
+											</el-tab-pane>
+										</el-tabs>
+									</td>
+									<td style="color:#4985cb; font-weight: bold;">代理商名称</td>
+									<td id="inputAgentName"></td>
+								</tr>
+								<tr>
+									<td style="color:#4985cb; font-weight: bold;">负责人</td>
+									<td id="inputMaster"></td>
+								</tr>
+								<tr>
+									<td style="color:#4985cb; font-weight: bold;">手机号码</td>
+									<td id="inputPhone"></td>
+								</tr>
+								<tr>
+									<td style="color:#4985cb; font-weight: bold;">地址</td>
+									<td id="inputAddress"></td>
+								</tr>
+								<tr>
+									<td style="color:#4985cb; font-weight: bold;">设备数</td>
+									<td id="inputCount"></td>
+								</tr>
+								<tr>
+									<td colspan="3" style="padding: 15px;">
+										<el-input v-model="input" placeholder="请输入内容"></el-input>
+										<el-row class="but">
+											<el-button type="primary" v-on:click="addTab(editableTabsValue)">添加</el-button>
+										</el-row>
+										<!-- <el-checkbox-group v-model="radio">
+											<el-checkbox label="自动添加" name="type"></el-checkbox>
+
+										</el-checkbox-group> -->
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消
+						</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="enter">
+							确定
+						</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
+
 
 		<!-- 添加代理商 -->
 		<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -139,7 +213,6 @@
 			</div><!-- /.modal -->
 		</div>
 		<!-- 修改代理商 -->
-
 		<div class="modal fade" id="modify" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 			aria-hidden="true">
 			<button class="btn btn-primary btn-lg operation modify" data-toggle="modal" data-target="#modify"></button>
@@ -154,47 +227,25 @@
 						</h4>
 					</div>
 					<div class="modal-body">
+					<input id="updateId"/>
 						<table class="table table-bordered">
 							<tbody>
 								<tr>
-									<td style="color:#4985cb; font-weight: bold;">姓名</td>
+									<td style="color:#4985cb; font-weight: bold;">代理商姓名</td>
 									<td>
 										<div class="col-lg-8">
 											<div class="input-group">
-												<input type="text" class="form-control" placeholder="广州墨子星智能科技集团有限公司" v-model="alterlist.name"/>
+												<input type="text" class="form-control" name="agentName" id="name" placeholder="代理商姓名" v-model="alterlist.updateAgentName"/>
 											</div>
 										</div>
 									</td>
 								</tr>
 								<tr>
-									<td style="color:#4985cb; font-weight: bold;">年龄</td>
+									<td style="color:#4985cb; font-weight: bold;">负责人</td>
 									<td>
 										<div class="col-lg-8">
 											<div class="input-group">
-												<input type="text" class="form-control" placeholder="年龄" v-model="alterlist.age"/>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td style="color:#4985cb; font-weight: bold;">性别</td>
-									<td>
-										<div class="col-lg-8">
-											<div class="input-group">
-												<select class="form-control" v-model="altersex">
-													<option v-for="item in optionalter" :value="item.value">{{item.name}}
-													</option>
-												</select>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td style="color:#4985cb; font-weight: bold;">手机号码</td>
-									<td>
-										<div class="col-lg-8">
-											<div class="input-group">
-												<input type="text" class="form-control" placeholder="手机号码" v-model="alterlist.phone"/>
+												<input type="text" class="form-control" name="master" id="master" placeholder="负责人" v-model="alterlist.updateMaster"/>
 											</div>
 										</div>
 									</td>
@@ -204,7 +255,37 @@
 									<td>
 										<div class="col-lg-8">
 											<div class="input-group">
-												<input type="text" class="form-control" placeholder="地址" v-model="alterlist.site"/>
+												<input type="text" name="address" id="address" class="form-control" placeholder="地址" v-model="alterlist.updateAddress"/>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td style="color:#4985cb; font-weight: bold;">座机</td>
+									<td>
+										<div class="col-lg-8">
+											<div class="input-group">
+												<input type="text" class="form-control" name="landline" id="landline" placeholder="座机" v-model="alterlist.updateLandline"/>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td style="color:#4985cb; font-weight: bold;">手机号码</td>
+									<td>
+										<div class="col-lg-8">
+											<div class="input-group">
+												<input type="text" class="form-control" name="phone" id="phone" placeholder="手机号码" v-model="alterlist.updatePhone"/>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td style="color:#4985cb; font-weight: bold;">联系邮箱</td>
+									<td>
+										<div class="col-lg-8">
+											<div class="input-group">
+												<input type="text" class="form-control" name="mailbox" id="mailbox" placeholder="联系邮箱" v-model="alterlist.updateMailbox"/>
 											</div>
 										</div>
 									</td>
@@ -242,13 +323,13 @@
 					<div class="button">
 						<button type="button" data-toggle="modal" data-target="#add">添加</button>
 					</div>
-					<input type="text" id="agentName" placeholder="请输入姓名" v-model="full"/>
+					<input type="text" name="" value="" placeholder="请输入姓名" v-model="full"/>
 					<button type="button" v-on:click="query">查询</button>
 					<button type="button" v-on:click="reset">重置</button>
 					<button type="button" v-on:click="refresh">刷新</button>
 				</div>
 				<div>
-					<v-table is-vertical-resize="vertical-resize-offset=60" is-horizontal-resize="style=width:100%"
+					<v-table is-vertical-resize="vertical-resize-offset=60" is-horizontal-resize="style=width:100% "
 						:multiple-sort="false" :min-height="350" even-bg-color="#f2f2f2"
 						:title-rows="tableConfig.titleRows" :columns="tableConfig.columns"
 						:table-data="tableConfig.tableData" row-hover-color="#eee" row-click-color="#edf7ff"
@@ -256,7 +337,7 @@
 						v-on:on-custom-comp="customCompFunc"></v-table>
 
 					<div class="mt20 mb20 bold"></div>
-					<v-pagination th:page-change="pageChange" th:page-size-change="pageSizeChange" :total="total"
+					<v-pagination th:page-change="pageChange" th:page-size-change="pageSizeChange" :total="50"
 						:page-size="pageSize" :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"
 						style="padding: 20px 100px 20px 0;float: right;"></v-pagination>
 				</div>
@@ -282,12 +363,12 @@
 				</el-form>
 				<div slot="footer" class="dialog-footer">
 					<el-button v-on:click="dialogFormVisible = false">取 消</el-button>
-					<el-button type="primary" v-on:click="ascertain">确 定</el-button>
+					<el-button type="primary" v-on:click="ascertain">确 定</el-button><!-- v-on:click="dialogFormVisible = false"  -->
 				</div>
 			</el-dialog>
 			<div class="check">
 				<div class="button"></div>
-				<input type="text" placeholder="imei" v-model="imei"/>
+				<input type="text" name="" value="" placeholder="imei" v-model="imei"/>
 				<button type="button" v-on:click="polling">查询</button>
 				<button type="button" v-on:click="ret">返回</button>
 			</div>
@@ -310,8 +391,8 @@
 							<td>{{item.model}}</td>
 							<td>{{item.createtime}}</td>
 							<td>
-							<!-- <el-button type="primary" v-on:click="dialogFormVisible = true" v-on:onclick="replace(item.id)">更换代理商</el-button> -->
-								<el-button type="primary"  v-on:click="dialogFormVisible = true" >更换代理商</el-button>
+								<el-button type="primary"
+									v-on:click="replace(item.uid)">更换代理商</el-button><!--  v-on:click="dialogFormVisible = true" -->
 							</td>
 						</tr>
 					</tbody>
@@ -320,7 +401,7 @@
 			<!-- 分页 -->
 			<div class="block">
 				<el-pagination v-on:size-change="handleSizeChange" v-on:current-change="handleCurrentChange" background="background"
-				 :page-sizes="[10, 20, 30, 40]" :page-size="10"
+					:page-sizes="[10, 20, 30, 40]" :page-size="10"
 					layout="total, sizes, prev, pager, next, jumper" :total="total">
 				</el-pagination>
 			</div>
@@ -335,12 +416,12 @@
 	<script th:src="@{/js/bootstrap.min.js}"></script>
 	<!-- 引入组件库 -->
 	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-	<!-- 提示框 -->
-    <script th:src="@{/js/tips/alert.js}"></script>
-    <!-- 时间选择器插件 -->
-	<script th:src="@{/js/amazeui.min.js}"></script>
+    <!-- 时间选择器插件 
+	<script th:src="@{/js/amazeui.min.js}"></script>-->
 	<!-- 公共JS -->
 	<script th:src="@{/js/common/utils.js}"></script>
+	<!-- 提示框 -->
+    <script th:src="@{/js/tips/alert.js}"></script>
 	<script th:src="@{/js/backstage/agent-table.js}"></script>
 </body>
 </html>

@@ -6,13 +6,13 @@ var agents = {
     template: "#replace",
     data() {
         return {
-            //接收点击查看获取打的代理商id
-            id: this.$route.params.id,
+            //接收id
+            uid: this.$route.params.id,
             show: true,
             //数据
-            tablelist:[],
-            total:'',
+            tablelist: [],
             //分页
+            total:'',
             dialogFormVisible: false,
             //更换代理商
             form: {
@@ -37,30 +37,27 @@ var agents = {
             },
             formLabelWidth: '120px',
             //imput查找
-            imei:""
+            imei: "",
         }
 
     },
     methods: {
         //更换代理商确定按钮
-        ascertain(){
-            alert(this.form.name+this.form.region);
+        ascertain() {
+            alert(this.form.name + this.form.region)
         },
         //查询按钮
-        polling(){
+        polling() {
         	imei=this.imei;
         	this.goback();
         },
         //更换代理商
         replace(event) {
-            alert("vvvvv");
             this.form.name = event
         },
         //返回按钮
         ret() {
-            //alert(1212)
-            this.$router.go(0)
-            //this.$router.go(-1)
+            this.$router.go(0);
         },
         //分页
         handleSizeChange(val) {
@@ -72,30 +69,29 @@ var agents = {
             console.log(`当前页: ${val}`);
         },
         //数据请求
-        goback: function (id) {
-            console.log("接收到的ID:" + id);
+        goback: function (uid) {
+        	console.log("接收到的ID:" + uid);
             var params = new URLSearchParams();
-	       	 params.append('id',id);
+	       	 params.append('id',uid);
 	       	 params.append('pageNum',pageIndex1);
           	 params.append('pageSize',pageSize1);
           	 params.append('imei',imei);
             axios.post(GetURLInfo()+"equipment/queryEquipmentImeiInfo",params).then(this.getnew);
-
         },
         getnew(res) {
         	if(res.data.code==-1){
-        		tableList2=[];
-        		for(var i=0;i<res.data.data.length;i++){
-        			tableList2.push(res.data.data[i]);
-                        }
-        		this.tablelist = tableList2;
-        		this.total=res.data.total;
+    		tableList2=[];
+    		for(var i=0;i<res.data.data.length;i++){
+    			tableList2.push(res.data.data[i]);
+                    }
+    		this.tablelist = tableList2;
+    		this.total=res.data.total;
+    	}
         	}
-        }
     },
     mounted: function () {
-        console.log("拿到ID赋值到ajax:"+this.id);
-        this.goback(this.id);
+        console.log(this.uid);
+        this.goback(this.uid);
     },
 }
 //路由
@@ -130,7 +126,6 @@ $.ajax({
     	//tips("操作异常,请更新页面");
     }
 });
-
 var tableList = new Vue({
     el: '#app',
     router: router,
@@ -143,22 +138,22 @@ var tableList = new Vue({
                 multipleSort: false,
                 tableData: [],
                 columns: [
-                    { field: 'id', width: 100, columnAlign: 'center'},
-                    { field: 'agentName', width: 200, columnAlign: 'center' },
-                    { field: 'master', width: 100, columnAlign: 'center'},
-                    { field: 'address', width: 200, columnAlign: 'center' },
-                    { field: 'landline', width: 150, columnAlign: 'center' },
-                    { field: 'phone', width: 150, columnAlign: 'center'},
-                    { field: 'count', width: 80, columnAlign: 'center'},
-                    { field: 'endDate', width: 200, columnAlign: 'center' },
-                    { field: 'startDate', width: 200, columnAlign: 'center' },
-                    { field: 'equipment', width: 150, columnAlign: 'center', componentName: 'table-equipment' },
-                    { field: 'fuck', width: 100, columnAlign: 'center', componentName: 'table-operation' }
+                    { field: 'id', width: 60, columnAlign: 'center', isResize: true },
+                    { field: 'agentName', width: 120, columnAlign: 'center', isResize: true },
+                    { field: 'master', width: 50, columnAlign: 'center', isResize: true },
+                    { field: 'address', width: 160, columnAlign: 'center', isResize: true },
+                    { field: 'landline', width: 60, columnAlign: 'center', isResize: true },
+                    { field: 'phone', width: 60, columnAlign: 'center', isResize: true },
+                    { field: 'count', width: 50, columnAlign: 'center', isResize: true },
+                    { field: 'endDate', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'startDate', width: 100, columnAlign: 'center', isResize: true },
+                    { field: 'equipment', width: 100, columnAlign: 'center', isResize: true, componentName: 'table-equipment' },
+                    { field: 'fuck', width: 50, columnAlign: 'center', isResize: true, componentName: 'table-operation' }
 
                 ],
                 titleRows: [
                     [
-                        { fields: ['id'], title: '编号', titleAlign: 'center' },
+                    	{ fields: ['id'], title: '编号', titleAlign: 'center' },
                         { fields: ['agentName'], title: '代理商姓名', titleAlign: 'center' },
                         { fields: ['master'], title: '负责人', titleAlign: 'center' },
                         { fields: ['address'], title: '地址', titleAlign: 'center' },
@@ -186,49 +181,133 @@ var tableList = new Vue({
             	mailbox:"",
             	startDate:""
             },
-            //input查询对象
-            full:"",
+            //input查询
+            full: "",
             //修改input
-            alterlist:{
-                name:"",
-                age:"",
-                phone:"",
-                site:""
+            alterlist: {
+            	updateAgentName:"",
+            	updateMaster:"",
+            	updateAddress:"",
+            	updateLandline:"",
+            	updatePhone:"",
+            	updateMailbox:"",
             },
-            altersex: 0,//默认选中第一项
-            optionalter: [
-                {
-                    name: '男',
-                    value: 0
-                },
-                {
-                    name: '女',
-                    value: 1
-                },
-            ],
+            //录入添加输入框
+            input: '',
+            //自动添加勾选
+   //         radio: '',
+            //录入添加
+            editableTabsValue: '2',
+            editableTabs: [],
+            tabIndex: 2
         }
     },
     // 监听,当路由发生变化的时候执行
-   /* watch: {
+    watch: {
         $route(to, from) {
-            console.log("监听,当路由发生变化的时候执行"+to.path);
+            console.log(to.path);
             if (to.path == "/") {
                 this.show = true
             } else {
                 this.show = false
             }
-
         }
-    },*/
+    },
     methods: {
-        //修改按钮
-        define(){
-            alert(this.alterlist.name+this.alterlist.age+this.alterlist.phone+this.alterlist.site+this.altersex);
+        //录入添加
+        addTab(targetName) {
+       //     console.log(this.radio)
+            if(this.input === ""){
+                jqueryAlert({
+                    'content': '不能为空',
+                    'closeTime': 2000
+                })
+            }else if(this.input.length != 15){
+                jqueryAlert({
+                    'content': '请输入15位数字',
+                    'closeTime': 2000
+                })
+            }else{
+                let newTabName = ++this.tabIndex + '';
+                this.editableTabs.push({
+                    title: this.input,
+                    name: newTabName,
+                });
+                this.editableTabsValue = newTabName;
+            }
+        },
+        removeTab(targetName) {
+            let tabs = this.editableTabs;
+            let activeName = this.editableTabsValue;
+            if (activeName === targetName) {
+                tabs.forEach((tab, index) => {
+                    if (tab.name === targetName) {
+                        let nextTab = tabs[index + 1] || tabs[index - 1];
+                        if (nextTab) {
+                            activeName = nextTab.name;
+                        }
+                    }
+                });
+            }
 
+            this.editableTabsValue = activeName;
+            this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+        },
+        //录入确定键
+        enter(){
+        	var imeis = new Array();
+        	
+        			
+        	for( var o in this.editableTabs){
+        		imeis.push(this.editableTabs[o].title);
+        	}
+        	$.ajax({
+        	    type : "POST",
+        	    url :GetURLInfo()+"equipment/inuptEquipmentImeiInfo",
+        	    datatype : "json",
+        	    traditional:true,
+        	    data:{"id":$("#agentId").val(),"imeis":imeis},
+        	    success : function(result) {
+        	    	if(result.code==-1){
+        	    		tips(result.message);
+        	    		location.reload();
+        	    	}else{
+        	    		tips(result.message);
+        	    	}
+        	    },
+        	    error : function() {
+        	    	//tips("操作异常,请更新页面");
+        	    }
+        	});
+        	
+        },
+        //修改按钮
+        define() {
+        	if(this.alterlist.updateAgentName=="" || this.alterlist.updateMaster=="" || this.alterlist.updateAddress=="" || this.alterlist.updateLandline=="" || this.alterlist.updatePhone=="" || this.alterlist.updateMailbox==""){
+        		tips("文本框不能为空");
+        	}else{
+        		$.ajax({
+            	    type : "POST",
+            	    url :GetURLInfo()+"agent/updateAgentInfo",
+            	    datatype : "json",
+            	    data:{"id":$("#updateId").val(),"agentName":this.alterlist.updateAgentName,"address":this.alterlist.updateAddress,"master":this.alterlist.updateMaster,"landline":this.alterlist.updateLandline,"phone":this.alterlist.updatePhone,"mailbox":this.alterlist.updateMailbox},
+            	    success : function(result) {
+            	    	if(result.code==-1){
+            	    		tips(result.message);
+            	    		location.reload();
+            	    	}else{
+            	    		tips(result.message);
+            	    	}
+            	    },
+            	    error : function() {
+            	    	tips("操作异常,请更新页面");
+            	    }
+            	});
+        	}
         },
         //查询按钮
         query(){
-        	agentName=$("#agentName").val();
+        	agentName=this.full;
         	tableList.goback();
         },
         //重置按钮
@@ -239,10 +318,11 @@ var tableList = new Vue({
         refresh(){
 	        location.reload();
         },
+
         //添加确定按钮
-        fix(){
+        fix() {
         	if(this.addlist.agentName=="" || this.addlist.master=="" || this.addlist.landline=="" || this.addlist.mailbox=="" || this.addlist.startDate==""	){
-        		alert("不能为空");return;
+        		tips("不能为空");return;
         	}
         	$.ajax({
         	    type : "POST",
@@ -251,7 +331,7 @@ var tableList = new Vue({
         	    data:{"type":this.type,"agentName":this.addlist.agentName,"phone":this.addlist.phone,"address":this.addlist.address,"master":this.addlist.master,"landline":this.addlist.landline,"mailbox":this.addlist.mailbox,"startDate":this.addlist.startDate},
         	    success : function(result) {
         	    	if(result.code==-1){
-        	    		alert(result.message);
+        	    		tips(result.message);
         	    		location.reload();
         	    	}else{
         	    		//tips(result.message);
@@ -261,13 +341,7 @@ var tableList = new Vue({
         	    	//tips("操作异常,请更新页面");
         	    }
         	});
-           
         },
-        //router点击跳转
-        // goHome: function () {
-        //     // router.push({name:"首页"});
-        //     router.push("/home");
-        // },
         login: function (msg) {
             console.log(msg)
             router.push({ name: "更换", params: { id: msg } });
@@ -276,32 +350,25 @@ var tableList = new Vue({
 
         //分页
         getTableData() {
-
-            this.tableConfig.tableData = tableDate;//.slice((this.pageIndex - 1) * this.pageSize, (this.pageIndex) * this.pageSize)
+        	 this.tableConfig.tableData = tableDate;
         },
         pageChange(pageIndex) {
-            this.pageIndex = pageIndex;
+        	this.pageIndex = pageIndex;
             this.goback();
         },
         pageSizeChange(pageSize) {
-            this.pageIndex = 1;
-            this.pageSize = pageSize;
-            this.getTableData();
+        	 this.pageIndex = 1;
+             this.pageSize = pageSize;
+             this.getTableData();
         },
         sortChange(params) {
-
             if (params.height.length > 0) {
-
                 this.tableConfig.tableData.sort(function (a, b) {
-
                     if (params.height === 'asc') {
-
                         return a.height - b.height;
                     } else if (params.height === 'desc') {
-
                         return b.height - a.height;
                     } else {
-
                         return 0;
                     }
                 });
@@ -309,19 +376,29 @@ var tableList = new Vue({
         },
         //接收子组件的params
         customCompFunc(params) {
-            console.log(params);
-            if (params.type === 'edit') { // do delete operation
-                //alert(`行号：${params.index} 姓名：${params.rowData['name']}`)
-                this.alterlist.name = `${params.rowData['name']}`
-            } else if (params.type === 'editt') { // do edit operation
-            	console.log(`行号：${params.rowData}`);
+            if (params.type === 'edit') {
+            	$("#updateId").val(params.rowData['id']);
+            	this.alterlist.updateAgentName=params.rowData['agentName'];
+            	this.alterlist.updateMaster=params.rowData['master'];
+            	this.alterlist.updateAddress=params.rowData['address'];
+            	this.alterlist.updateLandline=params.rowData['landline'];
+            	this.alterlist.updatePhone=params.rowData['phone'];
+            	this.alterlist.updateMailbox=params.rowData['mailbox'];
+            } else if (params.type === 'editt') { //列表查看按钮
                 this.login(`${params.rowData}`)
+            } else if (params.type === 'edittt') {
+            	$("#agentId").val(params.rowData['id']);
+            	document.getElementById("inputAgentName").innerHTML=params.rowData['agentName'];
+            	document.getElementById("inputMaster").innerHTML=params.rowData['master'];
+            	document.getElementById("inputPhone").innerHTML=params.rowData['phone'];
+            	document.getElementById("inputAddress").innerHTML=params.rowData['address'];
+            	document.getElementById("inputCount").innerHTML=params.rowData['count'];
             }
 
         },
         //数据请求
         goback: function () {
-        	 var params = new URLSearchParams();
+             var params = new URLSearchParams();
 	       	 params.append('agentName',agentName);
 	       	 params.append('pageNum',this.pageIndex);
 	       	 params.append('pageSize',this.pageSize);
@@ -340,23 +417,19 @@ var tableList = new Vue({
         	}
         }
     },
-    // created() {
-    //     this.getTableData();
-    // },
     mounted() {
         this.goback();
-        // this.item = setInterval(this.goback,3000)
     },
     beforeDestroy() {
         clearInterval(this.item);
     }
-})
+});
 
 // 自定义列组件<a href="" @click.stop.prevent="deleteRow(rowData,index)"></a>
 Vue.component('table-operation', {
-    template: '<span class="a">'+
-        '<a href="" id="handle" @click.stop.prevent="update(rowData,index)"><img src="../img/agent01.png" alt="" /></a>&nbsp;'+ 
-        '</span>',
+    template: `<span class="a">
+        <a href="" id="handle" @click.stop.prevent="update(rowData,index)"><img src="../img/agent01.png" alt="" /></a>&nbsp;        
+        </span>`,
     props: {
         rowData: {
             type: Object
@@ -370,27 +443,19 @@ Vue.component('table-operation', {
     },
     methods: {
         update() {
-        	alert("跳转了修改按钮");
             // 参数根据业务场景随意构造
-            let params = { type: 'edit', index: this.index, rowData: this.rowData };
+            let params = { type: 'edit',rowData: this.rowData };
             this.$emit('on-custom-comp', params);
+            $('.operation').click();
         },
-
-        // deleteRow(){
-
-        //     // 参数根据业务场景随意构造
-        //     let params = {type:'delete',index:this.index};
-        //     this.$emit('on-custom-comp',params);
-
-        // }
     }
 })
 // 自定义列组件
 Vue.component('table-equipment', {
-    template: "<span>"+
-        "<a href='#' v-on:click.stop.prevent='update(rowData,index)'>查看</a>&nbsp;"+
-        "<a href='#' >录入</a>"+
-       "</span>",
+    template: `<span>
+        <a href="#" @click.stop.prevent="update(rowData,index)">查看</a>&nbsp;
+        <a href="#" @click.stop.prevent="Row(rowData,index)">录入</a>
+        </span>`,
     props: {
         rowData: {
             type: Object
@@ -404,18 +469,16 @@ Vue.component('table-equipment', {
     },
     methods: {
         update() {
-            // 参数根据业务场景随意构造
         	console.log("点击查看跳转页面>>>>>>>"+this.rowData.id);
             let params = { type: 'editt', rowData: this.rowData.id};
             this.$emit('on-custom-comp', params);
         },
+        Row() {
+            $('.enter').click();
+            // 参数根据业务场景随意构造
+            let params = { type: 'edittt',rowData: this.rowData };
+            this.$emit('on-custom-comp', params);
 
-        // deleteRow(){
-
-        //     // 参数根据业务场景随意构造
-        //     let params = {type:'delete',index:this.index};
-        //     this.$emit('on-custom-comp',params);
-
-        // }
+        }
     }
 })

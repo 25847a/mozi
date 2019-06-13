@@ -231,4 +231,46 @@ div .el-dialog .el-dialog__footer .el-button+.el-button{
 	body::-webkit-scrollbar-thumb:hover,.v-table-body::-webkit-scrollbar-thumb:hover {
 	background-color:#bbb;
 	}
-	
+	.modal-content{
+	border: 0!important;
+}	
+.but{
+	display: inline-block;
+	margin: 0 20px;
+}
+.but button{
+	width: 100%;
+    display: block;
+}
+.but .el-button--primary:focus, .el-button--primary:hover{
+	background-color: #3277c1;
+}
+td .el-checkbox-group{
+	display: inline-block;
+}
+td .el-tabs__item{
+	display: block;
+}
+td .el-tabs--card>.el-tabs__header,td .el-tabs--card>.el-tabs__header .el-tabs__item{
+	border: 0;
+}
+td .el-tabs--card>.el-tabs__header .el-tabs__nav{
+	width: 100%;
+}
+td .el-tabs__nav-scroll{
+	height: 200px;
+	overflow-y: auto;
+}
+td .el-tabs--card>.el-tabs__header .el-tabs__nav{
+	border: 0;
+}
+/* ²ã¼¶ÑùÊ½ */
+.bounceIn{
+	z-index: 999999!important;
+}
+.v-table-views{
+	width:100%!important;
+}
+.v-table-rightview{
+	width:100%!important;
+}
