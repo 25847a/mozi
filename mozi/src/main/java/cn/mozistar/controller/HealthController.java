@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import cn.mozistar.pojo.Health;
+import cn.mozistar.pojo.User;
 import cn.mozistar.service.HealthService;
+import cn.mozistar.service.UserService;
+import cn.mozistar.util.DataUtil;
 import cn.mozistar.util.ResultData;
 import cn.mozistar.vo.Chart;
 import net.sf.json.JSONObject;
@@ -29,10 +29,59 @@ public class HealthController {
 	
 	@Autowired
 	private HealthService healthservice;
+	@Autowired
+	UserService userService;
 	
-
+	
 	/**
-	 * 1获取血压数据 （根据年月日 周）查找
+	 * 获取步数数据 （根据年月日 周）查找
+	 * @param m
+	 * @return
+	 */
+	@RequestMapping(value = "/selectStepWhen")
+	@ResponseBody
+	public ResultData<Map<String,Object>> selectStepWhen(@RequestBody Map<String,Object> m) {
+		Map<String,Object> data = new HashMap<String,Object>();
+		data.put("categoryId", "3");
+		data.put("name", "stepWhen");
+		data.put("desc", "步数");
+		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
+		
+		List<Chart> chart = healthservice.selecthealth(m);
+		if (chart != null && chart.size() > 0) {
+		List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();
+			for (int i = 0; i < chart.size(); i++) {
+				Chart j = chart.get(i);
+				Map<String,Object> chartData = new HashMap<String,Object>();
+				int[] stepWhen = new int[1];
+				stepWhen[0] = j.getStepWhen();
+				chartData.put("value", stepWhen);
+				chartData.put("createtime", format.format(j.getDate()));
+				chartData.put("updateTime",  format.format(j.getDate()));
+				bloodpressureList.add(chartData);
+			}
+			Map<String,String> map = healthservice.selectStepWhenInfo(m);
+			List<Map<String,Object>> list = DataUtil.polymerization("步数最高",map.get("maxtime"),"步数最低",map.get("mintime"),"最新步数","平均步数",map);	
+			data.put("detail", list);
+			data.put("kilometre", map.get("kilometre"));
+			data.put("createtime", map.get("createtime"));
+			data.put("userId", m.get("userId"));
+			data.put("show", DataUtil.tipsStepWhen(m));
+			data.put("chartData", bloodpressureList);
+			User user2 = userService.getUser(Integer.valueOf(String.valueOf(m.get("userId"))));
+			data.put("stepNumber", user2.getWalkCount());
+			re.setCode(200);
+			re.setData(data);
+			re.setMessage("获取步数健康数据成功！！！");
+		} else {
+			re.setCode(400);
+			re.setMessage("没有健康数据！！！");
+		}
+		return re;
+	}
+	
+	/**
+	 * 获取血压数据 （根据年月日 周）查找
 	 * @param m
 	 * @return
 	 */
@@ -44,63 +93,6 @@ public class HealthController {
 		data.put("name", "pressure");
 		data.put("desc", "血压");
 		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
-		String service = (String) m.get("service");
-		String timedata = (String) m.get("timedata");
-		Integer userId =  m.getInt("userId");
-		Map<String,Object> map = new HashMap<String,Object>();
-		String[] timedatas = null;
-		if (!service.equals("week")) {//把2018-04-11分成3个数组
-			timedatas = timedata.split("-");
-		}
-		//日
-		if (service.equals("day")) {
-			map.put("month", timedatas[1]);//04
-			map.put("timedata", timedatas[2]);//11
-			map.put("year", timedatas[0]);//2018
-			map.put("keyWord", "day");
-			// 月
-		} else if (service.equals("month")) {
-			map.put("timedata", timedatas[1]);
-			map.put("year", timedatas[0]);
-			map.put("keyWord", "month");
-			// 年
-		} else if (service.equals("year")) {
-			map.put("timedata", timedatas[0]);
-			map.put("keyWord", "year");
-		} else if (service.equals("week")) {
-			map.put("keyWord", "week");
-		}
-		map.put("userId", userId);//把用户手机放入Map
-		m.put("userId",  userId);//把用户手机放入Map
-		Health bloodpressureMax = healthservice.selecthealthMax(map);//获取时间下最大血压
-		Health bloodpressureMin = healthservice.selecthealthMin(map);//获取时间下最小血压
-		Health jfhealth = healthservice.getHealthByUserId(userId);
-		if(bloodpressureMax != null && bloodpressureMin !=null && null!=jfhealth) {
-			List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();	
-			Map<String,Object> detail = new HashMap<String,Object>();
-			detail.put("detailId", "5");
-			detail.put("name", "血压最高值");
-			detail.put("value", bloodpressureMax.getHighBloodPressure()+"/"+bloodpressureMax.getLowBloodPressure());
-			detail.put("updateTime", format.format(bloodpressureMax.getCreatetime()));
-			list.add(detail);
-			detail = new HashMap<String,Object>();
-			detail.put("detailId", "10");
-			detail.put("name", "血压最低值");
-			detail.put("value", bloodpressureMin.getHighBloodPressure()+"/"+bloodpressureMin.getLowBloodPressure());
-			detail.put("updateTime", format.format(bloodpressureMax.getCreatetime()));
-			list.add(detail);
-			detail = new HashMap<String,Object>();
-			detail.put("detailId", "15");
-			detail.put("name", "血压");
-			detail.put("value", jfhealth.getHighBloodPressure()+"/"+jfhealth.getLowBloodPressure());
-			detail.put("updateTime", format.format(jfhealth.getCreatetime()));
-			list.add(detail);
-			data.put("detail", list);
-		}else {
-			re.setCode(350);
-			re.setMessage("暂无健康数据！！！");
-			return re;
-		}
 		List<Chart> chart = healthservice.selecthealth(m);//查询用户2018-04-11健康数据
 		if (chart != null && chart.size() > 0) {//判断非空
 			 List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();	
@@ -115,9 +107,13 @@ public class HealthController {
 				chartData.put("updateTime", format.format(j.getDate()));
 				bloodpressureList.add(chartData);
 			}
+			Map<String,String> map = healthservice.selectBloodpressureInfo(m);
+			List<Map<String,Object>> list = DataUtil.polymerization("最高血压","","最低血压","","最新血压","平均血压",map);	
+			data.put("detail", list);
 			data.put("chartData", bloodpressureList);
-			data.put("h5url","http://120.76.201.150:8080/avatars/120.png");
-			data.put("imageurl", "http://120.76.201.150:8080/avatars/bloodpressure.png");
+			data.put("createtime", map.get("createtime"));
+			data.put("count", map.get("count"));
+			data.put("show", DataUtil.tipsBloodpressure(m));
 			re.setCode(200);
 			re.setData(data);
 			re.setMessage("获取血压健康数据成功！！！");
@@ -141,7 +137,6 @@ public class HealthController {
 		data.put("name", "heartrate");
 		data.put("desc", "心率");
 		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
-		
 		List<Chart> chart = healthservice.selecthealth(m);
 		if (chart != null && chart.size() > 0) {
 		List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();
@@ -155,9 +150,14 @@ public class HealthController {
 				chartData.put("updateTime",  format.format(j.getDate()));
 				bloodpressureList.add(chartData);
 			}
+			Map<String,String> map = healthservice.selectHeartRateInfo(m);
+			List<Map<String,Object>> list = DataUtil.polymerization("最快心率","","最慢心率","","最新心率","平均心率",map);	
+			data.put("detail", list);
+			data.put("count", map.get("count"));
+			data.put("createtime", map.get("createtime"));
+			data.put("userId", map.get("userId"));
+			data.put("show", DataUtil.tipsHeartRate(m));
 			data.put("chartData", bloodpressureList);
-			data.put("h5url","http://120.76.201.150:8080/avatars/120.png");
-			data.put("imageurl","http://120.76.201.150:8080/avatars/health.png");
 			re.setCode(200);
 			re.setData(data);
 			re.setMessage("获取心率健康数据成功！！！");
@@ -178,8 +178,6 @@ public class HealthController {
 	@ResponseBody
 	public ResultData<Map<String,Object>> selectHrv(@RequestBody Map<String,Object> m){
 		Map<String,Object> data = new HashMap<String,Object>();
-		//List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		//Map<String,Object> detail = new HashMap<String,Object>();
 		data.put("categoryId", "5");
 		data.put("name", "hrv");
 		data.put("desc", "心率变异性HRV");
@@ -197,16 +195,22 @@ public class HealthController {
 					chartData.put("updateTime",  format.format(j.getDate()));
 					bloodpressureList.add(chartData);
 				}
+				Map<String,String> map =healthservice.selectHrvInfo(m);
+				List<Map<String,Object>> list = DataUtil.polymerization("最高HRV","","最低HRV","","最新HRV","平均HRV",map);	
+				data.put("detail", list);
 				data.put("chartData", bloodpressureList);
+				data.put("count", map.get("count"));
+				data.put("createtime", map.get("createtime"));
+				data.put("userId", map.get("userId"));
+				data.put("show", DataUtil.tipsHrv(m));
 				re.setCode(200);
 				re.setData(data);
-				re.setMessage("获取心跳变异数据成功！！！");
+				re.setMessage("获取心率变异性数据成功！！！");
 			} else {
 				re.setCode(400);
-				re.setMessage("没有心跳变异数据！！！");
+				re.setMessage("没有心率变异性数据！！！");
 			}
 			return re;
-		
 	} 
 	/**
 	 * 获取微循环数据 （根据年月日 周）查找

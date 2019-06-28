@@ -2,7 +2,9 @@ package cn.mozistar.mapper;
 
 import cn.mozistar.pojo.User;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -34,7 +36,7 @@ public interface UserMapper {
 	int insertSelective(User record);
 
 	@Select({ "select", "id, account, password, name, age, gender, phone, address, avatar, createtime, ",
-			"atlasttime, weight, height, born, updatetime,coordinate,calibration, code", "from user", "where id = #{id,jdbcType=INTEGER}" })
+			"atlasttime, weight,walkCount, height, born, updatetime,coordinate,calibration, code", "from user", "where id = #{id,jdbcType=INTEGER}" })
 	@Results({ @Result(column = "id", property = "id", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "account", property = "account", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "password", property = "password", jdbcType = JdbcType.VARCHAR),
@@ -47,6 +49,7 @@ public interface UserMapper {
 			@Result(column = "createtime", property = "createtime", jdbcType = JdbcType.TIMESTAMP),
 			@Result(column = "atlasttime", property = "atlasttime", jdbcType = JdbcType.TIMESTAMP),
 			@Result(column = "weight", property = "weight", jdbcType = JdbcType.REAL),
+			@Result(column = "walkCount", property = "walkCount", jdbcType = JdbcType.INTEGER),
 			@Result(column = "height", property = "height", jdbcType = JdbcType.REAL),
 			@Result(column = "born", property = "born", jdbcType = JdbcType.TIMESTAMP),
 			@Result(column = "updatetime", property = "updatetime", jdbcType = JdbcType.TIMESTAMP),
@@ -80,7 +83,13 @@ public interface UserMapper {
 			+ "<foreach item='item' index='index' collection='idList' open='(' separator=',' close=')'>" 
 			+ "#{item}"
 			+ "</foreach>" + "</script>")
-	//@Results(value = { @Result(column = "user_name", property = "username") })
 	List<User> selectUserList(@Param(value = "idList") List<Integer> idList);
-
+	/**
+	 * 修改目标步数
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Update("update user set walkCount=#{walkCount} where id = #{userId}")
+	int updateWalkCount(Map<String,Object> map)throws SQLException;
 }

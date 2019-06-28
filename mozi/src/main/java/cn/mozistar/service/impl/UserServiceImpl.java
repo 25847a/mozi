@@ -1,6 +1,7 @@
 package cn.mozistar.service.impl;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import cn.mozistar.mapper.UserMapper;
 import cn.mozistar.pojo.User;
 import cn.mozistar.service.UserService;
 import cn.mozistar.util.MD5Util;
+import cn.mozistar.util.ResultBase;
 
 @Transactional
 @Service
@@ -164,5 +166,23 @@ public class UserServiceImpl implements UserService{
 	public boolean updateUser(User u) {
 		int i = userMapper.updateByPrimaryKeySelective(u);
 		return i>0?true:false;
+	}
+	/**
+	 * 修改目标步数
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ResultBase updateWalkCount(Map<String, Object> map, ResultBase re) throws Exception {
+		int row =userMapper.updateWalkCount(map);
+		if(row>0){
+			re.setCode(200);
+			re.setMessage("修改成功");
+		}else{
+			re.setCode(400);
+			re.setMessage("修改异常,请重试");
+		}
+		return re;
 	}
 }

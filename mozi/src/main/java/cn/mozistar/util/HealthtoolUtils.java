@@ -90,7 +90,7 @@ public class HealthtoolUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ResultBase addT14Health(JSONObject json,User user,Healthdao healthdao ,UserService userService,HealthdaoService healthdaoService,HealthService healthService,ResultBase re,HealthsService healthsService){
+	public static ResultData<ResultBase> addT14Health(JSONObject json,User user,Healthdao healthdao ,UserService userService,HealthdaoService healthdaoService,HealthService healthService,ResultData<ResultBase> re,HealthsService healthsService){
 		try{
 				//健康数据
 				String data = json.getString("data");
@@ -116,9 +116,18 @@ public class HealthtoolUtils {
 						String status = json.getString("status");//1校准  //0健康数据
 						System.out.println("status:**************"+status);
 						if(status.equals("1")){
+							logger.info("心率+"+heartRate+">血氧:"+bloodOxygen+">微循环:"+microcir+">hrv:"+hrv+">呼吸频率:"+respiration+">高压:"+bloodrArr[0]+">低压:"+bloodrArr[1]);
 							if(!heartRate.equals("0") && !bloodrArr[0].equals("0") && !bloodrArr[1].equals("0")){
 								Healthdao h = new Healthdao();
 								h=DataParsing.DataHealthdao(h, heartRate, bloodOxygen, microcir, hrv, respiration,bloodrArr[0],bloodrArr[1]);
+								//波形图数据
+								String waveform = json.getString("waveform");
+								StringBuilder sb = new StringBuilder();
+								byte[] fromBASE64 = Base64Utils.decodeFromString(waveform.trim());
+								for (byte b : fromBASE64) {
+									sb.append(b+128+",");
+								}
+								h.setWaveform(sb.toString());
 								h.setUserId(user.getId());
 								h.setCreatetime(new Date());
 								if(healthdao!=null){
@@ -127,9 +136,11 @@ public class HealthtoolUtils {
 									user.setCalibration(1);
 									userService.update(user);
 								}
+								re.setData(h);
 							}else{
-								re.setMessage("校准值为0");
+								re.setMessage("此次学习并未检测到皮肤,学习失败!");
 								re.setCode(350);
+								return re;
 							}
 						}else{
 							//波形图数据

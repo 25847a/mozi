@@ -26,6 +26,10 @@ public class Chart {
 
 	 private Integer respirationrate;
 	 
+	 private Integer stepWhen;
+	 
+	 private Integer carrieroad;
+	 
 	 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
 	 private Date date;
 
@@ -83,6 +87,22 @@ public class Chart {
 
 	public void setRespirationrate(Integer respirationrate) {
 		this.respirationrate = respirationrate;
+	}
+
+	public Integer getStepWhen() {
+		return stepWhen;
+	}
+
+	public void setStepWhen(Integer stepWhen) {
+		this.stepWhen = stepWhen;
+	}
+
+	public Integer getCarrieroad() {
+		return carrieroad;
+	}
+
+	public void setCarrieroad(Integer carrieroad) {
+		this.carrieroad = carrieroad;
 	}
 
 	public Date getDate() {

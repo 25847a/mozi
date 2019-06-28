@@ -31,6 +31,10 @@ public class User {
     private Integer calibration;
     
     private String avatar;
+    /**
+     * 用户的目标步数
+     */
+    private Integer walkCount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")  
     private Date createtime;
@@ -130,7 +134,15 @@ public class User {
         this.avatar = avatar == null ? null : avatar.trim();
     }
 
-    public Date getCreatetime() {
+    public Integer getWalkCount() {
+		return walkCount;
+	}
+
+	public void setWalkCount(Integer walkCount) {
+		this.walkCount = walkCount;
+	}
+
+	public Date getCreatetime() {
         return createtime;
     }
 

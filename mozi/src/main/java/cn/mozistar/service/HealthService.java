@@ -12,13 +12,33 @@ public interface HealthService {
 	
 	int insertSelective(Health health);
 	
-	Health getHealthByUserId(Integer userId);
+    Health getHealthByUserId(Integer userId);
 
 	List<Chart> selecthealth(Map<String, Object> m);
-	
-	Health selecthealthMax(Map<java.lang.String, Object> map);
-
-	Health selecthealthMin(Map<java.lang.String, Object> map);
+	/**
+	 * 查询心率的各项数值
+	 * @param m
+	 * @return
+	 */
+	Map<String,String> selectHeartRateInfo(Map<String, Object> m);
+	/**
+	 * 查询步数MAX,MIN,AVG,COUNT
+	 * @param m
+	 * @return
+	 */
+	Map<String,String> selectStepWhenInfo(Map<String, Object> m);
+	/**
+	 * 查询血压MAX,MIN,AVG,COUNT
+	 * @param m
+	 * @return
+	 */
+	Map<String,String> selectBloodpressureInfo(Map<String, Object> m);
+	/**
+	 * 查询HRV MAX,MIN,AVG,COUNT
+	 * @param m
+	 * @return
+	 */
+	Map<String,String> selectHrvInfo(Map<String, Object> m);
 
 	void sendJpush(Health health);
 	

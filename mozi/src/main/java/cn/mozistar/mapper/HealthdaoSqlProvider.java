@@ -147,7 +147,9 @@ public class HealthdaoSqlProvider {
     	if (record.getCreatetime() != null) {
     		sql.SET("createtime = #{createtime,jdbcType=TIMESTAMP}");
     	}
-    	
+    	if (record.getWaveform() != null) {
+    		sql.SET("waveform = #{waveform,jdbcType=VARCHAR}");
+    	}
     	sql.WHERE("userId = #{userId,jdbcType=INTEGER}");
     	
     	return sql.toString();

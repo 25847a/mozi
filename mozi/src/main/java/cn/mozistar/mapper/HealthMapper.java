@@ -71,77 +71,298 @@ public interface HealthMapper {
 			"createtime = #{createtime,jdbcType=TIMESTAMP},", "waveform = #{waveform,jdbcType=VARCHAR}",
 			"where id = #{id,jdbcType=INTEGER}" })
 	int updateByPrimaryKey(Health record);
-
-
-	@Select("select * from health where userId = #{userId} order by createtime DESC LIMIT 0,1")
-	Health selectByUserId(Integer userId);
-
 	
+    @Select("select * from health where userId = #{userId} order by createtime DESC LIMIT 0,1")
+    Health selectByUserId(Integer userId);
+
 	@Select("<script>" +
 			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
 				"SELECT TRUNCATE(avg(hrv),0) as hrv,TRUNCATE(avg(highBloodPressure),0) as highBloodPressure,TRUNCATE(avg(lowBloodPressure),0) as lowBloodPressure,TRUNCATE(avg(heartRate),0) as heartRate," +
 				"TRUNCATE(avg(bloodOxygen),0) as bloodOxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate," +
+				"SUM(stepWhen) as stepWhen,SUM(carrieroad) as carrieroad,"+
 				"date_format(createtime, '%Y-%m-%d')" +
 				"as date" +
 				"FROM health WHERE DATE_FORMAT(createtime, '%Y') =" +
 				"#{timedata} AND" +
 				"userId=#{userId} GROUP BY date_format(createtime," +
-				"'%Y%m%d');" +
+				"'%Y%m%d')" +
 			"</if>" +
 			"<if test='service != null and service != \"\" and  service == \"month\" '>" +
 			"SELECT TRUNCATE(avg(hrv),0) as hrv,TRUNCATE(avg(highBloodPressure),0) as highBloodPressure,TRUNCATE(avg(lowBloodPressure),0) as lowBloodPressure,TRUNCATE(avg(heartRate),0) as heartRate," +
 			"TRUNCATE(avg(bloodOxygen),0) as bloodOxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate," +
+			"SUM(stepWhen) as stepWhen,SUM(carrieroad) as carrieroad,"+
 			"	date_format(createtime, '%Y-%m-%d')" +
 			"	as date FROM health WHERE DATE_FORMAT(createtime, '%Y-%m') =" +
 			"	#{timedata} AND userId=#{userId}" +
 			"	GROUP BY date_format(createtime," +
-			"	'%Y%m%d');" +
+			"	'%Y%m%d')" +
 			"</if>" +
 			"<if test='service != null and service != \"\" and  service == \"day\" '>" +
 			"SELECT TRUNCATE(avg(hrv),0) as hrv,TRUNCATE(avg(highBloodPressure),0) as highBloodPressure,TRUNCATE(avg(lowBloodPressure),0) as lowBloodPressure,TRUNCATE(avg(heartRate),0) as heartRate," +
 			"TRUNCATE(avg(bloodOxygen),0) as bloodOxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate," +
+			"SUM(stepWhen) as stepWhen,SUM(carrieroad) as carrieroad,"+
 			"	date_format(createtime,'%Y-%m-%d %H:%i:%S') as date FROM health WHERE" +
 			"	DATE_FORMAT(createtime,'%Y-%m-%d')=#{timedata} AND userId=#{userId}" +
-			"	GROUP BY date_format(createtime, '%Y%m%d %H:%i:%S');" +
+			"	GROUP BY  HOUR(createtime);" +
 			"</if>" +
 			"<if test='service != null and service != \"\" and  service == \"week\" '>" +
 			"SELECT TRUNCATE(avg(hrv),0) as hrv,TRUNCATE(avg(highBloodPressure),0) as highBloodPressure,TRUNCATE(avg(lowBloodPressure),0) as lowBloodPressure,TRUNCATE(avg(heartRate),0) as heartRate," +
 			"TRUNCATE(avg(bloodOxygen),0) as bloodOxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate," +
+			"SUM(stepWhen) as stepWhen,SUM(carrieroad) as carrieroad,"+
 			"	date_format(createtime, '%Y-%m-%d')" +
 			"	as date FROM health WHERE" +
 			"	YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) AND" +
 			"	userId=#{userId}" +
-			"	GROUP BY date_format(createtime, '%Y%m%d');" +
+			"	GROUP BY date_format(createtime, '%Y%m%d')" +
 			"</if>" +
 		"</script>")
 	List<Chart> selecthealth(Map<String, Object> m);
-
-	@Select("<script>" 
-			+ " <if test='keyWord != null and keyWord != \"\" and  keyWord == \"year\" '>"
-			+ " select * from  health  where year(createtime)= #{timedata}    and  userId =#{userId} ORDER BY highBloodPressure DESC LIMIT 1 ;"
-			+ "   </if>" 
-			+ "   <if test='keyWord != null and keyWord != \"\" and  keyWord == \"month\" '>"
-			+ "	select * from health  where month(createtime)= #{timedata} and  userId =#{userId} and year(createtime)= #{year} ORDER BY highBloodPressure DESC LIMIT 1  ;"
-			+ "	</if>" 
-			+ "	<if test='keyWord != null and keyWord != \"\" and  keyWord == \"day\" '>"
-			+ "	  select * from health  where  day(createtime)= #{timedata} and  userId =#{userId} and year(createtime)= #{year}  and  "
-			+ "   month(createtime)= #{month} ORDER BY highBloodPressure DESC LIMIT 1;" 
-			+ "	</if>"
-			+ "	<if test='keyWord != null and keyWord != \"\" and  keyWord == \"week\" '>"
-			+ "	  select * from health  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  userId =#{userId} ORDER BY highBloodPressure DESC LIMIT 1;"
-			+ "	</if>" 
-			+ "	</script>")
-	Health selecthealthMax(Map<String, Object> map);
-
-	@Select("<script>" + "<if test= 'keyWord != null and keyWord != \"\" and  keyWord == \"year\" '>"
-			+ "select * from  health  where year(createtime)= #{timedata}    and  userId =#{userId} ORDER BY lowBloodPressure LIMIT 1,1 ;"
-			+ "</if>" + "<if test='keyWord != null and keyWord != \"\" and  keyWord == \"month\" '>"
-			+ "select * from health  where month(createtime)= #{timedata} and  userId =#{userId} and year(createtime)= #{year} ORDER BY lowBloodPressure LIMIT 1,1 ;"
-			+ "</if>" + "<if test='keyWord != null and keyWord != \"\" and  keyWord == \"day\" '>"
-			+ "select * from health  where  day(createtime)= #{timedata} and  userId =#{userId} and year(createtime)= #{year}  and "
-			+ " month(createtime)= #{month} ORDER BY lowBloodPressure LIMIT 1,1;" + "</if>"
-			+ "<if test='keyWord != null and keyWord != \"\" and  keyWord == \"week\" '>"
-			+ " select * from health  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  userId =#{userId} ORDER BY lowBloodPressure LIMIT 1,1 ;"
-			+ " </if>" + " </script>")
-	Health selecthealthMin(Map<String, Object> map);
+	/**
+	 * 心率MAX,MIN,AVG,COUNT
+	 * @param map
+	 * @return
+	 */
+	@Select("<script>" +
+			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
+			"SELECT tt.*,new,createtime FROM ("+
+			"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}"+
+			")tt"+
+			" INNER JOIN ("+
+			"SELECT tp.userId,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+			" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}) tt"+
+			" ON tp.createtime=tt.createtime"+
+			" 	#{userId} AND date_format(tp.createtime,'%Y')=#{timedata}"+
+			") tg"+
+			" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"month\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y-%m')=#{timedata}"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"day\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y-%m-%d')=#{timedata}"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"week\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND YEARWEEK(date_format(tp.createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+	"</script>")
+	Map<String,String> selectHeartRateInfo(Map<String, Object> map);
+	/**
+	 * 血压MAX,MIN,AVG,COUNT
+	 * @param map
+	 * @return
+	 */
+	@Select("<script>" +
+			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
+			"SELECT tt.*,new,createtime FROM ("+
+			"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}"+
+			")tt"+
+			" INNER JOIN ("+
+			"SELECT tp.userId,CONCAT(highBloodPressure,'/',lowBloodPressure) as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+			" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}) tt"+
+			" ON tp.createtime=tt.createtime"+
+			" 	#{userId} AND date_format(tp.createtime,'%Y')=#{timedata}"+
+			") tg"+
+			" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"month\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,CONCAT(highBloodPressure,'/',lowBloodPressure) as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y-%m')=#{timedata}"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"day\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,CONCAT(highBloodPressure,'/',lowBloodPressure) as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y-%m-%d')=#{timedata}"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"week\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,CONCAT(highBloodPressure,'/',lowBloodPressure) as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND YEARWEEK(date_format(tp.createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+	"</script>")
+	Map<String,String> selectBloodpressureInfo(Map<String, Object> map);
+	/**
+	 * 步数MAX,MIN,AVG,COUNT
+	 * @param map
+	 * @return
+	 */
+	@Select("<script>" +
+			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
+			"SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM ("+
+			"SELECT COUNT(*) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y') =#{timedata}"+
+			")tt"+
+			" INNER JOIN ("+
+			"SELECT tp.userId,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+			" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y') =#{timedata}) tt"+
+			" ON tp.createtime=tt.createtime"+
+			" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y') =#{timedata}"+
+			") tg"+
+			" ON tt.userId=tg.userId"+
+			" INNER JOIN (SELECT SUM(stepWhen) AS max,date_format(createtime,'%Y') as maxtime,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY stepWhen DESC  LIMIT 0,1"+
+			") tv"+
+			" ON tg.userId=tv.userId"+
+			" INNER JOIN (SELECT SUM(stepWhen) AS min,date_format(createtime,'%Y') as mintime,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY stepWhen  LIMIT 0,1"+
+			") tj"+
+			" ON tg.userId= tj.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"month\" '>" +
+			"SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM ("+
+			"SELECT COUNT(*) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata}"+
+			")tt"+
+			" INNER JOIN ("+
+			"SELECT tp.userId,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+			" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata}) tt"+
+			" ON tp.createtime=tt.createtime"+
+			" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y-%m') =#{timedata}"+
+			") tg"+
+			" ON tt.userId=tg.userId"+
+			" INNER JOIN (SELECT SUM(stepWhen) AS max,date_format(createtime,'%Y-%m') as maxtime,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY stepWhen DESC  LIMIT 0,1"+
+			") tv"+
+			" ON tg.userId=tv.userId"+
+			" INNER JOIN (SELECT SUM(stepWhen) AS min,date_format(createtime,'%Y-%m') as mintime,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY stepWhen  LIMIT 0,1"+
+			") tj"+
+			" ON tg.userId= tj.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"day\" '>" +
+			"SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM ("+
+			"SELECT COUNT(*) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata}"+
+			")tt"+
+			" INNER JOIN ("+
+			"SELECT tp.userId,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+			" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata}) tt"+
+			" ON tp.createtime=tt.createtime"+
+			" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y-%m-%d') =#{timedata}"+
+			") tg"+
+			" ON tt.userId=tg.userId"+
+			" INNER JOIN (SELECT SUM(stepWhen) AS max,date_format(createtime,'%Y-%m-%d') as maxtime,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY stepWhen DESC  LIMIT 0,1"+
+			") tv"+
+			" ON tg.userId=tv.userId"+
+			" INNER JOIN (SELECT SUM(stepWhen) AS min,date_format(createtime,'%Y-%m-%d') as mintime,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY stepWhen  LIMIT 0,1"+
+			") tj"+
+			" ON tg.userId= tj.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"week\" '>" +
+			"SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM ("+
+			"SELECT COUNT(*) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+			")tt"+
+			" INNER JOIN ("+
+			"SELECT tp.userId,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+			" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())) tt"+
+			" ON tp.createtime=tt.createtime"+
+			" WHERE tp.userId=#{userId} AND YEARWEEK(date_format(tp.createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+			") tg"+
+			" ON tt.userId=tg.userId"+
+			" INNER JOIN (SELECT SUM(stepWhen) AS max,date_format(createtime,'%Y-%m-%d') as maxtime,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW()) GROUP BY date_format(createtime,'%Y-%m-%d') ORDER BY stepWhen DESC  LIMIT 0,1"+
+			") tv"+
+			" ON tg.userId=tv.userId"+
+			" INNER JOIN (SELECT SUM(stepWhen) AS min,date_format(createtime,'%Y-%m-%d') as mintime,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW()) GROUP BY date_format(createtime,'%Y-%m-%d') ORDER BY stepWhen  LIMIT 0,1"+
+			") tj"+
+			" ON tg.userId= tj.userId"+
+		"</if>" +
+	"</script>")
+	Map<String,String> selectStepWhenInfo(Map<String, Object> map);
+	/**
+	 * HRVMAX,MIN,AVG,COUNT
+	 * @param map
+	 * @return
+	 */
+	@Select("<script>" +
+			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
+			"SELECT tt.*,new,createtime FROM ("+
+			"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}"+
+			")tt"+
+			" INNER JOIN ("+
+			"SELECT tp.userId,hrv as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+			" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}) tt"+
+			" ON tp.createtime=tt.createtime"+
+			" 	#{userId} AND date_format(tp.createtime,'%Y')=#{timedata}"+
+			") tg"+
+			" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"month\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,hrv as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y-%m')=#{timedata}"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"day\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,hrv as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND date_format(tp.createtime,'%Y-%m-%d')=#{timedata}"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+		"<if test='service != null and service != \"\" and  service == \"week\" '>" +
+		"SELECT tt.*,new,createtime FROM ("+
+		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		")tt"+
+		" INNER JOIN ("+
+		"SELECT tp.userId,hrv as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
+		" INNER JOIN (SELECT MAX(createtime) as createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())) tt"+
+		" ON tp.createtime=tt.createtime"+
+		" WHERE tp.userId=#{userId} AND YEARWEEK(date_format(tp.createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		") tg"+
+		" ON tt.userId=tg.userId"+
+		"</if>" +
+	"</script>")
+	Map<String,String> selectHrvInfo(Map<String, Object> map);
 }

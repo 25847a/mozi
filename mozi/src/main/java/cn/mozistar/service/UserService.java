@@ -1,6 +1,9 @@
 package cn.mozistar.service;
 
+import java.util.Map;
+
 import cn.mozistar.pojo.User;
+import cn.mozistar.util.ResultBase;
 
 public interface UserService {
 
@@ -40,4 +43,11 @@ public interface UserService {
 	 * @return
 	 */
 	public boolean updateUser(User u);
+	/**
+	 * 修改目标步数
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public ResultBase updateWalkCount(Map<String,Object> map,ResultBase re)throws Exception;
 }

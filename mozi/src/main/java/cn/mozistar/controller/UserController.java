@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -375,11 +376,9 @@ public class UserController {
 
 		Map<String, Object> map = null;
 		for (Integer integer : observeIdList) {
-
 			Map<String, Object> dmap = new LinkedHashMap<>();
-
 			map = new LinkedHashMap<>();
-			List<Map<String, Object>> list = new ArrayList<>();
+			List<Map<String, Object>> list = new LinkedList<Map<String,Object>>();
 			User user = userService.getUser(integer);
 			String name = user.getName();
 			Integer id = user.getId();
@@ -397,13 +396,21 @@ public class UserController {
 				health = new Health();
 			}
 			map.put("updatetime",health.getCreatetime()==null?"":sf.format(health.getCreatetime()));
-		//	map.put("updatetime",sf.format(health.getCreatetime()));
 			dmap.put("user", map);
+			
+			map = new HashMap<String, Object>();
+			map.put("name", "stepWhen");
+			map.put("desc", "步数");
+			map.put("category", "13");
+			map.put("lastestValue", health.getStepWhen() == null ? 0 : health.getStepWhen());
+			map.put("unit", "步");
+			list.add(map);
+			
 			map = new HashMap<String, Object>();
 			map.put("name", "heartrate");
 			map.put("desc", "心率");
 			map.put("category", "2");
-			map.put("lastestValue", health.getHeartRate() == null ? "" : health.getHeartRate());
+			map.put("lastestValue", health.getHeartRate() == null ? 0 : health.getHeartRate());
 			map.put("unit", "次/分");
 			list.add(map);
 
@@ -411,8 +418,8 @@ public class UserController {
 			map.put("name", "pressure");
 			map.put("desc", "血压");
 			map.put("category", "3");
-			String a = health.getHighBloodPressure() == null ? "": health.getHighBloodPressure().toString();
-			String b = health.getLowBloodPressure() == null ? "" : health.getLowBloodPressure().toString();
+			String a = health.getHighBloodPressure() == null ?"0": health.getHighBloodPressure().toString();
+			String b = health.getLowBloodPressure() == null ? "0" : health.getLowBloodPressure().toString();
 			map.put("lastestValue",a+"/"+b);
 			map.put("unit", "mmHg");
 			list.add(map);
@@ -421,7 +428,7 @@ public class UserController {
 			map.put("name", "hrv");
 			map.put("desc", "心率变异性HRV");
 			map.put("category", "8");
-			map.put("lastestValue", health.getHrv() == null ? "" : health.getHrv());
+			map.put("lastestValue", health.getHrv() == null ? 0 : health.getHrv());
 			map.put("unit", "ms");
 			list.add(map);
 
@@ -429,7 +436,7 @@ public class UserController {
 			map.put("name", "mocrocirculation");
 			map.put("desc", "微循环");
 			map.put("category", "4");
-			map.put("lastestValue", health.getMicrocirculation() == null ? "" : health.getMicrocirculation());
+			map.put("lastestValue", health.getMicrocirculation() == null ? 0 : health.getMicrocirculation());
 			map.put("unit", "%");
 			list.add(map);
 
@@ -437,15 +444,23 @@ public class UserController {
 			map.put("name", "qxygen");
 			map.put("desc", "血氧");
 			map.put("category", "10");
-			map.put("lastestValue", health.getBloodOxygen() == null ? "" : health.getBloodOxygen());
+			map.put("lastestValue", health.getBloodOxygen() == null ? 0 : health.getBloodOxygen());
 			map.put("unit", "%");
 			list.add(map);
 
 			map = new HashMap<String, Object>();
+			map.put("name", "carrieroad");
+			map.put("desc", "卡里路");
+			map.put("category", "14");
+			map.put("lastestValue", health.getCarrieroad() == null ? 0 : health.getCarrieroad());
+			map.put("unit", "焦耳/天");
+			list.add(map);
+			
+			map = new HashMap<String, Object>();
 			map.put("name", "breathe");
 			map.put("desc", "呼吸");
 			map.put("category", "12");
-			map.put("lastestValue", health.getRespirationrate() == null ? "" : health.getRespirationrate());
+			map.put("lastestValue", health.getRespirationrate() == null ? 0 : health.getRespirationrate());
 			map.put("unit", "次/分钟");
 			list.add(map);
 
@@ -800,13 +815,12 @@ public class UserController {
 	 */
 	@RequestMapping("addHealth")
 	@ResponseBody
-	public ResultBase addHealth(@RequestBody JSONObject json){
-		ResultBase re = new ResultBase();
+	public ResultData<ResultBase> addHealth(@RequestBody JSONObject json){
+		ResultData<ResultBase> re = new ResultData<ResultBase>();
 		String waveform = json.getString("waveform");
 		Integer userId = json.getInt("userId");
 		User user = userService.getUser(userId);
 		logger.info("userId:"+userId+">>>名字:>>>>>>>>>>>>>>>>>>>>>>>>>"+user.getName());
-	//	logger.info("userId:"+userId+">>>data:>>>>"+json.getString("data"));
 		logger.info("userId:"+userId+">>>waveform:>>>>"+json.getString("waveform"));
 		if(!waveform.equals("")){
 			Healthdao healthdao = healthdaoService.getHealthdaoByUserId(userId);
@@ -954,7 +968,24 @@ public class UserController {
 		mo.setViewName("agreement");
 		return mo;
 	}
-	
+	/**
+	 * 修改目标步数
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("updateWalkCount")
+	@ResponseBody
+	public ResultBase updateWalkCount(@RequestBody Map<String,Object> map){
+		ResultBase re = new ResultBase();
+		try {
+			re=userService.updateWalkCount(map,re);
+			
+		} catch (Exception e) {
+			logger.error("updateWalkCount>>>>>>>>>>>>>>",e);
+		}
+		return re;
+	}
 	
 
 }

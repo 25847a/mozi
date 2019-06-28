@@ -35,11 +35,11 @@ public class DataParsing {
 	 */
 	public static Health bloodPressure(Health health,Healthdao healthdao,String heartRate,String bloodrArr0,String bloodrArr1){
 		 //心率校准值
-    	double heartrdao = healthdao.getHeartRate()==0?80:healthdao.getHeartRate();
+    	double heartrdao = healthdao.getHeartRate()<80?80:healthdao.getHeartRate();
 		// 高压值校准值
-    	double highpressure = healthdao.getHighBloodPressure()==0?120:healthdao.getHighBloodPressure();
+    	double highpressure = healthdao.getHighBloodPressure()<120?120:healthdao.getHighBloodPressure();
 		// 低压校准值
-    	double lowpressure = healthdao.getLowBloodPressure()==0?80:healthdao.getLowBloodPressure();
+    	double lowpressure = healthdao.getLowBloodPressure()<80?80:healthdao.getLowBloodPressure();
 		// 心率 检测值
 		 double hear = Double.parseDouble(heartRate);
 		 double gy =Integer.valueOf(bloodrArr0);

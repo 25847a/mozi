@@ -33,6 +33,8 @@ public class Healthdao {
     private String phone;
 
     private String amedicalreport;
+    
+    private String waveform;
 
     public Integer getId() {
         return id;
@@ -129,4 +131,13 @@ public class Healthdao {
     public void setAmedicalreport(String amedicalreport) {
         this.amedicalreport = amedicalreport == null ? null : amedicalreport.trim();
     }
+
+	public String getWaveform() {
+		return waveform;
+	}
+
+	public void setWaveform(String waveform) {
+		this.waveform = waveform == null ? null : waveform.trim();
+	}
+
 }
