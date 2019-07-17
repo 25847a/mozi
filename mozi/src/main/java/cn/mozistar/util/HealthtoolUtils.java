@@ -112,7 +112,6 @@ public class HealthtoolUtils {
 				String respiration = respirationrate(account, "123456", stattime, device_id);
 				// 高低压
 				String[] bloodrArr = bloodr.split(",");
-					if(json.containsKey("status")){
 						String status = json.getString("status");//1校准  //0健康数据
 						System.out.println("status:**************"+status);
 						if(status.equals("1")){
@@ -180,63 +179,20 @@ public class HealthtoolUtils {
 							health=DataParsing.DataMicrocirculation(health, healthdao, microcir);
 							//呼吸
 							health=DataParsing.respirationrate(health, healthdao, respiration);
+							
+							health.setStepWhen(json.getInt("stepWhen"));
+							health.setCarrieroad(json.getInt("stepWhen")*2);
+							
 							health.setCreatetime(new Date());
 							health.setUserId(user.getId());
 							health.setPhone(user.getPhone());
 							health.setWaveform(sb.toString());
 							healthService.insertSelective(health);
-								//预警功能
-								healthService.sendJpush(health);
-						}
-					}else{
-						//波形图数据
-						String waveform = json.getString("waveform");
-						StringBuilder sb = new StringBuilder();
-						byte[] fromBASE64 = Base64Utils.decodeFromString(waveform.trim());
-						for (byte b : fromBASE64) {
-							sb.append(b+128+",");
-						}
-						Health health = new Health();
-						
-						Healths healths = new Healths();
-						healths.setPhone(user.getPhone());
-						healths.setHrv(Integer.valueOf(hrv));
-						 healths.setHeartRate(Integer.valueOf(heartRate));;
-						  // 高压
-						  healths.setHighBloodPressure(Integer.valueOf(bloodrArr[0]));
-						  // 低压
-						  healths.setLowBloodPressure(Integer.valueOf(bloodrArr[1]));
-						  healths.setBloodOxygen(Integer.parseInt(bloodOxygen));
-						  healths.setMicrocirculation(Integer.parseInt(microcir));
-					// 报告
-					healths.setAmedicalreport(amedical);
-					healths.setRespirationrate(Integer.valueOf(respiration));
-					healths.setCreatetime(new Date());
-					healths.setUserId(user.getId());
-					
-					healthsService.insertSelective(healths)	;
-					//血压,心率
-					health = DataParsing.bloodPressure(health, healthdao, heartRate, bloodrArr[0], bloodrArr[1]);
-					// 报告
-					health.setAmedicalreport(amedical);
-					// 血氧
-					health.setBloodOxygen(Integer.parseInt(bloodOxygen)<93?(int)(95+Math.random()*(99-95+1)):Integer.parseInt(bloodOxygen));
-					// Hrv
-					health=DataParsing.DataHrv(health, healthdao, hrv);
-					// 微循环
-					health=DataParsing.DataMicrocirculation(health, healthdao, microcir);
-					//呼吸
-					health=DataParsing.respirationrate(health, healthdao, respiration);
-					
-						health.setCreatetime(new Date());
-						health.setUserId(user.getId());
-						health.setPhone(user.getPhone());
-						health.setWaveform(sb.toString());
-						healthService.insertSelective(health);
+							user.setCoordinate(json.getString("coordinate"));
+							userService.update(user);
 							//预警功能
 							healthService.sendJpush(health);
-					}
-					
+						}
 					re.setCode(200);
 					re.setMessage("操作成功");
 				}catch (Exception e) {

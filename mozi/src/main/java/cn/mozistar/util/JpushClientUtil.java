@@ -15,8 +15,11 @@ import cn.jpush.api.push.model.notification.Notification;
  
  
 public class JpushClientUtil {
-	private final static String appKey = "4a7bad086b10f73823fc1459";
-	private final static String masterSecret = "031539a94c5df2c84935672e";
+  //  private final static String appKey = "4a7bad086b10f73823fc1459";
+  //  private final static String masterSecret = "031539a94c5df2c84935672e";墨子星的
+
+	private final static String appKey = "89559169385253b9f5577811";
+	private final static String masterSecret = "db6c3992a2569155d078bae2";//云彩的
     private static JPushClient jPushClient = new JPushClient(masterSecret,appKey);
     /**
      * 推送给设备标识参数的用户

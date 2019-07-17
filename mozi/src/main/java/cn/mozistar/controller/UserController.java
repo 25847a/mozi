@@ -55,7 +55,7 @@ import net.sf.json.JSONObject;
 public class UserController {
 
 	private final String baseUrl = "http://120.76.201.150:8080/";
-	private final String iconPath = "http://120.76.201.150:8080/avatars/120.png";
+	private final String iconPath = "http://120.76.201.150:8080/avatars/yuncai.png";
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -398,13 +398,13 @@ public class UserController {
 			map.put("updatetime",health.getCreatetime()==null?"":sf.format(health.getCreatetime()));
 			dmap.put("user", map);
 			
-			map = new HashMap<String, Object>();
+		/*	map = new HashMap<String, Object>();
 			map.put("name", "stepWhen");
 			map.put("desc", "步数");
 			map.put("category", "13");
 			map.put("lastestValue", health.getStepWhen() == null ? 0 : health.getStepWhen());
 			map.put("unit", "步");
-			list.add(map);
+			list.add(map);*/
 			
 			map = new HashMap<String, Object>();
 			map.put("name", "heartrate");
@@ -448,13 +448,13 @@ public class UserController {
 			map.put("unit", "%");
 			list.add(map);
 
-			map = new HashMap<String, Object>();
+		/*	map = new HashMap<String, Object>();
 			map.put("name", "carrieroad");
 			map.put("desc", "卡里路");
 			map.put("category", "14");
 			map.put("lastestValue", health.getCarrieroad() == null ? 0 : health.getCarrieroad());
 			map.put("unit", "焦耳/天");
-			list.add(map);
+			list.add(map);*/
 			
 			map = new HashMap<String, Object>();
 			map.put("name", "breathe");
