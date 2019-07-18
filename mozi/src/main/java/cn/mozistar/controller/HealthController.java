@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import cn.mozistar.pojo.User;
 import cn.mozistar.service.HealthService;
 import cn.mozistar.service.UserService;
 import cn.mozistar.util.DataUtil;
+import cn.mozistar.util.DateUtil;
 import cn.mozistar.util.ResultData;
 import cn.mozistar.vo.Chart;
 import net.sf.json.JSONObject;
@@ -25,7 +27,6 @@ import net.sf.json.JSONObject;
 public class HealthController {
 	
 	private  DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");         
-	//private static String mozistar = "mozistar";
 	
 	@Autowired
 	private HealthService healthservice;
@@ -108,6 +109,15 @@ public class HealthController {
 				bloodpressureList.add(chartData);
 			}
 			Map<String,String> map = healthservice.selectBloodpressureInfo(m);
+			if(map==null){
+				map = new HashMap<String,String>();
+				map.put("max", "0/0");
+				map.put("min", "0/0");
+				map.put("count", "0");
+				map.put("avg", "0/0");
+				map.put("new", "0/0");
+				map.put("createtime", DateUtil.sfshi.format(new Date()));
+			}
 			List<Map<String,Object>> list = DataUtil.polymerization("最高血压","","最低血压","","最新血压","平均血压",map);	
 			data.put("detail", list);
 			data.put("chartData", bloodpressureList);
@@ -151,6 +161,15 @@ public class HealthController {
 				bloodpressureList.add(chartData);
 			}
 			Map<String,String> map = healthservice.selectHeartRateInfo(m);
+			if(map==null){
+				map = new HashMap<String,String>();
+				map.put("max", "0");
+				map.put("min", "0");
+				map.put("count","0");
+				map.put("avg", "0");
+				map.put("new", "0");
+				map.put("createtime", DateUtil.sfshi.format(new Date()));
+			}
 			List<Map<String,Object>> list = DataUtil.polymerization("最快心率","","最慢心率","","最新心率","平均心率",map);	
 			data.put("detail", list);
 			data.put("count", map.get("count"));
@@ -196,6 +215,15 @@ public class HealthController {
 					bloodpressureList.add(chartData);
 				}
 				Map<String,String> map =healthservice.selectHrvInfo(m);
+				if(map==null){
+					map = new HashMap<String,String>();
+					map.put("max", "0");
+					map.put("min", "0");
+					map.put("count","0");
+					map.put("avg", "0");
+					map.put("new", "0");
+					map.put("createtime", DateUtil.sfshi.format(new Date()));
+				}
 				List<Map<String,Object>> list = DataUtil.polymerization("最高HRV","","最低HRV","","最新HRV","平均HRV",map);	
 				data.put("detail", list);
 				data.put("chartData", bloodpressureList);

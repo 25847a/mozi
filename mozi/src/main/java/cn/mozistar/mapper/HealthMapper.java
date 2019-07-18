@@ -125,7 +125,10 @@ public interface HealthMapper {
 	@Select("<script>" +
 			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
 			"SELECT tt.*,new,createtime FROM ("+
-			"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}"+
+			"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM ("+
+			"SELECT heartRate,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+			"  ORDER BY createtime LIMIT 1,99999"+
+			") tc"+
 			")tt"+
 			" INNER JOIN ("+
 			"SELECT tp.userId,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -137,7 +140,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"month\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}"+
+		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM ("+
+		"SELECT heartRate,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		"  ORDER BY createtime LIMIT 1,99999"+
+		") tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -149,7 +155,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"day\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}"+
+		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM ("+
+		"SELECT heartRate,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		"  ORDER BY createtime LIMIT 1,99999"+
+		") tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -161,7 +170,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"week\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		"SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,userId FROM ("+
+		"SELECT heartRate,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		"  ORDER BY createtime LIMIT 1,99999"+
+		") tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -181,7 +193,10 @@ public interface HealthMapper {
 	@Select("<script>" +
 			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
 			"SELECT tt.*,new,createtime FROM ("+
-			"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}"+
+			"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM("+
+			"SELECT highBloodPressure,lowBloodPressure,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+			" ORDER BY createtime LIMIT 1,99999"+
+			") tc"+
 			")tt"+
 			" INNER JOIN ("+
 			"SELECT tp.userId,CONCAT(highBloodPressure,'/',lowBloodPressure) as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -193,7 +208,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"month\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}"+
+		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM("+
+		"SELECT highBloodPressure,lowBloodPressure,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		" ORDER BY createtime LIMIT 1,99999"+
+		") tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,CONCAT(highBloodPressure,'/',lowBloodPressure) as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -205,7 +223,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"day\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}"+
+		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM("+
+		"SELECT highBloodPressure,lowBloodPressure,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		" ORDER BY createtime LIMIT 1,99999"+
+		") tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,CONCAT(highBloodPressure,'/',lowBloodPressure) as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -217,7 +238,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"week\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		"SELECT CONCAT(MAX(highBloodPressure),'/',MAX(lowBloodPressure)) AS max,CONCAT(MIN(highBloodPressure),'/',MIN(lowBloodPressure)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(highBloodPressure)),'/',ROUND(AVG(lowBloodPressure))) as avg,userId FROM("+
+		"SELECT highBloodPressure,lowBloodPressure,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		" ORDER BY createtime LIMIT 1,99999"+
+		") tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,CONCAT(highBloodPressure,'/',lowBloodPressure) as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -317,7 +341,10 @@ public interface HealthMapper {
 	@Select("<script>" +
 			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
 			"SELECT tt.*,new,createtime FROM ("+
-			"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y')=#{timedata}"+
+			"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId from("+
+			"SELECT hrv,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+			" ORDER BY createtime LIMIT 1,99999"+
+			")tc"+
 			")tt"+
 			" INNER JOIN ("+
 			"SELECT tp.userId,hrv as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -329,7 +356,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"month\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}"+
+		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId from("+
+		"SELECT hrv,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		" ORDER BY createtime LIMIT 1,99999"+
+		")tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,hrv as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -341,7 +371,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"day\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}"+
+		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId from("+
+		"SELECT hrv,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		" ORDER BY createtime LIMIT 1,99999"+
+		")tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,hrv as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -353,7 +386,10 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"week\" '>" +
 		"SELECT tt.*,new,createtime FROM ("+
-		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		"SELECT MAX(hrv) as max,MIN(hrv) AS min,COUNT(*) AS count,ROUND(AVG(hrv)) AS avg,userId from("+
+		"SELECT hrv,userId,createtime FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+		" ORDER BY createtime LIMIT 1,99999"+
+		")tc"+
 		")tt"+
 		" INNER JOIN ("+
 		"SELECT tp.userId,hrv as new,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+

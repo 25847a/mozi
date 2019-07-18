@@ -16,7 +16,7 @@ public class Managementconstant {
 	//心率提示语
 	public static final String HEARTRATE_WEEK="心率变化与心脏疾病密切相关。如果心率超过160次/分钟，或低于40次/分钟，大多见于心脏病患者，如常伴有心悸、胸闷等不适感，应及早进行详细检查，以便针对病因进行治疗。";
 	//心率提示语
-	public static final String HEARTRATE_MONTH="熬夜、吸烟、饮酒均可使静息心率加快。少喝浓茶、特别是不要在睡前喝，否则容易导致失眠。肥胖会使心脏负担加重，心率加快，因此肥胖者要通过健身运动，调节饮食包吃适宜的体重。";
+	public static final String HEARTRATE_MONTH="熬夜、吸烟、饮酒均可使静息心率加快。少喝浓茶、特别是不要在睡前喝，否则容易导致失眠。肥胖会使心脏负担加重，心率加快，因此肥胖者要通过健身运动，调节饮食保持适宜的体重。";
 	//步数提示语
 	public static final String STEPWHEN_DAY="适当的步行能减少血凝块的形成，减少心肌梗塞的可能性。还可以增强肌肉力量，强健腿足、筋骨，并能使关节灵活，促进人体血液循环和新陈代谢。";
 	//步数提示语

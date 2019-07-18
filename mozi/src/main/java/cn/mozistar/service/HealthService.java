@@ -11,7 +11,11 @@ public interface HealthService {
 	
 	
 	int insertSelective(Health health);
-	
+	/**
+	 * 查询最新的一条数据
+	 * @param userId
+	 * @return
+	 */
     Health getHealthByUserId(Integer userId);
 
 	List<Chart> selecthealth(Map<String, Object> m);

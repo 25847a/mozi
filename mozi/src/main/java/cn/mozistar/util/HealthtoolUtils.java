@@ -166,6 +166,9 @@ public class HealthtoolUtils {
 							healths.setUserId(user.getId());
 						
 							healthsService.insertSelective(healths)	;
+							
+							Health h = healthService.getHealthByUserId(user.getId());
+							
 							Health health = new Health();
 							//血压,心率
 							health = DataParsing.bloodPressure(health, healthdao, heartRate, bloodrArr[0], bloodrArr[1]);
@@ -179,9 +182,10 @@ public class HealthtoolUtils {
 							health=DataParsing.DataMicrocirculation(health, healthdao, microcir);
 							//呼吸
 							health=DataParsing.respirationrate(health, healthdao, respiration);
-							
-							health.setStepWhen(json.getInt("stepWhen"));
-							health.setCarrieroad(json.getInt("stepWhen")*2);
+							//步数
+							health.setStepWhen(h.getStepWhen()+json.getInt("stepWhen"));
+							//卡里路
+							health.setCarrieroad(h.getCarrieroad()+json.getInt("stepWhen")*2);
 							
 							health.setCreatetime(new Date());
 							health.setUserId(user.getId());
