@@ -22,6 +22,8 @@ public class HealthtoolUtils {
 	
 	private final static Logger logger = LoggerFactory.getLogger(HealthtoolUtils.class);
 	private static String url = "https://api.jingfantech.com/V1.02/physical_exam/manufacturer";
+	//心率不齐url
+	private static String arrhythmiaUrl = "https://api.jingfantech.com/V1.04/physical_exam/manufacturer";
 	private static String charset = "utf-8";
 	private static String device_id = "6A6668010001010101010000FFFFFFFF";
 	
@@ -39,8 +41,10 @@ public class HealthtoolUtils {
 	private static final String REPORT = "report";
 	// 呼吸頻率
 	private static final String RESPIRATIONRATE = "respiration_rate";
-
+	//hrv
 	private static final String HRV = "HRV";
+	//心率不齐
+	private static final String ARHYTHMIA = "arrhythmia";
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -110,6 +114,8 @@ public class HealthtoolUtils {
 				String hrv = HRV(account, "123456", stattime, device_id);
 				// 呼吸频率
 				String respiration = respirationrate(account, "123456", stattime, device_id);
+				
+				String arrhythmia = arrhythmia(account, "123456", stattime, device_id);
 				// 高低压
 				String[] bloodrArr = bloodr.split(",");
 						String status = json.getString("status");//1校准  //0健康数据
@@ -183,17 +189,25 @@ public class HealthtoolUtils {
 							//呼吸
 							health=DataParsing.respirationrate(health, healthdao, respiration);
 							//步数
+							System.out.println(json.getInt("stepWhen"));
 							health.setStepWhen(h.getStepWhen()+json.getInt("stepWhen"));
 							//卡里路
-							health.setCarrieroad(h.getCarrieroad()+json.getInt("stepWhen")*2);
+							System.out.println(h.getCarrieroad()+h.getStepWhen()*2);
+							health.setCarrieroad(h.getCarrieroad()+json.getInt("stepWhen")/20);
+							//心率不齐
+							health.setArrhythmia(Integer.valueOf(arrhythmia));
+							//情绪
+							health.setMood(health.getHrv());
 							
 							health.setCreatetime(new Date());
 							health.setUserId(user.getId());
 							health.setPhone(user.getPhone());
 							health.setWaveform(sb.toString());
 							healthService.insertSelective(health);
-							user.setCoordinate(json.getString("coordinate"));
-							userService.update(user);
+							if(json.getString("coordinate").equals("0")){
+								user.setCoordinate(json.getString("coordinate"));
+								userService.update(user);
+							}
 							//预警功能
 							healthService.sendJpush(health);
 						}
@@ -307,7 +321,34 @@ public class HealthtoolUtils {
 		//logger.info("惊凡返回的数据》》》》》》》》》》》》》》"+httpOrgCreateTestRtn);
 		return httpOrgCreateTestRtn;
 	}
-
+	/**
+	 * 获取心率不齐
+	 * @param service
+	 * @param phone_num
+	 * @param password
+	 * @param start_time
+	 * @param device_id
+	 * @return
+	 */
+	public static JSONObject arrhythmiaData(String service, String phone_num, String password, String start_time,
+			String device_id) {
+		String httpOrgCreateTest = arrhythmiaUrl;
+		JSONObject createMap = new JSONObject();
+		createMap.put("service", service);
+		createMap.put("channel_id", Managementconstant.channel_id);
+		createMap.put("channel_secret", Managementconstant.channel_secret);
+		createMap.put("name", phone_num);
+		createMap.put("secret", password);
+		createMap.put("client_id", "0");
+		createMap.put("device_id", device_id);
+		createMap.put("start_time", start_time);
+		createMap.put("period", "1h");
+		Gson gson = new Gson();
+		String json = gson.toJson(createMap);
+		String httpOrgCreateTestRtn = HttpClientUtil.doPost(httpOrgCreateTest, json, charset);
+		JSONObject jsonObject = JSONObject.fromObject(httpOrgCreateTestRtn);
+		return jsonObject;
+	}
 	/**
 	 * @param phone_num
 	 * @param password
@@ -397,7 +438,7 @@ public class HealthtoolUtils {
 		JSONObject htratejs = (JSONObject) htrate_result.get(String.valueOf(htrate_result.size()));
 		return htratejs.get("htrate_ave").toString();
 	}
-
+	
 	/**
 	 * 血氧
 	 * 
@@ -454,7 +495,16 @@ public class HealthtoolUtils {
 	public static String HRV(String phone_num, String password, String start_time, String device_id) {
 		return HealthtoolUtils.HAVrespirationrate(HRV, phone_num, password, start_time, device_id);
 	}
-
+	/**
+	 * 心律不齐
+	 * @return
+	 */
+	public static String arrhythmia(String phone_num, String password, String start_time, String device_id) {
+		JSONObject jsonObject = HealthtoolUtils.arrhythmiaData(ARHYTHMIA, phone_num, password, start_time, device_id);
+		JSONObject htrate_result = (JSONObject) jsonObject.get("arrhythmia_result");
+		JSONObject htratejs = (JSONObject) htrate_result.get(String.valueOf(htrate_result.size()));
+		return htratejs.get("arrhythmia").toString();
+	}
 	// 注册发送验证码
 	/**
 	 * 发送验证码

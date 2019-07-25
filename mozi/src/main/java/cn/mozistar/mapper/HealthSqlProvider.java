@@ -48,7 +48,13 @@ public class HealthSqlProvider {
         if (record.getCarrieroad() != null) {
             sql.VALUES("carrieroad", "#{carrieroad,jdbcType=INTEGER}");
         }
+        if (record.getArrhythmia() != null) {
+            sql.VALUES("arrhythmia", "#{arrhythmia,jdbcType=INTEGER}");
+        }
         
+        if (record.getMood() != null) {
+            sql.VALUES("mood", "#{mood,jdbcType=INTEGER}");
+        }
         if (record.getAmedicalreport() != null) {
             sql.VALUES("amedicalreport", "#{amedicalreport,jdbcType=VARCHAR}");
         }

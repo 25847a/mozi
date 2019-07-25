@@ -1,0 +1,49 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors Your Name (you@example.org)
+ * @date    2018-10-16 11:49:46
+ * @version $Id$
+ */
+/* 
+@font-face{
+    font-family: 'firstfont';
+    src:url('../siyuanfont/SourceHanSansCN-Bold.otf');
+    src:url('../siyuanfont/SourceHanSansCN-ExtraLight.otf');
+    src:url('../siyuanfont/SourceHanSansCN-Heavy.otf');
+    src:url('../siyuanfont/SourceHanSansCN-Light.otf');
+    src:url('../siyuanfont/SourceHanSansCN-Medium.otf');
+    src:url('../siyuanfont/SourceHanSansCN-Normal.otf'); 
+    src:url('../siyuanfont/SourceHanSansCN-Regular.otf');
+    font-style: normal;
+    font-weight: normal;
+}
+*/
+
+*{
+    margin: 0;padding: 0;font-family: "微软雅黑";
+}
+a,s,del,u{
+    color: #333;text-decoration: none;
+}
+ul,ol,dl{
+    list-style: none;
+}
+h1,h2,h3,h4,h5,h6,i,em,b{
+    font: normal 12px 'firstfont';
+}
+input,textarea,button,a,select{
+    outline: none;
+}
+textarea{
+    resize: none;
+}
+img{
+    border: none;
+}
+.clear{
+    clear: both;
+}
+.clearfix:after{
+    content: '';display: block;width: 0;height: 0;visibility: hidden;clear: both;
+}

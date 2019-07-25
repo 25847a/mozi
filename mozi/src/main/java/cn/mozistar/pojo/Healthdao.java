@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  *
  */
 public class Healthdao {
+	
     private Integer id;
 
     private Integer hrv;

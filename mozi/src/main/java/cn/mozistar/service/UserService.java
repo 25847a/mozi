@@ -1,12 +1,28 @@
 package cn.mozistar.service;
 
 import java.util.Map;
-
 import cn.mozistar.pojo.User;
+import cn.mozistar.util.DataRow;
 import cn.mozistar.util.ResultBase;
+import cn.mozistar.util.ResultData;
 
 public interface UserService {
 
+	/**
+	 * 首页数据
+	 * @param map
+	 * @return
+	 */
+	public ResultData<DataRow> selectHomePage(DataRow map,ResultData<DataRow> re)throws Exception;
+	/**
+	 * 首页数据
+	 * @param map
+	 * @return
+	 */
+	public ResultData<DataRow> queryUserEqFollowList(DataRow map,ResultData<DataRow> re)throws Exception;
+	
+	
+	
 	/**
 	 * 添加用户
 	 * @param u

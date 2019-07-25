@@ -1,32 +1,23 @@
-.top,.bottom{
+img {
     width: 100%;
 }
 
-.huawei-img,.xiaomi-img{
-   /* display: none;*/
-    border: 2px solid #bbbbbb;
-    border-radius: .6px;
-}
-.huawei,.xiaomi{
-    color: #101010;
-    font-size: 1.5rem;
-    background: #e6e6e6;
-    border: 2px solid #bbbbbb;
-    border-radius: .6rem;
-    padding: 1rem 1.3rem;
+.collapse-title {
+    flex: 1 0 90%;
+    order: 1;
 }
 
-img{
-    width:100%;
-    
+.el-collapse-item__header {
+    flex: 1 0 auto;
+    order: -1;
 }
-.xiaomi-img{
-    position: relative;
+
+.el-collapse-item__header {
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    padding-left: 1rem;
 }
-#top{
-    position: absolute;
-    right: 1.2rem;
-    bottom: 2rem;
-    width: 4rem;
-    height: 4rem;
+
+.el-collapse-item__content .el-collapse-item .el-collapse-item__header{
+    background: #e6e6e6;
 }

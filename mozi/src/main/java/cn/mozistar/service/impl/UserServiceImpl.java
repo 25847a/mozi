@@ -1,6 +1,8 @@
 package cn.mozistar.service.impl;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,17 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
+import cn.mozistar.mapper.HealthMapper;
+import cn.mozistar.mapper.RelationMapper;
 import cn.mozistar.mapper.UserMapper;
+import cn.mozistar.pojo.Health;
 import cn.mozistar.pojo.User;
 import cn.mozistar.service.UserService;
+import cn.mozistar.util.DataRow;
+import cn.mozistar.util.DateUtil;
 import cn.mozistar.util.MD5Util;
 import cn.mozistar.util.ResultBase;
+import cn.mozistar.util.ResultData;
 
 @Transactional
 @Service
@@ -32,7 +40,157 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired 
 	private UserMapper userMapper;
+	@Autowired
+	private HealthMapper healthMapper;
+	@Autowired
+	RelationMapper relationMapper;
 	
+	
+	/**
+	 * 首页数据
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public ResultData<DataRow> selectHomePage(DataRow map, ResultData<DataRow> re) throws Exception {
+			DataRow dataRow = userMapper.selectHomePage(map.getInt("userId"));
+			if(null!=dataRow){
+				Health health=healthMapper.selectByUserId(map.getInt("userId"));
+				dataRow.put("updatetime", DateUtil.sf.format(health.getCreatetime()));
+				dataRow.put("waveform", health.getWaveform());
+				List<DataRow> list = new LinkedList<DataRow>();
+				map = new DataRow();
+				map.put("name", "heartrate");
+				map.put("desc", "心率");
+				map.put("category", "2");
+				map.put("lastestValue", health.getHeartRate() == null ? 0 : health.getHeartRate());
+				map.put("unit", "次/分");
+				list.add(map);
+
+				map = new DataRow();
+				map.put("name", "pressure");
+				map.put("desc", "血压");
+				map.put("category", "3");
+				String a = health.getHighBloodPressure() == null ?"0": health.getHighBloodPressure().toString();
+				String b = health.getLowBloodPressure() == null ? "0" : health.getLowBloodPressure().toString();
+				map.put("lastestValue",a+"/"+b);
+				map.put("unit", "mmHg");
+				list.add(map);
+				
+				map = new DataRow();
+				map.put("name", "mocrocirculation");
+				map.put("desc", "微循环");
+				map.put("category", "4");
+				map.put("lastestValue", health.getMicrocirculation() == null ? 0 : health.getMicrocirculation());
+				map.put("unit", "%");
+				list.add(map);
+				
+				map = new DataRow();
+				map.put("name", "hrv");
+				map.put("desc", "心率变异性HRV");
+				map.put("category", "8");
+				map.put("lastestValue", health.getHrv() == null ? 0 : health.getHrv());
+				map.put("unit", "ms");
+				list.add(map);
+
+				map = new DataRow();
+				map.put("name", "qxygen");
+				map.put("desc", "血氧");
+				map.put("category", "10");
+				map.put("lastestValue", health.getBloodOxygen() == null ? 0 : health.getBloodOxygen());
+				map.put("unit", "%");
+				list.add(map);
+				
+				map = new DataRow();
+				map.put("name", "breathe");
+				map.put("desc", "呼吸");
+				map.put("category", "12");
+				map.put("lastestValue", health.getRespirationrate() == null ? 0 : health.getRespirationrate());
+				map.put("unit", "次/分钟");
+				list.add(map);
+				
+				map = new DataRow();
+				map.put("name", "stepWhen");
+				map.put("desc", "步数");
+				map.put("category", "13");
+				map.put("lastestValue", health.getStepWhen() == null ? 0 : health.getStepWhen());
+				map.put("unit", "步");
+				list.add(map);
+				
+				map = new DataRow();
+				map.put("name", "carrieroad");
+				map.put("desc", "卡路里");
+				map.put("category", "14");
+				map.put("lastestValue", health.getCarrieroad() == null ? 0 : health.getCarrieroad());
+				map.put("unit", "焦耳/天");
+				list.add(map);
+				
+				map = new DataRow();
+				map.put("name", "arrhythmia");
+				map.put("desc", "心率失常");
+				map.put("category", "15");
+				if(health.getArrhythmia()<=3){
+					map.put("lastestValue", "正常");
+				}else{
+					map.put("lastestValue", "异常");
+				}
+			//	map.put("lastestValue", health.getArrhythmia() == null ? 0 : health.getArrhythmia());
+				map.put("unit", "");
+				list.add(map);
+				
+				map = new DataRow();
+				map.put("name", "mood");
+				map.put("desc", "情绪");
+				map.put("category", "16");
+				String value="良好";
+				/*if(health.getMood()>100){
+					value="良好";
+				}else if(health.getMood()>=50 && health.getMood()<=100){
+					value="波动";
+				}else if(health.getMood()<50){
+					value="改变";
+				}*/
+				map.put("lastestValue", value);
+				map.put("unit", "");
+				list.add(map);
+				
+				dataRow.put("detail", list);
+				re.setCode(200);
+				re.setData(dataRow);
+				re.setMessage("查询成功");
+			}else{
+				re.setCode(400);
+				re.setMessage("查询不到用户");
+			}
+		return re;
+	}
+	/**
+	 * 关注列表
+	 * @param u
+	 * @return
+	 */
+	@Override
+	public ResultData<DataRow> queryUserEqFollowList(DataRow map, ResultData<DataRow> re) throws Exception {
+		DataRow dataRow = userMapper.selectHomePage(map.getInt("userId"));
+		if(null!=dataRow){
+			List<DataRow> list = relationMapper.queryObserveInfo(map.getInt("userId"));
+			if(!list.isEmpty()){
+				DataRow row = new DataRow();
+				row.put("users", dataRow);
+				row.put("observer", list);
+				re.setCode(200);
+				re.setData(row);
+				re.setMessage("查询成功");
+			}else{
+				re.setCode(400);
+				re.setMessage("没有观察者");
+			}
+		}else{
+			re.setCode(400);
+			re.setMessage("查询不到用户");
+		}
+		return re;
+	}
 	/**
 	 * 添加用户
 	 * @param u
@@ -54,18 +212,21 @@ public class UserServiceImpl implements UserService{
 		 return b;
 	}
 	
+	
 	public  Integer sendSMS(String phone) {
 
 		int smsMsg = getRandNum(1, 999999);
 		//设置超时时间-可自行调整
-		System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-		System.setProperty("sun.net.client.defaultReadTimeout", "10000");
+			System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
+			System.setProperty("sun.net.client.defaultReadTimeout", "10000");
 		//初始化ascClient需要的几个参数
 		final String product = "Dysmsapi";//短信API产品名称（短信产品名固定，无需修改）
 		final String domain = "dysmsapi.aliyuncs.com";//短信API产品域名（接口地址固定，无需修改）
 		//替换成你的AK
-		final String accessKeyId = "LTAIcx9GAEhZ8XOE";//你的accessKeyId,参考本文档步骤2
-		final String accessKeySecret = "FqdButvAztVgmDSCKw2dpInGTXax6z";//你的accessKeySecret，参考本文档步骤2
+	//	final String accessKeyId = "LTAIcx9GAEhZ8XOE";//你的accessKeyId,参考本文档步骤2墨子星
+	//	final String accessKeySecret = "FqdButvAztVgmDSCKw2dpInGTXax6z";//你的accessKeySecret，参考本文档步骤2墨子星
+		final String accessKeyId = "LTAIoPKXYaWSGR0Z";//你的accessKeyId,参考本文档步骤2
+		final String accessKeySecret = "wXxYLtKC5dCDUCkwXnIAVpsKjlDjpf";//你的accessKeySecret，参考本文档步骤2
 		//初始化ascClient,暂时不支持多region（请勿修改）
 		IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId,
 		accessKeySecret);
@@ -84,7 +245,7 @@ public class UserServiceImpl implements UserService{
 		 //必填:待发送手机号。支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码,批量调用相对于单条调用及时性稍有延迟,验证码类型的短信推荐使用单条调用的方式；发送国际/港澳台消息时，接收号码格式为00+国际区号+号码，如“0085200000000”
 		 request.setPhoneNumbers(phone);
 		 //必填:短信签名-可在短信控制台中找到
-		 request.setSignName("墨子星");
+		 request.setSignName("云采服饰");
 		 //必填:短信模板-可在短信控制台中找到
 		 request.setTemplateCode("SMS_136045082");
 		 //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为

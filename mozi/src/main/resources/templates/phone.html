@@ -1,64 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet"href="../css/phone.css">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
     <title>Document</title>
-    
+    <link rel="stylesheet" href="../css/phone.css">
+    <link rel="stylesheet" href="../css/public.css">
+    <link rel="stylesheet" href="../css/element.css">
+    <script src="../js/vue.js"></script>
+    <script src="../js/element.js"></script>
 </head>
+
 <body>
-    <div class="top">
-        <div class="huawei">
-            <span class="glyphicon glyphicon-chevron-right"></span>
-            华为手机
-        </div>
-        <div class="huawei-img">
-           <img src="../img/huawei.png" alt=""> 
-        </div>
-        
+    <div id="app">
+        <el-collapse v-model="activeNames">
+            <el-collapse-item name="1" v-for="item of phonelist">
+                <span class="collapse-title" slot="title">
+                    {{item.titlt}}
+                </span>
+                <el-collapse-item v-for="sum in item.phone">
+                    <span class="collapse-title" slot="title">
+                        {{sum.text}}
+                    </span>
+                    <div>
+                        <img :src="sum.imgUrl" alt="">
+                    </div>
+                </el-collapse-item>
+            </el-collapse-item>
+        </el-collapse>
     </div>
-    <div class="bottom">
-        <div class="xiaomi">
-            <span class="glyphicon glyphicon-chevron-right"></span>
-            小米手机
-        </div>
-        <div class="xiaomi-img">
-            <img src="../img/xiaomi.png" alt="">
-            <div id="top"></div>
-        </div>
-        
-    </div>
-    <script src="../js/jquery-1.11.3.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
     <script>
-        $(".huawei").click(function(){
-            $(".huawei-img").slideToggle();
-        })
-        
-        $(".xiaomi").click(function(){
-            $(".xiaomi-img").slideToggle();
-        })
-
-        $(function () {
-            $(".huawei").click(function (e) {
-                /*切换折叠指示图标*/
-                $(this).find("span").toggleClass("glyphicon-chevron-down");
-            });
-            $(".xiaomi").click(function (e) {
-                /*切换折叠指示图标*/
-                $(this).find("span").toggleClass("glyphicon-chevron-down");
-            });
-        });
-
-        $(function(){
-            $("#top").click(function() {
-                $("html,body").animate({scrollTop:0}, 500);
-            }); 
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    activeNames: ['1'],
+                    phonelist: [
+                        {
+                            titlt: "Q1:为什么提示设备使用者已经存在?",
+                            phone: [
+                                {
+                                    text: "华为手机",
+                                    imgUrl: "../img/huawei.png"
+                                },
+                                {
+                                    text: "小米手机",
+                                    imgUrl: "../img/xiaomi.png"
+                                },
+                                {
+                                    text: "魅族手机",
+                                    imgUrl: "../img/3_7_3.png"
+                                },
+                                {
+                                    text: "三星手机",
+                                    imgUrl: "../img/3_7_4.png"
+                                },
+                                {
+                                    text: "OPPO手机",
+                                    imgUrl: "../img/3_7_5_OPPO.png"
+                                },
+                                {
+                                    text: "ViVO手机",
+                                    imgUrl: "../img/3_7_6_ViVO (1).png"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
         })
     </script>
 </body>
+
 </html>

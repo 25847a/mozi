@@ -1,11 +1,12 @@
 package cn.mozistar.pojo;
 
+
 /**
  * 用户关系表
  * @author Admin
  *
  */
-public class Relation {
+public class Relation{
 	
     private Integer id;
 
@@ -13,7 +14,7 @@ public class Relation {
     private Integer userId;
 
     //我关注的用户的id
-    private Integer observeId;
+    private transient Integer observeId;
 
     public Integer getId() {
         return id;

@@ -2,10 +2,10 @@ package cn.mozistar.pojo;
 
 import java.util.Date;
 
-public class Health {
+public class Health{
     private Integer id;
 
-	private String phone;
+    protected String phone;
 
 	private Integer hrv;
 
@@ -26,7 +26,12 @@ public class Health {
 	private Integer stepWhen;
 
 	private Integer carrieroad;
+	
+	private Integer arrhythmia;
 
+	private Integer mood;
+	
+	
 	private Integer userId;
 
 	private Date createtime;
@@ -126,6 +131,22 @@ public class Health {
 
 	public void setCarrieroad(Integer carrieroad) {
 		this.carrieroad = carrieroad;
+	}
+
+	public Integer getArrhythmia() {
+		return arrhythmia;
+	}
+
+	public void setArrhythmia(Integer arrhythmia) {
+		this.arrhythmia = arrhythmia;
+	}
+
+	public Integer getMood() {
+		return mood;
+	}
+
+	public void setMood(Integer mood) {
+		this.mood = mood;
 	}
 
 	public Integer getUserId() {

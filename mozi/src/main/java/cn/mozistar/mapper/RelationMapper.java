@@ -1,6 +1,7 @@
 package cn.mozistar.mapper;
 
 import cn.mozistar.pojo.Relation;
+import cn.mozistar.util.DataRow;
 
 import java.util.List;
 
@@ -56,9 +57,14 @@ public interface RelationMapper {
     })
     int updateByPrimaryKey(Relation record);
     
+    @Select("SELECT tt.id as userId,tt.name,tt.avatar FROM relation tp"+
+    		" INNER JOIN user tt"+
+    		" ON tp.observeId=tt.id"+
+    		" WHERE userId=#{userId}")
+	List<DataRow> queryObserveInfo(Integer userId);
+    
     @Select("select * from relation where userId = #{userId}")
 	List<Relation> selectByUserId(Integer userId);
-
     /**
      * 根据 userId 和 observeId 查询
      * @param relation  #{userId}  #{observeId}

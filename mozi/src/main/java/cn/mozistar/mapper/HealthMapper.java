@@ -261,7 +261,7 @@ public interface HealthMapper {
 	@Select("<script>" +
 			"<if test='service != null and service != \"\" and  service == \"year\" '>" +
 			"SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM ("+
-			"SELECT COUNT(*) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y') =#{timedata}"+
+			"SELECT MAX(stepWhen) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y') =#{timedata}"+
 			")tt"+
 			" INNER JOIN ("+
 			"SELECT tp.userId,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -279,7 +279,7 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"month\" '>" +
 			"SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM ("+
-			"SELECT COUNT(*) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata}"+
+			"SELECT MAX(stepWhen) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata}"+
 			")tt"+
 			" INNER JOIN ("+
 			"SELECT tp.userId,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -297,7 +297,7 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"day\" '>" +
 			"SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM ("+
-			"SELECT COUNT(*) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata}"+
+			"SELECT MAX(stepWhen) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata}"+
 			")tt"+
 			" INNER JOIN ("+
 			"SELECT tp.userId,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+
@@ -315,7 +315,7 @@ public interface HealthMapper {
 		"</if>" +
 		"<if test='service != null and service != \"\" and  service == \"week\" '>" +
 			"SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM ("+
-			"SELECT COUNT(*) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
+			"SELECT MAX(stepWhen) AS new,ROUND(AVG(stepWhen)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,userId FROM health WHERE userId=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())"+
 			")tt"+
 			" INNER JOIN ("+
 			"SELECT tp.userId,date_format(tp.createtime,'%H:%i') as createtime FROM health tp"+

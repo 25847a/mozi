@@ -3,10 +3,8 @@ package cn.mozistar.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import cn.mozistar.mapper.HealthdaoMapper;
 import cn.mozistar.pojo.Healthdao;
-import cn.mozistar.pojo.Push;
 import cn.mozistar.service.HealthdaoService;
 
 

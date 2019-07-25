@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
 import cn.mozistar.pojo.Health;
 import cn.mozistar.pojo.Healthdao;
 import cn.mozistar.pojo.InvitationList;
@@ -42,6 +40,7 @@ import cn.mozistar.service.PushService;
 import cn.mozistar.service.RelationService;
 import cn.mozistar.service.UserCodeService;
 import cn.mozistar.service.UserService;
+import cn.mozistar.util.DataRow;
 import cn.mozistar.util.DeleteFileUtil;
 import cn.mozistar.util.HealthtoolUtils;
 import cn.mozistar.util.MD5Util;
@@ -351,7 +350,6 @@ public class UserController {
 		}
 		return re;
 	}
-
 	/**
 	 * 首页数据
 	 * 
@@ -399,14 +397,6 @@ public class UserController {
 			dmap.put("user", map);
 			
 			map = new HashMap<String, Object>();
-			map.put("name", "stepWhen");
-			map.put("desc", "步数");
-			map.put("category", "13");
-			map.put("lastestValue", health.getStepWhen() == null ? 0 : health.getStepWhen());
-			map.put("unit", "步");
-			list.add(map);
-			
-			map = new HashMap<String, Object>();
 			map.put("name", "heartrate");
 			map.put("desc", "心率");
 			map.put("category", "2");
@@ -423,7 +413,15 @@ public class UserController {
 			map.put("lastestValue",a+"/"+b);
 			map.put("unit", "mmHg");
 			list.add(map);
-
+			
+			map = new HashMap<String, Object>();
+			map.put("name", "mocrocirculation");
+			map.put("desc", "微循环");
+			map.put("category", "4");
+			map.put("lastestValue", health.getMicrocirculation() == null ? 0 : health.getMicrocirculation());
+			map.put("unit", "%");
+			list.add(map);
+			
 			map = new HashMap<String, Object>();
 			map.put("name", "hrv");
 			map.put("desc", "心率变异性HRV");
@@ -433,27 +431,11 @@ public class UserController {
 			list.add(map);
 
 			map = new HashMap<String, Object>();
-			map.put("name", "mocrocirculation");
-			map.put("desc", "微循环");
-			map.put("category", "4");
-			map.put("lastestValue", health.getMicrocirculation() == null ? 0 : health.getMicrocirculation());
-			map.put("unit", "%");
-			list.add(map);
-
-			map = new HashMap<String, Object>();
 			map.put("name", "qxygen");
 			map.put("desc", "血氧");
 			map.put("category", "10");
 			map.put("lastestValue", health.getBloodOxygen() == null ? 0 : health.getBloodOxygen());
 			map.put("unit", "%");
-			list.add(map);
-
-			map = new HashMap<String, Object>();
-			map.put("name", "carrieroad");
-			map.put("desc", "卡里路");
-			map.put("category", "14");
-			map.put("lastestValue", health.getCarrieroad() == null ? 0 : health.getCarrieroad());
-			map.put("unit", "焦耳/天");
 			list.add(map);
 			
 			map = new HashMap<String, Object>();
@@ -462,6 +444,51 @@ public class UserController {
 			map.put("category", "12");
 			map.put("lastestValue", health.getRespirationrate() == null ? 0 : health.getRespirationrate());
 			map.put("unit", "次/分钟");
+			list.add(map);
+			
+			map = new HashMap<String, Object>();
+			map.put("name", "stepWhen");
+			map.put("desc", "步数");
+			map.put("category", "13");
+			map.put("lastestValue", health.getStepWhen() == null ? 0 : health.getStepWhen());
+			map.put("unit", "步");
+			list.add(map);
+			
+			map = new HashMap<String, Object>();
+			map.put("name", "carrieroad");
+			map.put("desc", "卡路里");
+			map.put("category", "14");
+			map.put("lastestValue", health.getCarrieroad() == null ? 0 : health.getCarrieroad());
+			map.put("unit", "焦耳/天");
+			list.add(map);
+			
+			map = new HashMap<String, Object>();
+			map.put("name", "arrhythmia");
+			map.put("desc", "心率失常");
+			map.put("category", "15");
+			if(health.getArrhythmia()<=3){
+				map.put("lastestValue", "正常");
+			}else{
+				map.put("lastestValue", "异常");
+			}
+		//	map.put("lastestValue", health.getArrhythmia() == null ? 0 : health.getArrhythmia());
+			map.put("unit", "");
+			list.add(map);
+			
+			map = new HashMap<String, Object>();
+			map.put("name", "mood");
+			map.put("desc", "情绪");
+			map.put("category", "16");
+			String value="良好";
+			/*if(health.getMood()>100){
+				value="良好";
+			}else if(health.getMood()>=50 && health.getMood()<=100){
+				value="波动";
+			}else if(health.getMood()<50){
+				value="改变";
+			}*/
+			map.put("lastestValue", value);
+			map.put("unit", "");
 			list.add(map);
 
 			dmap.put("health", list);
@@ -475,112 +502,40 @@ public class UserController {
 		re.setData(arrayList);
 		return re;
 	}
-
 	/**
-	 * 下拉刷新数据(单独一个用户的数据)
-	 * 
-	 * @param json
+	 * 首页数据
+	 * @param map
+	 * @return
+	*/
+	@RequestMapping("selectHomePage111")
+	@ResponseBody
+	public ResultData<DataRow> selectHomePage(@RequestBody DataRow map) {
+		ResultData<DataRow> re = new ResultData<DataRow>();
+		try {
+			re = userService.selectHomePage(map,re);
+		} catch (Exception e) {
+			logger.error("UserController>>>>>>>>>>>>>>>>>>selectHomePage",e);
+		}
+		return re;
+	} 
+	/**
+	 * 关注列表
+	 * @param u
 	 * @return
 	 */
-	@RequestMapping("selectUserPage")
+	@RequestMapping(value = "queryUserEqFollowList")
 	@ResponseBody
-	public ResultData<List<Object>> selectUserPage(@RequestBody JSONObject json) {
-
-		ResultData<List<Object>> re = new ResultData<>();
-		List<Object> arrayList = new ArrayList<>();
-
-		int userId = json.getInt("userId");
-
-		Map<String, Object> map = null;
-
-		Map<String, Object> dmap = new LinkedHashMap<>();
-
-		map = new LinkedHashMap<>();
-		List<Map<String, Object>> list = new ArrayList<>();
-		User user = userService.getUser(userId);
-		String name = user.getName();
-		Integer id = user.getId();
-		String phone = user.getPhone();
-		String avatar = user.getAvatar();
-		map.put("userId", id);
-		map.put("name", name);
-		map.put("phone", phone);
-		map.put("avatar", avatar);
-		map.put("calibration", user.getCalibration());
-		SimpleDateFormat updatetimedf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
-		String updatetime = updatetimedf.format(new Date());
-		map.put("updatetime", updatetime);
-		dmap.put("user", map);
-
-		Health health = healthService.getHealthByUserId(userId);
-		if (health == null) {
-			health = new Health();
+	public ResultData<DataRow> queryUserEqFollowList(@RequestBody DataRow map) {
+		ResultData<DataRow> re = new ResultData<DataRow>();
+		try {
+			re = userService.queryUserEqFollowList(map,re);
+		} catch (Exception e) {
+			re.setCode(400);
+			re.setMessage("获取设备操作者失败！！！");
+			logger.error("UserEqController>>>>>>>>>>>>>>>>>>queryUserEqFollowList",e);
 		}
-
-		map = new HashMap<String, Object>();
-		map.put("name", "heartrate");
-		map.put("desc", "心率");
-		map.put("category", "2");
-		map.put("lastestValue", health.getHeartRate() == null ? "" : health.getHeartRate());
-		map.put("unit", "次/分");
-		list.add(map);
-
-		map = new HashMap<String, Object>();
-		map.put("name", "pressure");
-		map.put("desc", "血压");
-		map.put("category", "3");
-
-		map.put("lastestValue",
-				health.getHighBloodPressure() == null ? ""
-						: health.getHighBloodPressure() + "/" + health.getLowBloodPressure() == null ? ""
-								: health.getLowBloodPressure());
-		map.put("unit", "mmHg");
-		list.add(map);
-
-		map = new HashMap<String, Object>();
-		map.put("name", "hrv");
-		map.put("desc", "心率变异性HRV");
-		map.put("category", "8");
-		map.put("lastestValue", health.getHrv() == null ? "" : health.getHrv());
-		map.put("unit", "ms");
-		list.add(map);
-
-		map = new HashMap<String, Object>();
-		map.put("name", "mocrocirculation");
-		map.put("desc", "微循环");
-		map.put("category", "4");
-		map.put("lastestValue", health.getMicrocirculation() == null ? "" : health.getMicrocirculation());
-		map.put("unit", "%");
-		list.add(map);
-
-		map = new HashMap<String, Object>();
-		map.put("name", "qxygen");
-		map.put("desc", "血氧");
-		map.put("category", "10");
-		map.put("lastestValue", health.getBloodOxygen() == null ? "" : health.getBloodOxygen());
-		map.put("unit", "%");
-		list.add(map);
-
-		map = new HashMap<String, Object>();
-		map.put("name", "breathe");
-		map.put("desc", "呼吸");
-		map.put("category", "12");
-		map.put("lastestValue", health.getRespirationrate() == null ? "" : health.getRespirationrate());
-		map.put("unit", "次/分钟");
-		list.add(map);
-
-
-		dmap.put("health", list);
-		dmap.put("amedicalreport", health.getAmedicalreport() == null ? "" : health.getAmedicalreport());
-		dmap.put("waveform", health.getWaveform() == null ? "" : health.getWaveform());
-		arrayList.add(dmap);
-
-		re.setCode(200);
-		re.setMessage("获取个人首页");
-		re.setData(arrayList);
 		return re;
 	}
-
 	/**
 	 * 邀请用户
 	 * 
@@ -612,7 +567,6 @@ public class UserController {
 				Relation relation = new Relation();
 				relation.setUserId(user.getId());
 				relation.setObserveId(userId);
-
 				Relation selectRelation = relationService.selectRelation(relation);
 				if (selectRelation == null) {
 					Push push = new Push();
