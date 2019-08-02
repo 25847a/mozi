@@ -1,7 +1,6 @@
 package cn.mozistar.service;
 
-import java.util.Map;
-
+import cn.mozistar.util.DataRow;
 import cn.mozistar.util.ResultData;
 
 public interface PushRecordService {
@@ -11,5 +10,5 @@ public interface PushRecordService {
 	 * @param map
 	 * @return
 	 */
-	public ResultData<Map<String,Object>> queryPushRecordInfo(Map<String,String> map,ResultData<Map<String,Object>> re)throws Exception;
+	public ResultData<DataRow> queryPushRecordInfo(DataRow map,ResultData<DataRow> re)throws Exception;
 }

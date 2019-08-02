@@ -1,8 +1,6 @@
 package cn.mozistar.controller;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.mozistar.pojo.User;
 import cn.mozistar.service.HealthService;
 import cn.mozistar.service.UserService;
+import cn.mozistar.util.DataRow;
 import cn.mozistar.util.DataUtil;
 import cn.mozistar.util.DateUtil;
 import cn.mozistar.util.ResultData;
@@ -26,7 +25,6 @@ import net.sf.json.JSONObject;
 @RequestMapping(value = "/health")
 public class HealthController {
 	
-	private  DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");         
 	
 	@Autowired
 	private HealthService healthservice;
@@ -48,17 +46,17 @@ public class HealthController {
 		data.put("desc", "步数");
 		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
 		
-		List<Chart> chart = healthservice.selecthealth(m);
+		List<DataRow> chart = healthservice.queryHealthstep(m);
 		if (chart != null && chart.size() > 0) {
 		List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();
 			for (int i = 0; i < chart.size(); i++) {
-				Chart j = chart.get(i);
+				DataRow j = chart.get(i);
 				Map<String,Object> chartData = new HashMap<String,Object>();
 				int[] stepWhen = new int[1];
-				stepWhen[0] = j.getStepWhen();
+				stepWhen[0] = j.getInt("stepWhen");
 				chartData.put("value", stepWhen);
-				chartData.put("createtime", format.format(j.getDate()));
-				chartData.put("updateTime",  format.format(j.getDate()));
+				chartData.put("createtime", j.getString("date"));
+				chartData.put("updateTime",  j.getString("date"));
 				bloodpressureList.add(chartData);
 			}
 			Map<String,String> map = healthservice.selectStepWhenInfo(m);
@@ -104,8 +102,8 @@ public class HealthController {
 				bloodpressure[0]=j.getHighBloodPressure();
 				bloodpressure[1]=j.getLowBloodPressure();
 				chartData.put("value", bloodpressure);
-				chartData.put("createtime", format.format(j.getDate()));
-				chartData.put("updateTime", format.format(j.getDate()));
+				chartData.put("createtime", j.getDate());
+				chartData.put("updateTime", j.getDate());
 				bloodpressureList.add(chartData);
 			}
 			Map<String,String> map = healthservice.selectBloodpressureInfo(m);
@@ -156,8 +154,8 @@ public class HealthController {
 				int[] bloodpressure = new int[1];
 				bloodpressure[0] = j.getHeartRate();
 				chartData.put("value", bloodpressure);
-				chartData.put("createtime", format.format(j.getDate()));
-				chartData.put("updateTime",  format.format(j.getDate()));
+				chartData.put("createtime", j.getDate());
+				chartData.put("updateTime",  j.getDate());
 				bloodpressureList.add(chartData);
 			}
 			Map<String,String> map = healthservice.selectHeartRateInfo(m);
@@ -210,8 +208,8 @@ public class HealthController {
 					int[] bloodpressure = new int[1];
 					bloodpressure[0] = j.getHrv();
 					chartData.put("value", bloodpressure);
-					chartData.put("createtime", format.format(j.getDate()));
-					chartData.put("updateTime",  format.format(j.getDate()));
+					chartData.put("createtime", j.getDate());
+					chartData.put("updateTime",  j.getDate());
 					bloodpressureList.add(chartData);
 				}
 				Map<String,String> map =healthservice.selectHrvInfo(m);
@@ -263,8 +261,8 @@ public class HealthController {
 					int[] bloodpressure = new int[1];
 					bloodpressure[0] = j.getMicrocirculation();
 					chartData.put("value", bloodpressure);
-					chartData.put("createtime",format.format(j.getDate()));
-					chartData.put("updateTime",  format.format(j.getDate()));
+					chartData.put("createtime",j.getDate());
+					chartData.put("updateTime",  j.getDate());
 					bloodpressureList.add(chartData);
 	}
 				data.put("chartData", bloodpressureList);

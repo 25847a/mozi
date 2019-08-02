@@ -18,6 +18,7 @@ import cn.mozistar.pojo.Push;
 import cn.mozistar.pojo.PushRecord;
 import cn.mozistar.pojo.User;
 import cn.mozistar.service.HealthService;
+import cn.mozistar.util.DataRow;
 import cn.mozistar.util.JpushClientUtil;
 import cn.mozistar.vo.Chart;
 
@@ -40,6 +41,10 @@ public class HealthServiceImpl implements HealthService {
 
 	public List<Chart> selecthealth(Map<String, Object> m) {
 		return healthMapper.selecthealth(m);
+	}
+	
+	public List<DataRow> queryHealthstep(Map<String, Object> m) {
+		return healthMapper.queryHealthstep(m);
 	}
 	/**
 	 * 查询心率MAX,MIN,AVG,COUNT
@@ -122,7 +127,9 @@ public class HealthServiceImpl implements HealthService {
 		return healthMapper.selectByUserId(userId);
 	}
 
-	
+	public static void main(String[] args) {
+		JpushClientUtil.sendToAlias("116", "的舒张压异常","当前舒张压为","已经超出预警设定值-", null, null);
+	}
 	
 
 }

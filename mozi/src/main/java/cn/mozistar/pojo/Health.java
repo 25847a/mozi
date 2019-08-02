@@ -23,10 +23,6 @@ public class Health{
 
 	private Integer respirationrate;
 	
-	private Integer stepWhen;
-
-	private Integer carrieroad;
-	
 	private Integer arrhythmia;
 
 	private Integer mood;
@@ -115,22 +111,6 @@ public class Health{
 
 	public void setRespirationrate(Integer respirationrate) {
 		this.respirationrate = respirationrate;
-	}
-
-	public Integer getStepWhen() {
-		return stepWhen;
-	}
-
-	public void setStepWhen(Integer stepWhen) {
-		this.stepWhen = stepWhen;
-	}
-
-	public Integer getCarrieroad() {
-		return carrieroad;
-	}
-
-	public void setCarrieroad(Integer carrieroad) {
-		this.carrieroad = carrieroad;
 	}
 
 	public Integer getArrhythmia() {

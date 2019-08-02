@@ -1,6 +1,10 @@
 package cn.mozistar.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +28,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import cn.mozistar.mapper.HealthStepMapper;
 import cn.mozistar.pojo.Health;
 import cn.mozistar.pojo.Healthdao;
+import cn.mozistar.pojo.Healthstep;
 import cn.mozistar.pojo.InvitationList;
 import cn.mozistar.pojo.Positionig;
 import cn.mozistar.pojo.Push;
@@ -41,10 +48,12 @@ import cn.mozistar.service.RelationService;
 import cn.mozistar.service.UserCodeService;
 import cn.mozistar.service.UserService;
 import cn.mozistar.util.DataRow;
+import cn.mozistar.util.DateUtil;
 import cn.mozistar.util.DeleteFileUtil;
 import cn.mozistar.util.HealthtoolUtils;
 import cn.mozistar.util.MD5Util;
 import cn.mozistar.util.MyStringUtil;
+import cn.mozistar.util.ReadProperties;
 import cn.mozistar.util.ResultBase;
 import cn.mozistar.util.ResultData;
 import net.sf.json.JSONObject;
@@ -54,7 +63,7 @@ import net.sf.json.JSONObject;
 public class UserController {
 
 	private final String baseUrl = "http://120.76.201.150:8080/";
-	private final String iconPath = "http://120.76.201.150:8080/avatars/yuncai.png";
+	private final String iconPath = "http://120.76.201.150:8080/avatars/120.png";
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -75,6 +84,8 @@ public class UserController {
 	private PushService pushService;
 	@Autowired
 	private PositionigService positionigService;
+	@Autowired
+	private HealthStepMapper healthStepMapper;
 	/**
 	 * 跳转android操作提示页面
 	 * @return
@@ -94,6 +105,40 @@ public class UserController {
 		ModelAndView mo = new ModelAndView();
 		mo.setViewName("measure");
 		return mo;
+	}
+	/**
+	 * 下载最新版本APK
+	 * @return
+	 */
+	@RequestMapping("downloadAPK")
+	public String downloadAPK(HttpServletResponse response){
+		InputStream in = null;
+		OutputStream out = null;
+		//创建缓冲区
+		byte[] b= new byte[1024];
+		int len = 0;
+		try {
+			String path= "D:\\downloadAPK\\APK\\mozistar.apk";
+			File file = new File(path);
+			 in = new FileInputStream(file);
+			out = response.getOutputStream();
+			response.setContentType("application/force-download");
+			String fileName = file.getName();
+			  //设置响应头，控制浏览器下载该文件 
+		    response.addHeader("Content-Disposition","attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+		    response.setContentLength((int) file.length());
+		    //循环将输入流中的内容读取到缓冲区当中     
+		    while((len=in.read(b))!=-1){
+		    	//输出缓冲区的内容到浏览器，实现文件下载
+		    	out.write(b,0,len);
+		    }
+		    in.close();
+			out.close();
+		} catch (Exception e) {
+			logger.error("UserController>>>>>>>>>>>>>>>downloadAPK",e);
+		}
+		return null;
+		
 	}
 	/**
 	 * 用户登陆
@@ -158,6 +203,7 @@ public class UserController {
 				u.setName(u.getPhone());
 				u.setAvatar(iconPath);
 				u.setAccount(u.getPhone());
+				u.setCoordinate("116.4058905228,39.9129638808");
 				userService.addUser(u);
 
 				re.setCode(200);
@@ -205,7 +251,12 @@ public class UserController {
 				push.setLbpend(100);
 				push.setCreateTime(new Date());
 				pushService.insertSelective(push);
-			
+				Healthstep healthstep = new Healthstep();
+				healthstep.setStepWhen(0);
+				healthstep.setCarrieroad(0);
+				healthstep.setUserId(user.getId());
+				healthstep.setCreatetime(new Date());
+				healthStepMapper.insertHealthstep(healthstep);
 				// 查询邀请列表
 				List<InvitationList> list = invitationListService.selectByPhone(user.getPhone());
 				if (list != null && list.size() > 0) {
@@ -388,13 +439,32 @@ public class UserController {
 			map.put("avatar", avatar);
 			map.put("calibration", user.getCalibration());
 			map.put("coordinate", user.getCoordinate());
+			map.put("version", ReadProperties.getValue("version"));//版本号
+			map.put("versionExplain", ReadProperties.getValue("versionExplain"));//版本说明
 			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
 			Health health = healthService.getHealthByUserId(integer);
+			Healthstep healthStep=healthStepMapper.queryHealthstep(integer);
 			if (health == null) {
 				health = new Health();
 			}
+			if(healthStep ==null){
+				healthStep = new Healthstep();
+			}else{
+				if(!DateUtil.sfDay.format(healthStep.getCreatetime()).equals(DateUtil.sfDay.format(new Date()))){
+					healthStep.setStepWhen(0);
+					healthStep.setCarrieroad(0);
+				}
+			}
 			map.put("updatetime",health.getCreatetime()==null?"":sf.format(health.getCreatetime()));
 			dmap.put("user", map);
+			
+			map = new HashMap<String, Object>();
+			map.put("name", "stepWhen");
+			map.put("desc", "步数");
+			map.put("category", "13");
+			map.put("lastestValue", healthStep.getStepWhen() == null ? 0 : healthStep.getStepWhen());
+			map.put("unit", "步");
+			list.add(map);
 			
 			map = new HashMap<String, Object>();
 			map.put("name", "heartrate");
@@ -415,6 +485,14 @@ public class UserController {
 			list.add(map);
 			
 			map = new HashMap<String, Object>();
+			map.put("name", "hrv");
+			map.put("desc", "心率变异性HRV");
+			map.put("category", "8");
+			map.put("lastestValue", health.getHrv() == null ? 0 : health.getHrv());
+			map.put("unit", "ms");
+			list.add(map);
+			
+			map = new HashMap<String, Object>();
 			map.put("name", "mocrocirculation");
 			map.put("desc", "微循环");
 			map.put("category", "4");
@@ -422,14 +500,6 @@ public class UserController {
 			map.put("unit", "%");
 			list.add(map);
 			
-			map = new HashMap<String, Object>();
-			map.put("name", "hrv");
-			map.put("desc", "心率变异性HRV");
-			map.put("category", "8");
-			map.put("lastestValue", health.getHrv() == null ? 0 : health.getHrv());
-			map.put("unit", "ms");
-			list.add(map);
-
 			map = new HashMap<String, Object>();
 			map.put("name", "qxygen");
 			map.put("desc", "血氧");
@@ -439,27 +509,19 @@ public class UserController {
 			list.add(map);
 			
 			map = new HashMap<String, Object>();
+			map.put("name", "carrieroad");
+			map.put("desc", "卡路里");
+			map.put("category", "14");
+			map.put("lastestValue", healthStep.getCarrieroad() == null ? 0 : healthStep.getCarrieroad());
+			map.put("unit", "焦耳/天");
+			list.add(map);
+			
+			map = new HashMap<String, Object>();
 			map.put("name", "breathe");
 			map.put("desc", "呼吸");
 			map.put("category", "12");
 			map.put("lastestValue", health.getRespirationrate() == null ? 0 : health.getRespirationrate());
 			map.put("unit", "次/分钟");
-			list.add(map);
-			
-			map = new HashMap<String, Object>();
-			map.put("name", "stepWhen");
-			map.put("desc", "步数");
-			map.put("category", "13");
-			map.put("lastestValue", health.getStepWhen() == null ? 0 : health.getStepWhen());
-			map.put("unit", "步");
-			list.add(map);
-			
-			map = new HashMap<String, Object>();
-			map.put("name", "carrieroad");
-			map.put("desc", "卡路里");
-			map.put("category", "14");
-			map.put("lastestValue", health.getCarrieroad() == null ? 0 : health.getCarrieroad());
-			map.put("unit", "焦耳/天");
 			list.add(map);
 			
 			map = new HashMap<String, Object>();
@@ -502,22 +564,6 @@ public class UserController {
 		re.setData(arrayList);
 		return re;
 	}
-	/**
-	 * 首页数据
-	 * @param map
-	 * @return
-	*/
-	@RequestMapping("selectHomePage111")
-	@ResponseBody
-	public ResultData<DataRow> selectHomePage(@RequestBody DataRow map) {
-		ResultData<DataRow> re = new ResultData<DataRow>();
-		try {
-			re = userService.selectHomePage(map,re);
-		} catch (Exception e) {
-			logger.error("UserController>>>>>>>>>>>>>>>>>>selectHomePage",e);
-		}
-		return re;
-	} 
 	/**
 	 * 关注列表
 	 * @param u
@@ -771,35 +817,40 @@ public class UserController {
 	@ResponseBody
 	public ResultData<ResultBase> addHealth(@RequestBody JSONObject json){
 		ResultData<ResultBase> re = new ResultData<ResultBase>();
-		String waveform = json.getString("waveform");
-		Integer userId = json.getInt("userId");
-		User user = userService.getUser(userId);
-		logger.info("userId:"+userId+">>>名字:>>>>>>>>>>>>>>>>>>>>>>>>>"+user.getName());
-		logger.info("userId:"+userId+">>>waveform:>>>>"+json.getString("waveform"));
-		if(!waveform.equals("")){
-			Healthdao healthdao = healthdaoService.getHealthdaoByUserId(userId);
-			
-			re=HealthtoolUtils.addT14Health(json, user,healthdao,userService,healthdaoService, healthService,re,healthsService);
-		}else{
-			String data=json.getString("data");
-			byte[] fromBASE64 = Base64Utils.decodeFromString(data);
-			System.out.println(Arrays.toString(fromBASE64));
-			int headA = fromBASE64[3];//A0	//48:0  49:1 A0:0  A1:1
-			int headB = fromBASE64[5];//0
-			int clothC = fromBASE64[23];//A1
-			int clothD = fromBASE64[25];//0
-			if(headA==48){
-				if(headB==48){
-					re.setMessage("检测到传感器被拔除");
-				}else if(clothC==49){
-					if(clothD==48){
-						re.setMessage("检测到传感器未穿戴");
-					}else{
-						re.setMessage("采集数据失败,请检查传感器");
+		try {
+			String waveform = json.getString("waveform");
+			Integer userId = json.getInt("userId");
+			User user = userService.getUser(userId);
+			logger.info("userId:"+userId+">>>名字:>>>>>>>>>>>>>>>>>>>>>>>>>"+user.getName());
+			logger.info("userId:"+userId+">>>waveform:>>>>"+json.getString("waveform"));
+			if(!waveform.equals("")){
+				Healthdao healthdao = healthdaoService.getHealthdaoByUserId(userId);
+				
+				re=HealthtoolUtils.addT14Health(json, user,healthdao,userService,healthdaoService, healthService,re,healthsService,healthStepMapper);
+			}else{
+				String data=json.getString("data");
+				byte[] fromBASE64 = Base64Utils.decodeFromString(data);
+				System.out.println(Arrays.toString(fromBASE64));
+				int headA = fromBASE64[3];//A0	//48:0  49:1 A0:0  A1:1
+				int headB = fromBASE64[5];//0
+				int clothC = fromBASE64[23];//A1
+				int clothD = fromBASE64[25];//0
+				if(headA==48){
+					if(headB==48){
+						re.setMessage("检测到传感器被拔除");
+					}else if(clothC==49){
+						if(clothD==48){
+							re.setMessage("检测到传感器未穿戴");
+						}else{
+							re.setMessage("采集数据失败,请检查传感器");
+						}
 					}
 				}
+				re.setCode(400);
 			}
+		} catch (Exception e) {
 			re.setCode(400);
+			re.setMessage("失败");
 		}
 		return re;
 	}

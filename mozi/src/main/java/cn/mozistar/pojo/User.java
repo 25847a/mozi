@@ -52,6 +52,7 @@ public class User {
     private Date updatetime;
 
     private String code;
+    
     private String coordinate;
 
     public Integer getId() {

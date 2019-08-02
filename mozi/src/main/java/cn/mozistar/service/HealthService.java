@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.mozistar.pojo.Health;
+import cn.mozistar.util.DataRow;
 import cn.mozistar.vo.Chart;
 
 public interface HealthService {
@@ -17,8 +18,18 @@ public interface HealthService {
 	 * @return
 	 */
     Health getHealthByUserId(Integer userId);
-
+    /**
+     * 除了步数卡路里的健康数据
+     * @param m
+     * @return
+     */
 	List<Chart> selecthealth(Map<String, Object> m);
+	 /**
+     * 步数卡路里的健康数据
+     * @param m
+     * @return
+     */
+	List<DataRow> queryHealthstep(Map<String, Object> m);
 	/**
 	 * 查询心率的各项数值
 	 * @param m

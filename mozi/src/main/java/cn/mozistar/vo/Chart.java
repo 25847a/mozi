@@ -1,9 +1,5 @@
 package cn.mozistar.vo;
 
-import java.util.Date;
-
-import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 这个是返回图表数据的实体类(啊健)
@@ -26,12 +22,8 @@ public class Chart {
 
 	 private Integer respirationrate;
 	 
-	 private Integer stepWhen;
-	 
-	 private Integer carrieroad;
-	 
-	 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-	 private Date date;
+//	 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+	 private String date;
 
 	public Integer getHrv() {
 		return hrv;
@@ -89,27 +81,11 @@ public class Chart {
 		this.respirationrate = respirationrate;
 	}
 
-	public Integer getStepWhen() {
-		return stepWhen;
-	}
-
-	public void setStepWhen(Integer stepWhen) {
-		this.stepWhen = stepWhen;
-	}
-
-	public Integer getCarrieroad() {
-		return carrieroad;
-	}
-
-	public void setCarrieroad(Integer carrieroad) {
-		this.carrieroad = carrieroad;
-	}
-
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
     

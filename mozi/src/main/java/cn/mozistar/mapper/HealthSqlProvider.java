@@ -40,14 +40,6 @@ public class HealthSqlProvider {
         if (record.getMicrocirculation() != null) {
             sql.VALUES("microcirculation", "#{microcirculation,jdbcType=INTEGER}");
         }
-        
-        if (record.getStepWhen() != null) {
-            sql.VALUES("stepWhen", "#{stepWhen,jdbcType=INTEGER}");
-        }
-        
-        if (record.getCarrieroad() != null) {
-            sql.VALUES("carrieroad", "#{carrieroad,jdbcType=INTEGER}");
-        }
         if (record.getArrhythmia() != null) {
             sql.VALUES("arrhythmia", "#{arrhythmia,jdbcType=INTEGER}");
         }

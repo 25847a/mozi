@@ -72,7 +72,6 @@ public class UserSqlProvider {
         if (record.getCode() != null) {
             sql.VALUES("code", "#{code,jdbcType=VARCHAR}");
         }
-        
         return sql.toString();
     }
 

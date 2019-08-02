@@ -7,9 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import com.google.gson.Gson;
+
+import cn.mozistar.mapper.HealthStepMapper;
 import cn.mozistar.pojo.Health;
 import cn.mozistar.pojo.Healthdao;
 import cn.mozistar.pojo.Healths;
+import cn.mozistar.pojo.Healthstep;
 import cn.mozistar.pojo.User;
 import cn.mozistar.service.HealthService;
 import cn.mozistar.service.HealthdaoService;
@@ -94,7 +97,7 @@ public class HealthtoolUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ResultData<ResultBase> addT14Health(JSONObject json,User user,Healthdao healthdao ,UserService userService,HealthdaoService healthdaoService,HealthService healthService,ResultData<ResultBase> re,HealthsService healthsService){
+	public static ResultData<ResultBase> addT14Health(JSONObject json,User user,Healthdao healthdao ,UserService userService,HealthdaoService healthdaoService,HealthService healthService,ResultData<ResultBase> re,HealthsService healthsService,HealthStepMapper healthStepMapper){
 		try{
 				//健康数据
 				String data = json.getString("data");
@@ -173,8 +176,6 @@ public class HealthtoolUtils {
 						
 							healthsService.insertSelective(healths)	;
 							
-							Health h = healthService.getHealthByUserId(user.getId());
-							
 							Health health = new Health();
 							//血压,心率
 							health = DataParsing.bloodPressure(health, healthdao, heartRate, bloodrArr[0], bloodrArr[1]);
@@ -188,12 +189,36 @@ public class HealthtoolUtils {
 							health=DataParsing.DataMicrocirculation(health, healthdao, microcir);
 							//呼吸
 							health=DataParsing.respirationrate(health, healthdao, respiration);
-							//步数
-							System.out.println(json.getInt("stepWhen"));
-							health.setStepWhen(h.getStepWhen()+json.getInt("stepWhen"));
-							//卡里路
-							System.out.println(h.getCarrieroad()+h.getStepWhen()*2);
-							health.setCarrieroad(h.getCarrieroad()+json.getInt("stepWhen")/20);
+							
+							Healthstep healthstep = new Healthstep();
+							Healthstep step= healthStepMapper.queryHealthstep(user.getId());
+							if(step==null){
+								step = new Healthstep();
+								step.setCarrieroad(0);
+								step.setStepWhen(0);
+							}
+							//步数、卡路里
+							if(DateUtil.sfDay.format(step.getCreatetime()).equals(DateUtil.sfDay.format(new Date()))){
+								if(step.getStepWhen()>json.getInt("stepWhen")){//7411>0
+									healthstep.setStepWhen(step.getStepWhen());
+									healthstep.setCarrieroad(step.getCarrieroad());
+									
+								}else{
+									healthstep.setStepWhen(json.getInt("stepWhen"));
+									int num = json.getInt("stepWhen")-step.getStepWhen();
+									healthstep.setCarrieroad(step.getCarrieroad()+num/20);
+									//步数
+									System.out.println(step.getStepWhen());
+									//卡里路
+									System.out.println(step.getCarrieroad());
+								}
+							}else{
+								healthstep.setStepWhen(json.getInt("stepWhen"));
+								healthstep.setCarrieroad(json.getInt("stepWhen")/20);
+							}
+							
+							
+							
 							//心率不齐
 							health.setArrhythmia(Integer.valueOf(arrhythmia));
 							//情绪
@@ -204,8 +229,11 @@ public class HealthtoolUtils {
 							health.setPhone(user.getPhone());
 							health.setWaveform(sb.toString());
 							healthService.insertSelective(health);
+							healthstep.setUserId(user.getId());
+							healthstep.setCreatetime(new Date());
+							healthStepMapper.insertHealthstep(healthstep);
 							if(json.getString("coordinate").equals("0")){
-								user.setCoordinate(json.getString("coordinate"));
+								user.setCoordinate("116.4058905228,39.9129638808");
 								userService.update(user);
 							}
 							//预警功能
@@ -214,8 +242,7 @@ public class HealthtoolUtils {
 					re.setCode(200);
 					re.setMessage("操作成功");
 				}catch (Exception e) {
-					e.printStackTrace();
-					logger.info("数据解析出错");
+					logger.info("addT14Health>>>>>>>>>>>>>>>>>>>>数据解析出错",e);
 					re.setMessage("数据采集失败,请检查传感器");
 					re.setCode(400);
 				}

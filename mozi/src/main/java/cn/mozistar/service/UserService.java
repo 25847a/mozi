@@ -8,12 +8,7 @@ import cn.mozistar.util.ResultData;
 
 public interface UserService {
 
-	/**
-	 * 首页数据
-	 * @param map
-	 * @return
-	 */
-	public ResultData<DataRow> selectHomePage(DataRow map,ResultData<DataRow> re)throws Exception;
+	
 	/**
 	 * 首页数据
 	 * @param map
