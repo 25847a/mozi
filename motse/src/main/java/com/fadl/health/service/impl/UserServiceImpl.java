@@ -23,14 +23,19 @@ import com.fadl.common.DateUtil;
 //import com.fadl.common.GB2312Utils;
 import com.fadl.common.HttpClientUtil;
 import com.fadl.common.IConstants;
+import com.fadl.common.MD5Util;
 import com.fadl.common.ReadProperties;
 import com.fadl.common.SessionUtil;
+import com.fadl.health.dao.MemberMapper;
+import com.fadl.health.dao.PositionigMapper;
 import com.fadl.health.dao.UserMapper;
 import com.fadl.health.entity.Equipment;
 import com.fadl.health.entity.EquipmentData;
 import com.fadl.health.entity.Health;
 import com.fadl.health.entity.HealthNew;
 import com.fadl.health.entity.Healthdao;
+import com.fadl.health.entity.Member;
+import com.fadl.health.entity.Positionig;
 import com.fadl.health.entity.Push;
 import com.fadl.health.entity.User;
 import com.fadl.health.entity.UserEq;
@@ -76,6 +81,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	HealthNewService healthNewService;
 	@Autowired
 	AgentMapper agentMapper;
+	@Autowired
+	MemberMapper memberMapper;
+	@Autowired
+	PositionigMapper positionigMapper;
 	
 	/**
 	 * 查询使用者男女数量饼状图 
@@ -143,6 +152,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	public DataRow updateLoveInfo(Map<String, String> map, DataRow messageMap) throws SQLException {
 		EntityWrapper<User> ew = new EntityWrapper<User>();
 		ew.eq("imei", map.get("imei"));
+		ew.eq("isDelete", 0);
 		User user =this.selectOne(ew);
 		if(user.getLove()==0){
 			user.setLove(1);
@@ -182,7 +192,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		}else{
 			push.setHeartNotifyOn(1);
 			push.setBoolPreNotifyOn(1);
-			push.setFallNotifyOn(1);
 			push.setCreateTime(DateUtil.sf.format(new Date()));
 			pushService.insert(push);
 		}
@@ -370,59 +379,57 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 				if(uq==null){
 					user.setJfdataUpdateTime("5");
 					user.setCreatetime(DateUtil.sf.format(new Date()));
-					user.setAtlasttime(DateUtil.sf.format(new Date()));
+					user.setPassword(MD5Util.MD5(user.getPassword()));
+					user.setAge(DateUtil.getAgeByBirth(DateUtil.sfDay.parse(user.getBorn())));
+					user.setAvatar("http://120.76.201.150:8080/avatars/120.png");
 					this.insert(user);//使用者
+					//插入会员表
+					Member me = new Member();
+					me.setUserId(user.getId());
+					me.setEndTime(DateUtil.sf.format(DateUtil.getNextDay(20)));
+					memberMapper.insert(me);
 					boolean jfstatus = HttpClientUtil.registered(IConstants.channel_id + String.valueOf(user.getId()),"12345", "123456");
 					if(jfstatus){
-						//设备与监护人的关联关系
-						UserEq ue = new UserEq();
 						//就是mid
 						EntityWrapper<User> ea = new EntityWrapper<User>();
 						ea.eq("account", telephone);
 						User use =this.selectOne(ea);
-						ue.setUserId(use.getId());
-						ue.setEqId(e.getId());
-						ue.setTypeof(0);
-						//设备与使用者的关联关系
-						UserEq uue = new UserEq();
-						uue.setUserId(user.getId());
-						uue.setEqId(e.getId());
-						uue.setTypeof(2);
+						
+						EntityWrapper<UserEq> ex = new EntityWrapper<UserEq>();
+						ex.eq("user_id", use.getId());
+						ex.eq("follow", 1);
+						UserEq ez =userEqService.selectOne(ex);
+						UserEq ue = new UserEq();
+						if(ez==null){
+							//设备与监护人的关联关系
+							//就是mid
+							ue.setUserId(use.getId());
+							ue.setEqId(e.getId());
+							ue.setTypeof(0);
+							ue.setFollow(1);
+						}else{
+							//设备与监护人的关联关系
+							//就是mid
+							ue.setUserId(use.getId());
+							ue.setEqId(e.getId());
+							ue.setTypeof(0);
+							ue.setFollow(0);
+						}
 						userEqService.insert(ue);
-						userEqService.insert(uue);
+						//设备与使用者的关联关系
+						ue.setUserId(user.getId());
+						ue.setEqId(e.getId());
+						ue.setTypeof(2);
+						ue.setFollow(0);
+						userEqService.insert(ue);
 						//////////////////////////////////////
 						EquipmentData data = new EquipmentData();
 						data.setUserId(user.getId());//使用者ID
-						data.setHeartrate(0);
-						data.setHighpressure(0);
-						data.setBottompressure(0);
-						data.setBloodpressure(0);
-						data.setMocrocirculation(0);
-						data.setBreathe(0);
-						data.setSleeping(0.0);
 						data.setStepWhen(0);
 						data.setCarrieroad(0);
-						data.setSedentary("0");
-						data.setMovementstate(0);
-						data.setBodytemp(0);
-						data.setHumidity(0);
-						data.setCrash(0);
 						data.setCreatetime(DateUtil.sf.format(new Date()));
-						data.setQxygen(0);
-						data.setSleepingS(0);
-						data.setRunS(0);
-						data.setStepEach(0);
-						data.setHrv(0);
-						data.setMood(0);
 						equipmentDataService.insert(data);
 						Health bean = new Health();
-						bean.setHrv(0);
-						bean.setSbpAve(0);
-						bean.setDbpAve(0);
-						bean.setHeartrate(0);
-						bean.setBloodoxygen(0);
-						bean.setMicrocirculation(0);
-						bean.setRespirationrate(0);
 						bean.setPhone("mozistar"+user.getId());
 						bean.setImei(user.getImei());
 						bean.setCreatetime(DateUtil.sf.format(new Date()));
@@ -431,13 +438,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 					    Push push = new Push();
 					    push.setUserId(user.getId());//使用者ID
 					    push.setAlias(use.getId());//监护者ID
-					    push.setAllNotifyOn(1);
-					    push.setHeartHigThd(100);
-					    push.setHeartLowThd(55);
-					    push.setHbpstart(80);
-					    push.setHbpend(140);
-					    push.setLbpstart(60);
-					    push.setLbpend(100);
 					    pushService.insert(push);
 					    Healthdao healthdao = new Healthdao();
 						healthdao.setCreatetime(DateUtil.sf.format(new Date()));
@@ -451,7 +451,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 						healthdao.setSbpAve(120);//高压
 						healthdao.setDbpAve(80);//低压
 						healthdaoService.insert(healthdao);
-						
+						Positionig p = new Positionig();
+						p.setImei(user.getImei());
+						p.setPositioningData("39.9134905988:116.4072638138");
+						p.setPositioningS("0");
+						positionigMapper.insert(p);
 						HealthNew healthnew = new HealthNew();
 						healthnew.setCreatetime(DateUtil.sf.format(new Date()));
 						healthnew.setPhone("mozistar"+user.getId());

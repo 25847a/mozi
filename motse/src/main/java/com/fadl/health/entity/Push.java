@@ -45,18 +45,6 @@ public class Push extends Model<Push> {
      */
     private Integer boolPreNotifyOn;
     /**
-     * 跌倒通知开关 
-     */
-    private Integer fallNotifyOn;
-    /**
-     * 步数通知开关 
-     */
-    private Integer walkNotifyOn;
-    /**
-     * 围栏通知开关
-     */
-    private Integer fenceNotifyOn;
-    /**
      * 心率低阈值 
      */
     private Integer heartLowThd;
@@ -64,14 +52,6 @@ public class Push extends Model<Push> {
      * 心率通知高阈值 
      */
     private Integer heartHigThd;
-    /**
-     * 血压通知低阈值 
-     */
-    private Integer boolLowThd;
-    /**
-     * 血压通知高阈值 
-     */
-    private Integer boolHigThd;
     /**
      * 创建时间 
      */
@@ -146,30 +126,6 @@ public class Push extends Model<Push> {
         this.boolPreNotifyOn = boolPreNotifyOn;
     }
 
-    public Integer getFallNotifyOn() {
-        return fallNotifyOn;
-    }
-
-    public void setFallNotifyOn(Integer fallNotifyOn) {
-        this.fallNotifyOn = fallNotifyOn;
-    }
-
-    public Integer getWalkNotifyOn() {
-        return walkNotifyOn;
-    }
-
-    public void setWalkNotifyOn(Integer walkNotifyOn) {
-        this.walkNotifyOn = walkNotifyOn;
-    }
-
-    public Integer getFenceNotifyOn() {
-        return fenceNotifyOn;
-    }
-
-    public void setFenceNotifyOn(Integer fenceNotifyOn) {
-        this.fenceNotifyOn = fenceNotifyOn;
-    }
-
     public Integer getHeartLowThd() {
         return heartLowThd;
     }
@@ -186,21 +142,6 @@ public class Push extends Model<Push> {
         this.heartHigThd = heartHigThd;
     }
 
-    public Integer getBoolLowThd() {
-        return boolLowThd;
-    }
-
-    public void setBoolLowThd(Integer boolLowThd) {
-        this.boolLowThd = boolLowThd;
-    }
-
-    public Integer getBoolHigThd() {
-        return boolHigThd;
-    }
-
-    public void setBoolHigThd(Integer boolHigThd) {
-        this.boolHigThd = boolHigThd;
-    }
 
     public String getCreateTime() {
         return createTime;
@@ -264,13 +205,8 @@ public class Push extends Model<Push> {
         ", allNotifyOn=" + allNotifyOn +
         ", heartNotifyOn=" + heartNotifyOn +
         ", boolPreNotifyOn=" + boolPreNotifyOn +
-        ", fallNotifyOn=" + fallNotifyOn +
-        ", walkNotifyOn=" + walkNotifyOn +
-        ", fenceNotifyOn=" + fenceNotifyOn +
         ", heartLowThd=" + heartLowThd +
         ", heartHigThd=" + heartHigThd +
-        ", boolLowThd=" + boolLowThd +
-        ", boolHigThd=" + boolHigThd +
         ", createTime=" + createTime +
         ", updateTime=" + updateTime +
         ", lbpstart=" + lbpstart +

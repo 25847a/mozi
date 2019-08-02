@@ -62,7 +62,7 @@ public class NurseServiceImpl extends ServiceImpl<NurseMapper, Nurse> implements
 	public DataRow queryNurseInfo(Admin admin, DataRow messageMap) throws SQLException {
 		EntityWrapper<Nurse> ew = new EntityWrapper<Nurse>();
 		Agent agent =agentMapper.queryAgentInfo(admin.getId());
-		ew.eq("agenId", agent.getId());
+		ew.eq("agentId", agent.getId());
 		List<Nurse> list =this.selectList(ew);
 		messageMap.initSuccess(list);
 		return messageMap;
@@ -75,7 +75,7 @@ public class NurseServiceImpl extends ServiceImpl<NurseMapper, Nurse> implements
 	@Override
 	public DataRow addNurseInfo(Nurse nurse, DataRow messageMap) throws SQLException {
 		Agent agent =agentMapper.queryAgentInfo(SessionUtil.getSessionAdmin().getId());
-		nurse.setAgenId(agent.getId());
+		nurse.setAgentId(agent.getId());
 		int row =nurseMapper.insert(nurse);
 		if(row>0){
 			messageMap.initSuccess();

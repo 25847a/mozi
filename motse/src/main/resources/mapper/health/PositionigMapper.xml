@@ -7,13 +7,13 @@
         <id column="id" property="id" />
         <result column="positioning_s" property="positioningS" />
         <result column="positioning_data" property="positioningData" />
-        <result column="cratetime" property="cratetime" />
+        <result column="createtime" property="createtime" />
         <result column="imei" property="imei" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, positioning_s AS positioningS, positioning_data AS positioningData, cratetime, imei
+        id, positioning_s AS positioningS, positioning_data AS positioningData, createtime, imei
     </sql>
 
 </mapper>

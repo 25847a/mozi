@@ -1,10 +1,14 @@
 package com.fadl.health.service.impl;
 
 import com.fadl.health.entity.Equipment;
+import com.fadl.health.entity.Positionig;
+import com.fadl.health.entity.Sensorstatus;
 import com.fadl.common.DataRow;
 import com.fadl.common.DateUtil;
 import com.fadl.common.HttpClientUtil;
 import com.fadl.health.dao.EquipmentMapper;
+import com.fadl.health.dao.PositionigMapper;
+import com.fadl.health.dao.SensorstatusMapper;
 import com.fadl.health.service.EquipmentService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import java.sql.SQLException;
@@ -33,6 +37,12 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 	
 	@Autowired
 	EquipmentMapper equipmentMapper;
+	@Autowired
+	PositionigMapper positionigMapper;
+	@Autowired
+	SensorstatusMapper sensorstatusMapper;
+	
+	
 	
 	/**
 	 * 获取设备在线离线数量饼状图
@@ -67,7 +77,23 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
      */
 	@Override
 	public DataRow updateBluetooth(Equipment equipment, DataRow messageMap) throws Exception {
-		messageMap=HttpClientUtil.connectBluetooth(equipment);
+		//点击绑定,需要把蓝牙名称更新了
+		Equipment e= equipmentMapper.selectById(equipment.getId());
+		if(e.getBluetoothList() != null && !e.getBluetoothList().equals("[]") && !e.getBluetoothList().equals("")){
+			String bluetooths = e.getBluetoothList().substring(1,e.getBluetoothList().length()-1).replace("\"", "");
+			String[] bluetoothList = bluetooths.split(",");
+			if(bluetoothList.length==1){
+				e.setBluetoothList("[\""+equipment.getBluetoothName()+"\"]");
+			}else{
+				e.setBluetoothList("[\""+equipment.getBluetoothName()+"\",\""+bluetoothList[1]+"\"]");
+			}
+			int row =equipmentMapper.updateById(e);
+			if(row>0){
+				messageMap=HttpClientUtil.connectBluetooth(equipment);
+			}else{
+				messageMap.initFial("修改蓝牙名称失败");
+			}
+		}
 		return messageMap;
 	}
 	/**
@@ -161,6 +187,23 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 					adde.setAgentid(id);
 					adde.setModel("LN073OV1");
 					equipmentMapper.insert(adde);
+					Positionig p = new Positionig();
+					p.setImei(imei);
+					p.setCreatetime(DateUtil.sf.format(new Date()));
+					p.setPositioningData("39.9134905988:116.4072638138");
+					p.setPositioningS("0");
+					positionigMapper.insert(p);
+					Sensorstatus s = new Sensorstatus();
+					s.setImei(imei);
+					s =sensorstatusMapper.selectOne(s);
+					if(s==null){
+						s = new Sensorstatus();
+						s.setImei(imei);
+						s.setH("H:1");
+						s.setG("G:1");
+						s.setAdddate(DateUtil.sf.format(new Date()));
+						sensorstatusMapper.insert(s);
+					}
 				}
 			}
 		}else{
@@ -184,6 +227,23 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 				adde.setAgentid(id);
 				adde.setModel("LN073OV1");
 				equipmentMapper.insert(adde);
+				Positionig p = new Positionig();
+				p.setImei(imei);
+				p.setCreatetime(DateUtil.sf.format(new Date()));
+				p.setPositioningData("39.9134905988:116.4072638138");
+				p.setPositioningS("0");
+				positionigMapper.insert(p);
+				Sensorstatus s = new Sensorstatus();
+				s.setImei(imei);
+				s =sensorstatusMapper.selectOne(s);
+				if(s==null){
+					s = new Sensorstatus();
+					s.setImei(imei);
+					s.setH("H:1");
+					s.setG("G:1");
+					s.setAdddate(DateUtil.sf.format(new Date()));
+					sensorstatusMapper.insert(s);
+				}
 			}
 		}
 		messageMap.initSuccess();

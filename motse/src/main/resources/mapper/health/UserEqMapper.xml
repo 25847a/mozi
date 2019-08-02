@@ -9,6 +9,7 @@
         <result column="eq_id" property="eqId" />
         <result column="typeof" property="typeof" />
         <result column="authorized" property="authorized" />
+        <result column="follow" property="follow" />
     </resultMap>
 
     <!-- 通用查询结果列 -->

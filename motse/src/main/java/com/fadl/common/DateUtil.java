@@ -100,7 +100,20 @@ public class DateUtil {
             return date.toString();
         }
     }
-    
+    /**
+     * 数据day获取往后推算的时间
+     * @param day
+     * @return
+     */
+    public static Date getNextDay(int day){
+    	Date date = new Date();
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
+    	cal.add(Calendar.DAY_OF_MONTH, day);
+    	date = cal.getTime();
+		return date;
+    	
+    }
     /**
      * 格式化时间
      * @param time
@@ -112,7 +125,33 @@ public class DateUtil {
     	SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
         return sdf.parse(time);
     }
-    
+    /**
+     * 计算年龄
+     * @param birthday
+     * @return
+     */
+    public static int getAgeByBirth(Date birthday) {
+        int age = 0;
+        try {
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());// 当前时间
+
+            Calendar birth = Calendar.getInstance();
+            birth.setTime(birthday);
+
+            if (birth.after(now)) {//如果传入的时间，在当前时间的后面，返回0岁
+                age = 0;
+            } else {
+                age = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
+                if (now.get(Calendar.DAY_OF_YEAR) > birth.get(Calendar.DAY_OF_YEAR)) {
+                    age += 1;
+                }
+            }
+            return age;
+        } catch (Exception e) {//兼容性更强,异常后返回数据
+           return 0;
+        }
+    }
     /**
      * 计算两个时间之间相差的天数
      * @param start

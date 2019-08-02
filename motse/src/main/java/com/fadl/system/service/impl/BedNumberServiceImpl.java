@@ -62,7 +62,7 @@ public class BedNumberServiceImpl extends ServiceImpl<BedNumberMapper, BedNumber
 	@Override
 	public DataRow addBedInfo(BedNumber bedNumber, DataRow messageMap) throws SQLException {
 		Agent agent =agentMapper.queryAgentInfo(SessionUtil.getSessionAdmin().getId());
-		bedNumber.setAgenId(agent.getId());
+		bedNumber.setAgentId(agent.getId());
 		int row =bedNumberMapper.insert(bedNumber);
 		if(row>0){
 			messageMap.initSuccess();
@@ -109,7 +109,7 @@ public class BedNumberServiceImpl extends ServiceImpl<BedNumberMapper, BedNumber
 	public DataRow queryBedNumberInfo(Admin admin, DataRow messageMap) throws SQLException {
 		EntityWrapper<BedNumber> ew = new EntityWrapper<BedNumber>();
 		Agent agent =agentMapper.queryAgentInfo(admin.getId());
-		ew.eq("agenId", agent.getId());
+		ew.eq("agentId", agent.getId());
 		List<BedNumber> list =this.selectList(ew);
 		messageMap.initSuccess(list);
 		return messageMap;

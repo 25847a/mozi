@@ -29,7 +29,7 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 public class MysqlGenerator {
 	private static String packageName="";    //文件路径
     private static String authorName="jian";     //作者
-    private static String table="usercode";                  //table名字
+    private static String table="positionig";                  //table名字
     private static String prefix="";                     //table前缀
     private static String modulePack=".health";//需要命名模块则需要加. 如：.user
     private static String moduleMapper="health/";//需要命名模块则需要加  / 如：  user/
@@ -78,7 +78,7 @@ public class MysqlGenerator {
                         .setDriverName("com.mysql.jdbc.Driver")
                         .setUsername("root")
                         .setPassword("123456")
-                        .setUrl("jdbc:mysql://127.0.0.1:3306/moxi_jian?characterEncoding=utf8")
+                        .setUrl("jdbc:mysql://127.0.0.1:3306/mozi?characterEncoding=utf8")
         ).setStrategy(
                 // 策略配置
                 new StrategyConfig()

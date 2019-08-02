@@ -33,7 +33,7 @@ public class BedNumber extends Model<BedNumber> {
     /**
      * 角色ID
      */
-    private Long agenId;
+    private Long agentId;
     /**
      * 创建时间
      */
@@ -72,12 +72,12 @@ public class BedNumber extends Model<BedNumber> {
         this.bed = bed;
     }
 
-    public Long getAgenId() {
-        return agenId;
+    public Long getAgentId() {
+        return agentId;
     }
 
-    public void setAgenId(Long agenId) {
-        this.agenId = agenId;
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
     }
 
     public String getCreateDate() {
@@ -122,7 +122,7 @@ public class BedNumber extends Model<BedNumber> {
         return "BedNumber{" +
         "id=" + id +
         ", bed=" + bed +
-        ", agenId=" + agenId +
+        ", agentId=" + agentId +
         ", createDate=" + createDate +
         ", updateDate=" + updateDate +
         ", creater=" + creater +

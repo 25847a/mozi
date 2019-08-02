@@ -49,14 +49,6 @@ public class User extends Model<User> {
      */
     private String calibration;
     /**
-     * 设置围栏的半径,单位米
-     */
-    private String radius;
-    /**
-     * 设置围栏的中心点(圆心)坐标
-     */
-    private String midpoint;
-    /**
      * 健康数据的上传时间
      */
     private String jfdataUpdateTime;
@@ -64,10 +56,6 @@ public class User extends Model<User> {
      * 注册时间
      */
     private String createtime;
-    /**
-     * 最后登陆时间
-     */
-    private String atlasttime;
     /**
      * 密码
      */
@@ -89,17 +77,22 @@ public class User extends Model<User> {
      */
     private String gender;
     /**
+     * 省	
+     */
+    private String province;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String area;
+    
+    /**
      * 邮箱地址
      */
     private String address;
-    /**
-     * 微信
-     */
-    private String wechat;
-    /**
-     * QQ号码
-     */
-    private String qq;
     /**
      * 体重
      */
@@ -120,10 +113,6 @@ public class User extends Model<User> {
      * 通知的步行数
      */
     private String walkCount;
-    /**
-     * 上次的通知时间
-     */
-    private String walkPushTime;
     /**
      * 1.重点关爱  0.不重点关爱
      */
@@ -200,21 +189,30 @@ public class User extends Model<User> {
         this.calibration = calibration;
     }
 
-    public String getRadius() {
-        return radius;
-    }
+    public String getProvince() {
+		return province;
+	}
 
-    public void setRadius(String radius) {
-        this.radius = radius;
-    }
+	public void setProvince(String province) {
+		this.province = province;
+	}
 
-    public String getMidpoint() {
-        return midpoint;
-    }
+	public String getCity() {
+		return city;
+	}
 
-    public void setMidpoint(String midpoint) {
-        this.midpoint = midpoint;
-    }
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
 
     public String getJfdataUpdateTime() {
         return jfdataUpdateTime;
@@ -230,14 +228,6 @@ public class User extends Model<User> {
 
     public void setCreatetime(String createtime) {
         this.createtime = createtime;
-    }
-
-    public String getAtlasttime() {
-        return atlasttime;
-    }
-
-    public void setAtlasttime(String atlasttime) {
-        this.atlasttime = atlasttime;
     }
     public String getPassword() {
         return password;
@@ -287,22 +277,6 @@ public class User extends Model<User> {
         this.address = address;
     }
 
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
     public Float getWeight() {
         return weight;
     }
@@ -341,14 +315,6 @@ public class User extends Model<User> {
 
     public void setWalkCount(String walkCount) {
         this.walkCount = walkCount;
-    }
-
-    public String getWalkPushTime() {
-        return walkPushTime;
-    }
-
-    public void setWalkPushTime(String walkPushTime) {
-        this.walkPushTime = walkPushTime;
     }
 
     public Integer getLove() {
@@ -406,25 +372,19 @@ public class User extends Model<User> {
         ", name=" + name +
         ", phone=" + phone +
         ", calibration=" + calibration +
-        ", radius=" + radius +
-        ", midpoint=" + midpoint +
         ", jfdataUpdateTime=" + jfdataUpdateTime +
         ", createtime=" + createtime +
-        ", atlasttime=" + atlasttime +
         ", password=" + password +
         ", isDelete=" + isDelete +
         ", age=" + age +
         ", avatar=" + avatar +
         ", gender=" + gender +
         ", address=" + address +
-        ", wechat=" + wechat +
-        ", qq=" + qq +
         ", weight=" + weight +
         ", born=" + born +
         ", height=" + height +
         ", code=" + code +
         ", walkCount=" + walkCount +
-        ", walkPushTime=" + walkPushTime +
         ", love=" + love +
         ", bedId=" + bedId +
         ", nurseId=" + nurseId +

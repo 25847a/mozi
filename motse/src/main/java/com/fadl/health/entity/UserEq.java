@@ -43,7 +43,10 @@ public class UserEq extends Model<UserEq> {
      * 已授权--未授权
      */
     private String authorized;
-
+    /**
+     * 默认关注首页显示  0.隐藏  1.显示	
+     */
+    private Integer follow; 
 
     public Integer getId() {
         return id;
@@ -85,7 +88,15 @@ public class UserEq extends Model<UserEq> {
         this.authorized = authorized;
     }
 
-    @Override
+    public Integer getFollow() {
+		return follow;
+	}
+
+	public void setFollow(Integer follow) {
+		this.follow = follow;
+	}
+
+	@Override
     protected Serializable pkVal() {
         return this.id;
     }
@@ -98,6 +109,7 @@ public class UserEq extends Model<UserEq> {
         ", eqId=" + eqId +
         ", typeof=" + typeof +
         ", authorized=" + authorized +
+        ", follow=" + follow +
         "}";
     }
 }

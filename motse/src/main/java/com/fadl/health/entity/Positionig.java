@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author jian
- * @since 2019-07-09
+ * @since 2019-07-29
  */
 @TableName("positionig")
 public class Positionig extends Model<Positionig> {
@@ -35,7 +35,7 @@ public class Positionig extends Model<Positionig> {
     /**
      * 定位时间
      */
-    private String cratetime;
+    private String createtime;
     /**
      * imei
      */
@@ -66,12 +66,12 @@ public class Positionig extends Model<Positionig> {
         this.positioningData = positioningData;
     }
 
-    public String getCratetime() {
-        return cratetime;
+    public String getCreatetime() {
+        return createtime;
     }
 
-    public void setCratetime(String cratetime) {
-        this.cratetime = cratetime;
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
     }
 
     public String getImei() {
@@ -93,7 +93,7 @@ public class Positionig extends Model<Positionig> {
         "id=" + id +
         ", positioningS=" + positioningS +
         ", positioningData=" + positioningData +
-        ", cratetime=" + cratetime +
+        ", createtime=" + createtime +
         ", imei=" + imei +
         "}";
     }

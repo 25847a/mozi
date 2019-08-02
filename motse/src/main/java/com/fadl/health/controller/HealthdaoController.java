@@ -34,7 +34,7 @@ public class HealthdaoController extends AbstractController{
 	
 	/**
 	 *  查询人工智能学习信息
-	 * @param map
+	 * @param map 传userId是最好的
 	 * @return
 	 */
     @RequestMapping("/queryHealthDaoInfo")

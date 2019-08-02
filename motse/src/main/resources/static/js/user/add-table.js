@@ -162,7 +162,7 @@ $(document).keydown(function(e) {
             		$("#disconnect2").text("断开衣服");
             		$('#closeBluetooth1').attr("disabled",true);
             		$('#closeBluetooth2').attr("disabled",true);
-            //		document.getElementById("closeBluetooth").innerHTML=data.bluetoothmac;
+            	//	document.getElementById("closeBluetooth").innerHTML=data.bluetoothmac;
             		$("#closeState").text(data.bluetooth_type==0?"离线":"在线");//data.bluetooth_type
             		$("#equipmentId").val(data.id);
             	}

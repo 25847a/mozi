@@ -28,6 +28,6 @@
 		SELECT td.id,td.imei,td.name,DATE_FORMAT(tp.createtime,'%Y-%m-%d %H:%i:%s') as createtime,tp.HRV,tp.sbp_ave,tp.dbp_ave,tp.Heartrate,tp.Bloodoxygen,tp.microcirculation,tp.respirationrate FROM user td
 		LEFT JOIN jfhealthdao tp
 		ON substring(tp.phone,9)=td.id
-		WHERE td.imei=#{imei}
+		WHERE td.imei=#{imei} and td.isDelete=0
 	</select>
 </mapper>
