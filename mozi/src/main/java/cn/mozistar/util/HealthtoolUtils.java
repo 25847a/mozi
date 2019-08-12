@@ -196,9 +196,10 @@ public class HealthtoolUtils {
 								step = new Healthstep();
 								step.setCarrieroad(0);
 								step.setStepWhen(0);
+								step.setCreatetime(new Date());
 							}
 							//步数、卡路里
-							if(DateUtil.sfDay.format(step.getCreatetime()).equals(DateUtil.sfDay.format(new Date()))){
+						if(DateUtil.sfDay.format(step.getCreatetime()).equals(DateUtil.sfDay.format(new Date()))){
 								if(step.getStepWhen()>json.getInt("stepWhen")){//7411>0
 									healthstep.setStepWhen(step.getStepWhen());
 									healthstep.setCarrieroad(step.getCarrieroad());
