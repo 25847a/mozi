@@ -14,7 +14,7 @@
 		<!-- mybatis版本号 -->
 		<!-- <mybatis.version>3.2.4</mybatis.version> -->
 		<!-- log4j日志文件管理包版本 -->
-		<log4j.version>2.7</log4j.version>
+		<log4j.version>2.13.3</log4j.version>
 		<jackson.version>2.8.8</jackson.version>
 		<quartz.version>2.2.3</quartz.version>
 		<c3p0.version>0.9.5.2</c3p0.version>
